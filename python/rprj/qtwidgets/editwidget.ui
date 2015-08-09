@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditWidget</class>
+ <widget class="QWidget" name="EditWidget">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>796</width>
+    <height>251</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>941</width>
+        <height>55</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-text-bold.png</normaloff>:/rprj/format-text-bold.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+B</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-text-italic.png</normaloff>:/rprj/format-text-italic.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+I</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-text-underline.png</normaloff>:/rprj/format-text-underline.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+U</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-text-strikethrough.png</normaloff>:/rprj/format-text-strikethrough.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-text-color.png</normaloff>:/rprj/format-text-color.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-fill-color.png</normaloff>:/rprj/format-fill-color.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFontComboBox" name="fontComboBox">
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboFontSize">
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_7">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-justify-left.png</normaloff>:/rprj/format-justify-left.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_8">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-justify-center.png</normaloff>:/rprj/format-justify-center.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_9">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-justify-right.png</normaloff>:/rprj/format-justify-right.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_10">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-justify-fill.png</normaloff>:/rprj/format-justify-fill.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboInsertList"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_11">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-indent-more.png</normaloff>:/rprj/format-indent-more.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_12">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/format-indent-less.png</normaloff>:/rprj/format-indent-less.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_13">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/insert-horizontal-rule.png</normaloff>:/rprj/insert-horizontal-rule.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_14">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Insert External Link</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/insert-link.png</normaloff>:/rprj/insert-link.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_15">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rprj.qrc">
+           <normaloff>:/rprj/insert-image.png</normaloff>:/rprj/insert-image.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="textEdit">
+     <property name="lineWrapMode">
+      <enum>QTextEdit::WidgetWidth</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="rprj.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotItalic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotUnderline()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotStrikeout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fontComboBox</sender>
+   <signal>currentFontChanged(QFont)</signal>
+   <receiver>textEdit</receiver>
+   <slot>setCurrentFont(QFont)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>311</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>textEdit</sender>
+   <signal>textChanged()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotTextChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotTextColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>198</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotFillColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>254</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboFontSize</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotFontSize(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>539</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>289</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotAlignLeft()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>356</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>374</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotAlignCenter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>374</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_9</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotAlignRight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>464</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>374</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotAlignFill()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>518</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>374</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>textEdit</sender>
+   <signal>cursorPositionChanged()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotCursorPositionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>295</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotBold()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>317</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboInsertList</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotInsertList(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>601</x>
+     <y>12</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotIndent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>748</x>
+     <y>12</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_12</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotUnindent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>793</x>
+     <y>12</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_13</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotInsertHR()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>371</x>
+     <y>41</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_14</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotInsertLink()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>415</x>
+     <y>41</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_15</sender>
+   <signal>clicked()</signal>
+   <receiver>EditWidget</receiver>
+   <slot>slotInsertImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>41</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotBold()</slot>
+  <slot>slotItalic()</slot>
+  <slot>slotUnderline()</slot>
+  <slot>slotStrikeout()</slot>
+  <slot>slotTextChanged()</slot>
+  <slot>slotTextColor()</slot>
+  <slot>slotFillColor()</slot>
+  <slot>slotFontSize(QString)</slot>
+  <slot>slotAlignLeft()</slot>
+  <slot>slotAlignCenter()</slot>
+  <slot>slotAlignRight()</slot>
+  <slot>slotAlignFill()</slot>
+  <slot>slotCursorPositionChanged()</slot>
+  <slot>slotInsertList(int)</slot>
+  <slot>slotIndent()</slot>
+  <slot>slotUnindent()</slot>
+  <slot>slotInsertHR()</slot>
+  <slot>slotInsertLink()</slot>
+  <slot>slotInsertImage()</slot>
+ </slots>
+</ui>

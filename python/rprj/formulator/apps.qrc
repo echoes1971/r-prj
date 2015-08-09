@@ -1,0 +1,35 @@
+<RCC>
+  <qresource prefix="rPrj">
+    <file>icons/filesave.png</file>
+    <file>icons/fileclose.png</file>
+    <file>icons/filenew.png</file>
+    <file>icons/fileopen.png</file>
+    <file>icons/save-all.png</file>
+    <file>icons/user.png</file>
+    <file>icons/people.png</file>
+    <file>icons/banned_16x16.png</file>
+    <file>icons/project_16x16.gif</file>
+    <file>icons/task_16x16.gif</file>
+    <file>icons/timetrack_16x16.gif</file>
+    <file>icons/reload.png</file>
+    <file>icons/company_16x16.gif</file>
+    <file>icons/editdelete.png</file>
+    <file>icons/email_16x16.png</file>
+    <file>icons/event_16x16.png</file>
+    <file>icons/file_16x16.gif</file>
+    <file>icons/folder_16x16.gif</file>
+    <file>icons/group_16x16.gif</file>
+    <file>icons/link_16x16.gif</file>
+    <file>icons/news.png</file>
+    <file>icons/note_16x16.gif</file>
+    <file>icons/page_16x16.gif</file>
+    <file>icons/rprj.png</file>
+    <file>icons/text-x-log.png</file>
+    <file>icons/download.png</file>
+    <file>icons/Find16.gif</file>
+    <file>icons/Zoom16.gif</file>
+    <file>icons/glass.png</file>
+    <file>icons/linneighborhood.png</file>
+    <file>icons/mail.png</file>
+  </qresource>
+</RCC>

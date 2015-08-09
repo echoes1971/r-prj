@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=R-Prj
+Comment=Client for the R-Prj content management system
+Exec=rPrj.pyw
+Icon=/usr/share/icons/rprj.png
+Terminal=false
+Type=Application
+Categories=Office;
+# Categories=Application;Network;
+StartupNotify=true
+# X-Desktop-File-Install-Version=3.0

@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/rprj">
+        <file>format-fill-color.png</file>
+        <file>format-indent-less.png</file>
+        <file>format-indent-more.png</file>
+        <file>format-justify-center.png</file>
+        <file>format-justify-fill.png</file>
+        <file>format-justify-left.png</file>
+        <file>format-justify-right.png</file>
+        <file>format-text-bold.png</file>
+        <file>format-text-color.png</file>
+        <file>format-text-italic.png</file>
+        <file>format-text-strikethrough.png</file>
+        <file>format-text-underline.png</file>
+        <file>insert-horizontal-rule.png</file>
+        <file>insert-image.png</file>
+        <file>insert-link.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,59 @@
+
+1. Install PHP5, Apache and MySQL-Server
+
+sudo aptitude install mysql-server
+sudo aptitude install php5
+sudo aptitude install php5-mysql
+
+2. Configure Apache
+sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/userdir.load
+
+sudo ln -s /etc/apache2/mods-available/userdir.conf /etc/apache2/mods-enabled/userdir.conf
+
+sudo vi /etc/apache2/mods-enabled/php5.conf
+...
+        php_admin_flag engine On
+...
+
+
+mkdir ~/public_html
+vi ~/public_html/test.php
+<?php
+phpinfo();
+?>
+
+ln -s ~/projects/r-prj/php ~/public_html/rprj
+
+sudo apache2ctl restart
+
+3. Configure DB
+
+mysql -u root
+create database rproject;
+\q
+
+
+vi ~/public_html/rprj/config_local.php
+<?php
+$db_server = "localhost";
+$db_user = "root";
+$db_pwd = "";
+$db_db = "rproject";
+?>
+
+4. Initialise DB
+
+http://localhost/~<username>/rprj/mng/gestione.php
+login with:
+adm
+adm
+
+then click on "Update"
+
+at the end click on "Logout"
+
+5. Check everything is working
+
+http://localhost/~<username>/rprj/
+
+
