@@ -21,7 +21,6 @@
 
 from rprj.dblayer import DBConnectionProvider, DBLayerException, isDateTime
 from rprj.net.jsonlib import JSONClient, Binary
-import codecs
 import datetime
 import os
 import sys
@@ -95,13 +94,13 @@ class JsonConnectionProvider(DBConnectionProvider):
                 try:
                     v2 = datetime.datetime(int(v[:4]), int(v[5:7]), int(v[8:10]), int(v[11:13]), int(v[14:16]),
                                            int(v[17:19]))
-                except Exception, e:
+                except Exception:
                     try:
                         v2 = datetime.datetime(int(v[:4]), int(v[5:7]), int(v[8:10]), int(v[11:13]), int(v[14:16]))
-                    except Exception, e:
+                    except Exception:
                         try:
                             v2 = datetime.time(int(v[11:13]), int(v[14:16]), int(v[17:19]))
-                        except Exception, e:
+                        except Exception:
                             v2 = datetime.time(int(v[11:13]), int(v[14:16]))
                 valori2.append(v2)
             elif (type(v) == str or type(v) == unicode) and v.startswith("base64:"):
@@ -242,7 +241,7 @@ class JsonConnectionProvider(DBConnectionProvider):
     def search(self, dbe, uselike=1, orderby=None, ignore_deleted=True, full_object=True):
         casesensitive = 0
         if self.verbose: print "JsonConnectionProvider.search: start time = %s" % (datetime.datetime.now())
-        tablename = dbe.getTableName()
+        # tablename = dbe.getTableName()
         # Search
         dbexml = self._dbeToJson(dbe)
         if self.verbose: print "JsonConnectionProvider.search: dbexml = %s" % (dbexml)

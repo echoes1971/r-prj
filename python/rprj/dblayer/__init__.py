@@ -189,7 +189,7 @@ class DBEntity:
     def setValue(self, chiave, valore):
         try:
             self.__dict__[chiave] = valore
-        except Exception, e:
+        except Exception:
             if not chiave.startswith("_"):
                 setattr(self, chiave, valore)
 
@@ -220,18 +220,18 @@ class DBEntity:
         keys = self.getKeys()
         for c in keys:
             if not self.getValue(c) is None:
-                if type(self.getValue(c))==str and self.getValue(c)>u'':
+                if type(self.getValue(c)) == str and self.getValue(c) > u'':
                     return False
-                elif type(self.getValue(c))==unicode and self.getValue(c)>'':
+                elif type(self.getValue(c)) == unicode and self.getValue(c) > '':
                     return False
-                elif type(self.getValue(c))==int or type(self.getValue(c))==float\
-                        and self.getValue(c)!=0:
+                elif type(self.getValue(c)) == int or type(self.getValue(c)) == float\
+                        and self.getValue(c) != 0:
                     return False
-                elif type(self.getValue(c))==bool:
+                elif type(self.getValue(c)) == bool:
                     return False
         return True
 
-    def hasSameKeysOf(self,   another_dbe):
+    def hasSameKeysOf(self, another_dbe):
         """Checks whether the keys of the given dbe and the current dbe have same values:
         no matter of tables"""
         ret = True
@@ -243,11 +243,13 @@ class DBEntity:
         return ret
 
     def uuid2hex(cls, s):
-        if s is None or len(s)==0:
+        if s is None or len(s) == 0:
             return s
         str_len = len(s)
-        if str_len<4: return s
-        if s[:4]=='uuid': return s
+        if str_len < 4:
+            return s
+        if s[:4] == 'uuid':
+            return s
         ret = "uuid"
         for i in range(len(s)):
             ret += hex(ord(s[i])).replace('0x', '')
@@ -255,12 +257,13 @@ class DBEntity:
     uuid2hex = classmethod(uuid2hex)
 
     def hex2uuid(cls, a_str):
-        if a_str[:4]!="uuid": return a_str
-        s=a_str[4:]
+        if a_str[:4] != "uuid":
+            return a_str
+        s = a_str[4:]
         str_len = len(s)
         ret = ""
-        for i in range(str_len/2):
-            ret += chr(eval("0x%s" % s[i*2:(i+1)*2]))
+        for i in range(str_len / 2):
+            ret += chr(eval("0x%s" % s[i*2: (i+1)*2]))
         return ret
     hex2uuid = classmethod(hex2uuid)
 
@@ -268,35 +271,35 @@ class DBEntity:
         """Validate the DBE and applies custom logics."""
         pass
 
-    def _before_insert(self,  dbmgr=None):
+    def _before_insert(self, dbmgr=None):
         """Action to be taken before insert."""
         pass
 
-    def _after_insert(self,  dbmgr=None):
+    def _after_insert(self, dbmgr=None):
         """Action to be taken after insert."""
         pass
 
-    def _before_update(self,  dbmgr=None):
+    def _before_update(self, dbmgr=None):
         """Action to be taken before update."""
         pass
 
-    def _after_update(self,  dbmgr=None):
+    def _after_update(self, dbmgr=None):
         """Action to be taken after update."""
         pass
 
-    def _before_delete(self,  dbmgr=None):
+    def _before_delete(self, dbmgr=None):
         """Action to be taken before delete."""
         pass
 
-    def _after_delete(self,  dbmgr=None):
+    def _after_delete(self, dbmgr=None):
         """Action to be taken after delete."""
         pass
 
-    def _before_copy(self,  dbmgr=None):
+    def _before_copy(self, dbmgr=None):
         """Action to be taken before copy."""
         pass
 
-    def _after_copy(self,  dbmgr=None):
+    def _after_copy(self, dbmgr=None):
         """Action to be taken after copy."""
         pass
 
@@ -358,14 +361,14 @@ class DBConnectionProvider:
     def dbeType2dbType(self, dbetype):
         """TO OVERRIDE."""
         ret = dbetype
-        if dbetype=="uuid" or dbetype==u"uuid":
+        if dbetype == "uuid" or dbetype == u"uuid":
             ret = "varchar(16)"
         return ret
 
     def dbType2dbeType(self, dbetype):
         """TO OVERRIDE."""
         ret = dbetype
-        if dbetype=="varchar(16)":
+        if dbetype == "varchar(16)":
             ret = "uuid"
         return ret
 
@@ -379,9 +382,9 @@ class DBConnectionProvider:
         if definition['Null'] == 'NO':
             constraints.append("not null")
         if not definition['Default'] is None:
-            apice="'"
+            apice = "'"
             if definition['Type'] in ['int(11)', 'float']:
-                apice=""
+                apice = ""
             constraints.append("default %s%s%s" % (apice, definition['Default'], apice))
         elif definition['Default'] is None and definition['Null'] == 'YES':
             constraints.append("default null")
@@ -457,10 +460,10 @@ class DBMgr:
         ret = {}
         tmp = self.getDBEFactory().getRegisteredTypes()
         for k in tmp.keys():
-            if k!='default':
+            if k != 'default':
                 ret[k] = tmp[k]
         if self._connProvider.isProxy():
-            if len(ret.keys())>1 or (len(ret.keys())==1 and ret.keys()[0]!='default'):
+            if len(ret.keys()) > 1 or (len(ret.keys()) == 1 and ret.keys()[0] != 'default'):
                 return ret
             ret = self._connProvider.getRegisteredTypes(self)
         return ret
@@ -468,14 +471,14 @@ class DBMgr:
     def getClazz(self,  typename):
         """Returns the registered type."""
         ret = self.getDBEFactory().getClazz(typename)
-        if self._connProvider.isProxy() and ret==DBEntity:
+        if self._connProvider.isProxy() and ret == DBEntity:
             return self._connProvider.getClazz(self, typename)
         return ret
 
     def getClazzByTypeName(self,  typename):
         """Returns the registered type."""
         ret = self.getDBEFactory().getClazzByTypeName(typename)
-        if self._connProvider.isProxy() and ret==DBEntity:
+        if self._connProvider.isProxy() and ret == DBEntity:
             ret = self._connProvider.getClazzByTypeName(typename)
         return ret
 
@@ -484,16 +487,18 @@ class DBMgr:
         mytypes = self.dbeFactory.getRegisteredTypes()
         for tablename in mytypes.keys():
             if self._verbose: print "DBMgr.initDB: tablename = %s" % (tablename)
-            if tablename=='default':
+            if tablename == 'default':
                 continue
             mydbe = mytypes[tablename]()
             # 1. Table definition
             self._createTable(mydbe)
             # 2. Default entries
             defaultEntries = mydbe.getDefaultEntries()
-            if len(defaultEntries)==0: continue
+            if len(defaultEntries) == 0:
+                continue
             for d in defaultEntries:
-                if self._verbose: print "DBMgr.initDB: d = %s" % (d)
+                if self._verbose:
+                    print "DBMgr.initDB: d = %s" % (d)
                 newdbe = mytypes[tablename](attrs=d)
                 try:
                     nuova = DBMgr.insert(self,  newdbe)
@@ -511,7 +516,7 @@ class DBMgr:
             cursor.execute(myquery)
             numres = cursor.rowcount
             if self._verbose: print "DBMgr._createTable: numres = %s" % numres
-            if self._connProvider.getDBType()=="POSTGRESQL":
+            if self._connProvider.getDBType() == "POSTGRESQL":
                 cursor.execute("commit")
         except Exception, e:
             if self._verbose:
@@ -542,7 +547,7 @@ class DBMgr:
                     cursor.execute(myquery)
                     numres = cursor.rowcount
                     print "DBMgr.checkDB: numres = %s" % numres
-                    if self._connProvider.getDBType()=="POSTGRESQL":
+                    if self._connProvider.getDBType() == "POSTGRESQL":
                         cursor.execute("commit")
                 except Exception, e:
                     if self._verbose:
@@ -573,7 +578,7 @@ class DBMgr:
                     try:
                         cursor = self.getConnection().cursor()
                         cursor.execute(myquery)
-                        if self._connProvider.getDBType()=="POSTGRESQL":
+                        if self._connProvider.getDBType() == "POSTGRESQL":
                             cursor.execute("commit")
                     except Exception, e:
                         if self._verbose:
@@ -581,14 +586,16 @@ class DBMgr:
                             print "".join(traceback.format_tb(sys.exc_info()[2]))
             # 2. Check default entries
             defaultEntries = mydbe.getDefaultEntries()
-            if len(defaultEntries)==0: continue
+            if len(defaultEntries) == 0:
+                continue
             for d in defaultEntries:
                 if self._verbose: print "DBMgr.checkDB: d = %s" % (d)
                 cerca = mytypes[tablename](attrs=d)
                 tmp = DBMgr.search(self,  cerca, uselike=False)
-                if len(tmp)==0:
+                if len(tmp) == 0:
                     try:
-                        nuova = DBMgr.insert(self,  cerca)
+                        DBMgr.insert(self, cerca)
+                        # nuova = DBMgr.insert(self, cerca)
                     except Exception, e:
                         if self._verbose:
                             print "DBMgr.checkDB: Exception = %s" % (e)
@@ -598,7 +605,7 @@ class DBMgr:
         """BEWARE: Remove all the tables and all the rows from the DB!!!"""
         mytypes = self.dbeFactory.getRegisteredTypes()
         for tablename in mytypes.keys():
-            if tablename=='default':
+            if tablename == 'default':
                 continue
             mydbe = mytypes[tablename]()
             myquery = "drop table %s" % (self._buildTableName(mydbe))
@@ -610,7 +617,7 @@ class DBMgr:
                 if self._verbose: print "DBMgr.removeDB: numres = %s" % numres
             except Exception, e:
                 if self._verbose: print "DBMgr.removeDB: Exception = %s" % (e)
-                if self._connProvider.getDBType()=="POSTGRESQL":
+                if self._connProvider.getDBType() == "POSTGRESQL":
                     cursor.execute("rollback")
 
     def dbe2sql(self, dbe):
@@ -639,14 +646,14 @@ class DBMgr:
             if len(constraints)==0:
                 constraints = not_null
             constraints = self._connProvider.dbeConstraints2dbConstraints(constraints)
-            return "%s %s" % (mytype,constraints)
+            return "%s %s" % (mytype, constraints)
 
     def _escapeString(self, s):
-        return "'%s'" % s.replace("\\","\\\\").replace("\'","''")
+        return "'%s'" % s.replace("\\", "\\\\").replace("\'", "''")
 
     def _formatDateTime(self,  datetime):
         tmp = "%s" % datetime
-        tmp = tmp.replace('/','-')
+        tmp = tmp.replace('/', '-')
         # 2013-04-09: start.
         if len(tmp)==8:
             return "0000-00-00 %s" % (tmp)
@@ -656,8 +663,8 @@ class DBMgr:
     def getTodayString(self):
         today = datetime.datetime.now()
         ret = "%s-%02d-%02d %02d:%02d:%02d" % (
-            today.year,today.month,today.day,
-            today.hour,today.minute,today.second,
+            today.year, today.month, today.day,
+            today.hour, today.minute, today.second,
         )
         return ret
 
@@ -678,13 +685,13 @@ class DBMgr:
         chiavi = dbe.getKeys()
         for c in chiavi.keys():
             if chiavi[c]=='number':
-                ret.append("%s=%s" % (c, getattr(dbe,c)))
+                ret.append("%s=%s" % (c, getattr(dbe, c)))
             else:
-                ret.append("%s='%s'" % (c, getattr(dbe,c)))
+                ret.append("%s='%s'" % (c, getattr(dbe, c)))
             pass
         return string.join(ret, ' AND ')
 
-    def buildKeysCondition(self,  dbe):
+    def buildKeysCondition(self, dbe):
         return self._buildKeysCondition(dbe)
 
     def _buildInsertString(self, dbe):
@@ -695,14 +702,14 @@ class DBMgr:
             v = dbe.getValue(n)
             if v is None: continue
             tmpnomi.append(n)
-            if isinstance(v,str) or isinstance(v, unicode):
+            if isinstance(v, str) or isinstance(v, unicode):
                 if not isDateTime(v):
                     tmpvalori.append("%s" % (self._escapeString(v)))
                 else:
                     tmpvalori.append("'%s'" % (v))
-            elif v.__class__.__name__=='DateTime' or isinstance(v,datetime.datetime):
+            elif v.__class__.__name__ == 'DateTime' or isinstance(v, datetime.datetime):
                 tmpvalori.append("'%s'" % (self._formatDateTime(v)))
-            elif isinstance(v,bool):
+            elif isinstance(v, bool):
                 if v:
                     tmpvalori.append('1')
                 else:
@@ -710,7 +717,7 @@ class DBMgr:
             else:
                     tmpvalori.append("%s" % (v))
         query = "insert into %s (%s) values (%s)" % (
-            self._buildTableName(dbe), string.join(tmpnomi,","), string.join(tmpvalori,","))
+            self._buildTableName(dbe), string.join(tmpnomi, ","), string.join(tmpvalori, ","))
         return query
 
     def buildInsertString(self, dbe):
@@ -730,14 +737,14 @@ class DBMgr:
                         setstring.append("%s=%s" % (n, self._escapeString(v)))
                     else:
                         setstring.append("%s='%s'" % (n, v))
-                elif isinstance(v,bool):
+                elif isinstance(v, bool):
                     if v:
                         setstring.append("%s=1" % (n))
                     else:
                         setstring.append("%s=0" % (n))
-                elif v.__class__.__name__=='DateTime' or isinstance(v,datetime.datetime):
+                elif v.__class__.__name__=='DateTime' or isinstance(v, datetime.datetime):
                     setstring.append("%s='%s'" % (n, self._formatDateTime(v)))
-                elif v.__class__.__name__=='Time' or isinstance(v,datetime.time):
+                elif v.__class__.__name__=='Time' or isinstance(v, datetime.time):
                     setstring.append("%s='%s'" % (n, self._formatDateTime(v)))
                 else:
                     setstring.append("%s=%s" % (n, v))
@@ -746,7 +753,7 @@ class DBMgr:
                 #else:
                     #setstring.append("%s=NULL" % (n))
                 # 2012.04.04: end.
-        query = "update %s set %s where %s" % (self._buildTableName(dbe), string.join(setstring,", "),
+        query = "update %s set %s where %s" % (self._buildTableName(dbe), string.join(setstring, ", "),
                                                self._buildKeysCondition(dbe))
         return query
 
@@ -754,45 +761,45 @@ class DBMgr:
         nomicampi = dbe.getNames()
         clausole = []
         for n in nomicampi:
-            is_from = n[0:5]=='from_'
-            is_to = n[0:3]=='to_'
+            is_from = n[0:5] == 'from_'
+            is_to = n[0:3] == 'to_'
             v = dbe.getValue(n)
             if v is None:
-                if self._connProvider.getDBType()=="POSTGRESQL":
+                if self._connProvider.getDBType() == "POSTGRESQL":
                     clausole.append("%s is null" % (n))
             elif v=='null':
                 clausole.append("%s is null" % (n))
             elif isinstance(v, str) or isinstance(v, unicode):
                 if is_from:
-                    if len(v)>0: clausole.append("%s>='%s'" % (n[5:],v))
+                    if len(v)>0: clausole.append("%s>='%s'" % (n[5:], v))
                 elif is_to:
-                    if len(v)>0: clausole.append("%s<='%s'" % (n[3:],v))
+                    if len(v)>0: clausole.append("%s<='%s'" % (n[3:], v))
                 elif v.find('0000-00-00 00:00')>=0:
                     clausole.append("(%s='%s' or %s is null)" % (n,v,n))
                 elif uselike:
                     if len(v)>0:
                         myv = "%%%s%%" % v
                         if v.find('*')>=0:
-                            myv = "%s" % (v.replace("*","%%"))
+                            myv = "%s" % (v.replace("*", "%%"))
                         if case_sensitive:
-                            clausole.append("%s like '%s'" % (n,myv))
+                            clausole.append("%s like '%s'" % (n, myv))
                         else:
-                            clausole.append("lower(%s) like '%s'" % (n,myv.lower()))
+                            clausole.append("lower(%s) like '%s'" % (n, myv.lower()))
                 else:
-                    clausole.append("%s='%s'" % (n,v))
+                    clausole.append("%s='%s'" % (n, v))
             else:
                 if is_from:
-                    if v is not None: clausole.append("%s>=%s" % (n[5:],v))
+                    if v is not None: clausole.append("%s>=%s" % (n[5:], v))
                 elif is_to:
-                    if v is not None: clausole.append("%s<=%s" % (n[3:],v))
+                    if v is not None: clausole.append("%s<=%s" % (n[3:], v))
                 else:
-                    clausole.append("%s=%s" % (n,v))
+                    clausole.append("%s=%s" % (n, v))
         return clausole
 
-    def _buildSelectString(self,  dbe, uselike=1,case_sensitive=True):
+    def _buildSelectString(self,  dbe, uselike=1, case_sensitive=True):
         clausole = self._buildWhereCondition(dbe, uselike, case_sensitive)
         if len(clausole)>0:
-            query = "select * from %s where %s" % (self._buildTableName(dbe), string.join(clausole," and "))
+            query = "select * from %s where %s" % (self._buildTableName(dbe), string.join(clausole, " and "))
         else:
             query = "select * from %s" % (self._buildTableName(dbe))
         return query
@@ -861,7 +868,8 @@ class DBMgr:
                 print "DBMgr.insert: query=%s" % (query)
                 print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
-                ris = self.getConnection().execute(query)
+                self.getConnection().execute(query)
+                # ris = self.getConnection().execute(query)
                 self.getConnection().commit()
                 # After Insert
                 dbe = self._after_insert(dbe)
@@ -900,11 +908,12 @@ class DBMgr:
             dbe._after_update(self)
         except Exception, e:
             if self._verbose:
-                print "DBMgr.update: Probblemi: %s" % (e1)
+                print "DBMgr.update: Probblemi: %s" % (e)
                 print "DBMgr.update: query=%s" % (query)
                 print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
-                ris = self.getConnection().execute(query)
+                self.getConnection().execute(query)
+                # ris = self.getConnection().execute(query)
                 self.getConnection().commit()
                 # After Update
                 dbe = self._after_update(dbe)
@@ -919,14 +928,14 @@ class DBMgr:
                 raise DBLayerException("DBMgr.update: unable to execute\n\t%s.Error cause: %s" % (query, e1))
         return dbe
 
-    def select(self, tablename,searchString):
+    def select(self, tablename, searchString):
         """Returns a list of DBE according to the searchString."""
         if self._connProvider.isProxy():
             # 2012.04.02: start.
             if not self.isLoggedIn() and not self.relogin():
                 raise DBLayerException("Proxy connection down!")
             # 2012.04.02: end.
-            return self._connProvider.select(tablename,searchString)
+            return self._connProvider.select(tablename, searchString)
         cursor = self.getConnection().cursor()
         ret = []
         try:
@@ -946,7 +955,7 @@ class DBMgr:
                     if self._verbose: print "DBMgr.select: found %s rows." % (numres)
                     for i in range(numres):
                         ret.append(self.getDBEFactory()(tablename, names=names, values=listavalori[i]))
-            except TypeError,e:
+            except TypeError, e:
                 if self._verbose:
                     print "DBMgr.select: ECCEZIONE=%s (%s)" % (e,searchString)
                     print "".join(traceback.format_tb(sys.exc_info()[2]))
@@ -975,17 +984,19 @@ class DBMgr:
         query = "delete from %s where %s" % (self._buildTableName(dbe), self._buildKeysCondition(dbe))
         if self._verbose: print "Delete: query=%s" % query
         try:
-            ris = self.getConnection().execute(query)
+            self.getConnection().execute(query)
+            # ris = self.getConnection().execute(query)
             self.getConnection().commit()
             # After Delete
             dbe = self._after_delete(dbe)
             dbe._after_delete(self)
         except Exception, e:
             if self._verbose:
-                print "DBMgr.delete: ECCEZIONE=%s (%s)" % (e,searchString)
+                print "DBMgr.delete: ECCEZIONE=%s (%s)" % (e,query)
                 print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
-                ris = self.getConnection().query(query)
+                self.getConnection().query(query)
+                # ris = self.getConnection().query(query)
                 self.getConnection().commit()
                 # After Delete
                 dbe = self._after_delete(dbe)
@@ -1123,6 +1134,8 @@ class DBMgr:
         try:
             ret = self.search(cerca,uselike=False)
         except Exception, e:
+            if self._verbose: print "DBMgr.login: ECCEZIONE=%s" % (e)
+            if self._verbose: print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
                 self.initDB()
                 newuser = self.getClazzByTypeName('DBEUser')(attrs={'login':user,'pwd':pwd})
@@ -1140,7 +1153,7 @@ class DBMgr:
                 if self._verbose: print "DBMgr.login: newfolder=%s" % (newfolder)
                 ret = self.search(cerca,uselike=False)
             except Exception, e1:
-                if self._verbose: print "DBMgr.login: ECCEZIONE=%s" % (e)
+                if self._verbose: print "DBMgr.login: ECCEZIONE=%s" % (e1)
                 if self._verbose: print "".join(traceback.format_tb(sys.exc_info()[2]))
         if len(ret)==1:
             self.user = ret[0]
