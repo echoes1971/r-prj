@@ -1074,10 +1074,10 @@ class DBEFile(DBEObject):
         if self.getValue('filename') > '':
             # Uploading
             local_filename = self.getValue('filename')
-            self.setValue('filename', dbmgr.uploadFile(self.getValue('filename')))
+            self.setValue('filename', dbmgr.uploadFile(local_filename))
 
             dest_path = self.generaObjectPath()
-            from_dir = os.path.realpath(dbmgr.getConnectionProvider().getLocalFilePath())
+            # from_dir = os.path.realpath(dbmgr.getConnectionProvider().getLocalFilePath())
             dest_dir = os.path.realpath(dbmgr.getConnectionProvider().getLocalFilePath())
             if dest_path > '':
                 dest_dir = "%s%s%s" % (dest_dir, os.path.sep, dest_path)
@@ -1154,7 +1154,7 @@ class DBEFile(DBEObject):
             # Uploading
             if os.path.exists(self.getValue('filename')):
                 local_filename = self.getValue('filename')
-                self.setValue('filename', dbmgr.uploadFile(self.getValue('filename')))
+                self.setValue('filename', dbmgr.uploadFile(local_filename))
                 from_filename = self.getValue('filename')
                 filefrom = from_filename
             else:
