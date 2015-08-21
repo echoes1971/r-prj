@@ -188,7 +188,7 @@ QStatusBar QSizeGrip { border-bottom-right-radius: 0px; }
             self.ui.dockWidget.show()
         elif not self.ui.dockWidget.isHidden() and len(self.components) == 1:
             self.ui.dockWidget.hide()
-        menu = c.getMenu(self.ui.menubar)
+        # menu = c.getMenu(self.ui.menubar)
 
     def SetupPlugins(self, plugins_path):
         self._checkPath(plugins_path)
@@ -326,8 +326,8 @@ QStatusBar QSizeGrip { border-bottom-right-radius: 0px; }
         # Connection
         myconn = createConnection(myurl, self.getPref("Debug", "connection", False))  # True)
         # Server
-        self.server = dbschema.ObjectMgr(myconn, self.getPref("Debug", "server", False),
-                                                              self.getPref('DB', 'schema', 'rprj'))
+        self.server = dbschema.ObjectMgr(
+            myconn, self.getPref("Debug", "server", False), self.getPref('DB', 'schema', 'rprj'))
         self.server.setDBEFactory(self.dbeFactory)
         self.server.connect()
         myerr = ""
