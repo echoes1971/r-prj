@@ -45,9 +45,9 @@ class FField(rprj.formulator.FField, QtCore.QObject):
     def render(self, parent):
         if self.widget is None:
             self.InitWidget(parent)
-        if not self.widget is None:
+        if self.widget is not None:
             self.widget.setVisible(True)
-        if not self.field is None:
+        if self.field is not None:
             self.field.setEnabled(True)
             self.field.setVisible(True)
         return self.widget
@@ -57,9 +57,9 @@ class FField(rprj.formulator.FField, QtCore.QObject):
 
     def render_hidden(self, parent):
         self.render(parent)
-        if not self.widget is None:
+        if self.widget is not None:
             self.widget.setVisible(False)
-        elif not self.field is None:
+        elif self.field is not None:
             self.field.setVisible(False)
         return self.widget
 
@@ -100,13 +100,13 @@ class FField(rprj.formulator.FField, QtCore.QObject):
         self.layout.addWidget(self.field)
 
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = "%s" % self.field.text()
         return rprj.formulator.FField.getValue(self)
 
     def setValue(self, v, update_widget=True):
         rprj.formulator.FField.setValue(self, v)
-        if not self.field is None:
+        if self.field is not None:
             self.field.setText("%s" % v)
 
 
@@ -123,7 +123,7 @@ class FForm(rprj.formulator.FForm, QtCore.QObject):
     def render(self, parent):
         if self.widget is None:
             self.InitWidget(parent)
-        if not self.widget is None:
+        if self.widget is not None:
             self.widget.setVisible(True)
         return self.widget
 
@@ -253,7 +253,7 @@ class FForm(rprj.formulator.FForm, QtCore.QObject):
                     field = myfield.InitField(groupBox)
                 if myfieldname in self.getDetailReadOnlyColumnNames():
                     field.setEnabled(False)
-                if not myfieldname in self.getDetailColumnNames():
+                if myfieldname not in self.getDetailColumnNames():
                     label.setVisible(False)
                     field.setVisible(False)
                 else:
@@ -374,7 +374,7 @@ class FPercent(FField):  # ,rprj.formulator.FPercent):
 
 class FString(FField, rprj.formulator.FString):
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = "%s" % self.field.text()
         return rprj.formulator.FField.getValue(self)
 
@@ -415,13 +415,13 @@ class FList(FField, rprj.formulator.FList):
         return self.field
 
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = self.field.itemData(self.field.currentIndex()).toPyObject()
         return rprj.formulator.FField.getValue(self)
 
     def setValue(self, v, update_widget=True):
         rprj.formulator.FField.setValue(self, v)
-        if not self.field is None:
+        if self.field is not None:
             self.field.setCurrentIndex(self.field.findData(v))
 
 
@@ -454,7 +454,7 @@ class FTextArea(FField, rprj.formulator.FTextArea):
         return self.field
 
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = "%s" % self.field.toPlainText()
         return rprj.formulator.FField.getValue(self)
 
@@ -481,7 +481,7 @@ class FDateTime(FField, rprj.formulator.FDateTime):
 
     def setValue(self, v, update_widget=True):
         rprj.formulator.FField.setValue(self, v)
-        if not self.field is None:
+        if self.field is not None:
             if v is None:
                 self.field.setDateTime(QtCore.QDateTime.fromString('2000-01-01 00:00:00', "yyyy-MM-dd hh:mm:ss"))
             elif type(v) == str or type(v) == unicode:
@@ -495,7 +495,7 @@ class FDateTime(FField, rprj.formulator.FDateTime):
                 self.field.setDateTime(QtCore.QDateTime(v))
 
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = self.field.dateTime().toPyDateTime()
             if '2000-01-01 00:00:00' == "%s" % self.aValore:
                 self.aValore = '0000-00-00 00:00:00'
@@ -564,7 +564,7 @@ class FKField(FField, rprj.formulator.FKField):
         searchWidget = searchwidget.SearchWidget(searchDialog, "%s_explorer" % self.aNomeCampo, myfilterform, True)
         searchWidget.setServer(self.dbmgr)
         searchWidget.setFormFactory(self.formFactory)
-        if not self.getValue() is None and not myfilterform.getDetailTitle() == 'Object':
+        if self.getValue() is not None and not myfilterform.getDetailTitle() == 'Object':
             selectedDBE = myfilterform.getDBE(self.dbmgr)
             selectedDBE.setValue(self.myFK.colonna_riferita, self.getValue())
             searchWidget.setSelectedDBE(selectedDBE)
@@ -588,7 +588,7 @@ class FKField(FField, rprj.formulator.FKField):
 
     def setValue(self, v, update_widget=True):
         rprj.formulator.FField.setValue(self, v)
-        if not self.field is None:
+        if self.field is not None:
             if v is None:
                 self.field.setText('')
                 return
@@ -640,15 +640,15 @@ class FKObjectField(FKField):  # ,rprj.formulator.FKObjectField):
     def setValue(self, v, update_widget=True):
         # TODO use multithreading like FKField
         rprj.formulator.FField.setValue(self, v)
-        if not self.field is None:
+        if self.field is not None:
             myobj = self.dbmgr.objectById("%s" % v)
-            if not myobj is None:
+            if myobj is not None:
                 self.field.setText(myobj.getValue('name'))
 
 
 class FHtml(FField):  # ,rprj.formulator.FHtml):
     def getValue(self):
-        if not self.field is None:
+        if self.field is not None:
             self.aValore = "%s" % self.field.text()
         return rprj.formulator.FField.getValue(self)
 
@@ -675,7 +675,7 @@ class FUuid(FString, rprj.formulator.FUuid):
         rprj.formulator.FField.setValue(self, v)
         _v = ("%s" % v).replace("uuid", "")
         __v = "%s-%s-%s-%s-%s" % (_v[:8], _v[8:12], _v[12:16], _v[16:20], _v[20:])
-        if not self.field is None:
+        if self.field is not None:
             self.field.setText(__v)
 
 
