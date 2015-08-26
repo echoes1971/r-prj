@@ -54,7 +54,7 @@ class RApp(QtCore.QObject):
         self.app = QtGui.QApplication([])
         self.app.setApplicationName(RPRJ_WINDOW_TITLE)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/rPrj/icons/rprj.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/rPrj/icons/rprj.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.app.setWindowIcon(icon)
         self.loadStyle()
         self.myMainWindow = None
@@ -66,7 +66,7 @@ class RApp(QtCore.QObject):
         self.ui = mainwindow.Ui_MainWindow()
         self.ui.setupUi(self.myMainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/rPrj/icons/rprj.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/rPrj/icons/rprj.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.myMainWindow.setWindowIcon(icon)
         # Main Window Setup
         self.progressBar = QtGui.QProgressBar(self.myMainWindow.statusBar())
@@ -125,9 +125,9 @@ for x in dir(%s):
         QtCore.QObject.connect(self.ui.actionReload_Style, QtCore.SIGNAL("triggered()"), self.slotReloadStylesheet)
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.slotQuit)
         # Login Dialog
-        QtCore.QObject.connect(self.uiLogin.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.slotLoginOk)
-        QtCore.QObject.connect(self.uiLogin.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.slotLoginCancel)
-        QtCore.QObject.connect(self.uiLogin.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.slotLoginMoreOptions)
+        QtCore.QObject.connect(self.uiLogin.buttonBox, QtCore.SIGNAL("accepted()"), self.slotLoginOk)
+        QtCore.QObject.connect(self.uiLogin.buttonBox, QtCore.SIGNAL("rejected()"), self.slotLoginCancel)
+        QtCore.QObject.connect(self.uiLogin.pushButton, QtCore.SIGNAL("clicked()"), self.slotLoginMoreOptions)
         # Frameless
         if self.getPref("UI", "Frameless", "False"):
             QtCore.QObject.connect(self.mybtn_minimize, QtCore.SIGNAL("clicked()"), self.slotMinimizeWindow)

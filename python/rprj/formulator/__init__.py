@@ -21,7 +21,8 @@
 
 
 class FField:
-    def __init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength=20, aValore='', aClasseCss=None, myform=None, mytipo='s'):
+    def __init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength=20, aValore='', aClasseCss=None, myform=None,
+                 mytipo='s'):
         self.aNomeCampo = aNomeCampo
         self._title = aTitle
         self._description = aDescription
@@ -34,55 +35,44 @@ class FField:
         self.tipo = mytipo
 
     def render(self):
-
         raise Exception("TODO")
 
     def render_view(self):
-
         raise Exception("TODO")
 
     def render_hidden(self):
-
         raise Exception("TODO")
 
     def render_readonly(self):
-
         raise Exception("TODO")
 
     def readValueFromRequest(self, request, prefix='field_'):
-
         self.readValueFromArray(request, prefix)
 
     def readValueFromArray(self, aArray, prefix='field_'):
-        if aArray.has_key("%s%s" % (prefix, self.aNomeCampo)):
+        if "%s%s" % (prefix, self.aNomeCampo) in aArray:
             self.aValore = aArray["%s%s" % (prefix, self.aNomeCampo)]
         else:
-
             self.aValore = None
 
     def writeValueToArray(self, aArray, prefix='field_'):
         aArray["%s%s" % (prefix, self.aNomeCampo)] = self.aValore
-
         return aArray
 
     def clean(self):
         """Resets the field value."""
-
         self.setValue('')
 
     def getValue(self):
-
         return self.aValore
 
     def setValue(self, v):
         if v == '':
             self.aValore = None
         else:
-
             self.aValore = v
 
     def GetTitle(self):
-
         return self._title
 
     def GetDescription(self):
@@ -113,12 +103,10 @@ class FForm:
             for i in range(len(mygruppo)):
                 #for i in range(mygruppo):
                 myfield = self.getField(mygruppo[i])
-
                 ret += "\t\t%s => '%s'\n" % (mygruppo[i], myfield.getValue())
         return ret
 
     def getAction(self):
-
         """Azione di default: serve per la form html."""
         return self.azione
 
@@ -129,7 +117,6 @@ class FForm:
         return self.nome
 
     def getEnctype(self):
-
         return self.enctype
     # OVERRIDE: start.
 
@@ -143,7 +130,6 @@ class FForm:
         return []
 
     def getDetailReadOnlyColumnNames(self):
-
         """Ritorna i nomi dei campi in read-only."""
         return []
 
@@ -157,17 +143,14 @@ class FForm:
         return ""
 
     def getListColumnNames(self):
-
         """Ritorna i nomi di fields da visualizzare in una lista."""
         return []
 
     def getListEditableColumnNames(self):
-
         """Ritorna i nomi di fields editabili in lista."""
         return []
 
     def getDecodeGroupNames(self):
-
         """Ritorna un array con nome_gruppo=>'Nome Gruppo'."""
         return {}
 
@@ -175,22 +158,18 @@ class FForm:
         return ""
 
     def getDBE(self):
-
         """Ritorna la dbe associata alla form."""
         return None
 
     def getCodice(self):
-
         """Ritorna il codice che identifica la descrizione."""
         return ""
 
     def getShortDescription(self, dbmgr=None):
-
         """Ritorna una breve descrizione dei valori contenuti."""
         return ""
 
     def getController(self):
-
         """Ritorna il nome del controller della form."""
         return ""
 
@@ -206,7 +185,6 @@ class FForm:
         aField.myform = self
         self.fields[nomeField] = aField
         self.addToGroup(nomeField, nomeGruppo, ordine)
-
         if isinstance(aField, FFileField):
             self.enctype = 'multipart/form-data'
 
@@ -214,7 +192,7 @@ class FForm:
         return self.fields.keys()
 
     def getField(self, fieldName):
-        if not self.fields.has_key(fieldName):
+        if fieldName not in self.fields:
             return None
         if self.fields[fieldName].myform is None:
             self.fields[fieldName].myform = self
@@ -224,9 +202,8 @@ class FForm:
     # Groups: start.
     def decodeGroupName(self, group_name):
         tmp = self.getDecodeGroupNames()
-        if tmp.has_key(group_name):
+        if group_name in tmp:
             return tmp[group_name]
-
         else:
             return group_name
 
@@ -234,9 +211,8 @@ class FForm:
         return self.groups.keys()
 
     def getGroup(self, nomeGruppo):
-        if self.groups.has_key(nomeGruppo):
+        if nomeGruppo in self.groups:
             return self.groups[nomeGruppo]
-
         else:
             return []
 
@@ -254,8 +230,6 @@ class FForm:
             gruppo.append(nomeField)
         else:
             gruppo.insert(ordine, nomeField)
-
-            #gruppo[ordine] = nomeField
         self.setGroup(nomeGruppo, gruppo)
 
     def removeFromGroup(self, nomeField, nomeGruppo):
@@ -268,7 +242,6 @@ class FForm:
     # Groups: end.
     # Request: start.
     def readValuesFromRequest(self, aRequest, prefix="field_"):
-
         for nomeCampo in self.getFieldNames():
             self.fields[nomeCampo].readValueFromRequest(aRequest, prefix)
 
@@ -283,29 +256,25 @@ class FForm:
     # Getters and setters: start.
     def clean(self):
         """Resets all the field values."""
-
         for n in self.getFieldNames():
             self.fields[n].clean()
 
     def getValues(self):
         ret = {}
         for nomeCampo in self.getFieldNames():
-            if self.fields.has_key(nomeCampo):  # 2012.04.17
-
+            if nomeCampo in self.fields:
                 ret[nomeCampo] = self.fields[nomeCampo].getValue()
         return ret
 
     def setValues(self, valori):
         for chiave in valori.keys():
             campo = self.getField(chiave)
-
             if campo is not None:
                 self.fields[chiave].setValue(valori[chiave])
 
     def getValue(self, fieldName):
         tmp = self.getField(fieldName)
         if tmp is None:
-
             return None
         return tmp.getValue()
 
@@ -335,21 +304,17 @@ class FForm:
 class FMasterDetail(FForm):
     def __init__(self, nome='', azione='', metodo="POST", enctype='', dbmgr=None):
         FForm.__init__(self, nome, azione, metodo, enctype, dbmgr)
-
         self.detailForms = []
         # Contenitore delle dbe figlie della corrente: 'nomeform'=>lista dbe figli
         self.childs = {}
 
     def addDetail(self, aDetail, cardinality="n"):
         """Aggiunge una form di dettaglio.
-
         @param aDetail istanza di form OPPURE stringa col nome della classe FForm da istanziare
         @param cardinality 1=solo un figlio n=n-figli"""
-
         self.detailForms.append(aDetail)
 
     def getDetailFormsCount(self):
-
         return len(self.detailForms)
 
     def getDetailName(self, i):
@@ -358,13 +323,11 @@ class FMasterDetail(FForm):
     def getDetail(self, i):
         if type(self.detailForms[i]) == str:
             ret = (self.getFormFactory().getInstance(self.detailForms[i], dbmgr=self.dbmgr))
-
             return ret
         else:
             return self.detailForms[i]
 
     def setValues(self, valori, doFetchChilds=False):
-
         FForm.setValues(self, valori)
         if doFetchChilds:
             self.fetchChilds()
@@ -380,7 +343,8 @@ class FMasterDetail(FForm):
         for detail in self.detailForms:
             print "FMasterDetail.fetchChilds: Detail: %s" % (detail)
             childForm = self.getFormFactory().getInstance(detail, dbmgr=self.dbmgr)
-            print "FMasterDetail.fetchChilds: childForm: %s - %s - %s" % (childForm.getName(), childForm.getDetailTitle(), childForm.getListTitle())
+            print "FMasterDetail.fetchChilds: childForm: %s - %s - %s" % (
+                childForm.getName(), childForm.getDetailTitle(), childForm.getListTitle())
             childDbe = childForm.getDBE(self.dbmgr)
             childDbe.readFKFrom(mydbe)
             print "FMasterDetail.fetchChilds: childDbe=%s" % (childDbe)
@@ -405,14 +369,14 @@ class FMasterDetail(FForm):
 
 
 class FAssociation(FForm):
+
     """Classe base per le form responsabili della mappatura di una DBE che rappresenta una
     associazione N-M su DB. Questa associazione puo' presentare N-attributi, renderizzabili tramite
     fields."""
-    def __init__(self, dbeassociation, from_form, to_form, nome='', azione='', metodo="POST"):
 
+    def __init__(self, dbeassociation, from_form, to_form, nome='', azione='', metodo="POST"):
         FForm.__init__(self, nome, azione, metodo)
         self.dbeassociation = dbeassociation
-
         self.from_form = from_form
         self.to_form = to_form
 
@@ -427,6 +391,7 @@ class FAssociation(FForm):
 
 
 class FormFactory:
+
     """Returns the correct class for the given dbe name."""
 
     def __init__(self, verbose=False):
@@ -440,14 +405,13 @@ class FormFactory:
         if clazz is not None:
             istanza = clazz('', '', 'POST', '', dbmgr)
         else:
-            exec(compile("from %s import %s\nistanza = %s()" % (package, aClassName, aClassName), "formulatorcompile.py", "exec"))
+            exec(compile("from %s import %s\nistanza = %s()" % (package, aClassName, aClassName),
+                         "formulatorcompile.py", "exec"))
         self.classname2type[aClassName] = clazz  # aClassName
         mydbe = istanza.getDBE(dbmgr)
         if mydbe is None:
-
             return
-        if self.dbename2type.has_key(mydbe.getTypeName()):
-
+        if mydbe.getTypeName() in self.dbename2type:
             return
         self.dbename2type[mydbe.getTypeName()] = clazz  # aClassName
         self.dbename2classname[mydbe.getTypeName()] = aClassName
@@ -456,8 +420,7 @@ class FormFactory:
         return self.classname2type.keys()
 
     def getInstance(self, aClassname, nome='', azione='', metodo="POST", dbmgr=None):
-        if self.classname2type.has_key(aClassname):
-
+        if aClassname in self.classname2type:
             ret = (self.classname2type[aClassname])(nome, azione, metodo, '', dbmgr)
             ret.setFormFactory(self)
             return ret
@@ -465,8 +428,7 @@ class FormFactory:
             return FForm(nome, azione, metodo, '', dbmgr)
 
     def getInstanceByDBEName(self, aDBEName, nome='', azione='', metodo="POST", enctype='', dbmgr=None):
-        if self.dbename2type.has_key(aDBEName):
-
+        if aDBEName in self.dbename2type:
             ret = (self.dbename2type[aDBEName])(nome, azione, metodo, enctype, dbmgr)
             ret.setFormFactory(self)
             return ret
@@ -498,7 +460,6 @@ class FormFactory:
         #print "# ##################################"
         exec(compile(src, "remoteformschema.py", "exec"))
         #print "# ##################################"
-
         #print dir()
         #print dir(FUser)
         #print FUser.__module__
@@ -525,13 +486,11 @@ class FFileField(FField):
     def __init__(self, aNomeCampo, aTitle, aDescription, dest_directory='', aSize=1, aLength=20,
                  aValore='', aClasseCss=None):
         """@param dest_directory directory dove memorizzare i files."""
-
         FField.__init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength, aValore, aClasseCss)
         self.dest_directory = dest_directory
 
     def generaFilename(self):
         dbe = self.myform.getDBE()
-
         dbe.setValuesDictionary(self.myform.getValues())
         return dbe.generaFilename()
 
@@ -597,7 +556,6 @@ class FList(FField):
         multiselezione"""
         FField.__init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength, aValore, aClasseCss)
         self.listaValori = listaValori
-
         self.altezza = altezza
         self.multiselezione = multiselezione
 
@@ -605,13 +563,11 @@ class FList(FField):
         raise Exception("TODO")
 
     def render_view(self):
-
         raise Exception("TODO")
 
 
 class FCheckBox(FField):
     def __init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength=20, aValore='',
-
                  aClasseCss=None, listaValori={}, multiselezione=False, stringa_separatrice="||",
                  tipo_campo='s'):
         """listaValori = {  k=>v  }
@@ -622,7 +578,6 @@ class FCheckBox(FField):
         FField.__init__(self, aNomeCampo, aTitle, aDescription, aSize, aLength, aValore, aClasseCss)
         self.listaValori = listaValori
         self.multiselezione = multiselezione
-
         self.stringa_separatrice = stringa_separatrice
         self.tipo = tipo_campo
 
@@ -633,11 +588,10 @@ class FCheckBox(FField):
             self.aValore = v
 
     def readValueFromRequest(self, aRequest):
-        if aRequest.has_key('field_%s' % self.aNomeCampo):
+        if 'field_%s' % self.aNomeCampo in aRequest:
             self.setValue(aRequest['field_%s' % self.aNomeCampo])
 
     def render(self):
-
         raise Exception("TODO")
 
     def render_view(self):
@@ -661,10 +615,9 @@ class FTextArea(FField):
 
 
 class FDateTime(FField):
-    def __init__(self, aNomeCampo, aTitle, aDescription, aValore, aClasseCss=None,
-                 aVisualizzaData=True, aVisualizzaOra=True):
-        FField.__init__(self, aNomeCampo, aTitle, aDescription, 0, 0, aValore, aClasseCss,
-                        myform=None, mytipo='d')
+    def __init__(self, aNomeCampo, aTitle, aDescription, aValore, aClasseCss=None, aVisualizzaData=True,
+                 aVisualizzaOra=True):
+        FField.__init__(self, aNomeCampo, aTitle, aDescription, 0, 0, aValore, aClasseCss, myform=None, mytipo='d')
         self.aVisualizzaData = aVisualizzaData
         self.aVisualizzaOra = aVisualizzaOra
 
@@ -674,33 +627,30 @@ class FDateTime(FField):
 
     def readValueFromRequest(self, aRequest):
         tmpdata = ''
-        if aRequest.has_key("subfield_%s_date" % self.aNomeCampo):
+        if "subfield_%s_date" % self.aNomeCampo in aRequest:
             tmpdata = aRequest["subfield_%s_date" % self.aNomeCampo]
         else:
             anno = ''
-            if aRequest.has_key("subfield_%s_year" % self.aNomeCampo):
+            if "subfield_%s_year" % self.aNomeCampo in aRequest:
                 anno = aRequest["subfield_%s_year" % self.aNomeCampo]
             mese = ''
-            if aRequest.has_key("subfield_%s_month" % self.aNomeCampo):
+            if "subfield_%s_month" % self.aNomeCampo in aRequest:
                 mese = aRequest["subfield_%s_month" % self.aNomeCampo]
             if len(mese) == 1:
-
                 mese = "0%s" % mese
             giorno = ''
-
-            if aRequest.has_key("subfield_%s_day" % self.aNomeCampo):
+            if "subfield_%s_day" % self.aNomeCampo in aRequest:
                 giorno = aRequest["subfield_%s_day" % self.aNomeCampo]
-
             if len(giorno) == 1:
                 giorno = "0%s" % giorno
             if len(anno) > 0 and len(mese) > 0 and len(giorno) > 0:
                 tmpdata = "%s/%s/%s" % (anno, mese, giorno)
         tmpora = ''
         ore = ''
-        if aRequest.has_key("subfield_%s_hour" % self.aNomeCampo):
+        if "subfield_%s_hour" % self.aNomeCampo in aRequest:
             ore = aRequest["subfield_%s_hour" % self.aNomeCampo]
         minuti = ''
-        if aRequest.has_key("subfield_%s_minute" % self.aNomeCampo):
+        if "subfield_%s_minute" % self.aNomeCampo in aRequest:
             minuti = aRequest["subfield_%s_minute" % self.aNomeCampo]
         if len(ore) > 0 and len(minuti) > 0:
             tmpora = "%s:%s" % (ore, minuti)
@@ -733,7 +683,6 @@ class FKField(FField):
     def __init__(self, aNomeCampo, aTitle, aDescription, aValore=None, aClasseCss=None, mydbe=None,
                  myFK=None, description_columns=[], destform=None, viewmode='select',
                  aDescription_glue=" - ", aAltezza=1, aMultiselezione=False):
-
         """@param viewmode { 'select','readonly','distinct' }.
         @param destform nome della classe formulator del tipo di destinazione
         @param description_columns array con le colonne descrizione della tabella puntata"""
@@ -748,11 +697,9 @@ class FKField(FField):
         self.description_glue = aDescription_glue
         self.altezza = aAltezza
         self.multiselezione = aMultiselezione
-
         self.listaValori = None
 
     def GetListaValori(self, refresh=False):
-
         if self.listaValori is None or refresh:
             self.listaValori = {}
             self.listaValori[""] = ""
@@ -762,10 +709,8 @@ class FKField(FField):
                 for dbe in lista:
                     chiavi = dbe.getKeys().keys()
                     chiave_array = ["%s" % dbe.getValue(chiave) for chiave in chiavi]
-
                     description_array = [dbe.getValue(chiave) for chiave in self.description_columns]
                     self.listaValori["_".join(chiave_array)] = self.description_glue.join(description_array)
-
         return self.listaValori
 
     def renderlink(self):
@@ -778,7 +723,6 @@ class FKField(FField):
             if len(lista) == 1:
                 mydbe = lista[0]
                 description_array = []
-
                 for chiave in self.description_columns:
                     description_array.append(mydbe.getValue(chiave))
                 link_desc = self.description_glue.join(description_array)
@@ -810,6 +754,7 @@ class FKObjectField(FKField):
 
     """A Foreign Key pointing to multiple destinations.
     @param destform se null ==> cerca tra tutte le FObject, nella form specificata altrimenti"""
+
     def __init__(self, aNomeCampo, aTitle, aDescription, aValore=None, aClasseCss=None, mydbe=None,
                  myFK=None, description_columns=[], destform=None, viewmode='select',
                  aDescription_glue=" - ", aAltezza=1, aMultiselezione=False):

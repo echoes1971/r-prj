@@ -564,7 +564,7 @@ class DBMgr:
                     try:
                         cursor = self.getConnection().cursor()
                         cursor.execute(myquery)
-                        if self._connProvider.getDBType()=="POSTGRESQL":
+                        if self._connProvider.getDBType() == "POSTGRESQL":
                             cursor.execute("commit")
                     except Exception, e:
                         if self._verbose or True:
@@ -638,12 +638,12 @@ class DBMgr:
     def column2sql(self,  mydef,  isPrimaryKey):
             mytype = self._connProvider.dbeType2dbType(mydef[0])
             constraints = ""
-            if len(mydef)>1:
+            if len(mydef) > 1:
                 constraints = mydef[1]
-            not_null=""
+            not_null = ""
             if isPrimaryKey:
-                not_null="not null"
-            if len(constraints)==0:
+                not_null = "not null"
+            if len(constraints) == 0:
                 constraints = not_null
             constraints = self._connProvider.dbeConstraints2dbConstraints(constraints)
             return "%s %s" % (mytype, constraints)
@@ -655,7 +655,7 @@ class DBMgr:
         tmp = "%s" % datetime
         tmp = tmp.replace('/', '-')
         # 2013-04-09: start.
-        if len(tmp)==8:
+        if len(tmp) == 8:
             return "0000-00-00 %s" % (tmp)
         # 2013-04-09: end.
         return tmp[0:16]
@@ -672,11 +672,11 @@ class DBMgr:
         return self._buildTableName(dbe)
 
     def _buildTableName(self, dbe):
-        tablename=''
+        tablename = ''
         __schema = dbe.getSchemaName()
-        if __schema is None or __schema=="":
+        if __schema is None or __schema == "":
             __schema = self._schema
-        if __schema>"":
+        if __schema > "":
             tablename = "%s_%s" % (__schema, dbe.getTableName())
         return tablename
 
@@ -684,7 +684,7 @@ class DBMgr:
         ret = []
         chiavi = dbe.getKeys()
         for c in chiavi.keys():
-            if chiavi[c]=='number':
+            if chiavi[c] == 'number':
                 ret.append("%s=%s" % (c, getattr(dbe, c)))
             else:
                 ret.append("%s='%s'" % (c, getattr(dbe, c)))
@@ -696,8 +696,8 @@ class DBMgr:
 
     def _buildInsertString(self, dbe):
         nomicampi = dbe.getNames()
-        tmpnomi=[]
-        tmpvalori=[]
+        tmpnomi = []
+        tmpvalori = []
         for n in nomicampi:
             v = dbe.getValue(n)
             if v is None: continue
@@ -726,13 +726,13 @@ class DBMgr:
     def _buildUpdateString(self, dbe):
         nomicampi = dbe.getNames()
         chiavi = dbe.getKeys()
-        setstring=[]
+        setstring = []
         for n in nomicampi:
             v = dbe.getValue(n)
             if not (n in chiavi):
                 if v is None:
                     continue
-                elif isinstance(v,str) or isinstance(v, unicode):
+                elif isinstance(v, str) or isinstance(v, unicode):
                     if not isDateTime(v):
                         setstring.append("%s=%s" % (n, self._escapeString(v)))
                     else:
@@ -742,9 +742,9 @@ class DBMgr:
                         setstring.append("%s=1" % (n))
                     else:
                         setstring.append("%s=0" % (n))
-                elif v.__class__.__name__=='DateTime' or isinstance(v, datetime.datetime):
+                elif v.__class__.__name__ == 'DateTime' or isinstance(v, datetime.datetime):
                     setstring.append("%s='%s'" % (n, self._formatDateTime(v)))
-                elif v.__class__.__name__=='Time' or isinstance(v, datetime.time):
+                elif v.__class__.__name__ == 'Time' or isinstance(v, datetime.time):
                     setstring.append("%s='%s'" % (n, self._formatDateTime(v)))
                 else:
                     setstring.append("%s=%s" % (n, v))
@@ -767,19 +767,19 @@ class DBMgr:
             if v is None:
                 if self._connProvider.getDBType() == "POSTGRESQL":
                     clausole.append("%s is null" % (n))
-            elif v=='null':
+            elif v == 'null':
                 clausole.append("%s is null" % (n))
             elif isinstance(v, str) or isinstance(v, unicode):
                 if is_from:
-                    if len(v)>0: clausole.append("%s>='%s'" % (n[5:], v))
+                    if len(v) > 0: clausole.append("%s>='%s'" % (n[5:], v))
                 elif is_to:
-                    if len(v)>0: clausole.append("%s<='%s'" % (n[3:], v))
-                elif v.find('0000-00-00 00:00')>=0:
-                    clausole.append("(%s='%s' or %s is null)" % (n,v,n))
+                    if len(v) > 0: clausole.append("%s<='%s'" % (n[3:], v))
+                elif v.find('0000-00-00 00:00') >= 0:
+                    clausole.append("(%s='%s' or %s is null)" % (n, v, n))
                 elif uselike:
-                    if len(v)>0:
+                    if len(v) > 0:
                         myv = "%%%s%%" % v
-                        if v.find('*')>=0:
+                        if v.find('*') >= 0:
                             myv = "%s" % (v.replace("*", "%%"))
                         if case_sensitive:
                             clausole.append("%s like '%s'" % (n, myv))
@@ -798,7 +798,7 @@ class DBMgr:
 
     def _buildSelectString(self,  dbe, uselike=1, case_sensitive=True):
         clausole = self._buildWhereCondition(dbe, uselike, case_sensitive)
-        if len(clausole)>0:
+        if len(clausole) > 0:
             query = "select * from %s where %s" % (self._buildTableName(dbe), string.join(clausole, " and "))
         else:
             query = "select * from %s" % (self._buildTableName(dbe))
@@ -944,7 +944,7 @@ class DBMgr:
             names = None
             try:
                 names = self._description2names(cursor.description)
-                if self._connProvider.getDBType()=="MYSQL":
+                if self._connProvider.getDBType() == "MYSQL":
                     if self._verbose: print "DBMgr.select: found %s rows." % (numres)
                     for i in range(0, numres):
                         valori = cursor.fetchone()
@@ -957,13 +957,13 @@ class DBMgr:
                         ret.append(self.getDBEFactory()(tablename, names=names, values=listavalori[i]))
             except TypeError, e:
                 if self._verbose:
-                    print "DBMgr.select: ECCEZIONE=%s (%s)" % (e,searchString)
+                    print "DBMgr.select: ECCEZIONE=%s (%s)" % (e, searchString)
                     print "".join(traceback.format_tb(sys.exc_info()[2]))
         except Exception, e:
-            if self._connProvider.getDBType()=="POSTGRESQL":
+            if self._connProvider.getDBType() == "POSTGRESQL":
                 cursor.execute("rollback")
             if self._verbose:
-                print "DBMgr.select: ECCEZIONE=%s (%s)" % (e,searchString)
+                print "DBMgr.select: ECCEZIONE=%s (%s)" % (e, searchString)
                 print "".join(traceback.format_tb(sys.exc_info()[2]))
             raise e
         cursor.close()
@@ -992,7 +992,7 @@ class DBMgr:
             dbe._after_delete(self)
         except Exception, e:
             if self._verbose:
-                print "DBMgr.delete: ECCEZIONE=%s (%s)" % (e,query)
+                print "DBMgr.delete: ECCEZIONE=%s (%s)" % (e, query)
                 print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
                 self.getConnection().query(query)
@@ -1014,7 +1014,7 @@ class DBMgr:
                 raise DBLayerException("Proxy connection down!")
             # 2012.04.02: end.
             return self._connProvider.search(dbe, uselike, orderby, ignore_deleted, full_object)
-        query = self._buildSelectString(dbe,uselike)
+        query = self._buildSelectString(dbe, uselike)
         if orderby is not None: query += " ORDER BY %s" % (orderby)
         if self._verbose: print "DBMgr.search: query=%s" % query
         return self.select(dbe.getTableName(), query)
@@ -1023,15 +1023,15 @@ class DBMgr:
         nomeTabella = "%s_seq_id" % (self._schema)
         tmp = self.select(nomeTabella, "select id from %s where name=''" % (nomeTabella))
         myid = 1
-        if len(tmp)>0:
+        if len(tmp) > 0:
             myid = tmp[0].getValue('id') + 1
-            self.select(nomeTabella, "insert into %s (id,name) values (%s,'')" % (nomeTabella,myid))
+            self.select(nomeTabella, "insert into %s (id,name) values (%s,'')" % (nomeTabella, myid))
         else:
-            self.select(nomeTabella, "update %s set id=%s where name=''" % (nomeTabella,myid))
+            self.select(nomeTabella, "update %s set id=%s where name=''" % (nomeTabella, myid))
         return myid
 
     def getNextUuid(self,  dbe, length=16):
-        return (("%s" % uuid.uuid4()).replace('-',''))[:16]
+        return (("%s" % uuid.uuid4()).replace('-', ''))[:16]
 
     def copy(self,  dbe):
         """Copy the given DBE."""
@@ -1043,7 +1043,7 @@ class DBMgr:
             return self._connProvider.copy(dbe)
         # 1. Read the whole DBE from db
         tmp = self.search(dbe, uselike=0)
-        if len(tmp)!=1: raise DBLayerException("Unable to copy the given DBE; found %s instances." % (len(tmp)))
+        if len(tmp) != 1: raise DBLayerException("Unable to copy the given DBE; found %s instances." % (len(tmp)))
         mydbe = tmp[0]
         # 2. Resetting keys
         mydbe.cleanKeyFields()
@@ -1078,15 +1078,15 @@ class DBMgr:
         if dbe.isNew():
             return False
         tmp = self.searchByKeys(dbe)
-        return len(tmp)>0
+        return len(tmp) > 0
 
     def isDateTime(self, s):
         return isDateTime(s)
 
     def datetime2string(self,  dt):
         tmpdata = "%s" % (dt)
-        tmpdata = "%s-%s-%s 00:00" % (tmpdata[:4],tmpdata[5:7],tmpdata[8:10])
-        return tmpdata.replace('/','-')
+        tmpdata = "%s-%s-%s 00:00" % (tmpdata[:4], tmpdata[5:7], tmpdata[8:10])
+        return tmpdata.replace('/', '-')
 
     def string2datetime(self,  dt):
         return DateTime(dt)
@@ -1096,8 +1096,8 @@ class DBMgr:
 
     def convertDate(self,  dt):
         tmpdata = "%s" % (dt)
-        tmpdata = "%s-%s-%s" % (tmpdata[8:10],tmpdata[5:7],tmpdata[:4])
-        return tmpdata.replace('/','-')
+        tmpdata = "%s-%s-%s" % (tmpdata[8:10], tmpdata[5:7], tmpdata[:4])
+        return tmpdata.replace('/', '-')
 
     def getLastMessages(self):
         return self.lastMessages
@@ -1112,50 +1112,50 @@ class DBMgr:
             return
         cerca = self.getClazzByTypeName('DBEUserGroup')()
         cerca.readFKFrom(self.user)
-        lista=self.search(cerca, uselike=0)
-        lista_gruppi=[]
+        lista = self.search(cerca, uselike=0)
+        lista_gruppi = []
         for g in lista:
-            lista_gruppi.append("%s" %g.getValue('group_id'))
-        if not "%s" %self.user.getValue('group_id') in lista_gruppi:
-            lista_gruppi.append("%s" %self.user.getValue('group_id'))
+            lista_gruppi.append("%s" % g.getValue('group_id'))
+        if not "%s" % self.user.getValue('group_id') in lista_gruppi:
+            lista_gruppi.append("%s" % self.user.getValue('group_id'))
         self.setUserGroupsList(lista_gruppi)
 
-    def login(self, user,pwd):
+    def login(self, user, pwd):
         if self._connProvider.isProxy():
-            self.user = self._connProvider.login(user,pwd)
+            self.user = self._connProvider.login(user, pwd)
             if self.user is None:
                 return None
             self._loadUserGroups()
             return self.user
-        if pwd is None or len(pwd)==0 or user is None or len(user)==0:
+        if pwd is None or len(pwd) == 0 or user is None or len(user) == 0:
             raise DBLayerException("Missing username or password")
-        cerca = self.getClazzByTypeName('DBEUser')(attrs={'login':user,'pwd':pwd})
+        cerca = self.getClazzByTypeName('DBEUser')(attrs={'login': user, 'pwd': pwd})
         ret = []
         try:
-            ret = self.search(cerca,uselike=False)
+            ret = self.search(cerca, uselike=False)
         except Exception, e:
             if self._verbose: print "DBMgr.login: ECCEZIONE=%s" % (e)
             if self._verbose: print "".join(traceback.format_tb(sys.exc_info()[2]))
             try:
                 self.initDB()
-                newuser = self.getClazzByTypeName('DBEUser')(attrs={'login':user,'pwd':pwd})
+                newuser = self.getClazzByTypeName('DBEUser')(attrs={'login': user, 'pwd': pwd})
                 newuser = self.insert(newuser)
-                searchGroup = self.getClazzByTypeName('DBEGroup')(attrs={'name':user})
-                newgroup = self.search(searchGroup,uselike=False)[0]
+                searchGroup = self.getClazzByTypeName('DBEGroup')(attrs={'name': user})
+                newgroup = self.search(searchGroup, uselike=False)[0]
                 if self._verbose: print "DBMgr.login: newuser=%s" % (newuser)
                 newfolder = self.getClazzByTypeName('DBEFolder')(attrs={
-                    'owner':newuser.getValue('id'),
-                    'group_id':newgroup.getValue('id'),
-                    'creator':newuser.getValue('id'),
-                    'last_modify':newuser.getValue('id'),
-                    'name':user})
+                    'owner': newuser.getValue('id'),
+                    'group_id': newgroup.getValue('id'),
+                    'creator': newuser.getValue('id'),
+                    'last_modify': newuser.getValue('id'),
+                    'name': user})
                 newfolder = self.insert(newfolder)
                 if self._verbose: print "DBMgr.login: newfolder=%s" % (newfolder)
-                ret = self.search(cerca,uselike=False)
+                ret = self.search(cerca, uselike=False)
             except Exception, e1:
                 if self._verbose: print "DBMgr.login: ECCEZIONE=%s" % (e1)
                 if self._verbose: print "".join(traceback.format_tb(sys.exc_info()[2]))
-        if len(ret)==1:
+        if len(ret) == 1:
             self.user = ret[0]
             self._loadUserGroups()
         return self.user
@@ -1173,13 +1173,13 @@ class DBMgr:
         if not self.getDBEUser() is None:
             u = self.getDBEUser().getValue('login')
         h = "%s" % self.getConnectionProvider().getHost()
-        if d=="SQLite":
+        if d == "SQLite":
             h = ("%s" % self.getConnectionProvider().getDB()).split(os.path.sep)[-1]
-        if h.find("://")>0:
+        if h.find("://") > 0:
             _url = h.split("://")
-            if len(_url)>1:
-                h = "%s:%s" % (_url[0],_url[1].split("/")[0])
-        return "%s@%s" % (u,h)
+            if len(_url) > 1:
+                h = "%s:%s" % (_url[0], _url[1].split("/")[0])
+        return "%s@%s" % (u, h)
 
     def getDBEUser(self):
         return self.user
@@ -1201,35 +1201,35 @@ class DBMgr:
 
     def hasGroup(self, group_id):
         """ The logged user has the requested group_id ?."""
-        return "%s" %group_id in self.user_groups_list
+        return "%s" % group_id in self.user_groups_list
 
     def addGroup(self, group_id):
         if group_id not in self.user_groups_list:
             self.user_groups_list.append(group_id)
 
-    def getFormSchema(self, language='python',aClassname=''):
+    def getFormSchema(self, language='python', aClassname=''):
         if self._connProvider.isProxy():
             # 2012.04.02: start.
             if not self.isLoggedIn() and not self.relogin():
                 raise DBLayerException("Proxy connection down!")
             # 2012.04.02: end.
-            return self._connProvider.getFormSchema(language,aClassname)
+            return self._connProvider.getFormSchema(language, aClassname)
         raise DBLayerException("DBMgr.getFormSchema: TODO")
 
-    def getDBSchema(self, language='python',aClassname=''):
+    def getDBSchema(self, language='python', aClassname=''):
         if self._connProvider.isProxy():
             # 2012.04.02: start.
             if not self.isLoggedIn() and not self.relogin():
                 raise DBLayerException("Proxy connection down!")
             # 2012.04.02: end.
-            return self._connProvider.getDBSchema(language,aClassname)
+            return self._connProvider.getDBSchema(language, aClassname)
         raise DBLayerException("DBMgr.getDBSchema: TODO")
 
     def uploadFile(self, local_filename):
         return self._connProvider.uploadFile(local_filename)
 
-    def downloadFile(self, remote_filename,local_filename,view_thumbnail=False):
-        return self._connProvider.downloadFile(remote_filename,local_filename,view_thumbnail)
+    def downloadFile(self, remote_filename, local_filename, view_thumbnail=False):
+        return self._connProvider.downloadFile(remote_filename, local_filename, view_thumbnail)
 
 
 class DBEFactory:
@@ -1240,11 +1240,11 @@ class DBEFactory:
         self._cache = OrderedDict()  # {}
         self._cache_by_typename = OrderedDict()  # {}
         self.register('default', DBEntity)
-        self.verbose=verbose
+        self.verbose = verbose
 
     def register(self,  tablename, clazz):
-        self._cache[tablename]=clazz
-        self._cache_by_typename[clazz().getTypeName()]=clazz
+        self._cache[tablename] = clazz
+        self._cache_by_typename[clazz().getTypeName()] = clazz
 
     def getRegisteredTypes(self):
         return self._cache
@@ -1254,7 +1254,7 @@ class DBEFactory:
         if tablename in self._cache:
             ret = self._cache[tablename]
         else:
-            ret=self._cache['default']
+            ret = self._cache['default']
         return ret
 
     def getClazzByTypeName(self,  typename, case_sensitive=True):
@@ -1268,7 +1268,7 @@ class DBEFactory:
             typename_lower = typename.lower()
             if typename_lower in chiavi:
                 for k in self._cache_by_typename.keys():
-                    if k.lower()==typename_lower:
+                    if k.lower() == typename_lower:
                         ret = self._cache_by_typename[k]
                         break
         if self.verbose: print "DBEFactory.getClazzByTypeName: ret=%s" % (ret)
@@ -1289,12 +1289,12 @@ def isDateTime(s):
     # 2005-04-12 00:00
     # 2012/1/21 17:51:56
     try:
-        if s[4]=='-' and s[7]=='-' and (s[13]==':' or len(s)==10):
+        if s[4] == '-' and s[7] == '-' and (s[13] == ':' or len(s) == 10):
             return True
         else:
-            data,ora = s.split(" ")
-            if (len(data.split("/"))==3 or len(data.split("-"))==3) \
-                    and (len(ora.split(":"))>=2 or len(ora.split("."))>=2):
+            data, ora = s.split(" ")
+            if (len(data.split("/")) == 3 or len(data.split("-")) == 3) \
+                    and (len(ora.split(":")) >= 2 or len(ora.split(".")) >= 2):
                 return True
             return False
     except Exception:
@@ -1302,42 +1302,41 @@ def isDateTime(s):
 
 
 def string2datetime(s):
-    if len(s)>=15:  # len(s)>=16:
-        data,ora = s.split(" ")
-        _y,_m,_d = 0,0,0
-        if data.find("/")>=0:
-            _y,_m,_d = data.split("/")
-        elif data.find("-")>=0:
-            _y,_m,_d = data.split("-")
-        if ora.find(":")>=0:
-            _h,_M = (ora.split(":"))[:2]
-        elif ora.find(".")>=0:
-            _h,_M = (ora.split("."))[:2]
+    if len(s) >= 15:  # len(s)>=16:
+        data, ora = s.split(" ")
+        _y, _m, _d = 0, 0, 0
+        if data.find("/") >= 0:
+            _y, _m, _d = data.split("/")
+        elif data.find("-") >= 0:
+            _y, _m, _d = data.split("-")
+        if ora.find(":") >= 0:
+            _h, _M = (ora.split(":"))[:2]
+        elif ora.find(".") >= 0:
+            _h, _M = (ora.split("."))[:2]
         try:
-            _y,_m,_d,_h,_M = int(_y),int(_m),int(_d),int(_h),int(_M)
+            _y, _m, _d, _h, _M = int(_y), int(_m), int(_d), int(_h), int(_M)
         except Exception, e:
-            #print "s:", s
             return None
-        if _y==0 and _m==0 and _d==0 and _h==0 and _M==0:
+        if _y == 0 and _m == 0 and _d == 0 and _h == 0 and _M == 0:
             return None
-        if _y==0 and _m==0 and _d==0:
-            return datetime.time(_h,_M)
+        if _y == 0 and _m == 0 and _d == 0:
+            return datetime.time(_h, _M)
         try:
-            return datetime.datetime(_y,_m,_d,_h,_M)
+            return datetime.datetime(_y, _m, _d, _h, _M)
         except Exception, e:
-            raise DBLayerException("string2datetime(%s): exception=%s" % (s,e))
+            raise DBLayerException("string2datetime(%s): exception=%s" % (s, e))
     else:
-        if s.find("/")>=0:
-            _y,_m,_d = s.split("/")
-        elif s.find("-")>=0:
-            _y,_m,_d = s.split("-")
-        _y,_m,_d = int(_y),int(_m),int(_d)
-        if _y==0 and _m==0 and _d==0:
+        if s.find("/") >= 0:
+            _y, _m, _d = s.split("/")
+        elif s.find("-") >= 0:
+            _y, _m, _d = s.split("-")
+        _y, _m, _d = int(_y), int(_m), int(_d)
+        if _y == 0 and _m == 0 and _d == 0:
             return None
-        return datetime.datetime(_y,_m,_d)
+        return datetime.datetime(_y, _m, _d)
 
 
-def createConnection(aUrl,aVerbose=False):
+def createConnection(aUrl, aVerbose=False):
     myconn = None
     myurl = aUrl
     if myurl.startswith("http"):
@@ -1348,7 +1347,7 @@ def createConnection(aUrl,aVerbose=False):
         else:
             myurl = "%s/xmlrpc_server.php" % (myurl)
         from rprj.dblayer.xmlrpc import XmlrpcConnectionProvider
-        myconn = XmlrpcConnectionProvider(myurl,'','','',aVerbose)  # 1)
+        myconn = XmlrpcConnectionProvider(myurl, '', '', '', aVerbose)
     elif myurl.startswith("json"):
         # Quick patch: if there is a port, then don't add the default page
         if not myurl.find(":"):
@@ -1359,23 +1358,23 @@ def createConnection(aUrl,aVerbose=False):
             else:
                 myurl = "%s/jsonserver.php" % (myurl)
         from rprj.dblayer.jsonconn import JsonConnectionProvider
-        myconn = JsonConnectionProvider(myurl,'','','',aVerbose)  # 1)
+        myconn = JsonConnectionProvider(myurl, '', '', '', aVerbose)  # 1)
     elif myurl.startswith("mysql"):
-        xx,host, db, user, pwd = myurl.split(":")
+        xx, host, db, user, pwd = myurl.split(":")
         from rprj.dblayer.mydb import MYConnectionProvider
-        myconn = MYConnectionProvider(host, db, user, pwd,aVerbose)
+        myconn = MYConnectionProvider(host, db, user, pwd, aVerbose)
     elif myurl.startswith("postgresql"):
-        xx,host, db, user, pwd = myurl.split(":")
+        xx, host, db, user, pwd = myurl.split(":")
         from rprj.dblayer.pgdb import PGConnectionProvider
-        myconn = PGConnectionProvider(host, db, user, pwd,aVerbose)
+        myconn = PGConnectionProvider(host, db, user, pwd, aVerbose)
     elif myurl.startswith("sqlite"):
-        tmp_path=myurl.split(":")
+        tmp_path = myurl.split(":")
         path = "".join(tmp_path[1:])
-        if len(tmp_path)>2:
-            tmp_path[1] = "%s:" %tmp_path[1]
+        if len(tmp_path) > 2:
+            tmp_path[1] = "%s:" % tmp_path[1]
             path = "".join(tmp_path[1:])
         if path.startswith("///"):
             path = path[2:]
         from rprj.dblayer.sqlitedb import SQLiteConnectionProvider
-        myconn = SQLiteConnectionProvider('',path,'','',aVerbose)
+        myconn = SQLiteConnectionProvider('', path, '', '', aVerbose)
     return myconn

@@ -22,26 +22,32 @@ from rprj.dblayer import *
 
 from MySQLdb import *
 
+
 class MYConnectionProvider(DBConnectionProvider):
-	"""MySQL Connection provider"""
-	__super_init = DBConnectionProvider.__init__
-	def __init__(self, host, db, user, pwd, verbose=0):
-		self.__super_init( host, db, user, pwd, verbose )
-	def getConnection(self):
-		if self._conn is None:
-			try:
-				self._conn = connect( host=self._host, db=self._db, \
-										user=self._user, passwd=self._pwd )
-			except Exception, e:
-				if self._verbose: print "MYConnectionProvider.getConnection: Error=%s" % (e)
-		return self._conn
-	def freeConnection(self,conn):
-		try:
-			conn.close()
-		except Exception, e:
-			if self._verbose: print "MYConnectionProvider.freeConnection: Error=%s" % (e)
-		del conn
-		del self._conn
-		self._conn = None
-	def getDBType(self):
-		return "MYSQL"
+
+    """MySQL Connection provider"""
+
+    __super_init = DBConnectionProvider.__init__
+
+    def __init__(self, host, db, user, pwd, verbose=0):
+        self.__super_init(host, db, user, pwd, verbose)
+
+    def getConnection(self):
+        if self._conn is None:
+            try:
+                self._conn = connect(host=self._host, db=self._db, user=self._user, passwd=self._pwd)
+            except Exception, e:
+                if self._verbose: print "MYConnectionProvider.getConnection: Error=%s" % (e)
+        return self._conn
+
+    def freeConnection(self, conn):
+        try:
+            conn.close()
+        except Exception, e:
+            if self._verbose: print "MYConnectionProvider.freeConnection: Error=%s" % (e)
+        del conn
+        del self._conn
+        self._conn = None
+
+    def getDBType(self):
+        return "MYSQL"
