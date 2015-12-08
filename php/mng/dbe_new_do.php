@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2011 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: dbe_new_do.php $
  * @package rproject
@@ -47,13 +47,11 @@ if ($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
 $dbetype = $_REQUEST['dbetype'];
 $formtype = $_REQUEST['formtype'];
 
-
 $myform = $formulator->getInstance($formtype,'xxx','dbe_modify.php'); // 2011.04.04 eval("\$myform = new $formtype('xxx','dbe_modify.php');");
 $myform->readValuesFromRequest( $_REQUEST );
 
 $mydbe = $dbmgr->getInstance($dbetype,$aNames=null,$aValues=null,$aAttrs=$myform->getValues()); // 2011.04.04 eval("\$mydbe = new $dbetype( null, null, null, \$myform->getValues(), null);");
 $mydbe = $dbmgr->insert( $mydbe );
-
 
 $cgi_params=array();
 $cgi_params[]="dbetype=$dbetype";
@@ -69,7 +67,7 @@ if($mydbe==null) {
 $redir_string = "Location: http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
                       . dirname($_SERVER['PHP_SELF'])
                       . "/$redir_page?".implode("&",$cgi_params);
-// echo "redir string: $redir_string<br/>\n";
+//echo "redir string: $redir_string<br/>\n";
 // exit();
 
 header( $redir_string );

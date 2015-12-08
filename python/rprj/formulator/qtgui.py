@@ -556,7 +556,7 @@ class FKField(FField, rprj.formulator.FKField):
         searchDialog = QtGui.QDialog(self.fieldWidget)
         searchDialog.setModal(True)
         searchDialog.setWindowTitle(
-            QtGui.QApplication.translate("FKFiels", "Select", None, QtGui.QApplication.UnicodeUTF8))
+            QtGui.QApplication.translate("FKField", "Select", None, QtGui.QApplication.UnicodeUTF8))
         verticalLayout = QtGui.QVBoxLayout(searchDialog)
         verticalLayout.setMargin(0)
         verticalLayout.setObjectName("%s_verticalLayout" % self.aNomeCampo)

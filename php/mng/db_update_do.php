@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2011-2014 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: db_update_do.php $
  * @package rproject
@@ -209,6 +209,7 @@ if($all_ok && $my_db_version<1) {
 	echo "Section $new_db_version: start.\n";
 	$queries = array(
 		"insert into _dbversion values ('rprj',0)",
+		//"insert into _dbversion values (0)",
 		"insert into _users values ( -1, 'adm','adm','','Administrator',-2 )",
 		"insert into _groups values ( -2, 'Admin','System admins' )",
 		"insert into _groups values ( -3, 'Users','System users' )",

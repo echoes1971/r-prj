@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2011 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: xmlrpc_server.php $
  * @package rproject
@@ -158,6 +158,7 @@ function _xmlrpcToDbe(&$dbexml) {
 
 	$struttura = $dbexml->me['array'][1];
 	foreach( $struttura->me['struct'] as $k=>$obj ) {
+//echo("_xmlrpcToDbe: $k=".$obj->scalarval());
 		$valori[$k] = $obj->scalarval();
 	}
     $ret = $myfactory->getInstance( $aClassname->scalarval(),
@@ -634,7 +635,7 @@ function search($m) {
 	}
 	$messaggi = ob_get_contents();
 	ob_end_clean();
-// 	error_log("xmlrpc_server::search: messaggi=$messaggi\n",3,"/tmp/phperrors");
+ 	error_log("xmlrpc_server::search: messaggi=$messaggi\n",3,"/tmp/phperrors");
 	$retArray=array();
 	foreach($listadbe as $mydbe ) {
 		$retArray[]=_dbeToXmlrpc($mydbe);
