@@ -99,28 +99,25 @@ echo "<input id=\"search_object\" name=\"search_object\" type=\"text\" />";
 echo "</form>";
 echo "</div>";
 
-echo "<br/>";
-echo "<hr class=\"amiga\" />";
 
 if($dbmgr->isConnected()) {
 	echo "<div id=\"top_menu\">";
 	do_hook('topmenu_before');
-	echo " :: ";
 	if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
-		echo "<a href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a> ::";
+		echo "<a href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a> ";
 	}
 	if(array_key_exists('menu_top',$_SESSION) && is_array($_SESSION['menu_top'])) {
 		foreach($_SESSION['menu_top'] as $menu_item) {
 			if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
 			if($menu_item->getTypeName()=='DBELink') {
 				$tmpform = new FLink(); $tmpform->setValues($menu_item->getValuesDictionary());
-				echo " ".$tmpform->render_view()." ::";
+				echo " ".$tmpform->render_view()." ";
 			} else
-				echo " <a href=\"".ROOT_FOLDER."main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a> ::";
+				echo " <a href=\"".ROOT_FOLDER."main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a> ";
 		}
 	}
 	if($dbmgr->getDBEUser()!==null) {
-		echo " <a href=\"".ROOT_FOLDER."mng/gestione.php\">Manage</a> ::";
+		echo " <a href=\"".ROOT_FOLDER."mng/gestione.php\">Manage</a>";
 	}
 	echo " ";
 	do_hook('topmenu_after');
@@ -128,6 +125,9 @@ if($dbmgr->isConnected()) {
 }
 
 do_hook('divheader_after');
+
+echo "<hr class=\"amiga\" />";
+
 echo "</div>";
 do_hook('header_after');
 ?>

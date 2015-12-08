@@ -19,7 +19,8 @@
 
 body {
 	background-color: #444444;
-	color: black;
+/* 	color: black; */
+    color: #aaaaaa;
 	font-family: Ubuntu,'Tahoma','Gill Sans',Verdana,sans-serif;
 	font-size: 85%;
 	font-weight: normal;
@@ -42,7 +43,11 @@ form { margin: 0px; }
 
 iframe { margin: 0px; border:0px; padding: 0px; }
 
-h1,h2,h3 { margin:0px; }
+h1,h2,h3 {
+/*     color: #cccccc; */
+    color: rgba(255,255,255,0.8);
+    margin:0px;
+}
 h1 {
 	font-weight: bold;
 	font-size: 2.5em;
@@ -118,7 +123,6 @@ p.content_item {
 }
 
 h1.logo {
-	color: #111122;
 	background-color: rgba(255,255,255,0.8);
 	margin: 0.2em;
 	margin-bottom: 0em;
@@ -153,7 +157,8 @@ ul.breadcrumb {
 	background-color: rgba(255,255,255,0.8);
 	margin: 0.1em;
 	border: 0px;
-	padding: 0.4em 1em;
+    border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+	padding: 4px 16px;
 }
 li.breadcrumb, a.breadcrumb:link, a.breadcrumb:active, a.breadcrumb:visited, a.breadcrumb:hover {
 	display: inline;
@@ -324,11 +329,26 @@ input.search {
 }
 
 #top_menu, #top_menu a:link, #top_menu a:active, #top_menu a:visited, #top_menu a:hover {
-/* 	margin-top: 1.5em; */
-	color: #080;
-	font-weight: bold;
+ color:black;
+ background-color:#888888;
+/*  font-weight: bold; */
+ padding:.2em;
 }
-
+#top_menu {
+ margin-top:0.4em;
+ padding:0.4em;
+}
+#top_menu a:link, #top_menu a:active, #top_menu a:visited, #top_menu a:hover {
+ margin:1px 4px;
+ margin-bottom:0px;
+ border-radius:4px;
+ padding:2px 4px;
+ background-color:rgba(255,255,255,0.45);
+ min-width:8em;
+}
+#top_menu a:active, #top_menu a:hover {
+ background-color:rgba(255,255,255,0.85);
+}
 #underconstruction {
 	color: black;
 	background-color: yellow;
@@ -352,7 +372,7 @@ input.search {
 	padding: 2px;
 /* 	padding-right: 20px */
 	background-color: rgba(255,255,255,0.8);
-	margin-top:-3em;
+/* 	margin-top:-3em; */
 	color: transparent;
 	
 	background-image:url('icons/glass.png');

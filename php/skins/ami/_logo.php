@@ -1,2 +1,2 @@
-<h1>:: R-Project ::</h1>
-<h3>:: Project and Time Tracking Management System ::</h3>
+<h1>Roberto Rocco Angeloni</h1>
+<h3>- Knowledge, experience and skills -</h3>
