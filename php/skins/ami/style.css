@@ -272,7 +272,10 @@ input.search {
 	right: 0em;
 	text-align: center;
 	height: 8em;
-    background: #ffffff url('images/Tramonto_1000x200.jpg') no-repeat center center;
+    background-image: url('images/Tramonto_1000x200.jpg');
+    background-repeat:no-repeat;
+    background-attachment:scroll;
+    background-position:center center;
     /* CSS3 */
 /* 	opacity:0.9; filter:alpha(opacity=90); -moz-opacity:0.9; */
 }
