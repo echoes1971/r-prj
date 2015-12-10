@@ -21,7 +21,7 @@
 do_hook('footer_before');
 ?><div id="footer"><hr class="amiga" /><?php
 do_hook('footer_content_before');
-?><small><b>&copy; 2005-<?php echo date("Y"); ?> by Roberto Rocco Angeloni - All rights reserved. - Powered by <a href="http://u.bb/77j">R-Project</a>.</b></small><?php
+?><div class="copyright"><b>&copy; 2005-<?php echo date("Y"); ?> by Roberto Rocco Angeloni - All rights reserved. - Powered by <a href="http://u.bb/77j">R-Project</a>.</b></div><?php
 do_hook('footer_content_after');
 ?></div><?php
 do_hook('footer_after');
