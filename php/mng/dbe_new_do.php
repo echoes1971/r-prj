@@ -67,7 +67,7 @@ if($mydbe==null) {
 $redir_string = "Location: http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
                       . dirname($_SERVER['PHP_SELF'])
                       . "/$redir_page?".implode("&",$cgi_params);
-//echo "redir string: $redir_string<br/>\n";
+// echo "redir string: $redir_string<br/>\n";
 // exit();
 
 header( $redir_string );

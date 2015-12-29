@@ -430,7 +430,7 @@ class DBEFactory {
 		return array_keys($this->classname2type);
 	}
 	
-	function getInstance( $aClassname, $aNames=null, $aValues=null, $aAttrs=null ) {
+	function getInstance($aClassname, $aNames=null, $aValues=null, $aAttrs=null) {
 		if(array_key_exists($aClassname,$this->classname2type)) {
 			eval( "\$ret = new ".$this->classname2type[$aClassname]."(null, \$aNames, \$aValues , \$aAttrs, null);" );
 			return $ret;
