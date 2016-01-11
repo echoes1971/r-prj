@@ -17,6 +17,17 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
+/*
+ ZERO DATE ISSUE
+ In newest mysql for osx, is strictly forbidden to insert a zero date.
+ To fix this:
+ - open a mysql session
+ - execute: SELECT @@GLOBAL.sql_mode;
+ - execute: SET GLOBAL sql_mode = '...what you've found before without the zero date restrictions...';
+ - restart mysql
+*/
+
 define("ROOT_FOLDER", "../");
 require_once(ROOT_FOLDER . "config.php");
 require_once(ROOT_FOLDER . "utils.php");
