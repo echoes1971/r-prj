@@ -92,7 +92,7 @@ function render_level(&$parent_list,$level=0,$indent="") {
 				echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
 			}
 			if( is_a($myform,'FLink') ) {
-				echo $myform->render_view();
+				echo $myform->render_view($dbmgr);
 			} else
 				echo "<a href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
 	// 		echo $menu_item_view>'' ? $menu_item_view : "<a href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";

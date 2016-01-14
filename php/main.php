@@ -231,7 +231,9 @@ function getChilds($my_obj_id,&$current_obj,&$current_form,$without_index_page=t
 // Menu Top
 $menu_top = array_key_exists('menu_top',$_SESSION) ? $_SESSION['menu_top'] : null;
 if ($menu_top===null || is_array($menu_top)) {
-	$menu_top = getChilds($root_obj_id,$root_obj,$formulator->getInstanceByDBEName( "DBEFolder" ) );//$current_obj->getTypeName() );)
+// vaffa($my_obj_id,&$current_obj,&$current_form,$without_index_page=true)
+$__current__form = $formulator->getInstanceByDBEName("DBEFolder");
+	$menu_top = getChilds($root_obj_id,$root_obj,$__current__form);//$current_obj->getTypeName() );)
 	$_SESSION['menu_top']=$menu_top;
 }
 if($mypeople!==null) $menu_top[]=$mypeople;

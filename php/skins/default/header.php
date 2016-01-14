@@ -111,7 +111,7 @@ if($dbmgr->isConnected()) {
 			if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
 			if($menu_item->getTypeName()=='DBELink') {
 				$tmpform = new FLink(); $tmpform->setValues($menu_item->getValuesDictionary());
-				echo " ".$tmpform->render_view()." ::";
+				echo " ".$tmpform->render_view($dbmgr)." ::";
 			} else
 				echo " <a href=\"".ROOT_FOLDER."main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a> ::";
 		}

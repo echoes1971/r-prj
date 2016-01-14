@@ -47,8 +47,8 @@ class DBEDBVersion extends DBEntity {
 	function getKeys() { return $this->_chiavi; }
 	function getOrderBy() { return array("version"); }
 	
-	function _before_insert( &$dbmgr ) {}
-	function _after_insert( &$dbmgr ) {}
+	function _before_insert(&$dbmgr) {}
+	function _after_insert(&$dbmgr) {}
 
 	function version() { $tmp = $this->getValue('version'); return $tmp===null ? 0 : $tmp; }
 
@@ -99,17 +99,17 @@ class DBEUser extends DBEntity {
 		return $ret;
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
 		$this->setValue( 'id', $myid );
 		if( $this->checkNewPassword() ) {
 			$this->_createGroup($dbmgr);
 		}
 	}
-	function _after_insert( &$dbmgr ) {
+	function _after_insert(&$dbmgr) {
 		$this->_checkGroupAssociation($dbmgr);
 	}
-	function _after_update( &$dbmgr ) {
+	function _after_update(&$dbmgr) {
 		$this->_checkGroupAssociation($dbmgr);
 	}
 	function _after_delete(&$dbmgr) {
@@ -164,7 +164,7 @@ class DBEGroup extends DBEntity {
 	function getKeys() { return $this->_chiavi; }
 	function getOrderBy() { return array("name"); }
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
 		$this->setValue( 'id', $myid );
 	}
@@ -173,7 +173,7 @@ class DBEGroup extends DBEntity {
 	 * una volta creato il gruppo.
 	 * Lo aggiunge inoltre automaticamente alla lista dei gruppi dell'utente in dbmgr
 	 */
-	function _after_insert( &$dbmgr ) {
+	function _after_insert(&$dbmgr) {
 		$dbe = new DBEUserGroup();
 		$dbe->setValue('group_id',$this->getValue('id'));
 		$dbe->setValue('user_id', $dbmgr->getDBEUser()->getValue('id'));
@@ -243,7 +243,7 @@ class DBELog extends DBEntity {
 	}
 	function getOrderBy() { return array( 'data desc','ora desc' ); }
 	
-	function _before_insert( $dbmgr ) {
+	function _before_insert(&$dbmgr) {
 // 		$nomeTabella = $dbmgr->_buildTableName( "seq_id" );
 // 		$tmp = $dbmgr->select( $nomeTabella, "select id as id from $nomeTabella" );
 // 		$myid = $tmp[0]->getValue('id') + 1;
@@ -404,19 +404,19 @@ class DBEObject extends DBEntity {
 		
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
 		$this->setValue( 'id', $myid );
 		$this->setDefaultValues($dbmgr);
 	}
-	function _before_update( &$dbmgr ) {
+	function _before_update(&$dbmgr) {
 		$myuser = $dbmgr->getDBEUser();
 		if($myuser!=null) {
 			$this->setValue('last_modify',$myuser->getValue('id'));
 		}
 		$this->setValue('last_modify_date', $this->_getTodayString());
 	}
-	function _before_delete( &$dbmgr ) {
+	function _before_delete(&$dbmgr) {
 		if($this->isDeleted()) return;
 		// I remove all the values but the keys, so that a proper update string can be built
 /*		foreach($this->getNames() as $_k) {
@@ -835,7 +835,7 @@ class DBECompany extends DBEObject {
 		return $this->_fk;
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 	}
 }
@@ -883,7 +883,7 @@ class DBEPeople extends DBEObject {
 		return $this->_fk;
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 	}
 }
@@ -1073,7 +1073,7 @@ class DBEFile extends DBEObject {
 	}
 	// Image management: end.
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		// Eredita la 'radice' dal padre
@@ -1131,7 +1131,7 @@ class DBEFile extends DBEObject {
 		if($this->isImage())
 			$this->createThumbnail($_fullpath);
 	}
-	function _before_update( &$dbmgr ) {
+	function _before_update(&$dbmgr) {
 		parent::_before_update( $dbmgr );
 		
 		// Eredita la 'radice' dal padre
@@ -1222,7 +1222,7 @@ class DBEFile extends DBEObject {
 		if($this->isImage())
 			$this->createThumbnail($_fullpath);
 	}
-	function _before_delete( &$dbmgr ) {
+	function _before_delete(&$dbmgr) {
 		// Has it been marked deleted before?
 		$is_deleted = $this->isDeleted();
 		parent::_before_delete( $dbmgr );
@@ -1298,7 +1298,7 @@ class DBEFolder extends DBEObject {
 		}
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		// Eredita la 'radice' dal padre
@@ -1311,7 +1311,7 @@ class DBEFolder extends DBEObject {
 			}
 		}
 	}
-	function _before_update( &$dbmgr ) {
+	function _before_update(&$dbmgr) {
 		parent::_before_update( $dbmgr );
 		
 		// Eredita la 'radice' dal padre
@@ -1479,7 +1479,7 @@ class DBEProject extends DBEObject {
 	/**
 	 * @TODO da finire?
 	 */
-	function _before_delete( &$dbmgr ) {
+	function _before_delete(&$dbmgr) {
 		parent::_before_delete( $dbmgr );
 		
 		// Cancello i legami con le compagnie
@@ -1520,7 +1520,7 @@ class DBEProjectCompanyRole extends DBEObject {
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
@@ -1598,7 +1598,7 @@ class DBEProjectPeopleRole extends DBAssociation {
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
@@ -1672,7 +1672,7 @@ class DBEProjectProjectRole extends DBEObject {
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
@@ -1756,16 +1756,16 @@ class DBETimetrack extends DBEObject {
 	
 	function getOrderBy() { return array('fk_progetto','stato desc','dalle_ore desc','fk_obj_id','name'); }
 	
-	function getFKCGIConditionFromMaster( &$dbe_master ) {
+	function getFKCGIConditionFromMaster(&$dbe_master) {
 		$ret=array();
-		$ret[] = parent::getFKCGIConditionFromMaster( $dbe_master );
+		$ret[] = parent::getFKCGIConditionFromMaster($dbe_master);
 		// Recupero la fk verso i progetti
-		$fks = $dbe_master->getFKForTable( 'projects' );
-		$myfks = $this->getFKForTable( 'projects' );
-		for( $m=0; $m<count($fks); $m++ ) {
+		$fks = $dbe_master->getFKForTable('projects');
+		$myfks = $this->getFKForTable('projects');
+		for($m=0; $m<count($fks); $m++ ) {
 			$master_value = $dbe_master->getValue( $fks[$m]->colonna_fk );
 			if( $master_value!=null ) {
-				for( $f=0; $f<count($myfks); $f++ ) {
+				for($f=0; $f<count($myfks); $f++ ) {
 					// Controllo che non sia già presente un'altra clausola in $ret
 					$trovata = false;
 					$stringa_nome = "field_" . $myfks[$f]->colonna_fk;
@@ -1829,8 +1829,8 @@ class DBETodo extends DBEObject {
 		$ret=array();
 		$ret[] = parent::getFKCGIConditionFromMaster( $dbe_master );
 		// Recupero la fk verso i progetti
-		$fks = $dbe_master->getFKForTable( 'projects' );
-		$myfks = $this->getFKForTable( 'projects' );
+		$fks = $dbe_master->getFKForTable('projects');
+		$myfks = $this->getFKForTable('projects');
 		if( count($fks)==1 && count($myfks)==1 ) {
 			$master_value = $dbe_master->getValue( $fks[0]->colonna_fk );
 			if( $master_value!=null ) {
@@ -1848,7 +1848,7 @@ class DBETodo extends DBEObject {
 		return join( $ret, "&" );
 	}
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		$data_segnalazione = $this->getValue('data_segnalazione');
@@ -1859,7 +1859,7 @@ class DBETodo extends DBEObject {
 		$this->_RULE_controllo_chiusura();
 	}
 	
-	function _before_update( &$dbmgr ) {
+	function _before_update(&$dbmgr) {
 		parent::_before_update( $dbmgr );
 		
 		// Controllo stato=100%
@@ -1921,7 +1921,7 @@ class DBETodoTipo extends DBEObject {
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
-	function _before_insert( &$dbmgr ) {
+	function _before_insert(&$dbmgr) {
 		parent::_before_insert( $dbmgr );
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
@@ -1960,7 +1960,7 @@ class DBETestDBLayer extends DBEntity {
     function getKeys() { return $this->_chiavi; }
     function getOrderBy() { return array("nome"); }
     
-    function _before_insert( &$dbmgr ) {
+    function _before_insert(&$dbmgr) {
         $myid = $dbmgr->getNextUuid($this);
         $this->setValue( 'id', $myid );
     }
@@ -1996,7 +1996,7 @@ class DBESocieta extends DBEntity {
     function getKeys() { return $this->_chiavi; }
     function getOrderBy() { return array("ragione_sociale"); }
     
-    function _before_insert( &$dbmgr ) {
+    function _before_insert(&$dbmgr) {
         $myid = $dbmgr->getNextUuid($this);
         $this->setValue( 'id', $myid );
     }

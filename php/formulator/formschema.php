@@ -61,7 +61,7 @@ class FUser extends FMasterDetail {
 	function getListColumnNames() { return array('id','login','fullname','group_id'); }
 	function getPagePrefix() { return "dbe"; }
 	function getDBE() { return new DBEUser(); }
-	function getShortDescription() { return $this->getValue('fullname'); }
+	function getShortDescription($dbmgr = NULL) { return $this->getValue('fullname'); }
 	function getValues() {
 		$ret = array();
 		foreach ( $this->getFieldNames() as $nomeCampo ) {
@@ -91,7 +91,7 @@ class FGroup extends FMasterDetail {
 	function getListColumnNames() { return array('id','name','description'); }
 	function getPagePrefix() { return "dbe"; }
 	function getDBE() { return new DBEGroup(); }
-	function getShortDescription() { return $this->getValue('name'); }
+	function getShortDescription($dbmgr = NULL) { return $this->getValue('name'); }
 }
 $formschema_type_list[]="FGroup";
 class FUserGroupAssociation extends FAssociation {
@@ -130,7 +130,7 @@ class FLog extends FMasterDetail {
 	function getListColumnNames() { return array('data','ora','count','ip','url','note'); }
 	function getPagePrefix() { return "dbe"; }
 	function getDBE() { return new DBELog(); }
-	function getShortDescription() { return $this->getValue('ip'); }
+	function getShortDescription($dbmgr = NULL) { return $this->getValue('ip'); }
 	/**
 	 * Returns possible actions on one instance of the managed data type (dbe).
 	 * Returned array is like:
@@ -248,7 +248,7 @@ class FObject extends FMasterDetail {
 	function getDecodeGroupNames() { return array("_permission"=>"Permissions", ); }
 	function getPagePrefix() { return "dbe"; }
 	function getDBE() { return new DBEObject(); }
-	function getShortDescription() { return $this->getValue('name'); }
+	function getShortDescription($dbmgr = NULL) { return $this->getValue('name'); }
 	function getActions() { return array(
 		'reload'=>array(
 				'label'=>'Reload',
@@ -499,6 +499,7 @@ class FFile extends FObject {
 	/**
 	 * @par alternative_link link alternativo per permettere download da linkbucks :-) 2010.09.27
 	 */
+	// &$dbmgr, $nome_field = null
 	function render_view($with_thumbnail=true,$alternative_link='') {
 		$__alt_link = $this->getValue('alt_link');
 		if($__alt_link===null || $__alt_link=='') {
@@ -580,7 +581,7 @@ class FLink extends FObject {
 										array("link"=>"Link",) ); }
 	function getDBE() { return new DBELink(); }
 	
-	function render_view($nome_field=null) {
+	function render_view(&$dbmgr, $nome_field = null) {
 		$ret = '';
 		if ( $nome_field!==null ) {
 			$_field = $this->getField( $nome_field );
