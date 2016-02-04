@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from rprj.formulator.qtgui import *
+from rprj.formulator.qtgui import FAssociation, FChildSort, FDateTime, FDateTimeReadOnly, FFileField, FHtml
+from rprj.formulator.qtgui import FKField, FKObjectField
+from rprj.formulator.qtgui import FLanguage, FList, FMasterDetail, FNumber
+from rprj.formulator.qtgui import FPassword, FPercent, FPermissions, FString, FTextArea, FUuid
 
 formschema_type_list = {}
 

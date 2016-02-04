@@ -4,7 +4,7 @@
 # @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
 # @version $Id: mydb.py $
 # @package dblayer
-# 
+#
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
@@ -18,9 +18,9 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-from rprj.dblayer import *
+from rprj.dblayer import DBConnectionProvider
 
-from MySQLdb import *
+from MySQLdb import connect
 
 
 class MYConnectionProvider(DBConnectionProvider):

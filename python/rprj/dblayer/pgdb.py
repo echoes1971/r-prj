@@ -18,9 +18,9 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-from rprj.dblayer import *
-
 from psycopg2 import *
+
+from rprj.dblayer import DBConnectionProvider
 
 
 class PGConnectionProvider(DBConnectionProvider):

@@ -18,15 +18,15 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import os, sys
-
-from rprj.dblayer import *
+import os, sys, traceback
 
 major_v, minor_v, subminor_v, etichetta, altri = sys.version_info
 if major_v == 2 and minor_v == 4:
     from pysqlite2 import dbapi2 as sqlite
 else:
     from sqlite3 import dbapi2 as sqlite
+
+from rprj.dblayer import DBConnectionProvider
 
 
 def convert_text(s):
@@ -43,7 +43,7 @@ class SQLiteConnectionProvider(DBConnectionProvider):
         @param user?
         @param pwd?
         """
-        DBConnectionProvider.__init__(self,  host, db, user, pwd, verbose)
+        DBConnectionProvider.__init__(self, host, db, user, pwd, verbose)
 
     def customInit(self):
         """Redefine this for idiosynchratic behaviour"""
@@ -78,7 +78,7 @@ class SQLiteConnectionProvider(DBConnectionProvider):
     def getDBType(self):
         return "SQLite"
 
-    def getColumnsForTable(self,  tablename):
+    def getColumnsForTable(self, tablename):
         """@return dictionary with column definitions, None if the table does not exists"""
         if self._verbose:
             #print "SQLiteConnectionProvider.getColumnsForTable: tablename=%s" % (tablename)
@@ -93,10 +93,10 @@ class SQLiteConnectionProvider(DBConnectionProvider):
                 ret[d[0]] = [d[0], d[1], d[2], d[3], d[4], d[5], d[6]]
                 #if self._verbose:
                 #    print "SQLiteConnectionProvider.getColumnsForTable: d=(%s,%s,%s,%s,%s,%s,%s) %s" % (d[0], d[1], d[2], d[3], d[4], d[5], d[6], len(d))
-        except sqlite.OperationalError, oe:
-                # Table does not exists
-                #print "SQLiteConnectionProvider.getColumnsForTable: OperationalError=%s (%s)" % (oe,searchString)
-                ret = None
+        except sqlite.OperationalError: # , oe:
+            # Table does not exists
+            #print "SQLiteConnectionProvider.getColumnsForTable: OperationalError=%s (%s)" % (oe,searchString)
+            ret = None
         except Exception, e:
             if self._verbose:
                 print "SQLiteConnectionProvider.getColumnsForTable: ECCEZIONE=%s (%s)" % (e, searchString)

@@ -18,12 +18,13 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-from rprj.dblayer import DBConnectionProvider, DBLayerException, isDateTime
-import codecs, datetime, os, sys, traceback
+import datetime, os, sys, traceback
 from base64 import b64decode
 
 import pymongo
 
+from rprj.dblayer import DBConnectionProvider, DBLayerException
+ 
 # 1 mega = 1048576
 UPLOAD_SPLIT_SIZE = 1048576
 
@@ -201,7 +202,7 @@ class MongoConnectionProvider(DBConnectionProvider):
             #if not collectionName in self._server.collection_names():
             #    raise DBLayerException("Collection '%s' does not exists." % (collectionName))
             coll = self._server[collectionName]
-            if self.verbose: print "MongoConnectionProvider.search: coll=%s (%s)\n  %s" % (coll,  coll.count(),  dir(coll))
+            if self.verbose: print "MongoConnectionProvider.search: coll=%s (%s)\n  %s" % (coll, coll.count(), dir(coll))
             lista = coll.find(dbedict)
             #self.lastMessages = msg
         except Exception, e:

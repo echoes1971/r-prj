@@ -20,7 +20,12 @@
 #
 
 from collections import OrderedDict
-import datetime, os, string, sys, traceback, uuid
+import datetime
+import os
+import string
+import sys
+import traceback
+import uuid
 
 
 class DBLayerException(Exception):
@@ -30,11 +35,11 @@ class DBLayerException(Exception):
     pass
 
 
-class ForeignKey:
+class ForeignKey(object):
 
     """Maps a table's foreign key."""
 
-    def __init__(self,  colonna_fk="", tabella_riferita="", colonna_riferita=""):
+    def __init__(self, colonna_fk="", tabella_riferita="", colonna_riferita=""):
         self.colonna_fk = colonna_fk
         self.tabella_riferita = tabella_riferita
         self.colonna_riferita = colonna_riferita
@@ -43,7 +48,7 @@ class ForeignKey:
         return "FK( %s => %s.%s )" % (self.colonna_fk, self.tabella_riferita, self.colonna_riferita)
 
 
-class DBEntity:
+class DBEntity(object):
 
     """DB Entity
     Superclass for DB persistent entities"""
@@ -75,17 +80,19 @@ class DBEntity:
         nomi = self.getNames()
         myattr = {}
         for n in nomi:
-            v = getattr(self,  n)
+            v = getattr(self, n)
             if v: myattr[n] = v
         ret = "%s( %s )" % (self.getTypeName(), myattr)
         return ret
 
-    def _formatDateTime(self,  datetime):
-        tmp = "%s" % datetime
+    @staticmethod
+    def _formatDateTime(_datetime):
+        tmp = "%s" % _datetime
         tmp = tmp.replace('/', '-')
         return tmp[0:16]
 
-    def _getTodayString(self):
+    @staticmethod
+    def _getTodayString():
         today = datetime.datetime.now()
         ret = "%s-%02d-%02d %02d:%02d:%02d" % (
             today.year, today.month, today.day,
@@ -124,7 +131,7 @@ class DBEntity:
         """Returns an array with the foreign keys of the table."""
         return []
 
-    def getFKForTable(self,  tablename):
+    def getFKForTable(self, tablename):
         """IF exists, returns an array with the FKs for the given table."""
         fks = self.getFK()
         ret = []
@@ -133,7 +140,7 @@ class DBEntity:
                 ret.append(f)
         return ret
 
-    def getFKDefinition(self,  fk_column_name):
+    def getFKDefinition(self, fk_column_name):
         """Returns all the FKs for the given table' column."""
         fks = self.getFK()
         ret = []
@@ -142,7 +149,7 @@ class DBEntity:
                 ret.append(f)
         return ret
 
-    def readFKFrom(self,  dbe):
+    def readFKFrom(self, dbe):
         """Reads the content of the referenced columns in the referenced table
         mapped in the given dbe"""
         fks = self.getFKForTable(dbe.getTableName())
@@ -151,7 +158,7 @@ class DBEntity:
             if v:
                 setattr(self, f.colonna_fk, v)
 
-    def writeFKTo(self,  masterdbe):
+    def writeFKTo(self, masterdbe):
         """Writes the content of the referenced columns in the referenced table
         mapped in the given dbe"""
         fks = self.getFKForTable(masterdbe.getTableName())
@@ -161,12 +168,12 @@ class DBEntity:
                 masterdbe.setValue(f.colonna_riferita, v)
         return masterdbe
 
-    def isPrimaryKey(self,  field_name):
+    def isPrimaryKey(self, field_name):
         if field_name in self.getKeys().keys():
             return True
         return False
 
-    def isFK(self,  field_name, tabella_riferita=None):
+    def isFK(self, field_name, tabella_riferita=None):
         """Tells if the given field is fk towards the given table."""
         fks = self.getFK()
         tmp = [f.colonna_fk for f in fks if tabella_riferita is None or tabella_riferita == f.tabella_riferita]
@@ -203,7 +210,7 @@ class DBEntity:
                 ret[m] = v
         return ret
 
-    def setValuesDictionary(self,  mydict):
+    def setValuesDictionary(self, mydict):
         for k in mydict.keys():
             self.setValue(k, mydict[k])
 
@@ -220,14 +227,14 @@ class DBEntity:
         keys = self.getKeys()
         for c in keys:
             if not self.getValue(c) is None:
-                if type(self.getValue(c)) == str and self.getValue(c) > u'':
+                if isinstance(self.getValue(c), str) and self.getValue(c) > u'':
                     return False
-                elif type(self.getValue(c)) == unicode and self.getValue(c) > '':
+                elif isinstance(self.getValue(c), unicode) and self.getValue(c) > '':
                     return False
-                elif type(self.getValue(c)) == int or type(self.getValue(c)) == float\
+                elif isinstance(self.getValue(c), int) or isinstance(self.getValue(c), float)\
                         and self.getValue(c) != 0:
                     return False
-                elif type(self.getValue(c)) == bool:
+                elif isinstance(self.getValue(c), bool):
                     return False
         return True
 
@@ -242,6 +249,7 @@ class DBEntity:
                 break
         return ret
 
+    @classmethod
     def uuid2hex(cls, s):
         if s is None or len(s) == 0:
             return s
@@ -251,11 +259,11 @@ class DBEntity:
         if s[:4] == 'uuid':
             return s
         ret = "uuid"
-        for i in range(len(s)):
-            ret += hex(ord(s[i])).replace('0x', '')
+        for _, x in enumerate(s):
+            ret += hex(ord(x)).replace('0x', '')
         return ret
-    uuid2hex = classmethod(uuid2hex)
 
+    @classmethod
     def hex2uuid(cls, a_str):
         if a_str[:4] != "uuid":
             return a_str
@@ -265,7 +273,6 @@ class DBEntity:
         for i in range(str_len / 2):
             ret += chr(eval("0x%s" % s[i*2: (i+1)*2]))
         return ret
-    hex2uuid = classmethod(hex2uuid)
 
     def validate(self):
         """Validate the DBE and applies custom logics."""
@@ -318,19 +325,21 @@ class DBAssociation(DBEntity):
         return self._fk[1].tabella_riferita
 
 
-class DBConnectionProvider:
+class DBConnectionProvider(object):
 
     """Superclass for all the connection providers.
     Subclasses of this may also implement connection pooling,
     not only specific DB connection"""
 
-    def __init__(self,  host, db, user, pwd, verbose=0):
+    def __init__(self, host, db, user, pwd, verbose=0):
         self._host = host
         self._db = db
         self._user = user
         self._pwd = pwd
         self._verbose = verbose
         self._conn = None
+        self.lastMessages = None
+        self.msg = None
         self.customInit()
 
     def customInit(self):
@@ -349,7 +358,7 @@ class DBConnectionProvider:
     def getConnection(self):
         return self._conn
 
-    def freeConnection(self,  conn):
+    def freeConnection(self, conn):
         pass
 
     def getDBType(self):
@@ -375,6 +384,7 @@ class DBConnectionProvider:
     def dbeConstraints2dbConstraints(self, constraints):
         return constraints
 
+    @classmethod
     def dbConstraints2dbeConstraints(cls, definition):
         """ FIXME should this be in the connection object?
         Translates MySQL constraints into dbeContraints"""
@@ -389,7 +399,6 @@ class DBConnectionProvider:
         elif definition['Default'] is None and definition['Null'] == 'YES':
             constraints.append("default null")
         return " ".join(constraints)
-    dbConstraints2dbeConstraints = classmethod(dbConstraints2dbeConstraints)
     # TODO translate all those PHP functions: start.
     #static function dbColumnDefinition2dbeColumnDefinition($def) {
         #$constraints = DBEntity::dbConstraints2dbeConstraints($def);
@@ -417,7 +426,7 @@ class DBConnectionProvider:
         raise DBLayerException("DBConnectionProvider.downloadFile: not implemented.")
 
 
-class DBMgr:
+class DBMgr(object):
     def __init__(self, connProvider, verbose=0, schema=''):
         self._connProvider = connProvider
         self._verbose = verbose
@@ -468,14 +477,14 @@ class DBMgr:
             ret = self._connProvider.getRegisteredTypes(self)
         return ret
 
-    def getClazz(self,  typename):
+    def getClazz(self, typename):
         """Returns the registered type."""
         ret = self.getDBEFactory().getClazz(typename)
         if self._connProvider.isProxy() and ret == DBEntity:
             return self._connProvider.getClazz(self, typename)
         return ret
 
-    def getClazzByTypeName(self,  typename):
+    def getClazzByTypeName(self, typename):
         """Returns the registered type."""
         ret = self.getDBEFactory().getClazzByTypeName(typename)
         if self._connProvider.isProxy() and ret == DBEntity:
@@ -501,13 +510,13 @@ class DBMgr:
                     print "DBMgr.initDB: d = %s" % (d)
                 newdbe = mytypes[tablename](attrs=d)
                 try:
-                    nuova = DBMgr.insert(self,  newdbe)
-                    print "DBMgr.initDB: nuova=%s (%s)" % (nuova,  newdbe)
+                    nuova = DBMgr.insert(self, newdbe)
+                    print "DBMgr.initDB: nuova=%s (%s)" % (nuova, newdbe)
                 except Exception, e:
                     print "DBMgr.initDB: Exception = %s" % (e)
                     print "".join(traceback.format_tb(sys.exc_info()[2]))
 
-    def _createTable(self,  dbe):
+    def _createTable(self, dbe):
         """Create the table for the given dbe."""
         myquery = self.dbe2sql(dbe)
         if self._verbose: print "DBMgr._createTable: myquery = %s" % (myquery)
@@ -525,7 +534,7 @@ class DBMgr:
             if self._connProvider.getDBType() == "POSTGRESQL":
                 cursor.execute("rollback")
 
-    def getColumnsForTable(self,  tablename):
+    def getColumnsForTable(self, tablename):
         return self.getConnectionProvider().getColumnsForTable(tablename)
 
     def checkDB(self):
@@ -591,7 +600,7 @@ class DBMgr:
             for d in defaultEntries:
                 if self._verbose: print "DBMgr.checkDB: d = %s" % (d)
                 cerca = mytypes[tablename](attrs=d)
-                tmp = DBMgr.search(self,  cerca, uselike=False)
+                tmp = DBMgr.search(self, cerca, uselike=False)
                 if len(tmp) == 0:
                     try:
                         DBMgr.insert(self, cerca)
@@ -635,24 +644,26 @@ class DBMgr:
         ret.append("")
         return "\n".join(ret)
 
-    def column2sql(self,  mydef,  isPrimaryKey):
-            mytype = self._connProvider.dbeType2dbType(mydef[0])
-            constraints = ""
-            if len(mydef) > 1:
-                constraints = mydef[1]
-            not_null = ""
-            if isPrimaryKey:
-                not_null = "not null"
-            if len(constraints) == 0:
-                constraints = not_null
-            constraints = self._connProvider.dbeConstraints2dbConstraints(constraints)
-            return "%s %s" % (mytype, constraints)
+    def column2sql(self, mydef, isPrimaryKey):
+        mytype = self._connProvider.dbeType2dbType(mydef[0])
+        constraints = ""
+        if len(mydef) > 1:
+            constraints = mydef[1]
+        not_null = ""
+        if isPrimaryKey:
+            not_null = "not null"
+        if len(constraints) == 0:
+            constraints = not_null
+        constraints = self._connProvider.dbeConstraints2dbConstraints(constraints)
+        return "%s %s" % (mytype, constraints)
 
-    def _escapeString(self, s):
+    @staticmethod
+    def _escapeString(s):
         return "'%s'" % s.replace("\\", "\\\\").replace("\'", "''")
 
-    def _formatDateTime(self,  datetime):
-        tmp = "%s" % datetime
+    @staticmethod
+    def _formatDateTime(_datetime):
+        tmp = "%s" % _datetime
         tmp = tmp.replace('/', '-')
         # 2013-04-09: start.
         if len(tmp) == 8:
@@ -660,7 +671,8 @@ class DBMgr:
         # 2013-04-09: end.
         return tmp[0:16]
 
-    def getTodayString(self):
+    @staticmethod
+    def getTodayString():
         today = datetime.datetime.now()
         ret = "%s-%02d-%02d %02d:%02d:%02d" % (
             today.year, today.month, today.day,
@@ -680,7 +692,7 @@ class DBMgr:
             tablename = "%s_%s" % (__schema, dbe.getTableName())
         return tablename
 
-    def _buildKeysCondition(self,  dbe):
+    def _buildKeysCondition(self, dbe):
         ret = []
         chiavi = dbe.getKeys()
         for c in chiavi.keys():
@@ -715,7 +727,7 @@ class DBMgr:
                 else:
                     tmpvalori.append('0')
             else:
-                    tmpvalori.append("%s" % (v))
+                tmpvalori.append("%s" % (v))
         query = "insert into %s (%s) values (%s)" % (
             self._buildTableName(dbe), string.join(tmpnomi, ","), string.join(tmpvalori, ","))
         return query
@@ -729,7 +741,7 @@ class DBMgr:
         setstring = []
         for n in nomicampi:
             v = dbe.getValue(n)
-            if not (n in chiavi):
+            if n not in chiavi:
                 if v is None:
                     continue
                 elif isinstance(v, str) or isinstance(v, unicode):
@@ -796,7 +808,7 @@ class DBMgr:
                     clausole.append("%s=%s" % (n, v))
         return clausole
 
-    def _buildSelectString(self,  dbe, uselike=1, case_sensitive=True):
+    def _buildSelectString(self, dbe, uselike=1, case_sensitive=True):
         clausole = self._buildWhereCondition(dbe, uselike, case_sensitive)
         if len(clausole) > 0:
             query = "select * from %s where %s" % (self._buildTableName(dbe), string.join(clausole, " and "))
@@ -808,39 +820,39 @@ class DBMgr:
         query = "delete from %s where %s" % (self._buildTableName(dbe), self._buildKeysCondition(dbe))
         return query
 
-    def _before_insert(self,  dbe):
+    def _before_insert(self, dbe):
         """Action to be taken before insert."""
         return dbe
 
-    def _after_insert(self,  dbe):
+    def _after_insert(self, dbe):
         """Action to be taken after insert."""
         return dbe
 
-    def _before_update(self,  dbe):
+    def _before_update(self, dbe):
         """Action to be taken before update."""
         return dbe
 
-    def _after_update(self,  dbe):
+    def _after_update(self, dbe):
         """Action to be taken after update."""
         return dbe
 
-    def _before_delete(self,  dbe):
+    def _before_delete(self, dbe):
         """Action to be taken before delete."""
         return dbe
 
-    def _after_delete(self,  dbe):
+    def _after_delete(self, dbe):
         """Action to be taken after delete."""
         return dbe
 
-    def _before_copy(self,  dbe):
+    def _before_copy(self, dbe):
         """Action to be taken before copy."""
         return dbe
 
-    def _after_copy(self,  dbe):
+    def _after_copy(self, dbe):
         """Action to be taken after copy."""
         return dbe
 
-    def insert(self,  dbe, cleanKeysIfError=True):
+    def insert(self, dbe, cleanKeysIfError=True):
         """Insert the new dbe into the db."""
         if self._connProvider.isProxy():
             # 2012.04.02: start.
@@ -1006,7 +1018,7 @@ class DBMgr:
                 raise DBLayerException("DBMgr.delete: unable to execute\n\t%s.Error cause: %s" % (query, e))
         return dbe
 
-    def search(self,  dbe, uselike=1, orderby=None, ignore_deleted=True, full_object=True):
+    def search(self, dbe, uselike=1, orderby=None, ignore_deleted=True, full_object=True):
         """Provides Search methods."""
         if self._connProvider.isProxy():
             # 2012.04.02: start.
@@ -1019,7 +1031,7 @@ class DBMgr:
         if self._verbose: print "DBMgr.search: query=%s" % query
         return self.select(dbe.getTableName(), query)
 
-    def getNextId(self,  dbe):
+    def getNextId(self, dbe):
         nomeTabella = "%s_seq_id" % (self._schema)
         tmp = self.select(nomeTabella, "select id from %s where name=''" % (nomeTabella))
         myid = 1
@@ -1030,10 +1042,10 @@ class DBMgr:
             self.select(nomeTabella, "update %s set id=%s where name=''" % (nomeTabella, myid))
         return myid
 
-    def getNextUuid(self,  dbe, length=16):
+    def getNextUuid(self, dbe, length=16):
         return (("%s" % uuid.uuid4()).replace('-', ''))[:16]
 
-    def copy(self,  dbe):
+    def copy(self, dbe):
         """Copy the given DBE."""
         if self._connProvider.isProxy():
             # 2012.04.02: start.
@@ -1064,7 +1076,7 @@ class DBMgr:
         # 2012.06.04: this works better with NoSQL dbs
         cerca = self.getClazzByTypeName(dbe.getTypeName())()
         for k in chiavi.keys():
-            cerca.setValue(k,  dbe.getValue(k))
+            cerca.setValue(k, dbe.getValue(k))
         cerca.setValuesDictionary(chiavi)
         ret = self.search(cerca, uselike=0)
         #query = "select * from %s where %s" % (self._buildTableName(dbe), self._buildKeysCondition(dbe))
@@ -1080,21 +1092,26 @@ class DBMgr:
         tmp = self.searchByKeys(dbe)
         return len(tmp) > 0
 
-    def isDateTime(self, s):
+    @staticmethod
+    def isDateTime(s):
         return isDateTime(s)
 
-    def datetime2string(self,  dt):
+    @staticmethod
+    def datetime2string(dt):
         tmpdata = "%s" % (dt)
         tmpdata = "%s-%s-%s 00:00" % (tmpdata[:4], tmpdata[5:7], tmpdata[8:10])
         return tmpdata.replace('/', '-')
 
-    def string2datetime(self,  dt):
+    @staticmethod
+    def string2datetime(dt):
         return DateTime(dt)
 
-    def millis2datetime(self,  millis):
+    @staticmethod
+    def millis2datetime(millis):
         return DateTime(millis)
 
-    def convertDate(self,  dt):
+    @staticmethod
+    def convertDate(dt):
         tmpdata = "%s" % (dt)
         tmpdata = "%s-%s-%s" % (tmpdata[8:10], tmpdata[5:7], tmpdata[:4])
         return tmpdata.replace('/', '-')
@@ -1232,24 +1249,24 @@ class DBMgr:
         return self._connProvider.downloadFile(remote_filename, local_filename, view_thumbnail)
 
 
-class DBEFactory:
+class DBEFactory(object):
 
     """Returns the correct class for the given tablename."""
 
-    def __init__(self,  verbose=False):
+    def __init__(self, verbose=False):
         self._cache = OrderedDict()  # {}
         self._cache_by_typename = OrderedDict()  # {}
         self.register('default', DBEntity)
         self.verbose = verbose
 
-    def register(self,  tablename, clazz):
+    def register(self, tablename, clazz):
         self._cache[tablename] = clazz
         self._cache_by_typename[clazz().getTypeName()] = clazz
 
     def getRegisteredTypes(self):
         return self._cache
 
-    def getClazz(self,  tablename):
+    def getClazz(self, tablename):
         ret = None
         if tablename in self._cache:
             ret = self._cache[tablename]
@@ -1257,7 +1274,7 @@ class DBEFactory:
             ret = self._cache['default']
         return ret
 
-    def getClazzByTypeName(self,  typename, case_sensitive=True):
+    def getClazzByTypeName(self, typename, case_sensitive=True):
         if self.verbose: print "DBEFactory.getClazzByTypeName: typename=%s" % (typename)
         ret = self._cache['default']
         if case_sensitive:
@@ -1274,7 +1291,7 @@ class DBEFactory:
         if self.verbose: print "DBEFactory.getClazzByTypeName: ret=%s" % (ret)
         return ret
 
-    def __call__(self,  tablename, names=None, values=None, *args):
+    def __call__(self, tablename, names=None, values=None, *args):
         """Some kind of magic..."""
         if self.verbose:
             print "DBEFactory.__call__: tablename=%s" % (tablename)
@@ -1360,11 +1377,11 @@ def createConnection(aUrl, aVerbose=False):
         from rprj.dblayer.jsonconn import JsonConnectionProvider
         myconn = JsonConnectionProvider(myurl, '', '', '', aVerbose)  # 1)
     elif myurl.startswith("mysql"):
-        xx, host, db, user, pwd = myurl.split(":")
+        _, host, db, user, pwd = myurl.split(":")
         from rprj.dblayer.mydb import MYConnectionProvider
         myconn = MYConnectionProvider(host, db, user, pwd, aVerbose)
     elif myurl.startswith("postgresql"):
-        xx, host, db, user, pwd = myurl.split(":")
+        _, host, db, user, pwd = myurl.split(":")
         from rprj.dblayer.pgdb import PGConnectionProvider
         myconn = PGConnectionProvider(host, db, user, pwd, aVerbose)
     elif myurl.startswith("sqlite"):
