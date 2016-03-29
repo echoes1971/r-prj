@@ -18,7 +18,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-from psycopg2 import *
+from psycopg2 import connect
 
 from rprj.dblayer import DBConnectionProvider
 
@@ -40,14 +40,14 @@ class PGConnectionProvider(DBConnectionProvider):
                 self._conn = connect(connString)
                 self._conn.autocommit = True
             except Exception, e:
-                if self._verbose: print "PGConnectionProvider.getConnection: Error=%s" % (e)
+                self._log("PGConnectionProvider.getConnection: Error=%s" % (e))
         return self._conn
 
     def freeConnection(self, conn):
         try:
             conn.close()
         except Exception, e:
-            if self._verbose: print "PGConnectionProvider.freeConnection: Error=%s" % (e)
+            self._log("PGConnectionProvider.freeConnection: Error=%s" % (e))
         del conn
         del self._conn
         self._conn = None

@@ -63,14 +63,14 @@ class SQLiteConnectionProvider(DBConnectionProvider):
                     .replace(u"\\\\", u"\\")
                 # 2012.03.16: end.
             except Exception, e:
-                if self._verbose: print "SQLiteConnectionProvider.getConnection: db=%s Error=%s" % (self._db, e)
+                self._log("SQLiteConnectionProvider.getConnection: db=%s Error=%s" % (self._db, e))
         return self._conn
 
     def freeConnection(self, conn):
         try:
             conn.close()
         except Exception, e:
-            if self._verbose: print "SQLiteConnectionProvider.freeConnection: Error=%s" % (e)
+            self._log("SQLiteConnectionProvider.freeConnection: Error=%s" % (e))
         del conn
         del self._conn
         self._conn = None
@@ -113,15 +113,16 @@ class SQLiteConnectionProvider(DBConnectionProvider):
 
     def uploadFile(self, local_filename):
         dest_dir = "%s%sfiles" % (os.path.sep.join(self.getDB().split(os.path.sep)[:-1]), os.path.sep)
-        if not os.path.exists(dest_dir): os.mkdir(dest_dir)
-        if self._verbose: print "SQLiteConnectionProvider.uploadFile: dest_dir:", dest_dir
+        if not os.path.exists(dest_dir):
+            os.mkdir(dest_dir)
+        self._log("SQLiteConnectionProvider.uploadFile: dest_dir=%s" % dest_dir)
         # Short local filename
         filename_corto = local_filename[len(os.path.dirname(local_filename)):]
         if filename_corto.startswith('/'):
             filename_corto = filename_corto[1:]
-        if self._verbose: print "SQLiteConnectionProvider.uploadFile: filename_corto:", filename_corto
+        self._log("SQLiteConnectionProvider.uploadFile: filename_corto=%s" % filename_corto)
         dest_file = "%s%s%s" % (dest_dir, os.path.sep, filename_corto)
-        if self._verbose: print "SQLiteConnectionProvider.uploadFile: dest_file:", dest_file
+        self._log("SQLiteConnectionProvider.uploadFile: dest_file=%s" % dest_file)
         # Load file
         myfile = file(local_filename, 'rb').read()
         # Upload

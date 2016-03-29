@@ -132,13 +132,14 @@ class JsonConnectionProvider(DBConnectionProvider):
 
     def getClazzByTypeName(self, typename, case_sensitive=False):
         try:
-            if self.verbose: print "JsonConnectionProvider.getClazzByTypeName: typename=%s" % (typename)
-            if self._cache is None: self._cache = self.getRegisteredTypes()
+            self._log("JsonConnectionProvider.getClazzByTypeName: typename=%s" % (typename))
+            if self._cache is None:
+                self._cache = self.getRegisteredTypes()
             ret = DBEntity
             if 'default' in self._cache:
                 ret = self._cache['default']
             for k in self._cache.keys():
-                if self.verbose: print "DBEFactory.getClazzByTypeName: k=%s" % (k)
+                self._log("DBEFactory.getClazzByTypeName: k=%s" % (k))
                 mytypename = ''
                 if isinstance(self._cache[k], RemoteDBE):
                     mytypename = self._cache[k].getTypeName()
@@ -207,9 +208,9 @@ class JsonConnectionProvider(DBConnectionProvider):
         return dbe
 
     def select(self, tablename, search_string):
-        if self.verbose: print "JsonConnectionProvider.select: tablename=%s" % (tablename)
-        if self.verbose: print "JsonConnectionProvider.select: search_string=%s" % (search_string)
-        if self.verbose: print "JsonConnectionProvider.select: start search=%s" % (datetime.datetime.now())
+        self._log("JsonConnectionProvider.select: tablename=%s" % (tablename))
+        self._log("JsonConnectionProvider.select: search_string=%s" % (search_string))
+        self._log("JsonConnectionProvider.select: start search=%s" % (datetime.datetime.now()))
         try:
             # self.semaforo.acquire(True)
             tmp = self._server.select(tablename, search_string)
@@ -218,12 +219,12 @@ class JsonConnectionProvider(DBConnectionProvider):
             self.lastMessages = b64decode(tmp[0])
         except DBLayerException, e:
             raise DBLayerException("Problemi di comunicazione col server: %s" % e)
-        if self.verbose: print "JsonConnectionProvider.select: start xml->dbe=%s" % (datetime.datetime.now())
+        self._log("JsonConnectionProvider.select: start xml->dbe=%s" % (datetime.datetime.now()))
         ret = []
         for r in res:
             tmpdbe = self._jsonToDbe(r)
             ret.append(tmpdbe)
-        if self.verbose: print "JsonConnectionProvider.select: end time = %s" % (datetime.datetime.now())
+        self._log("JsonConnectionProvider.select: end time = %s" % (datetime.datetime.now()))
         return ret
 
     def delete(self, dbe):
@@ -234,27 +235,28 @@ class JsonConnectionProvider(DBConnectionProvider):
         # self.semaforo.release()
         tmparray = tmp[1]
         self.lastMessages = b64decode(tmp[0])
-        if self.verbose: print "JsonConnectionProvider.delete: self.lastMessages = %s" % (self.lastMessages)
+        self._log("JsonConnectionProvider.delete: self.lastMessages = %s" % (self.lastMessages))
         dbe = self._jsonToDbe(tmparray[0])
         return dbe
 
     def search(self, dbe, uselike=1, orderby=None, ignore_deleted=True, full_object=True):
         casesensitive = 0
-        if self.verbose: print "JsonConnectionProvider.search: start time = %s" % (datetime.datetime.now())
+        self._log("JsonConnectionProvider.search: start time = %s" % (datetime.datetime.now()))
         # tablename = dbe.getTableName()
         # Search
         dbexml = self._dbeToJson(dbe)
-        if self.verbose: print "JsonConnectionProvider.search: dbexml = %s" % (dbexml)
-        if self.verbose: print "JsonConnectionProvider.search: uselike = %s" % (uselike)
+        self._log("JsonConnectionProvider.search: dbexml = %s" % (dbexml))
+        self._log("JsonConnectionProvider.search: uselike = %s" % (uselike))
         # if self.verbose: print "JsonConnectionProvider.search: casesensitive = %s" % (casesensitive)
-        if self.verbose: print "JsonConnectionProvider.search: orderby = %s" % (orderby)
+        self._log("JsonConnectionProvider.search: orderby = %s" % (orderby))
         try:
-            if orderby is None: orderby = ''
+            if orderby is None:
+                orderby = ''
             # self.semaforo.acquire(True)
             msg, lista = self._server.search(dbexml, uselike, casesensitive, orderby, ignore_deleted, full_object)
             msg = b64decode(msg)
             # self.semaforo.release()
-            if self.verbose: print "JsonConnectionProvider.search: msg=\n  ", "\n  ".join(("%s" % msg).split("\n"))
+            self._log("JsonConnectionProvider.search: msg=\n  %s" % "\n  ".join(("%s" % msg).split("\n")))
             self.lastMessages = msg
         except Exception, e:
             print "JsonConnectionProvider.search: ECCEZIONE ############# Inizio."
@@ -266,8 +268,8 @@ class JsonConnectionProvider(DBConnectionProvider):
         for r in lista:
             tmpdbe = self._jsonToDbe(r)
             ret.append(tmpdbe)
-        if self.verbose: print "JsonConnectionProvider.search: ret = %s" % (len(ret))
-        if self.verbose: print "JsonConnectionProvider.search: end time = %s" % (datetime.datetime.now())
+        self._log("JsonConnectionProvider.search: ret = %s" % (len(ret)))
+        self._log("JsonConnectionProvider.search: end time = %s" % (datetime.datetime.now()))
         return ret
 
     def copy(self, dbe):
@@ -302,12 +304,11 @@ class JsonConnectionProvider(DBConnectionProvider):
         self.msg, ret = self._server.getLoggedUser()
         self.msg = b64decode(self.msg)
         # self.semaforo.release()
-        if self.verbose:
-            print "JsonConnectionProvider.getLoggedUser: msg=%s" % self.msg
-            print "JsonConnectionProvider.getLoggedUser: ret=%s" % ret
+        self._log("JsonConnectionProvider.getLoggedUser: msg=%s" % self.msg)
+        self._log("JsonConnectionProvider.getLoggedUser: ret=%s" % ret)
         if len(ret) == 1:
             tmp = self._jsonToDbe(ret[0])
-            if self.verbose: print "JsonConnectionProvider.getLoggedUser: tmp=%s" % tmp
+            self._log("JsonConnectionProvider.getLoggedUser: tmp=%s" % tmp)
             return tmp
         return None
 
@@ -427,7 +428,7 @@ class JsonConnectionProvider(DBConnectionProvider):
         filename_corto = local_filename[len(os.path.dirname(local_filename)):]
         if filename_corto.startswith('/'):
             filename_corto = filename_corto[1:]
-        if self.verbose: print "JsonConnectionProvider.uploadFile: filename_corto: ", filename_corto
+        self._log("JsonConnectionProvider.uploadFile: filename_corto=%s" % filename_corto)
         # Load file
         myfile = file(local_filename).read()
         # Upload TODO split the file in chunks
@@ -456,15 +457,15 @@ class JsonConnectionProvider(DBConnectionProvider):
             print "JsonConnectionProvider.downloadFile: messaggio = %s" % (messaggio)
             tmp = {}
             for k in ret.keys():
-                if k == 'contents': continue
+                if k == 'contents':
+                    continue
                 tmp[k] = ret[k]
             print "JsonConnectionProvider.downloadFile: ret (senza contents) = %s" % (tmp)
         mime = "%s" % ret['mime']
         filesize = ret['filesize']
         filename = "%s%s%s" % (local_path, os.path.sep, ret['filename'])
-        if self.verbose:
-            print "JsonConnectionProvider.downloadFile: mime = %s" % (mime)
-            print "JsonConnectionProvider.downloadFile: filesize = %s" % (filesize)
-            print "JsonConnectionProvider.downloadFile: filename = %s" % (filename)
+        self._log("JsonConnectionProvider.downloadFile: mime = %s" % (mime))
+        self._log("JsonConnectionProvider.downloadFile: filesize = %s" % (filesize))
+        self._log("JsonConnectionProvider.downloadFile: filename = %s" % (filename))
         file(filename, 'wb').write(b64decode(ret['contents']))
         return filename

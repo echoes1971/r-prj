@@ -43,7 +43,8 @@ class RemoteDBE(DBEntity):
         self._orderBy = orderBy
 
     def __call__(self, tablename=None, names=None, values=None, attrs=None, keys=None): #keys={'id':'number'} ):
-        if tablename is not None: self._tablename = tablename
+        if tablename is not None:
+            self._tablename = tablename
         ret = RemoteDBE(
             self._tablename, self._myclazzname, self._remoteDBMgr, self.getKeys(), self.getFK(), self.getOrderBy())
         DBEntity.__init__(ret, self._tablename, names, values, attrs, self.getKeys())
@@ -70,7 +71,8 @@ class RemoteDBE(DBEntity):
             self._keys = {}
             for k in tmp[1].keys():
                 v = tmp[1][k].data
-                if v == 'int': v = 'number'
+                if v == 'int':
+                    v = 'number'
                 self._keys[k] = v
         return self._keys
 
@@ -126,7 +128,7 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         ret = {}
         for n in dbe.getNames():
             tmpvalue = dbe.getValue(n)
-            if type(tmpvalue) == str or type(tmpvalue) == unicode:
+            if isinstance(tmpvalue, str) or isinstance(tmpvalue, unicode):
                 try:
                     tmpvalue.decode('ascii')
                 except Exception:
@@ -144,7 +146,8 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         valori = [n for n in xmldbe.values()]
         valori2 = []
         for v in valori:
-            if isinstance(v, Binary): v = v.data
+            if isinstance(v, Binary):
+                v = v.data
             #if isinstance(v,str): v=u"%s"%v
             if isDateTime(v): #rra.dblayer.isDateTime(v):
                 #"0000-00-00 00:00:00"
@@ -163,7 +166,8 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
                 valori2.append(v2)
             else:
                 valori2.append(v)
-        if isinstance(typename, Binary): typename = typename.data
+        if isinstance(typename, Binary):
+            typename = typename.data
         myclazz = self.dbmgr.getClazzByTypeName(typename)
         if isinstance(myclazz, RemoteDBE):
             return myclazz(myclazz.getTableName(), names=nomi, values=valori2)
@@ -191,13 +195,14 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
 
     def getClazzByTypeName(self, typename, case_sensitive=False):
         try:
-            if self.verbose: print "XmlrpcConnectionProvider.getClazzByTypeName: typename=%s" % (typename)
-            if self._cache is None: self._cache = self.getRegisteredTypes()
+            self._log("XmlrpcConnectionProvider.getClazzByTypeName: typename=%s" % (typename))
+            if self._cache is None:
+                self._cache = self.getRegisteredTypes()
             ret = DBEntity
             if 'default' in self._cache:
                 ret = self._cache['default']
             for k in self._cache.keys():
-                if self.verbose: print "DBEFactory.getClazzByTypeName: k=%s" % (k)
+                self._log("DBEFactory.getClazzByTypeName: k=%s" % (k))
                 mytypename = ''
                 if isinstance(self._cache[k], RemoteDBE):
                     mytypename = self._cache[k].getTypeName()
@@ -266,9 +271,9 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         return dbe
 
     def select(self, tablename, searchString):
-        if self.verbose: print "XmlrpcConnectionProvider.select: tablename=%s" % (tablename)
-        if self.verbose: print "XmlrpcConnectionProvider.select: searchString=%s" % (searchString)
-        if self.verbose: print "XmlrpcConnectionProvider.select: start search=%s" % (datetime.datetime.now())
+        self._log("XmlrpcConnectionProvider.select: tablename=%s" % (tablename))
+        self._log("XmlrpcConnectionProvider.select: searchString=%s" % (searchString))
+        self._log("XmlrpcConnectionProvider.select: start search=%s" % (datetime.datetime.now()))
         try:
             self.semaforo.acquire(True)
             tmp = self._server.select(tablename, searchString)
@@ -277,12 +282,12 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
             self.lastMessages = tmp[0].data
         except DBLayerException, e:
             raise DBLayerException("Problemi di comunicazione col server: %s" % e)
-        if self.verbose: print "XmlrpcConnectionProvider.select: start xml->dbe=%s" % (datetime.datetime.now())
+        self._log("XmlrpcConnectionProvider.select: start xml->dbe=%s" % (datetime.datetime.now()))
         ret = []
         for r in res:
             tmpdbe = self._xmlrpcToDbe(r)
             ret.append(tmpdbe)
-        if self.verbose: print "XmlrpcConnectionProvider.select: end time = %s" % (datetime.datetime.now())
+        self._log("XmlrpcConnectionProvider.select: end time = %s" % (datetime.datetime.now()))
         return ret
 
     def delete(self, dbe):
@@ -305,20 +310,21 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
 
     def search(self, dbe, uselike=1, orderby=None, ignore_deleted=True, full_object=True):
         casesensitive = 0
-        if self.verbose: print "XmlrpcConnectionProvider.search: start time = %s" % (datetime.datetime.now())
-        tablename = dbe.getTableName()
+        self._log("XmlrpcConnectionProvider.search: start time = %s" % (datetime.datetime.now()))
+        # tablename = dbe.getTableName()
         # Search
         dbexml = self._dbeToXmlrpc(dbe)
-        if self.verbose: print "XmlrpcConnectionProvider.search: dbexml = %s" % (dbexml)
-        if self.verbose: print "XmlrpcConnectionProvider.search: uselike = %s" % (uselike)
-        #if self.verbose: print "XmlrpcConnectionProvider.search: casesensitive = %s" % (casesensitive)
-        if self.verbose: print "XmlrpcConnectionProvider.search: orderby = %s" % (orderby)
+        self._log("XmlrpcConnectionProvider.search: dbexml = %s" % (dbexml))
+        self._log("XmlrpcConnectionProvider.search: uselike = %s" % (uselike))
+        #self._log("XmlrpcConnectionProvider.search: casesensitive = %s" % (casesensitive))
+        self._log("XmlrpcConnectionProvider.search: orderby = %s" % (orderby))
         try:
-            if orderby is None: orderby = ''
+            if orderby is None:
+                orderby = ''
             self.semaforo.acquire(True)
             msg, lista = self._server.search(dbexml, uselike, casesensitive, orderby, ignore_deleted, full_object)
             self.semaforo.release()
-            if self.verbose: print "XmlrpcConnectionProvider.search: msg=\n  ", "\n  ".join(("%s" % msg).split("\n"))
+            self._log("XmlrpcConnectionProvider.search: msg=\n  %s" % "\n  ".join(("%s" % msg).split("\n")))
             self.lastMessages = msg.data
         except Exception, e:
             print "XmlrpcConnectionProvider.search: ECCEZIONE ############# Inizio."
@@ -330,8 +336,8 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         for r in lista:
             tmpdbe = self._xmlrpcToDbe(r)
             ret.append(tmpdbe)
-        if self.verbose: print "XmlrpcConnectionProvider.search: ret = %s" % (len(ret))
-        if self.verbose: print "XmlrpcConnectionProvider.search: end time = %s" % (datetime.datetime.now())
+        self._log("XmlrpcConnectionProvider.search: ret = %s" % (len(ret)))
+        self._log("XmlrpcConnectionProvider.search: end time = %s" % (datetime.datetime.now()))
         return ret
 
     def copy(self, dbe):
@@ -370,7 +376,7 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
             print "XmlrpcConnectionProvider.getLoggedUser: ret=%s" % ret
         if len(ret) == 1:
             tmp = self._xmlrpcToDbe(ret[0])
-            if self.verbose: print "XmlrpcConnectionProvider.getLoggedUser: tmp=%s" % tmp
+            self._log("XmlrpcConnectionProvider.getLoggedUser: tmp=%s" % tmp)
             return tmp
         return None
 
@@ -429,12 +435,7 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         if self.verbose:
             print "XmlrpcConnectionProvider.objectByName: msg=%s" % self.msg
             print "XmlrpcConnectionProvider.objectByName: ret=%s" % ret
-        # 2012.05.07: start.
         return [self._xmlrpcToDbe(dbe) for dbe in ret]
-        #if len(ret)==1:
-        #    return self._xmlrpcToDbe(ret[0])
-        #return None
-        # 2012.05.07: end.
 
     def fullObjectByName(self, myid, ignore_deleted=True):
         self.semaforo.acquire(True)
@@ -452,12 +453,7 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
         if self.verbose:
             print "XmlrpcConnectionProvider.fullObjectByName: msg=%s" % self.msg
             print "XmlrpcConnectionProvider.fullObjectByName: ret=%s" % ret
-        # 2012.05.07: start.
         return [self._xmlrpcToDbe(dbe) for dbe in ret]
-        #if len(ret)==1:
-        #    return self._xmlrpcToDbe(ret[0])
-        #return None
-        # 2012.05.07: end.
 
     def uploadFile(self, local_filename):
         # Remote destination directory
@@ -469,13 +465,12 @@ class XmlrpcConnectionProvider(DBConnectionProvider):
             print "XmlrpcConnectionProvider.uploadFile: debugMsg = %s" % (debugMsg)
             print "XmlrpcConnectionProvider.uploadFile: ret = %s" % (ret)
         dest_dir = ret['dest_dir']
-        if self.verbose:
-            print "XmlrpcConnectionProvider.uploadFile: dest_dir:", dest_dir
+        self._log("XmlrpcConnectionProvider.uploadFile: dest_dir=%s" % dest_dir)
         # Short local filename
         filename_corto = local_filename[len(os.path.dirname(local_filename)):]
         if filename_corto.startswith('/'):
             filename_corto = filename_corto[1:]
-        if self.verbose: print "XmlrpcConnectionProvider.uploadFile: filename_corto: ", filename_corto
+        self._log("XmlrpcConnectionProvider.uploadFile: filename_corto=%s" % filename_corto)
         # Load file
         myfile = file(local_filename).read()
         # Upload TODO split the file in chunks

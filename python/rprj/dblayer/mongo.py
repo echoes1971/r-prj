@@ -4,7 +4,7 @@
 # @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
 # @version $Id: xmlrpc.py $
 # @package dblayer
-# 
+#
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
@@ -24,7 +24,7 @@ from base64 import b64decode
 import pymongo
 
 from rprj.dblayer import DBConnectionProvider, DBLayerException
- 
+
 # 1 mega = 1048576
 UPLOAD_SPLIT_SIZE = 1048576
 
