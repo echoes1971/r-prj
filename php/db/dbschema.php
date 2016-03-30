@@ -1050,7 +1050,9 @@ class DBEFile extends DBEObject {
 		$imorig=null;
          if(!function_exists('imagecreatefromjpeg')) {
              echo "<h1>";
-             echo "RUN:<br/>sudo aptitude install php5-gd</br>";
+             echo "RUN:<br/>";
+             echo "sudo aptitude install php5-gd</br>";
+             echo "sudo /etc/init.d/apache2 restart<br/>";
              echo "</h1>";
          }
 		switch($type) {
