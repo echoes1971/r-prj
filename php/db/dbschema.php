@@ -1048,6 +1048,11 @@ class DBEFile extends DBEObject {
 		$gis = getimagesize($fullpath);
 		$type = $gis[2];
 		$imorig=null;
+         if(!function_exists('imagecreatefromjpeg')) {
+             echo "<h1>";
+             echo "RUN:<br/>sudo aptitude install php5-gd</br>";
+             echo "</h1>";
+         }
 		switch($type) {
 			case "1": $imorig = imagecreatefromgif($fullpath); break;
 			case "2": $imorig = imagecreatefromjpeg($fullpath);break;
