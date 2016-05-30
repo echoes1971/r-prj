@@ -81,8 +81,9 @@ $nome = implode("_",$tmp_nome);
 //$nome = $mydbe->getValue('filename');
 // 2011.03.17: fine.
 
-
-rproject_mylog("RDownload","[".$cerca->getValue('id')."] filename: $nome");
+// To write a note message instead of RDownload
+$log_note = array_key_exists('note',$_REQUEST) ? $_REQUEST['note'] : "RDownload";
+rproject_mylog($log_note,"[".$cerca->getValue('id')."] filename: $nome");
 
 
 
