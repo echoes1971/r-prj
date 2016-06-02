@@ -52,6 +52,10 @@ eval("\$dbe = new $dbetype();");
 $tablename = $dbmgr->buildTableName($dbe);
 
 $queries = array(
+    "delete from $tablename where url like '%baidu%'",
+    "delete from $tablename where url like '%googlebot%'", 
+    "delete from $tablename where url like '%msnbot%'",
+    "delete from $tablename where url like '%yandex%'",
 			"update $tablename set note2='' where `count`>=100",
 			"optimize table $tablename",
 			);

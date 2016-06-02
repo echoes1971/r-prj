@@ -57,6 +57,7 @@ $queries = array(
  			"update $tablename set url='China' where ( ip like '114.%' or ip like '121.70.%' or ip like '124.114.%' or ip like '124.115.%' ) and url is null",
  			"update $tablename set url='China' where ip>='202.108.' and ip<'202.109.' and url is null",
  			"update $tablename set url='China - crawl.baidu.com' where (ip like '123.112.%' or ip like '123.113.%' or ip like '123.114.%' or ip like '123.115.%' or ip like '123.116.%' or ip like '123.117.%' or ip like '123.118.%' or ip like '123.119.%' or ip like '123.120.%' or ip like '123.121.%' or ip like '123.122.%' or ip like '123.123.%' or ip like '123.124.%' or ip like '123.125.%' or ip like '123.126.%' or ip like '220.181.%') and url is null",
+                        "update $tablename set url='China - crawl.baidu.com' where (ip like '180.76.%') and url is null",
  			"update $tablename set url='facebook.com' where ( (ip>='66.220.144.' and ip <'66.220.160.') or (ip>='69.171.224.' and ip<'69.171.256.') or (ip>='69.63.176.' and ip<'69.63.192.') ) and url is null",
  			"update $tablename set url='Germany Berlin' where (ip like '91.64.78.%' or ip like '84.191.%' or ip like '87.176.%' or ip like '87.185.%') and url is null",
  			"update $tablename set url='Germany Stuttgart' where ip like '91.45.%' and url is null",
@@ -116,6 +117,7 @@ $queries = array(
  			"update $tablename set url='www.han.nl - Netherlands Arnhem Hogeschool Van Arnhem En Nijmegen' where ip like '145.74.%' and url is null",
  			"update $tablename set url='www.whois.sc - USA Seattle Compass Communications Inc' where ip like '216.145.11.%' and url is null",
  			"update $tablename set url='yahoo' where (ip like '67.195.%' or ip like '72.30.%' or ip like '74.6.%' or ip like '76.13.%') and url is null",
+                        "update $tablename set url='yandex' where (ip like '199.21.96.%' or ip like '199.21.97.%' or ip like '199.21.98.%' or ip like '199.21.99.%') and url is null",
 // 			"update $tablename set note2='' where `count`>=100",
 // 			"optimize table $tablename",
 			);
