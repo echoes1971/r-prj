@@ -503,7 +503,7 @@ class MYConnectionProvider extends DBConnectionProvider {
             if($this->_verbose) echo 'Could not run query: ' . mysql_error();
             return $ret;
         }
-        if(mysql_num_rows($result) > 0) {
+        if(mysql_num_rows($result)>0) {
             $colonna=1;
             while ($row = mysql_fetch_assoc($result)) {
                 $ret[ $row["Field"] ]=$row;

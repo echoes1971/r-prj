@@ -215,7 +215,7 @@ class FForm {
 		$this->fields[ $nomeField ] = $aField;
 		$this->addToGroup( $nomeGruppo, $ordine, $nomeField );
 		
-		if( is_a($aField, 'FFileField') )
+		if(is_a($aField, 'FFileField'))
 			$this->enctype='multipart/form-data';
 	}
 	

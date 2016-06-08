@@ -499,7 +499,6 @@ class FFile extends FObject {
 	/**
 	 * @par alternative_link link alternativo per permettere download da linkbucks :-) 2010.09.27
 	 */
-	// &$dbmgr, $nome_field = null
 	function render_view($with_thumbnail=true,$alternative_link='') {
 		$__alt_link = $this->getValue('alt_link');
 		if($__alt_link===null || $__alt_link=='') {
@@ -581,7 +580,7 @@ class FLink extends FObject {
 										array("link"=>"Link",) ); }
 	function getDBE() { return new DBELink(); }
 	
-	function render_view(&$dbmgr, $nome_field = null) {
+	function render_view(&$dbmgr, $nome_field=null) {
 		$ret = '';
 		if ( $nome_field!==null ) {
 			$_field = $this->getField( $nome_field );

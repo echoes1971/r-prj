@@ -1606,7 +1606,7 @@ class DBEProjectPeopleRole extends DBAssociation {
 	function getOrderBy() { return array("order_position","id"); }
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
@@ -1680,7 +1680,7 @@ class DBEProjectProjectRole extends DBEObject {
 	function getOrderBy() { return array("order_position","id"); }
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
@@ -1769,10 +1769,10 @@ class DBETimetrack extends DBEObject {
 		// Recupero la fk verso i progetti
 		$fks = $dbe_master->getFKForTable('projects');
 		$myfks = $this->getFKForTable('projects');
-		for($m=0; $m<count($fks); $m++ ) {
+		for($m=0; $m<count($fks); $m++) {
 			$master_value = $dbe_master->getValue( $fks[$m]->colonna_fk );
 			if( $master_value!=null ) {
-				for($f=0; $f<count($myfks); $f++ ) {
+				for($f=0; $f<count($myfks); $f++) {
 					// Controllo che non sia già presente un'altra clausola in $ret
 					$trovata = false;
 					$stringa_nome = "field_" . $myfks[$f]->colonna_fk;
