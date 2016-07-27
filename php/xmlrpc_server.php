@@ -32,6 +32,8 @@ define("MY_DEST_DIR",$GLOBALS[ 'root_directory' ]."/".$GLOBALS[ 'files_directory
 session_start();
 require_once(ROOT_FOLDER . "plugins.php");
 
+//error_log("TEST LOG");
+
 global $dbeFactory;
 
 $dbmgr = array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
