@@ -590,8 +590,9 @@ class MYConnectionProvider extends DBConnectionProvider {
         $ret = array();
         $num_fields = $_desc===false ? 0 : mysqli_num_fields($_desc);
         for($i=0; $i<$num_fields; $i++) {
-            $_tmp = mysqli_field_name($_desc, $i);
-            $ret[ $i ] = $_tmp;
+            $properties = mysqli_fetch_field_direct($_desc, $i);
+            $_tmp = is_object($properties) ? $properties->name : null;
+            $ret[$i] = $_tmp;
         }
         return $ret;
     }
