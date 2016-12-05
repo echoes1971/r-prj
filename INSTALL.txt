@@ -2,15 +2,15 @@
 1. Install PHP5, Apache and MySQL-Server
 
 sudo aptitude install mysql-server
-sudo aptitude install php5
-sudo aptitude install php5-mysql
+sudo aptitude install php
+sudo aptitude install php-mysql
 
 2. Configure Apache
 sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/userdir.load
 
 sudo ln -s /etc/apache2/mods-available/userdir.conf /etc/apache2/mods-enabled/userdir.conf
 
-sudo vi /etc/apache2/mods-enabled/php5.conf
+sudo vi /etc/apache2/mods-enabled/php7.0.conf
 ...
         php_admin_flag engine On
 ...

@@ -1,5 +1,8 @@
 <?php
 
+$db_user = "roberto";
+$db_pwd = "swirob00";
+
 /*
 $db_server = "localhost";
 $db_user = "root";

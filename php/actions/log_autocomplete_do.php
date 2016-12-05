@@ -117,7 +117,8 @@ $queries = array(
  			"update $tablename set url='www.han.nl - Netherlands Arnhem Hogeschool Van Arnhem En Nijmegen' where ip like '145.74.%' and url is null",
  			"update $tablename set url='www.whois.sc - USA Seattle Compass Communications Inc' where ip like '216.145.11.%' and url is null",
  			"update $tablename set url='yahoo' where (ip like '67.195.%' or ip like '72.30.%' or ip like '74.6.%' or ip like '76.13.%') and url is null",
-                        "update $tablename set url='yandex' where (ip like '199.21.96.%' or ip like '199.21.97.%' or ip like '199.21.98.%' or ip like '199.21.99.%') and url is null",
+                        "update $tablename set url='yahoo' where (ip>='68.180.128.' and ip<'68.180.256.') and url is null",
+                        "update $tablename set url='yandex' where (ip like '141.8.132.%' or ip like '199.21.96.%' or ip like '199.21.97.%' or ip like '199.21.98.%' or ip like '199.21.99.%') and url is null",
 // 			"update $tablename set note2='' where `count`>=100",
 // 			"optimize table $tablename",
 			);

@@ -220,8 +220,8 @@ class FForm {
 	}
 	
 	function getFieldNames() { return array_keys( $this->fields ); }
-	function getField( $fieldName ) {
-		return array_key_exists($fieldName,$this->fields) ? $this->fields[ $fieldName ] : null;
+	function getField($fieldName) {
+		return array_key_exists($fieldName,$this->fields) ? $this->fields[$fieldName] : null;
 	}
 	
 	function decodeGroupName($group_name) {

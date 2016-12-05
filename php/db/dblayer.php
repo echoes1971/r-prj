@@ -495,33 +495,33 @@ class MYConnectionProvider extends DBConnectionProvider {
     function getColumnsForTable($tablename) {
         $ret=array();
         ob_start();
-        $result = mysql_query("SHOW COLUMNS FROM $tablename",$this->conn);
+        $result = $this->db_query("SHOW COLUMNS FROM $tablename");
         $messaggi = ob_get_contents();
         ob_end_clean();
         if($this->_verbose) { echo "MYConnectionProvider.getColumnsForTable: $messaggi<br />\n"; }
         if($result===false) {
-            if($this->_verbose) echo 'Could not run query: ' . mysql_error();
+            if($this->_verbose) echo 'Could not run query: ' . mysqli_error();
             return $ret;
         }
-        if(mysql_num_rows($result)>0) {
+        if(mysqli_num_rows($result)>0) {
             $colonna=1;
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $ret[ $row["Field"] ]=$row;
             }
         }
-        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysql_num_rows(result)=".$ret."<br/>\n";
+        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$ret."<br/>\n";
         return $ret;
     }
     function getColumnName($tablename, $num_column) {
         $ret="";
-        $result = mysql_query("SHOW COLUMNS FROM $tablename",$this->conn);
+        $result = $this->db_query("SHOW COLUMNS FROM $tablename");
         if($result===false) {
-            echo 'MYConnectionProvider.getColumnName: Could not run query ' . mysql_error();
+            echo 'MYConnectionProvider.getColumnName: Could not run query ' . mysqli_error();
             return $ret;
         }
-        if(mysql_num_rows($result) > 0) {
+        if(mysqli_num_rows($result) > 0) {
             $colonna=1;
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 if($colonna==$num_column) {
                     $ret=$row["Field"];
                     break;
@@ -529,30 +529,30 @@ class MYConnectionProvider extends DBConnectionProvider {
                 $colonna++;
             }
         }
-        echo "MYConnectionProvider.getColumnName: mysql_num_rows(result): ".$ret."\n";
+        echo "MYConnectionProvider.getColumnName: mysqli_num_rows(result): ".$ret."\n";
         return $ret;
     }
     function getColumnSize($tablename) {
         $ret=-1;
-        $result = mysql_query("SHOW COLUMNS FROM $tablename",$this->conn);
+        $result = $this->db_query("SHOW COLUMNS FROM $tablename");
         if($result===false) {
-            echo 'MYConnectionProvider.getColumnSize: Could not run query: ' . mysql_error();
+            echo 'MYConnectionProvider.getColumnSize: Could not run query: ' . mysqli_error();
             return $ret;
         }
-        $ret = mysql_num_rows($result);
-        echo "MYConnectionProvider.getColumnSize: mysql_num_rows(result): ".$ret."\n";
+        $ret = mysqli_num_rows($result);
+        echo "MYConnectionProvider.getColumnSize: mysqli_num_rows(result): ".$ret."\n";
         return $ret;
     }
     function getKeys($tablename) {
         $ret=array();
-        $result = mysql_query("SHOW COLUMNS FROM $tablename",$this->conn);
+        $result = $this->db_query("SHOW COLUMNS FROM $tablename");
         if($result===false) {
-            echo 'MYConnectionProvider.getKeys: Could not run query: ' . mysql_error();
+            echo 'MYConnectionProvider.getKeys: Could not run query: ' . mysqli_error();
             return $ret;
         }
-        if(mysql_num_rows($result) > 0) {
+        if(mysqli_num_rows($result) > 0) {
             $colonna=1;
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 if($row["Key"]=="PRI")
                     $ret[]=$colonna;
                 $colonna++;
@@ -562,14 +562,14 @@ class MYConnectionProvider extends DBConnectionProvider {
     }
     function getForeignKeys($tablename) {
         $ret=array();
-        $result = mysql_query("SHOW COLUMNS FROM $tablename",$this->conn);
+        $result = $this->db_query("SHOW COLUMNS FROM $tablename");
         if($result===false) {
-            echo 'MYConnectionProvider.getForeignKeys: Could not run query: ' . mysql_error();
+            echo 'MYConnectionProvider.getForeignKeys: Could not run query: ' . mysqli_error();
             return $ret;
         }
-        if(mysql_num_rows($result) > 0) {
+        if(mysqli_num_rows($result) > 0) {
             $colonna=0;
-            while ($row = mysql_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 if($row["Key"]=="MUL")
                     $ret[]=$colonna;
                 $colonna++;
@@ -577,20 +577,20 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         return $ret;
     }
-    function db_query($_query) { return mysql_query($_query,$this->conn); }
-    function db_error() { return mysql_error(); }
-    function db_fetch_array($_p) { return mysql_fetch_array($_p); }
-    //function db_escape_string($_p) { return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",mysql_real_escape_string($_p))); }
+    function db_query($_query) { return mysqli_query($this->conn, $_query); }
+    function db_error() { return mysqli_error(); }
+    function db_fetch_array($_p) { return mysqli_fetch_array($_p); }
+    //function db_escape_string($_p) { return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",mysqli_real_escape_string($_p))); }
     function db_escape_string($_p) {
         return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",$_p));
     }
-    function db_free_result(&$r) { return mysql_free_result($r); }
-    function db_num_rows($r) { return mysql_num_rows($r); }
+    function db_free_result(&$r) { return mysqli_free_result($r); }
+    function db_num_rows($r) { return mysqli_num_rows($r); }
     function _description2names($_desc) {
         $ret = array();
-        $num_fields = $_desc===false ? 0 : mysql_num_fields($_desc);
+        $num_fields = $_desc===false ? 0 : mysqli_num_fields($_desc);
         for($i=0; $i<$num_fields; $i++) {
-            $_tmp = mysql_field_name($_desc, $i);
+            $_tmp = mysqli_field_name($_desc, $i);
             $ret[ $i ] = $_tmp;
         }
         return $ret;
@@ -598,8 +598,7 @@ class MYConnectionProvider extends DBConnectionProvider {
     function connect() {
         if($this->isConnected()) return;
         ob_start();
-        $this->conn = mysql_connect($this->_server, $this->_user, $this->_pwd);
-        mysql_select_db($this->_dbname, $this->conn);
+        $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd, $this->_dbname);
         $messaggi = ob_get_contents();
         ob_end_clean();
         if($this->_verbose) {
@@ -609,7 +608,7 @@ class MYConnectionProvider extends DBConnectionProvider {
     }
     function disconnect() {
         if($this->isConnected()) {
-            mysql_close($this->conn);
+            mysqli_close($this->conn);
         }
         $this->conn=null;
     }
@@ -617,7 +616,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         $ret = $this->conn!==null
                 && $this->conn!==false
                 && !is_int($this->conn)
-                && mysql_ping($this->conn)
+                && mysqli_ping($this->conn)
                 ;
         //echo "isConnected:$ret<br/>";
         return $ret;

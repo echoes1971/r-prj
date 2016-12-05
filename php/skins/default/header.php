@@ -30,6 +30,7 @@ $popupIframe = new WTPopupIFrame('main_actions','New','','800px', '600px');
 <html xmlns="http://www.w3.org/1999/xhtml"><head><title><?php
   echo $_SESSION['site_title'];
   if(isset($current_obj) && $current_obj!==null && $current_obj->getValue('name')>'' && $current_obj->getValue('name')!='Home') echo " ".$current_obj->getValue('name'); ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" /><?php
 if($dbmgr->getDBEUser()!==null) {
 } else {
