@@ -74,8 +74,8 @@ global $root_obj_id; $root_obj_id='-10';
 
 $pecnam_host = $_SERVER["HTTP_HOST"];
 // Bugfix: non funziona nell'area di test, es. epap.sicurezzapostale.it:8443
-if( strcmp($pecnam_host,":")>0 ) {
-  $tmp_pecnam_host = split(":",$pecnam_host);
+if(strcmp($pecnam_host,":")>0) {
+  $tmp_pecnam_host = explode(":",$pecnam_host);
   $pecnam_host = $tmp_pecnam_host[0];
 }
 @include ROOT_FOLDER.'config_'.$pecnam_host.'.php';

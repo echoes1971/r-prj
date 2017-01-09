@@ -32,6 +32,8 @@ define("MY_DEST_DIR",$GLOBALS[ 'root_directory' ]."/".$GLOBALS[ 'files_directory
 session_start();
 require_once(ROOT_FOLDER . "plugins.php");
 
+define(DEBUG_TO_LOG, true);
+
 //error_log("TEST LOG");
 
 global $dbeFactory;
@@ -187,7 +189,6 @@ function execDBEMethod($m) {
     $dbmgr->setVerbose(false);
     $res = array();
     if(_isAuthorized()) {
-
         for($i=0; $i<count($argomenti); $i++)
             if(is_string($argomenti[$i]))
                 $argomenti[$i]="\"".$argomenti[$i]."\"";
@@ -861,6 +862,8 @@ function login($m) {
     $messaggi = ob_get_contents();
     ob_end_clean();
     
+    //if(DEBUG_TO_LOG) error_log($messaggi);
+    
     $retArray=array();
     if($__utente!=null) $retArray[]=_dbeToXmlrpc($__utente);
     
@@ -1436,7 +1439,7 @@ function ping($m) {
     
     $retArray=array();
     $retArray[] = new xmlrpcval( "pong", 'base64' );
-    
+
     return new xmlrpcresp(
         new xmlrpcval(
             array(
@@ -1687,6 +1690,7 @@ function CheckFileChanged($m) {
 }
 
 
+// if(DEBUG_TO_LOG) ob_start();
 
 $s=new xmlrpc_server( array(
             "select" =>
@@ -1811,4 +1815,12 @@ $s=new xmlrpc_server( array(
         )
     );
 
+//$s->setDebug(1);
+
+// if(DEBUG_TO_LOG) {
+//     $messaggi = ob_get_contents();
+//     ob_end_clean();
+// 
+//     error_log($messaggi);
+// }
 ?>
