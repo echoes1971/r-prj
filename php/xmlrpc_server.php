@@ -546,6 +546,7 @@ function update($m) {
     if(_isAuthorized()) {
         $dbexml = $m->getParam(0);
         $dbe = _xmlrpcToDbe($dbexml);
+        //if(DEBUG_TO_LOG) error_log("dbe: ".$dbe->to_string());
         $dbe = $dbmgr->update($dbe);
         if($dbe!==null) {
             $dbe->setValue('_typename',get_class($dbe));
@@ -557,6 +558,7 @@ function update($m) {
     $messaggi = ob_get_contents();
     ob_end_clean();
     
+    //if(DEBUG_TO_LOG) error_log($messaggi);
     return new xmlrpcresp(
         new xmlrpcval(
             array(

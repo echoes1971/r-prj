@@ -580,10 +580,13 @@ class MYConnectionProvider extends DBConnectionProvider {
     function db_query($_query) { return mysqli_query($this->conn, $_query); }
     function db_error() { return mysqli_error(); }
     function db_fetch_array($_p) { return mysqli_fetch_array($_p); }
+    
+    // 20170110: FIXME why not reenable this again?
     //function db_escape_string($_p) { return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",mysqli_real_escape_string($_p))); }
     function db_escape_string($_p) {
         return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",$_p));
     }
+    
     function db_free_result(&$r) { return mysqli_free_result($r); }
     function db_num_rows($r) { return mysqli_num_rows($r); }
     function _description2names($_desc) {
@@ -604,7 +607,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         ob_end_clean();
         if($this->_verbose) {
             echo "MYConnectionProvider.connect: ".$this->_server.":".$this->_user.":".$this->_pwd.":".$this->_dbname." $messaggi<br />\n";
-            echo "MYConnectionProvider.connect: ".$this->conn."<br />\n";
+            //echo "MYConnectionProvider.connect: ".$this->conn."<br />\n";
         }
     }
     function disconnect() {
@@ -617,6 +620,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         $ret = $this->conn!==null
                 && $this->conn!==false
                 && !is_int($this->conn)
+                && $this->conn->connect_errno===0
                 && mysqli_ping($this->conn)
                 ;
         //echo "isConnected:$ret<br/>";
@@ -858,7 +862,14 @@ class DBMgr {
                     if($tipo_v===null) $tipo_v=gettype($v);
                     if($tipo_v=='string' || $tipo_v=='datetime' || $tipo_v=='date' || $tipo_v=='time') {
                         if($tipo_v=='datetime' && strlen($v)==8) $v="0000-00-00 ".$v;
-                        $setstring[ count($setstring) ] = "$nomeCampo='".$this->db_escape_string($v)."'";
+                        // 20170110: start.
+                        // 20170110: fix for NO_ZERO_DATE, run this to verify if you are subject to the issue:
+                        // 20170110: SHOW VARIABLES LIKE 'sql_mode';
+                        if($tipo_v=='datetime' && $v="0000-00-00 00:00:00") {
+                        } else {
+                            $setstring[ count($setstring) ] = "$nomeCampo='".$this->db_escape_string($v)."'";
+                        }
+                        // 20170110: end.
                     } elseif($tipo_v=='uuid') {
                         $setstring[ count($setstring) ] = "$nomeCampo='".DBEntity::hex2uuid($v)."'";
                     } else {

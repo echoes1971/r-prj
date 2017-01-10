@@ -1,5 +1,8 @@
 <?php
 
+
+// mysql -pswirob00 rproject
+
 $db_user = "roberto";
 $db_pwd = "swirob00";
 
