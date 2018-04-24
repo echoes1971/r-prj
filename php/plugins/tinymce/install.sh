@@ -2,6 +2,7 @@
 
 wget --no-check-certificate http://github.com/downloads/tinymce/tinymce/tinymce_3.4.7.zip
 unzip tinymce_3.4.7.zip
+mkdir skins
 mv tinymce/jscripts skins/default/
 
 rm -rf tinymce

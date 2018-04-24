@@ -3,7 +3,6 @@
  * Estensioni al formulator
  */
 
-
 class FHtmlEdit extends FHtml {
 	function js_tinymce() {
 		$ret = "";
@@ -28,7 +27,5 @@ class FHtmlEdit extends FHtml {
 // 		return parent::render_view().$this->popupDomaintools_view();
 // 	}
 }
-
-
 
 ?>

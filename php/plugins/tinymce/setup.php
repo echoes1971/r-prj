@@ -54,5 +54,4 @@ function tinymce_hook_test($params) {
 	echo "<b>Hook Test</b>";
 }
 
-
 ?>
