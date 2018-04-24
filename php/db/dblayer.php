@@ -578,7 +578,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         return $ret;
     }
     function db_query($_query) { return mysqli_query($this->conn, $_query); }
-    function db_error() { return mysqli_error(); }
+    function db_error() { return mysqli_error($this->conn); }
     function db_fetch_array($_p) { return mysqli_fetch_array($_p); }
     
     // 20170110: FIXME why not reenable this again?

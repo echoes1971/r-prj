@@ -36,7 +36,7 @@ if ($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$_SESSION['dbmgr'] = $dbmgr;
 }
 $dbmgr->setVerbose(false);
-$formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
+$formulator = array_key_exists('formulator',$_SESSION) ? $_SESSION['formulator'] : null;
 if ($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
 	$formulator = new MyFormFactory;
 	$_SESSION['formulator'] = $formulator;
@@ -64,15 +64,15 @@ if(count($lista)!=1) {
 $mydbe = $lista[0];
 $childs=array();
 
-if( is_a( $myform, 'FMasterDetail' ) ) {
+if(is_a($myform, 'FMasterDetail')) {
 	for($i=0; $i<$myform->getDetailFormsCount(); $i++) {
 		$childForm = $myform->getDetail($i);
 		$childDbe = $childForm->getDBE();
 		$childDbe->readFKFrom($mydbe);
 		$tmp = $dbmgr->search($childDbe,$uselike=0);
-		if ( is_a( $childForm, 'FAssociation' ) ) {
+		if (is_a($childForm, 'FAssociation')) {
 			$tmp2=array();
-			$dest_form = get_class($myform)==get_class( $childForm->getFromForm() ) ? $childForm->getToForm() : $childForm->getFromForm();
+			$dest_form = get_class($myform)==get_class($childForm->getFromForm()) ? $childForm->getToForm() : $childForm->getFromForm();
 			$dest_dbe = $dest_form->getDBE();
 			foreach($tmp as $assdbe) {
 				$dest_dbe = $assdbe->writeFKTo($dest_dbe);
@@ -81,14 +81,14 @@ if( is_a( $myform, 'FMasterDetail' ) ) {
 			}
 			$tmp=$tmp2;
 		}
-		$childs[ get_class($childForm) ] = $tmp;
+		$childs[get_class($childForm)] = $tmp;
 	}
 }
 
-$myform->setValues( $mydbe->getValuesDictionary() );
+$myform->setValues($mydbe->getValuesDictionary());
 
 $campiVisibili = $myform->getDetailColumnNames();
 $campiReadonly = $myform->getDetailReadOnlyColumnNames();
 
-require_once( getSkinPage("mng/dbe_modify.php") );
+require_once(getSkinPage("mng/dbe_modify.php"));
 ?>

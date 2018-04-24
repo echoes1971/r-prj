@@ -19,7 +19,6 @@
  */
 
 global $plugins_enabled;
-
 global $rproject_plugin_hooks;
 
 if(!defined($rproject_plugin_hooks)) $rproject_plugin_hooks=array();

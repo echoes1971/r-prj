@@ -18,7 +18,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_NOTICE);
-//error_log("SUNCHI");
+/* Silence the "Different declarations" Warnings
+ * See:
+ *  https://stackoverflow.com/questions/36079651/silence-declaration-should-be-compatible-warnings-in-php-7
+ */
+if(PHP_MAJOR_VERSION >= 7) {
+    set_error_handler(function ($errno, $errstr) {
+       return strpos($errstr, 'Declaration of') === 0
+        || strpos($errstr, 'mysqli_ping(): Couldn\'t fetch mysqli') === 0;
+    }, E_WARNING);
+}
+
 /**
  *	File di configurazione.
  */
