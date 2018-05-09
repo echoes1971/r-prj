@@ -212,7 +212,7 @@ class FForm {
 	
 	function addField($nomeGruppo='', $ordine=-1, $nomeField, &$aField) {
 		$aField->setForm($this);
-		$this->fields[ $nomeField ] = $aField;
+		$this->fields[$nomeField] = $aField;
 		$this->addToGroup($nomeGruppo, $ordine, $nomeField);
 		
 		if(is_a($aField, 'FFileField'))
@@ -231,14 +231,14 @@ class FForm {
 	function getGroupNames() { return array_keys($this->groups); }
 	function getGroup($nomeGruppo) {
 		if(array_key_exists($nomeGruppo,$this->groups)) {
-			return $this->groups[ $nomeGruppo ];
+			return $this->groups[$nomeGruppo];
 		}
 	}
 	function getGroupSize($nomeGruppo) {
-		return count($this->getGroup($nomeGruppo ));
+		return count($this->getGroup($nomeGruppo));
 	}
 	function setGroup($nomeGruppo, $gruppo) {
-		$this->groups[ $nomeGruppo ] = $gruppo;
+		$this->groups[$nomeGruppo] = $gruppo;
 	}
 	/**
 	 * Un gruppo e' un array ordinato di nomi di campo.
@@ -247,7 +247,7 @@ class FForm {
 		$gruppo = $this->getGroup($nomeGruppo);
 		if($gruppo==null) {	$gruppo=array();	}
 		if($ordine<0) {	$ordine = count($gruppo);	}
-		$gruppo[ $ordine ] = $nomeField;
+		$gruppo[$ordine] = $nomeField;
 		$this->setGroup($nomeGruppo, $gruppo);
 	}
 	
@@ -255,44 +255,44 @@ class FForm {
 	 * @par $at_index legge all'indice index in un array di valori
 	 */
 	function readValuesFromRequest($aRequest, $only_not_empty=false, $at_index=-1) {
-		foreach ($this->getFieldNames() as $nomeCampo) {
-			$this->fields[ $nomeCampo ]->readValueFromRequest($aRequest,$only_not_empty,$at_index);
+		foreach($this->getFieldNames() as $nomeCampo) {
+			$this->fields[$nomeCampo]->readValueFromRequest($aRequest,$only_not_empty,$at_index);
 		}
 	}
 	function readValuesFromArray($aSession,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		$this->readValuesFromRequest($aSession,$only_not_empty,$at_index);
 	}
 	function writeValuesToArray(&$aSession,$prefix="field_") {
-		foreach ($this->getFieldNames() as $nomeCampo) {
-			$this->fields[ $nomeCampo ]->writeValueToArray($aSession);
+		foreach($this->getFieldNames() as $nomeCampo) {
+			$this->fields[$nomeCampo]->writeValueToArray($aSession);
 		}
 	}
 	/** Ritorna solo i valori dei campi indicati per il filtro */
 	function getFilterValues() {
 		$ret = array();
-		foreach ($this->getFilterFields() as $nomeCampo) {
-			$ret[ $nomeCampo ] = $this->fields[ $nomeCampo ]->getValue();
+		foreach($this->getFilterFields() as $nomeCampo) {
+			$ret[$nomeCampo] = $this->fields[$nomeCampo]->getValue();
 		}
 		return $ret;
 	}
 	function getValues() {
 		$ret = array();
-		foreach ($this->getFieldNames() as $nomeCampo) {
-			$ret[ $nomeCampo ] = $this->fields[ $nomeCampo ]->getValue();
+		foreach($this->getFieldNames() as $nomeCampo) {
+			$ret[$nomeCampo] = $this->fields[$nomeCampo]->getValue();
 		}
 		return $ret;
 	}
 	function setValues($valori) {
-		foreach(array_keys($valori ) as $chiave) {
+		foreach(array_keys($valori) as $chiave) {
 			$campo = null;
-			if(array_key_exists($chiave,$this->fields)) { $campo = $this->fields[ $chiave ]; }
+			if(array_key_exists($chiave,$this->fields)) { $campo = $this->fields[$chiave]; }
 			if($campo!=null) {
-				$this->fields[ $chiave ]->setValue($valori[ $chiave ]);
+				$this->fields[$chiave]->setValue($valori[$chiave]);
 			}
 		}
 	}
 	function getValue($fieldName) { $tmp = $this->getField($fieldName); return $tmp->getValue(); }
-	function setValue($fieldName,$aValue) { $this->fields[ $fieldName ]->setValue($aValue); }
+	function setValue($fieldName,$aValue) { $this->fields[$fieldName]->setValue($aValue); }
 	
 	function render_view(&$dbmgr,$nome_field=null) {
 		$ret = '';
@@ -345,10 +345,10 @@ class FForm {
 		$ret .= "Method: " . $this->metodo . "\n";
 		$gruppi = $this->getGroupNames();
 		$ret .= "Groups: " . $gruppi . "\n";
-		foreach ($gruppi as $nomeGruppo) {
+		foreach($gruppi as $nomeGruppo) {
 			$ret .= "\tGroup: " . $nomeGruppo . "\n";
 			$mygruppo = $this->getGroup($nomeGruppo);
-			for ($i=0; $i<count($mygruppo); $i++) {
+			for($i=0; $i<count($mygruppo); $i++) {
 				$myfield = $this->getField($mygruppo[ $i ]);
 				$ret .= "\t\t" . $mygruppo[ $i ] . " => '" . $myfield->getValue() . "'\n";
 			}
@@ -487,7 +487,7 @@ class FormFactory {
 			if(!in_array($k,array_keys($this->fieldslist)) )
 				$this->fieldslist[$k] = array();
 			$_field_kind = get_class($istanza->getField($k));
-			if(!in_array($_field_kind, array_keys($this->fieldslist[$k]) ))
+			if(!in_array($_field_kind, array_keys($this->fieldslist[$k])))
 				$this->fieldslist[$k][$_field_kind]=array();
 			$_fieldlist = $this->fieldslist[$k][$_field_kind];
 			if(!in_array($aClassName,$_fieldlist)) {
@@ -517,7 +517,7 @@ class FormFactory {
 			eval("\$ret = new ".$this->classname2type[$aClassname]."(\$nome, \$azione , \$metodo);");
 			$_aClassname=$this->classname2type[$aClassname];
 // 			return $ret;
-		} elseif(array_search($aClassname, array_values($this->classname2type) )) {
+		} elseif(array_search($aClassname, array_values($this->classname2type))) {
 			eval("\$ret = new $aClassname(\$nome, \$azione , \$metodo);");
 // 			return $ret;
 		} elseif($aClassname=="FForm" || $aClassname=="FMasterDetail" || $aClassname=="FAssociation") {
@@ -1529,7 +1529,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 			$ret .= "<select ";
 			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_day_".$aNomeCampo."\"><option value=''>--</option>";
-			for ($_day=1; $_day<=31; $_day++) {
+			for($_day=1; $_day<=31; $_day++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_day) . "\" ";
 				if($_day==$_giorno) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_day) . "</option>";
@@ -1539,7 +1539,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 			$ret .= "<select ";
 			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_month_".$aNomeCampo."\"><option value=''>--</option>";
-			for ($_month=1; $_month<=12; $_month++) {
+			for($_month=1; $_month<=12; $_month++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_month) . "\" ";
 				if($_month==$_mese) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_month) . "</option>";
@@ -1549,7 +1549,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 			$ret .= "<select ";
 			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_year_".$aNomeCampo."\"><option value=''>--</option>";
-			for ($_year=2000; $_year<=2020; $_year++) {
+			for($_year=2000; $_year<=2020; $_year++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_year) . "\" ";
 				if($_year==$_anno) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_year) . "</option>";
@@ -1567,7 +1567,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 		$ret .= "<select ";
 		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_hour_".$aNomeCampo."\"><option value=''>--</option>";
-		for ($_hour=0; $_hour<=23; $_hour++) {
+		for($_hour=0; $_hour<=23; $_hour++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_hour) . "\" ";
 			if($_hour==$_ore) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_hour) . "</option>";
@@ -1577,7 +1577,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 		$ret .= "<select ";
 		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_minute_".$aNomeCampo."\"><option value=''>--</option>";
-		for ($_minute=0; $_minute<=59; $_minute++) {
+		for($_minute=0; $_minute<=59; $_minute++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_minute) . "\" ";
 			if($_minute==$_minuti) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_minute) . "</option>";
@@ -1587,7 +1587,7 @@ function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRU
 		$ret .= "<select ";
 		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_seconds_".$aNomeCampo."\"><option value=''>--</option>";
-		for ($_second=0; $_second<=59; $_second++) {
+		for($_second=0; $_second<=59; $_second++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_second) . "\" ";
 			if($_second==$_secondi) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_second) . "</option>";

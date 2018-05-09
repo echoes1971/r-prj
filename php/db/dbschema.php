@@ -175,7 +175,7 @@ class DBEGroup extends DBEntity {
 	 */
 	function _after_insert(&$dbmgr) {
 		$dbe = new DBEUserGroup();
-		$dbe->setValue('group_id',$this->getValue('id'));
+		$dbe->setValue('group_id', $this->getValue('id'));
 		$dbe->setValue('user_id', $dbmgr->getDBEUser()->getValue('id'));
 		$dbmgr->insert($dbe);
 		$dbmgr->addGroup($this->getValue('id'));
@@ -237,8 +237,8 @@ class DBELog extends DBEntity {
 	var $_chiavi = array('ip' => 'text', 'data'=>'date');
 	function getKeys() {
 		$_chiavi = array();
-		$_chiavi[ 'ip' ] = 'varchar(16)';
-		$_chiavi[ 'data' ] = 'date';
+		$_chiavi['ip'] = 'varchar(16)';
+		$_chiavi['data'] = 'date';
 		return $_chiavi;
 	}
 	function getOrderBy() { return array('data desc','ora desc'); }
@@ -604,7 +604,7 @@ class ObjectMgr extends DBMgr {
 				$this->connect();
 				$dbe->_before_delete($this);
 				$sqlString = $this->_buildUpdateString($dbe);
-				if ($this->_verbose) {
+				if($this->_verbose) {
 					print "ObjectMgr.delete: sqlString = $sqlString<br />\n";
 				}
 				$result = $this->db_query($sqlString);
@@ -643,7 +643,7 @@ class ObjectMgr extends DBMgr {
 	 * @par full_object retrieve the whole data of the object, only common object attributes otherwise
 	 */
 	function search($dbe, $uselike=1, $caseSensitive=false, $orderby=null,$ignore_deleted=true,$full_object=true) {
-		if ($this->_verbose) { printf("ObjectMgr::search: start.<br/>\n"); }
+		if($this->_verbose) { printf("ObjectMgr::search: start.<br/>\n"); }
 		if($dbe->getTypeName()!='DBEObject') {
 			if(is_a($dbe,'DBEObject') && $ignore_deleted===true) $dbe->setValue('deleted_date','0000-00-00 00:00:00');
 			return parent::search($dbe, $uselike, $caseSensitive, $orderby);
@@ -654,7 +654,7 @@ class ObjectMgr extends DBMgr {
 		$tmp = parent::search($dbe, $uselike, $caseSensitive, $orderby);
 		// 2012.03.05: start.
 		if(!$full_object) {
-			if ($this->_verbose) { printf("ObjectMgr::search: end.<br/>\n"); }
+			if($this->_verbose) { printf("ObjectMgr::search: end.<br/>\n"); }
 			return $tmp;
 		}
 		// 2012.03.05: end.
@@ -666,7 +666,7 @@ class ObjectMgr extends DBMgr {
 			if(count($lista)!=1) continue;
 			$ret[]=$lista[0];
 		}
-		if ($this->_verbose) { printf("ObjectMgr::search: end.<br/>\n"); }
+		if($this->_verbose) { printf("ObjectMgr::search: end.<br/>\n"); }
 		return $ret;
 	}
 	
@@ -685,7 +685,7 @@ class ObjectMgr extends DBMgr {
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
 		$searchString = implode($q, " union ");
-		if ($this->_verbose) { printf("query: $searchString<br/>\n"); }
+		if($this->_verbose) { printf("query: $searchString<br/>\n"); }
 		$lista = $this->select('DBEObject', "objects", $searchString);
 		return count($lista)==1 ? $lista[0] : null;
 	}
@@ -695,7 +695,7 @@ class ObjectMgr extends DBMgr {
 		eval("\$cerca=new ".$myobj->getValue('classname')."();");
 		$cerca->setValue('id',$myobj->getValue('id'));
 		$lista = $this->search($cerca,0,false,null,$a_ignore_deleted);
-		if ($this->_verbose) { printf("ObjectMgr.fullObjectById: lista=".count($lista)."<br/>\n"); }
+		if($this->_verbose) { printf("ObjectMgr.fullObjectById: lista=".count($lista)."<br/>\n"); }
 		return count($lista)==1 ? $lista[0] : null;
 	}
 	/** Ricerca gli oggetti per nome, tipo wiki */
@@ -712,7 +712,7 @@ class ObjectMgr extends DBMgr {
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
 		$searchString = implode($q, " union ");
-		if ($this->_verbose) {
+		if($this->_verbose) {
 			printf("query: $searchString<br/>\n");
 		}
 		// 2012.05.07: start.
@@ -748,7 +748,7 @@ class ObjectMgr extends DBMgr {
 		
 		$__utente=null;
 		
-		if (count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1) {
+		if(count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1) {
 			// User FOUND
 			$__utente = $ris[0];
 			$this->setDBEUser($__utente);
@@ -1069,8 +1069,8 @@ class DBEFile extends DBEObject {
 		$pix_width = intval($w / $scale);
 		$pix_height = intval($h / $scale);
 		$im = imagecreatetruecolor($pix_width,$pix_height);
-		if (imagecopyresampled($im,$imorig , 0,0,0,0,$pix_width,$pix_height,$w,$h)) {
-			if (imagejpeg($im, $fullpath."_thumb.jpg")) {
+		if(imagecopyresampled($im,$imorig , 0,0,0,0,$pix_width,$pix_height,$w,$h)) {
+			if(imagejpeg($im, $fullpath."_thumb.jpg")) {
 				return $fullpath."_thumb.jpg";
 			}
 		}
@@ -1119,7 +1119,7 @@ class DBEFile extends DBEObject {
 		if(file_exists($_fullpath)) {
 			if(function_exists('finfo_open')) {
 				$finfo = finfo_open(FILEINFO_MIME);
-				if (!$finfo) {
+				if(!$finfo) {
 					if(function_exists('mime_content_type'))
 						$this->setValue('mime',mime_content_type($_fullpath));
 					else
@@ -1210,7 +1210,7 @@ class DBEFile extends DBEObject {
 		if(file_exists($_fullpath)) {
 			if(function_exists('finfo_open')) {
 				$finfo = finfo_open(FILEINFO_MIME);
-				if (!$finfo) {
+				if(!$finfo) {
 					if(function_exists('mime_content_type'))
 						$this->setValue('mime',mime_content_type($_fullpath));
 					else

@@ -586,7 +586,6 @@ class MYConnectionProvider extends DBConnectionProvider {
     function db_escape_string($_p) {
         return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",$_p));
     }
-    
     function db_free_result(&$r) { return mysqli_free_result($r); }
     function db_num_rows($r) { return mysqli_num_rows($r); }
     function _description2names($_desc) {
