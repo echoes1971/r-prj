@@ -865,15 +865,21 @@ class DBMgr {
                         // 20170110: start.
                         // 20170110: fix for NO_ZERO_DATE, run this to verify if you are subject to the issue:
                         // 20170110: SHOW VARIABLES LIKE 'sql_mode';
-                        if($tipo_v=='datetime' && $v="0000-00-00 00:00:00") {
+                        if($tipo_v!='datetime' || $v!="0000-00-00 00:00:00") {
+                            $setstring[count($setstring)] = "$nomeCampo='".$this->db_escape_string($v)."'";
+
                         } else {
-                            $setstring[ count($setstring) ] = "$nomeCampo='".$this->db_escape_string($v)."'";
                         }
+//                         if($tipo_v=='datetime' && $v=="0000-00-00 00:00:00") {
+//                         } else {
+//                         echo "SUNCHI CAZZO\n";
+//                             $setstring[count($setstring)] = "$nomeCampo='".$this->db_escape_string($v)."'";
+//                         }
                         // 20170110: end.
                     } elseif($tipo_v=='uuid') {
-                        $setstring[ count($setstring) ] = "$nomeCampo='".DBEntity::hex2uuid($v)."'";
+                        $setstring[count($setstring)] = "$nomeCampo='".DBEntity::hex2uuid($v)."'";
                     } else {
-                        $setstring[ count($setstring) ] = "$nomeCampo=$v";
+                        $setstring[count($setstring)] = "$nomeCampo=$v";
                     }
                 }
             }
