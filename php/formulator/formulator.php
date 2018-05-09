@@ -28,8 +28,8 @@ $VECCHIO_CALENDARIO = false;
 if(!$VECCHIO_CALENDARIO) {
 	require_once("jscalendar-1.0/calendar.php");
 	$lang = array_key_exists('lang',$_GET) ? $_GET['lang'] : null;
-	if ($lang==null)	$lang = array_key_exists('lang',$_REQUEST) ? $_REQUEST['lang'] : null;
-	if ($lang==null)	$lang = 'en';
+	if($lang==null)	$lang = array_key_exists('lang',$_REQUEST) ? $_REQUEST['lang'] : null;
+	if($lang==null)	$lang = 'en';
 	global $calendar; $calendar = new DHTML_Calendar(ROOT_FOLDER.'formulator/jscalendar-1.0/', $lang, 'calendar-win2k-2', false);
 	global $calendar_writtenLoadFiles; $calendar_writtenLoadFiles = false;
 }
@@ -61,7 +61,7 @@ class FField {
 	 * @param myform riferimento all'istanza di form a cui appartiene
 	 * @param mytipo s=stringa, n=numero, d=data
 	 */
-	function FField( $aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $myform=null, $mytipo='s' ) {
+	function FField($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $myform=null, $mytipo='s') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -76,13 +76,13 @@ class FField {
 	}
 	
 	function render() {
-		return campoGenerico( 'text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length );
+		return campoGenerico('text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 	}
 	function render_view() {
-		return campoGenerico_view( $tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss );
+		return campoGenerico_view($tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss);
 	}
 	function render_hidden() {
-		return campoGenerico_hidden( $tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss );
+		return campoGenerico_hidden($tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss);
 	}
 	function render_readonly() {
 		return $this->render_view() . $this->render_hidden();
@@ -101,7 +101,7 @@ class FField {
 		$this->readValueFromArray($aRequest,"field_",$only_not_empty,$at_index);
 	}
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
-		if ( array_key_exists($prefix . $this->aNomeCampo,$aArray) ) {
+		if(array_key_exists($prefix . $this->aNomeCampo,$aArray)) {
 			$this->aValore = $at_index<0 ? $aArray[$prefix.$this->aNomeCampo ] : $aArray[$prefix.$this->aNomeCampo ][$at_index];
 		} elseif(!$only_not_empty) {
 			$this->aValore=null;
@@ -112,7 +112,7 @@ class FField {
 	}
 	
 	function getValue() {	return $this->aValore;	}
-	function setValue( $v ) {	$this->aValore = $v;	}
+	function setValue($v) {	$this->aValore = $v;	}
 	
 	function getTitle() { return $this->_title; }
 	function getDescription() { return $this->_description; }
@@ -131,7 +131,7 @@ class FForm {
 	var $fields;
 	var $groups;
 	
-	function FForm( $nome='', $azione='', $metodo="POST", $enctype='' ) {
+	function FForm($nome='', $azione='', $metodo="POST", $enctype='') {
 		$this->fields = array(); $this->groups = array();
 		$this->nome = $nome; $this->azione = $azione; $this->metodo = $metodo; $this->enctype=$enctype;
 	}
@@ -197,12 +197,12 @@ class FForm {
 	 * 2011.40.04
 	 * Utility static function for the schema classes returning filterforms, to forms, from forms, etc.
 	 */
-	static function getInstance( $aClassname, $nome='', $azione='', $metodo="POST" ) {
+	static function getInstance($aClassname, $nome='', $azione='', $metodo="POST") {
 		$formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
 		if($formulator!==null)
 			return $formulator->getInstance($aClassname,$nome,$azione,$metodo);
 		else
-			eval( "return new $aClassname(\$nome, \$azione , \$metodo);" );
+			eval("return new $aClassname(\$nome, \$azione , \$metodo);");
 	}
 	
 	function getAction() { return $this->azione; }
@@ -210,16 +210,16 @@ class FForm {
 	function getName() { return $this->nome; }
 	function getEnctype() { return $this->enctype; }
 	
-	function addField( $nomeGruppo='', $ordine=-1, $nomeField, &$aField ) {
+	function addField($nomeGruppo='', $ordine=-1, $nomeField, &$aField) {
 		$aField->setForm($this);
 		$this->fields[ $nomeField ] = $aField;
-		$this->addToGroup( $nomeGruppo, $ordine, $nomeField );
+		$this->addToGroup($nomeGruppo, $ordine, $nomeField);
 		
 		if(is_a($aField, 'FFileField'))
 			$this->enctype='multipart/form-data';
 	}
 	
-	function getFieldNames() { return array_keys( $this->fields ); }
+	function getFieldNames() { return array_keys($this->fields); }
 	function getField($fieldName) {
 		return array_key_exists($fieldName,$this->fields) ? $this->fields[$fieldName] : null;
 	}
@@ -228,34 +228,34 @@ class FForm {
 		$tmp = $this->getDecodeGroupNames();
 		return array_key_exists($group_name,$tmp) ? $tmp[$group_name] : $group_name;
 	}
-	function getGroupNames() { return array_keys( $this->groups ); }
-	function getGroup( $nomeGruppo ) {
-		if ( array_key_exists($nomeGruppo,$this->groups) ) {
+	function getGroupNames() { return array_keys($this->groups); }
+	function getGroup($nomeGruppo) {
+		if(array_key_exists($nomeGruppo,$this->groups)) {
 			return $this->groups[ $nomeGruppo ];
 		}
 	}
-	function getGroupSize( $nomeGruppo ) {
-		return count( $this->getGroup( $nomeGruppo ) );
+	function getGroupSize($nomeGruppo) {
+		return count($this->getGroup($nomeGruppo ));
 	}
-	function setGroup( $nomeGruppo, $gruppo ) {
+	function setGroup($nomeGruppo, $gruppo) {
 		$this->groups[ $nomeGruppo ] = $gruppo;
 	}
 	/**
 	 * Un gruppo e' un array ordinato di nomi di campo.
 	 */
-	function addToGroup( $nomeGruppo='', $ordine=-1, $nomeField ) {
-		$gruppo = $this->getGroup( $nomeGruppo );
-		if ( $gruppo==null ) {	$gruppo=array();	}
-		if ( $ordine<0 ) {	$ordine = count( $gruppo );	}
+	function addToGroup($nomeGruppo='', $ordine=-1, $nomeField) {
+		$gruppo = $this->getGroup($nomeGruppo);
+		if($gruppo==null) {	$gruppo=array();	}
+		if($ordine<0) {	$ordine = count($gruppo);	}
 		$gruppo[ $ordine ] = $nomeField;
-		$this->setGroup( $nomeGruppo, $gruppo );
+		$this->setGroup($nomeGruppo, $gruppo);
 	}
 	
 	/**
 	 * @par $at_index legge all'indice index in un array di valori
 	 */
 	function readValuesFromRequest($aRequest, $only_not_empty=false, $at_index=-1) {
-		foreach ( $this->getFieldNames() as $nomeCampo ) {
+		foreach ($this->getFieldNames() as $nomeCampo) {
 			$this->fields[ $nomeCampo ]->readValueFromRequest($aRequest,$only_not_empty,$at_index);
 		}
 	}
@@ -263,31 +263,31 @@ class FForm {
 		$this->readValuesFromRequest($aSession,$only_not_empty,$at_index);
 	}
 	function writeValuesToArray(&$aSession,$prefix="field_") {
-		foreach ( $this->getFieldNames() as $nomeCampo ) {
+		foreach ($this->getFieldNames() as $nomeCampo) {
 			$this->fields[ $nomeCampo ]->writeValueToArray($aSession);
 		}
 	}
 	/** Ritorna solo i valori dei campi indicati per il filtro */
 	function getFilterValues() {
 		$ret = array();
-		foreach ( $this->getFilterFields() as $nomeCampo ) {
+		foreach ($this->getFilterFields() as $nomeCampo) {
 			$ret[ $nomeCampo ] = $this->fields[ $nomeCampo ]->getValue();
 		}
 		return $ret;
 	}
 	function getValues() {
 		$ret = array();
-		foreach ( $this->getFieldNames() as $nomeCampo ) {
+		foreach ($this->getFieldNames() as $nomeCampo) {
 			$ret[ $nomeCampo ] = $this->fields[ $nomeCampo ]->getValue();
 		}
 		return $ret;
 	}
-	function setValues( $valori ) {
-		foreach( array_keys( $valori ) as $chiave ) {
+	function setValues($valori) {
+		foreach(array_keys($valori ) as $chiave) {
 			$campo = null;
-			if ( array_key_exists($chiave,$this->fields) ) { $campo = $this->fields[ $chiave ]; }
-			if ( $campo!=null ) {
-				$this->fields[ $chiave ]->setValue( $valori[ $chiave ] );
+			if(array_key_exists($chiave,$this->fields)) { $campo = $this->fields[ $chiave ]; }
+			if($campo!=null) {
+				$this->fields[ $chiave ]->setValue($valori[ $chiave ]);
 			}
 		}
 	}
@@ -296,18 +296,18 @@ class FForm {
 	
 	function render_view(&$dbmgr,$nome_field=null) {
 		$ret = '';
-		if ( $nome_field!==null ) {
-			$_field = $this->getField( $nome_field );
+		if($nome_field!==null) {
+			$_field = $this->getField($nome_field);
 			$ret .= $_field->render_view();
 		} else {
 			/** TODO metodo generico di render_view di una form */
 			$viewColumns = $this->getViewColumnNames();
 			$ret.="<div id=\"form".$this->nome."\" class=\"formView\">";
-			foreach( $this->getGroupNames() as $nome_gruppo ) {
+			foreach($this->getGroupNames() as $nome_gruppo) {
 				if($nome_gruppo=='_permission') continue;
-				$_mygroup=$this->getGroup( $nome_gruppo );
+				$_mygroup=$this->getGroup($nome_gruppo);
 				$myrows="";
-				foreach( $_mygroup as $col ) {
+				foreach($_mygroup as $col) {
 					if(!in_array($col,$viewColumns)) continue;
 					$myfield = $this->getField($col);
 					if($myfield===null) {
@@ -345,11 +345,11 @@ class FForm {
 		$ret .= "Method: " . $this->metodo . "\n";
 		$gruppi = $this->getGroupNames();
 		$ret .= "Groups: " . $gruppi . "\n";
-		foreach ( $gruppi as $nomeGruppo ) {
+		foreach ($gruppi as $nomeGruppo) {
 			$ret .= "\tGroup: " . $nomeGruppo . "\n";
-			$mygruppo = $this->getGroup( $nomeGruppo );
-			for ( $i=0; $i<count($mygruppo); $i++ ) {
-				$myfield = $this->getField( $mygruppo[ $i ] );
+			$mygruppo = $this->getGroup($nomeGruppo);
+			for ($i=0; $i<count($mygruppo); $i++) {
+				$myfield = $this->getField($mygruppo[ $i ]);
 				$ret .= "\t\t" . $mygruppo[ $i ] . " => '" . $myfield->getValue() . "'\n";
 			}
 		}
@@ -376,7 +376,7 @@ class FMasterDetail extends FForm {
 	 * @param aDetail form instance OR string with the FForm class name
 	 * @param cardinality 1=only one child,  n=n-childs
 	 */
-	function addDetail( $aDetail, $cardinality="n" ) {
+	function addDetail($aDetail, $cardinality="n") {
 		$this->detailForms[] = $aDetail;
 	}
 	/** FIXME a better way to do this? */
@@ -392,10 +392,10 @@ class FMasterDetail extends FForm {
 	function setDetailForms($d) { $this->detailForms=$d; }
 	function getDetailFormsCount() { return count($this->detailForms); }
 	function getDetail($i) {
-		if( is_string($this->detailForms[$i]) ) {
-			if( array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null ) {
+		if(is_string($this->detailForms[$i])) {
+			if(array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null) {
 				$myformulator = $_SESSION['formulator'];
-				return $myformulator->getInstance( $this->detailForms[$i] );
+				return $myformulator->getInstance($this->detailForms[$i]);
 			}
 			eval("\$ret = new ".$this->detailForms[$i]."();");
 			return $ret;
@@ -408,7 +408,7 @@ class FMasterDetail extends FForm {
 	 * @param aMaster istanza di form OPPURE stringa col nome della classe FForm da istanziare
 	 * @param cardinality 1=solo un figlio n=n-figli
 	 */
-	function addMaster( $aMaster, $cardinality="n" ) {
+	function addMaster($aMaster, $cardinality="n") {
 		$this->masterForms[] = $aMaster;
 	}
 	/** FIXME a better way to do this? */
@@ -423,10 +423,10 @@ class FMasterDetail extends FForm {
 	function getMasterFormsCount() { return count($this->masterForms); }
 	function getMasterName($i) { return $this->masterForms[$i]; }
 	function getMaster($i) {
-		if( is_string($this->masterForms[$i]) ) {
-			if( array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null ) {
+		if(is_string($this->masterForms[$i])) {
+			if(array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null) {
 				$myformulator = $_SESSION['formulator'];
-				return $myformulator->getInstance( $this->masterForms[$i] );
+				return $myformulator->getInstance($this->masterForms[$i]);
 			}
 			eval("\$ret = new ".$this->masterForms[$i]."();");
 			return $ret;
@@ -467,17 +467,17 @@ class FormFactory {
 	var $dbename2type;
 	var $fieldslist; // 2011.05.16
 	var $master_details;
-	function FormFactory( $verbose = 0 ) {
+	function FormFactory($verbose = 0) {
 		$this->verbose=$verbose;
-		$this->classname2type=array( "default"=>"FForm", );
-		$this->dbename2type=array( "default"=>"FForm", );
+		$this->classname2type=array("default"=>"FForm",);
+		$this->dbename2type=array("default"=>"FForm",);
 		
 		$this->fieldslist=array(); // 2011.05.16
 		$this->master_details=array();
 	}
 	
 	function register($aClassName, $aClassName2=null) {
-		eval( "\$istanza = new $aClassName();" );
+		eval("\$istanza = new $aClassName();");
 		$mydbe = $istanza->getDBE();
 		$this->classname2type[$aClassName] = $aClassName2===null ? $aClassName : $aClassName2;
 		$this->dbename2type[ $mydbe->getTypeName() ] = $aClassName2===null ? $aClassName : $aClassName2;
@@ -486,8 +486,8 @@ class FormFactory {
 		foreach($istanza->getFieldNames() as $k) {
 			if(!in_array($k,array_keys($this->fieldslist)) )
 				$this->fieldslist[$k] = array();
-			$_field_kind = get_class( $istanza->getField($k) );
-			if( !in_array( $_field_kind, array_keys($this->fieldslist[$k]) ))
+			$_field_kind = get_class($istanza->getField($k));
+			if(!in_array($_field_kind, array_keys($this->fieldslist[$k]) ))
 				$this->fieldslist[$k][$_field_kind]=array();
 			$_fieldlist = $this->fieldslist[$k][$_field_kind];
 			if(!in_array($aClassName,$_fieldlist)) {
@@ -497,9 +497,9 @@ class FormFactory {
 		}
 		// Some forms have a master list: let's write this on master_details.
 		if(is_a($istanza,'FMasterDetail')) {
-			for($m=0; $m<$istanza->getMasterFormsCount(); $m++ ) {
+			for($m=0; $m<$istanza->getMasterFormsCount(); $m++) {
 				$masterName = $istanza->getMasterName($m);
-				if( !array_key_exists($masterName,$this->master_details) )
+				if(!array_key_exists($masterName,$this->master_details) )
 					$this->master_details[$masterName] = array();
 				$this->master_details[$masterName][]=$aClassName;
 			}
@@ -510,18 +510,18 @@ class FormFactory {
 		return array_keys($this->classname2type);
 	}
 	
-	function getInstance( $aClassname, $nome='', $azione='', $metodo="POST" ) {
+	function getInstance($aClassname, $nome='', $azione='', $metodo="POST") {
 		$ret=null;
 		$_aClassname = $aClassname;
 		if(array_key_exists($aClassname,$this->classname2type)) {
-			eval( "\$ret = new ".$this->classname2type[$aClassname]."(\$nome, \$azione , \$metodo);" );
+			eval("\$ret = new ".$this->classname2type[$aClassname]."(\$nome, \$azione , \$metodo);");
 			$_aClassname=$this->classname2type[$aClassname];
 // 			return $ret;
-		} elseif( array_search( $aClassname, array_values($this->classname2type) ) ) {
-			eval( "\$ret = new $aClassname(\$nome, \$azione , \$metodo);" );
+		} elseif(array_search($aClassname, array_values($this->classname2type) )) {
+			eval("\$ret = new $aClassname(\$nome, \$azione , \$metodo);");
 // 			return $ret;
-		} elseif( $aClassname=="FForm" || $aClassname=="FMasterDetail" || $aClassname=="FAssociation" ) {
-			eval( "\$ret = new $aClassname(\$nome, \$azione , \$metodo);" );
+		} elseif($aClassname=="FForm" || $aClassname=="FMasterDetail" || $aClassname=="FAssociation") {
+			eval("\$ret = new $aClassname(\$nome, \$azione , \$metodo);");
 // 			return $ret;
 		} else {
 			user_error("FormFactory::getInstance:  NOT found $aClassname");
@@ -529,17 +529,17 @@ class FormFactory {
 		}
 		if(array_key_exists($_aClassname,$this->master_details)) {
 			foreach($this->master_details[$_aClassname] as $a_detail_formname) {
-				$ret->addDetail( $a_detail_formname );
+				$ret->addDetail($a_detail_formname);
 			}
 		}
 		return $ret;
 	}
 	
-	function getInstanceByDBEName( $aDBEName, $nome='', $azione='', $metodo="POST" ) {
+	function getInstanceByDBEName($aDBEName, $nome='', $azione='', $metodo="POST") {
 		$ret = null;
 		$aClassname="FForm";
 		if(array_key_exists($aDBEName,$this->dbename2type)) {
-			eval( "\$ret = new ".$this->dbename2type[$aDBEName]."(\$nome, \$azione , \$metodo);" );
+			eval("\$ret = new ".$this->dbename2type[$aDBEName]."(\$nome, \$azione , \$metodo);");
 			$aClassname = $this->dbename2type[$aDBEName];
 // 			return $ret;
 		} else {
@@ -548,13 +548,13 @@ class FormFactory {
 		if(array_key_exists($aClassname,$this->master_details)) {
 			foreach($this->master_details[$aClassname] as $a_detail_formname) {
 //			foreach($this->master_details[$masterName] as $a_detail_formname) {
-				$ret->addDetail( $a_detail_formname );
+				$ret->addDetail($a_detail_formname);
 			}
 		}
 		return $ret;
 	}
 	
-	function getFormNameByDBEName( $aDBEName ) {
+	function getFormNameByDBEName($aDBEName) {
 		$ret = null;
 		if(array_key_exists($aDBEName,$this->dbename2type)) {
 			$ret = $this->dbename2type[$aDBEName];
@@ -568,8 +568,8 @@ class FormFactory {
 //***************************** Standard Fields
 
 class FNumber extends FField {
-	function FNumber( $aNomeCampo, $aTitle, $aDescription, $aValore='', $aClasseCss=null, $myform=null ) {
-		$this->FField( $aNomeCampo, $aTitle, $aDescription, 0, 0, $aValore, $aClasseCss, $myform, 'n' );
+	function FNumber($aNomeCampo, $aTitle, $aDescription, $aValore='', $aClasseCss=null, $myform=null) {
+		$this->FField($aNomeCampo, $aTitle, $aDescription, 0, 0, $aValore, $aClasseCss, $myform, 'n');
 	}
 }
 class FPercent extends FNumber {
@@ -596,22 +596,22 @@ class FUuid extends FString {
 		return trim($this->aValore);
 	}
 	function render_hidden() {
-		return campoGenerico_hidden( $tipoCampo='text', $this->aNomeCampo, trim($this->aValore), $this->aClasseCss );
+		return campoGenerico_hidden($tipoCampo='text', $this->aNomeCampo, trim($this->aValore), $this->aClasseCss);
 	}*/
 }
 class FPassword extends FString {
 	var $old_pwd;
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false) {
-		if ( array_key_exists($prefix.'new_'.$this->aNomeCampo,$aArray)
+		if(array_key_exists($prefix.'new_'.$this->aNomeCampo,$aArray)
 			&& array_key_exists($prefix.'new2_'.$this->aNomeCampo,$aArray)
 			&& $aArray[$prefix.'new_'.$this->aNomeCampo]>''
-			&& $aArray[$prefix.'new_'.$this->aNomeCampo]==$aArray[$prefix.'new2_'.$this->aNomeCampo] ) {
+			&& $aArray[$prefix.'new_'.$this->aNomeCampo]==$aArray[$prefix.'new2_'.$this->aNomeCampo]) {
 			$this->aValore = $aArray[$prefix.'new_'.$this->aNomeCampo ];
 		} elseif(!$only_not_empty) {
 			$this->aValore=null;
 		}
 		// Old Password
-		if ( array_key_exists($prefix.'old_'.$this->aNomeCampo,$aArray) ) {
+		if(array_key_exists($prefix.'old_'.$this->aNomeCampo,$aArray)) {
 			$this->old_pwd = $aArray[$prefix.'old_'.$this->aNomeCampo ];
 		} elseif(!$only_not_empty) {
 			$this->old_pwd=null;
@@ -619,10 +619,10 @@ class FPassword extends FString {
 	}
 	function render() {
 		$ret  = campoGenerico_hidden('text', $this->aNomeCampo.$this->isArray, $this->aValore);
-		$ret .= campoGenerico( $tipoCampo='password', 'old_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." Old<br/>";
-		$ret .= campoGenerico( $tipoCampo='password', 'new_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." New<br/>";
-		$ret .= campoGenerico( $tipoCampo='password', 'new2_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." Retype new";
-		//$ret = campoGenerico( $tipoCampo='password', $this->aNomeCampo, $this->aValore, $this->aClasseCss, $this->_size, $this->_length );
+		$ret .= campoGenerico($tipoCampo='password', 'old_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." Old<br/>";
+		$ret .= campoGenerico($tipoCampo='password', 'new_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." New<br/>";
+		$ret .= campoGenerico($tipoCampo='password', 'new2_'.$this->aNomeCampo.$this->isArray, '', $this->aClasseCss, $this->_size, $this->_length )." Retype new";
+		//$ret = campoGenerico($tipoCampo='password', $this->aNomeCampo, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 		return $ret;
 	}
 	function render_view() {
@@ -636,10 +636,10 @@ class FPassword extends FString {
  */
 class FPermissions extends FString {
 	function render() {
-		return campoPermissions( $this->aNomeCampo, $this->aValore, $this->aClasseCss, false );
+		return campoPermissions($this->aNomeCampo, $this->aValore, $this->aClasseCss, false);
 	}
 	function render_view() {
-		return campoPermissions( $this->aNomeCampo, $this->aValore, $this->aClasseCss, true );
+		return campoPermissions($this->aNomeCampo, $this->aValore, $this->aClasseCss, true);
 	}
 }
 
@@ -655,7 +655,7 @@ class FFileField extends FField {
 	 * @param aValore field value
 	 * @param aClasseCss css class
 	 */
-	function FFileField( $aNomeCampo, $aTitle, $aDescription, $dest_directory='', $aSize=1, $aLength=20, $aValore='', $aClasseCss=null ) {
+	function FFileField($aNomeCampo, $aTitle, $aDescription, $dest_directory='', $aSize=1, $aLength=20, $aValore='', $aClasseCss=null) {
 		$this->FField($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength, $aValore, $aClasseCss);
 		
 		$this->dest_directory=$dest_directory;
@@ -663,7 +663,7 @@ class FFileField extends FField {
 	
 	function generaFilename() {
 		$dbe = $this->myform->getDBE();
-		$dbe->setValuesDictionary( $this->myform->getValues() );
+		$dbe->setValuesDictionary($this->myform->getValues());
 		return $dbe->generaFilename();
 	}
 	
@@ -691,7 +691,7 @@ class FFileField extends FField {
 		$download_link = $alternative_link>'' ? $alternative_link : $GLOBALS['files_downloader']."?field_id=".$this->myform->getValue('id');
 		
 		$dbe = $this->myform->getDBE();
-		$dbe->setValuesDictionary( $this->myform->getValues() );
+		$dbe->setValuesDictionary($this->myform->getValues());
 		if($with_thumbnail && is_a($dbe,'DBEFile') && $dbe->isImage()) {
 			return $this->render_thumbnail($download_link);
 		}
@@ -699,15 +699,15 @@ class FFileField extends FField {
 	}
 	
 	function render() {
-		return $this->render_view(). '&nbsp;' . campoGenerico( $tipoCampo='file', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length );
+		return $this->render_view(). '&nbsp;' . campoGenerico($tipoCampo='file', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 	}
 	function readValueFromArray(&$aArray,$prefix="field_") {
 		parent::readValueFromArray($aArray,$prefix);
 		$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 		
 		$nome_campo = $prefix . $this->aNomeCampo;
-		if (array_key_exists($nome_campo,$_FILES) && is_uploaded_file($_FILES[$nome_campo]['tmp_name'])) {
-			if (!move_uploaded_file($_FILES[$nome_campo]['tmp_name'], $dest_dir."/".$_FILES[$nome_campo]['name'])) {
+		if(array_key_exists($nome_campo,$_FILES) && is_uploaded_file($_FILES[$nome_campo]['tmp_name'])) {
+			if(!move_uploaded_file($_FILES[$nome_campo]['tmp_name'], $dest_dir."/".$_FILES[$nome_campo]['name'])) {
 				user_error("<p>Errore nel caricamento del file!</p>");
 				$this->aValore=null;
 			} else
@@ -725,7 +725,7 @@ class FList extends FField {
 	 * altezza = numero di elementi visualizzati della select
 	 * multiselezione
 	*/
-	function FList( $aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $altezza, $multiselezione ) {
+	function FList($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $altezza, $multiselezione) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -740,10 +740,10 @@ class FList extends FField {
 	}
 	
 	function render() {
-		return campoLista( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->altezza, $this->multiselezione );
+		return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->altezza, $this->multiselezione);
 	}
 	function render_view() {
-		return campoLista_view( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->altezza, $this->multiselezione );
+		return campoLista_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->altezza, $this->multiselezione);
 	}
 }
 class FCheckBox extends FField {
@@ -757,7 +757,7 @@ class FCheckBox extends FField {
 	 * multiselezione
 	 * stringa_separatrice: nel caso della multiselezione, viene effettuata una implosione dell'array di stringhe con qyesta stringa come separatore
 	*/
-	function FCheckBox( $aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $multiselezione=false, $stringa_separatrice="||", $tipo_campo='s' ) {
+	function FCheckBox($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $multiselezione=false, $stringa_separatrice="||", $tipo_campo='s') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -773,15 +773,15 @@ class FCheckBox extends FField {
 		$this->tipo = $tipo_campo;
 	}
 	
-	function setValue( $v ) {
-		if (  ($this->multiselezione===true || $this->multiselezione==1) && is_array($v) ) {
-			$this->aValore = implode( $v, $this->stringa_separatrice );
+	function setValue($v) {
+		if(($this->multiselezione===true || $this->multiselezione==1) && is_array($v)) {
+			$this->aValore = implode($v, $this->stringa_separatrice);
 		} else {
 			$this->aValore = $v;
 		}
 	}
 	function readValueFromRequest($aRequest, $only_not_empty=false, $at_index=-1) {
-		if ( array_key_exists('field_' . $this->aNomeCampo,$aRequest) ) {
+		if(array_key_exists('field_' . $this->aNomeCampo,$aRequest)) {
 			$this->setValue(
 				$at_index<0 ? $aRequest['field_' . $this->aNomeCampo ] : $aRequest['field_' . $this->aNomeCampo ][$at_index]
 			);
@@ -789,10 +789,10 @@ class FCheckBox extends FField {
 	}
 	
 	function render() {
-		return campoCheckBox( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->multiselezione, $this->stringa_separatrice, $this->tipo );
+		return campoCheckBox($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->multiselezione, $this->stringa_separatrice, $this->tipo);
 	}
 	function render_view() {
-		return campoCheckBox_view( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->multiselezione, $this->stringa_separatrice, $this->tipo );
+		return campoCheckBox_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length, $this->listaValori, $this->multiselezione, $this->stringa_separatrice, $this->tipo);
 	}
 }
 class FTextArea extends FField {
@@ -804,7 +804,7 @@ class FTextArea extends FField {
 	Parameters:
 	- $basic_formatting:	supporto per una formattazione di base, al momento solo gli 'a capo'
 	*/
-	function FTextArea( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true ) {
+	function FTextArea($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -818,16 +818,16 @@ class FTextArea extends FField {
 	}
 	
 	function render() {
-		return campoTextArea( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->width, $this->height );
+		return campoTextArea($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->width, $this->height);
 	}
 	
 	function render_view() {
-		return campoTextArea_view( $tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->basicFormatting);
+		return campoTextArea_view($tipoCampo='text', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->basicFormatting);
 	}
 }
 class FHtml extends FTextArea {
-	function FHtml( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true ) {
-		$this->FTextArea( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss, $width===null ? 50 : $width, $height===null ? 100 : $height, $basicFormatting );
+	function FHtml($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
+		$this->FTextArea($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss, $width===null ? 50 : $width, $height===null ? 100 : $height, $basicFormatting);
 	}
 	function render() {
 		return parent::render()
@@ -840,17 +840,17 @@ class FHtml extends FTextArea {
 				."</font>";
 	}
 	function render_view($view_page='main.php',$downloadPage='download.php') {
-		return campoHtml_view( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss,$view_page,$downloadPage);
+		return campoHtml_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss,$view_page,$downloadPage);
 	}
 	function render_hidden() {
-		return campoGenerico_hidden( $tipoCampo='text', $this->aNomeCampo.$this->isArray, htmlentities($this->aValore), $this->aClasseCss );
+		return campoGenerico_hidden($tipoCampo='text', $this->aNomeCampo.$this->isArray, htmlentities($this->aValore), $this->aClasseCss);
 	}
 }
 class FDateTime extends FField {
 	var $aVisualizzaData=TRUE;
 	var $aVisualizzaOra=TRUE;
 	
-	function FDateTime( $aNomeCampo, $aTitle, $aDescription, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) {
+	function FDateTime($aNomeCampo, $aTitle, $aDescription, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -863,15 +863,15 @@ class FDateTime extends FField {
 	}
 	
 	function render() {
-		return campoData( $this->aNomeCampo.$this->isArray, $this->getValue(), $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra );
+		return campoData($this->aNomeCampo.$this->isArray, $this->getValue(), $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra);
 	}
 	
 	function render_view() {
-		return campoData_view( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra );
+		return campoData_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra);
 	}
 	
 	function render_hidden() {
-		return campoData_hidden( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra );
+		return campoData_hidden($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->aVisualizzaData, $this->aVisualizzaOra);
 	}
 	
 	function readValueFromRequest($aRequest, $only_not_empty=false, $at_index=-1) {
@@ -883,46 +883,46 @@ class FDateTime extends FField {
 			$tmpdata = $at_index<0 ? $aRequest['field_'.$this->aNomeCampo] : $aRequest['field_'.$this->aNomeCampo][$at_index];
 		} else {
 			$anno = '';
-			if (array_key_exists('subfield_year_'.$this->aNomeCampo,$aRequest)) {
+			if(array_key_exists('subfield_year_'.$this->aNomeCampo,$aRequest)) {
 				$anno = $at_index<0 ? $aRequest['subfield_year_'.$this->aNomeCampo] : $aRequest['subfield_year_'.$this->aNomeCampo][$at_index];
 			}
 			$mese='';
-			if (array_key_exists('subfield_month_'.$this->aNomeCampo,$aRequest)) {
+			if(array_key_exists('subfield_month_'.$this->aNomeCampo,$aRequest)) {
 				$mese = $at_index<0 ? $aRequest['subfield_month_'.$this->aNomeCampo] : $aRequest['subfield_month_'.$this->aNomeCampo][$at_index];
 			}
-			if ( strlen($mese)==1 ) { $mese = "0$mese"; }
+			if(strlen($mese)==1) { $mese = "0$mese"; }
 			$giorno = '';
-			if (array_key_exists('subfield_day_'.$this->aNomeCampo,$aRequest)) {
+			if(array_key_exists('subfield_day_'.$this->aNomeCampo,$aRequest)) {
 				$giorno = $at_index<0 ? $aRequest['subfield_day_'.$this->aNomeCampo] : $aRequest['subfield_day_'.$this->aNomeCampo][$at_index];
 			}
-			if ( strlen($giorno)==1 ) { $giorno = "0$giorno"; }
-			if ( strlen($anno)>0 && strlen($mese)>0 && strlen($giorno)>0 ) {
+			if(strlen($giorno)==1) { $giorno = "0$giorno"; }
+			if(strlen($anno)>0 && strlen($mese)>0 && strlen($giorno)>0) {
 				$tmpdata = "$anno/$mese/$giorno";
 			}
 		}
 		$tmpora = '';
 		$ore = '';
-		if (array_key_exists('subfield_hour_'.$this->aNomeCampo,$aRequest)) {
+		if(array_key_exists('subfield_hour_'.$this->aNomeCampo,$aRequest)) {
 			$ore = $at_index<0 ? $aRequest['subfield_hour_'.$this->aNomeCampo] : $aRequest['subfield_hour_'.$this->aNomeCampo][$at_index];
 		}
 		$minuti = '';
-		if (array_key_exists('subfield_minute_'.$this->aNomeCampo,$aRequest)) {
+		if(array_key_exists('subfield_minute_'.$this->aNomeCampo,$aRequest)) {
 			$minuti = $at_index<0 ? $aRequest['subfield_minute_'.$this->aNomeCampo] : $aRequest['subfield_minute_'.$this->aNomeCampo][$at_index];
 		}
 		$secondi = '';
-		if (array_key_exists('subfield_seconds_'.$this->aNomeCampo,$aRequest)) {
+		if(array_key_exists('subfield_seconds_'.$this->aNomeCampo,$aRequest)) {
 			$secondi = $at_index<0 ? $aRequest['subfield_seconds_'.$this->aNomeCampo] : $aRequest['subfield_seconds_'.$this->aNomeCampo][$at_index];
 		}
-		if (strlen($ore)>0 && strlen($minuti)>0 && strlen($secondi)>0) {
+		if(strlen($ore)>0 && strlen($minuti)>0 && strlen($secondi)>0) {
 			$tmpora = "$ore:$minuti:$secondi";
 		}
-		if ( $this->aVisualizzaData && $tmpdata!='' ) {
+		if($this->aVisualizzaData && $tmpdata!='') {
 			$this->aValore = $tmpdata;
-			if ( $this->aVisualizzaOra && $tmpora!='' ) {
+			if($this->aVisualizzaOra && $tmpora!='') {
 				$this->aValore = $this->aValore . " " . $tmpora;
 			}
 		} else {
-			if ( $this->aVisualizzaOra )
+			if($this->aVisualizzaOra )
 				$this->aValore = $tmpora;
 // 2011.03.14: inizio.
 // 			else
@@ -956,8 +956,8 @@ class FKField extends FField {
 	 * @param destform class name of the destination form
 	 * @param viewmode { 'select','readonly' }
 	 */
-	function FKField( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
-									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select' ) {
+	function FKField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
+									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -983,37 +983,37 @@ class FKField extends FField {
 		$backup_valore = $this->aValore;
 		foreach($lista as $dbe) {
 			$dbeFactory = $dbmgr->getFactory();
-			$cerca = $dbeFactory->getInstanceByTableName( $this->myFK->tabella_riferita );
-			$cerca->setValue( $this->myFK->colonna_riferita, $dbe->getValue($this->myFK->colonna_fk) );
+			$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
+			$cerca->setValue($this->myFK->colonna_riferita, $dbe->getValue($this->myFK->colonna_fk));
 			$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
-			if( count($lista)!=1 ) continue;
+			if(count($lista)!=1 ) continue;
 			$mydbe=$lista[0];
 			if($mydbe==null) continue;
 			$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
-			$link_desc=implode( $this->description_glue, $description_array );
+			$link_desc=implode($this->description_glue, $description_array);
 			$valori[ $dbe->getValue($this->myFK->colonna_fk) ] = $link_desc;
 		}
 		$this->aValore = $backup_valore;
-		return campoLista( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione );
+		return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione);
 	}
 	
 	function render(&$dbmgr) {
 		if($this->viewmode=='select') {
 			$dbeFactory = $dbmgr->getFactory();
-			$cerca = $dbeFactory->getInstanceByTableName( $this->myFK->tabella_riferita );
+			$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
 			$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
 			$lista_valori = array();
 			$lista_valori[""]="";
-			foreach( $lista as $dbe ) {
-				$chiavi = is_array( $dbe->getKeys() ) ? array_keys( $dbe->getKeys() ) : array();
+			foreach($lista as $dbe) {
+				$chiavi = is_array($dbe->getKeys() ) ? array_keys($dbe->getKeys() ) : array();
 				$chiave_array=array();
 				$description_array=array();
 				foreach($chiavi as $chiave) { $chiave_array[]=$dbe->getValue($chiave); }
 				foreach($this->description_columns as $chiave) { $description_array[]=$dbe->getValue($chiave); }
-				$lista_valori[ implode("_",$chiave_array) ] = implode( $this->description_glue, $description_array );
+				$lista_valori[ implode("_",$chiave_array) ] = implode($this->description_glue, $description_array);
 			}
 			$link = $this->renderLink($dbmgr);
-			return campoLista( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $lista_valori, $this->altezza, $this->multiselezione )
+			return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $lista_valori, $this->altezza, $this->multiselezione )
 						. $link;
 		} else if($this->viewmode=='distinct') {
 			return $this->render_distinct($dbmgr);
@@ -1022,20 +1022,20 @@ class FKField extends FField {
 			if($this->destform>"") {
 				$link_desc="";
 				$dbeFactory = $dbmgr->getFactory();
-				$cerca = $dbeFactory->getInstanceByTableName( $this->myFK->tabella_riferita );
-				$cerca->setValue( $this->myFK->colonna_riferita, $this->aValore );
+				$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
+				$cerca->setValue($this->myFK->colonna_riferita, $this->aValore);
 				$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
-				if( count($lista)==1 ) {
+				if(count($lista)==1) {
 					$mydbe=$lista[0];
 					$mydestform = null;
-					if( array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null ) {
+					if(array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null) {
 						$myformulator = $_SESSION['formulator'];
-						$mydestform =  $myformulator->getInstance( $this->destform );
+						$mydestform =  $myformulator->getInstance($this->destform);
 					} else
 						eval("\$mydestform = new ".$this->destform.";");
 					$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
 					$link=$mydestform->getPagePrefix()."_modify.php?dbetype=".$mydbe->getTypeName()."&formtype=".$this->destform."&".$mydbe->getCGIKeysCondition();
-					$link_desc=implode( $this->description_glue, $description_array );
+					$link_desc=implode($this->description_glue, $description_array);
 				}
 				$link = $link>"" ? "<a href=\"$link\">$link_desc</a>" : "";
 			}
@@ -1052,20 +1052,20 @@ class FKField extends FField {
 		if($this->destform>"") {
 			$link_desc="";
 			$dbeFactory = $dbmgr->getFactory();
-			$cerca = $dbeFactory->getInstanceByTableName( $this->myFK->tabella_riferita );
-			$cerca->setValue( $this->myFK->colonna_riferita, $this->aValore );
+			$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
+			$cerca->setValue($this->myFK->colonna_riferita, $this->aValore);
 			$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
-			if( count($lista)==1 ) {
+			if(count($lista)==1) {
 				$mydbe=$lista[0];
 				$mydestform = null;
-				if( array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null ) {
+				if(array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null) {
 					$myformulator = $_SESSION['formulator'];
-					$mydestform =  $myformulator->getInstance( $this->destform );
+					$mydestform =  $myformulator->getInstance($this->destform);
 				} else
 					eval("\$mydestform = new ".$this->destform.";");
 				$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
 				$link=$mydestform->getPagePrefix()."_$mode.php?dbetype=".$mydbe->getTypeName()."&formtype=".$this->destform."&".$mydbe->getCGIKeysCondition();
-				$link_desc=implode( $this->description_glue, $description_array );
+				$link_desc=implode($this->description_glue, $description_array);
 			}
 			$link = $link>"" ? "<a href=\"$link\"><img title=\"$link_desc\" alt=\"$link_desc\" border=\"0\" src=\"".getSkinFile("mng/icone/Edit16.gif")."\"/></a>" : "";
 		}
@@ -1074,21 +1074,21 @@ class FKField extends FField {
 	
 	function render_view(&$dbmgr) {
 		$dbeFactory = $dbmgr->getFactory();
-		$cerca = $dbeFactory->getInstanceByTableName( $this->myFK->tabella_riferita );
+		$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
 		$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
 		$lista_valori = array();
 		$lista_valori[""]="";
 		$link="";
 		$link_desc="";
-		foreach( $lista as $dbe ) {
-			$chiavi=is_array($dbe->getKeys()) ? array_keys( $dbe->getKeys() ) : array();
+		foreach($lista as $dbe) {
+			$chiavi=is_array($dbe->getKeys()) ? array_keys($dbe->getKeys() ) : array();
 			$chiave_array=array();
 			$description_array=array();
 			foreach($chiavi as $chiave) { $chiave_array[]=$dbe->getValue($chiave); }
 			foreach($this->description_columns as $chiave) { $description_array[]=$dbe->getValue($chiave); }
-			$lista_valori[ implode("_",$chiave_array) ]=implode( $this->description_glue, $description_array );
+			$lista_valori[ implode("_",$chiave_array) ]=implode($this->description_glue, $description_array);
 		}
-		return campoLista_view( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $lista_valori, $this->altezza, $this->multiselezione );
+		return campoLista_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $lista_valori, $this->altezza, $this->multiselezione);
 	}
 	
 	function render_readonly(&$dbmgr) {
@@ -1100,10 +1100,10 @@ class FKField extends FField {
  * @param destform se null ==> cerca tra tutte le FObject, nella form specificata altrimenti
  */
 class FKObjectField extends FKField {
-	function FKObjectField( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
-									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select' ) {
-		$this->FKField( $aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss,
-									$mydbe, $myFK, $description_columns, $destform, $viewmode );
+	function FKObjectField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
+									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select') {
+		$this->FKField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss,
+									$mydbe, $myFK, $description_columns, $destform, $viewmode);
 	}
 	
 	function _searchObject(&$dbmgr) {
@@ -1112,34 +1112,34 @@ class FKObjectField extends FKField {
 		$dbeFactory = $dbmgr->getFactory();
 		global $formulator; // FIXME: non mi piace global
 		$classi = $this->destform==null ? $formulator->getAllClassnames() : array($this->destform);
-		if( $this->myFK!=null )
+		if($this->myFK!=null )
 			foreach($classi as $nomeclasse) {
-				if( $nomeclasse=='default' ) continue;
+				if($nomeclasse=='default' ) continue;
 				$mydestform = null;
-				if( array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null ) {
+				if(array_key_exists('formulator',$_SESSION) && $_SESSION['formulator']!==null) {
 					$myformulator = $_SESSION['formulator'];
-					$mydestform =  $myformulator->getInstance( $nomeclasse );
+					$mydestform =  $myformulator->getInstance($nomeclasse);
 				} else
 					eval("\$mydestform = new ".$nomeclasse."();");
 				if(!is_subclass_of($mydestform,"FObject") && !is_subclass_of($mydestform,"fobject")) continue;
 				$cerca = $mydestform->getDBE();
-				$cerca->setValue( $this->myFK->colonna_riferita, $this->aValore );
+				$cerca->setValue($this->myFK->colonna_riferita, $this->aValore);
 				$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
-				if( count($lista)==1 ) {
-					if( $lista[0]->getColumnType($this->myFK->colonna_riferita)=='uuid' ) {
-						if( $lista[0]->getValue($this->myFK->colonna_riferita)==$cerca->getValue($this->myFK->colonna_riferita) ) {
+				if(count($lista)==1) {
+					if($lista[0]->getColumnType($this->myFK->colonna_riferita)=='uuid') {
+						if($lista[0]->getValue($this->myFK->colonna_riferita)==$cerca->getValue($this->myFK->colonna_riferita)) {
 							$mydbe=$lista[0];
 							break;
 						}
 					} else {
-						if( $lista[0]->getValue($this->myFK->colonna_riferita)==$cerca->getValue($this->myFK->colonna_riferita) ) {
+						if($lista[0]->getValue($this->myFK->colonna_riferita)==$cerca->getValue($this->myFK->colonna_riferita)) {
 							$mydbe=$lista[0];
 							break;
 						}
 					}
 				}
 			}
-		return array( $mydbe, $mydestform, isset($nomeclasse)?$nomeclasse:'' );
+		return array($mydbe, $mydestform, isset($nomeclasse)?$nomeclasse:'');
 	}
 	
 	function render_distinct(&$dbmgr) {
@@ -1153,11 +1153,11 @@ class FKObjectField extends FKField {
 			$mydbe=$tmp[0]; $mydestform=$tmp[1]; $nomeclasse=$tmp[2];
 			if($mydbe==null) continue;
 			$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
-			$link_desc=implode( $this->description_glue, $description_array );
+			$link_desc=implode($this->description_glue, $description_array);
 			$valori[ $dbe->getValue($this->myFK->colonna_fk) ] = $link_desc;
 		}
 		$this->aValore = $backup_valore;
-		return campoLista( $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione );
+		return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione);
 	}
 	
 	function render(&$dbmgr) {
@@ -1169,7 +1169,7 @@ class FKObjectField extends FKField {
 		if($mydbe==null) return '';
 		$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
 		$link=$mydestform->getPagePrefix()."_modify.php?dbetype=".$mydbe->getTypeName()."&formtype=".$nomeclasse."&".$mydbe->getCGIKeysCondition();
-		$link_desc=implode( $this->description_glue, $description_array );
+		$link_desc=implode($this->description_glue, $description_array);
 		$ret = "<div id=\"".$this->aNomeCampo."_link\" style=\"display:inline;\">";
 		$ret.= $link>"" ? "<a href=\"$link\">$link_desc</a>" : "";
 		$ret.="</div>";
@@ -1187,7 +1187,7 @@ class FKObjectField extends FKField {
 		if($mydbe==null) return '';
 		$description_array=array(); foreach($this->description_columns as $chiave) { $description_array[]=$mydbe->getValue($chiave); }
 		$link=$mydestform->getPagePrefix()."_view.php?dbetype=".$mydbe->getTypeName()."&formtype=".$nomeclasse."&".$mydbe->getCGIKeysCondition();
-		$link_desc=implode( $this->description_glue, $description_array );
+		$link_desc=implode($this->description_glue, $description_array);
 		$ret = $showlink ? "<a href=\"$link\">$link_desc</a>" : $link_desc;
 		return $ret;
 	}
@@ -1215,7 +1215,7 @@ class FChildSort extends FList {
 		$childs_sort_order=preg_split("/,/",$this->aValore);
 		foreach($childs_sort_order as $_oid) {
 			for($_i=0; $_i<count($childs); $_i++) {
-				if( $childs[$_i]->getValue('id')!=$_oid ) continue;
+				if($childs[$_i]->getValue('id')!=$_oid ) continue;
 				$listaValori[$childs[$_i]->getValue('id')]=$childs[$_i]->getValue('name');
 				array_splice($childs, $_i,1);
 			}
@@ -1224,7 +1224,7 @@ class FChildSort extends FList {
 		$this->aValore=implode(",",array_keys($listaValori));
 		// Render
 		$ret = "<div id=\"child_sort_$current_obj_id\" style=\"border: 0px solid #0000ff;\">".$this->render_hidden();
-		$ret.= campoLista( $this->aNomeCampo."_list", '',$this->aClasseCss, $this->_size, $this->_length, $listaValori, min($this->altezza,count($listaValori)), $this->multiselezione );
+		$ret.= campoLista($this->aNomeCampo."_list", '',$this->aClasseCss, $this->_size, $this->_length, $listaValori, min($this->altezza,count($listaValori)), $this->multiselezione);
 		$ret.="<br/>";
 		$ret.="<script type=\"text/javascript\">";
 		$ret.="function child_sort_{$current_obj_id}_up() {\n";
@@ -1279,7 +1279,7 @@ class FChildSort extends FList {
 		return $ret;
 	}
 	function render_hidden() {
-		return campoGenerico_hidden( $tipoCampo='text', $this->aNomeCampo.$this->isArray, htmlentities($this->aValore), $this->aClasseCss );
+		return campoGenerico_hidden($tipoCampo='text', $this->aNomeCampo.$this->isArray, htmlentities($this->aValore), $this->aClasseCss);
 	}
 }
 
@@ -1293,41 +1293,41 @@ class FChildSort extends FList {
  * @param size
  * @param length
  */
-function campoGenerico( $tipoCampo='text', $aNomeCampo='', $aValore='', $aClasseCss=null, $size=null, $length=null) {
-	if ( $tipoCampo=='password' ) {
+function campoGenerico($tipoCampo='text', $aNomeCampo='', $aValore='', $aClasseCss=null, $size=null, $length=null) {
+	if($tipoCampo=='password') {
 		$lung = strlen($aValore);
 		$aValore = '';
 		for($i=0;$i<$lung; $i++) { $aValore .= '*'; }
 	}
 	$ret = '';
 	$ret .= "<input type=\"" . $tipoCampo . "\" id=\"field_" . $aNomeCampo . "\" name=\"field_" . $aNomeCampo . "\" value=\"" . $aValore . "\" ";
-	if ($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
-	if ($size!=null) { $ret .= "size=\"" . $size . "\" "; }
-	if ($length!=null) { $ret .= "maxlength=\"" . $length . "\" "; }
+	if($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
+	if($size!=null) { $ret .= "size=\"" . $size . "\" "; }
+	if($length!=null) { $ret .= "maxlength=\"" . $length . "\" "; }
 	$ret .= " />";
 	return $ret;
 }
-function campoGenerico_view( $tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null) {
+function campoGenerico_view($tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null) {
 	return $aValore;
 }
-function campoGenerico_hidden( $tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null) {
+function campoGenerico_hidden($tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null) {
 	$ret = "<input type=\"hidden\" id=\"field_" . $aNomeCampo . "\" name=\"field_" . $aNomeCampo . "\" value=\"" . $aValore . "\" />";
 	return $ret;
 }
 
 /** Render a textarea */
-function campoTextArea( $aNomeCampo, $aValore='', $aClasseCss, $size=null, $width=null, $height=null ) {
+function campoTextArea($aNomeCampo, $aValore='', $aClasseCss, $size=null, $width=null, $height=null) {
 	$ret="<textarea id=\"field_" . $aNomeCampo . "\" name=\"field_" . $aNomeCampo . "\" ";
-	if ($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
-	if ($size!=null) { $ret .= "size=\"" . $size . "\" "; }
-	if ($width!=null) { $ret .= "cols=\"" . $width . "\" "; }
-	if ($height!=null) { $ret .= "rows=\"" . $height . "\" "; }
+	if($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
+	if($size!=null) { $ret .= "size=\"" . $size . "\" "; }
+	if($width!=null) { $ret .= "cols=\"" . $width . "\" "; }
+	if($height!=null) { $ret .= "rows=\"" . $height . "\" "; }
 	$ret .= ">" . $aValore . "</textarea>";
 	return $ret;
 }
-function campoTextArea_view( $tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null, $basicFormatting) {
+function campoTextArea_view($tipoCampo='text', $aNomeCampo, $aValore='', $aClasseCss=null, $basicFormatting) {
 	$_mytext = $aValore;
-	if ($basicFormatting==true or $basicFormatting==1) {
+	if($basicFormatting==true or $basicFormatting==1) {
 		$_mytext = str_replace("\n",'<br>',$aValore);
 	}
 	return $_mytext;
@@ -1339,8 +1339,8 @@ function campoHtml_view($aNomeCampo, $aValore='', $aClasseCss=null, $viewPage='m
 	foreach($righe as $r) {
 		$indice1 = strpos($r,"[[");
 		$indice2 = $indice1===false ? false : strpos($r,"]]",$indice1);
-		if( ($indice2-$indice1)>0 ) {
-			while( ($indice2-$indice1)>0 ) {
+		if(($indice2-$indice1)>0) {
+			while(($indice2-$indice1)>0) {
 				$k = substr($r, $indice1+2, ($indice2-$indice1)-2);
 				$__type='link';
 				$__key=$k;
@@ -1379,44 +1379,44 @@ function campoHtml_view($aNomeCampo, $aValore='', $aClasseCss=null, $viewPage='m
 	return implode("\n", $ret);
 }
 /**	Renderizza una lista di valori predefiniti	*/
-function campoLista( $aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $altezza, $multiselezione ) {
+function campoLista($aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $altezza, $multiselezione) {
 	$ret = "<select name=\"field_" . $aNomeCampo . "\" size=\"" . $altezza . "\" class=\"$aClasseCss\">";
-	foreach( $listaValori as $k=>$v ) {
-		$ret .= "<option value=\"" . $k . "\" " . ( $k==$aValore ? "selected" : "" ) . ">" . $v . "</option>";
+	foreach($listaValori as $k=>$v) {
+		$ret .= "<option value=\"" . $k . "\" " . ($k==$aValore ? "selected" : "" ) . ">" . $v . "</option>";
 	}
 	$ret .="</select>";
 	return $ret;
 }
-function campoLista_view( $aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $altezza, $multiselezione ) {
+function campoLista_view($aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $altezza, $multiselezione) {
 	$ret = '';
-	if ( array_key_exists($aValore,$listaValori) && $listaValori[ $aValore ]!=null ) { $ret = $listaValori[ $aValore ]; }
+	if(array_key_exists($aValore,$listaValori) && $listaValori[ $aValore ]!=null) { $ret = $listaValori[ $aValore ]; }
 	return $ret;
 }
 
 /**	Renderizza una lista di valori predefiniti	*/
-function campoCheckBox( $aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $multiselezione, $stringa_separatrice, $tipo_campo ) {
+function campoCheckBox($aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $multiselezione, $stringa_separatrice, $tipo_campo) {
 	$tipo_input="radio";
-	if( $multiselezione===true || $multiselezione==1 ) {
+	if($multiselezione===true || $multiselezione==1) {
 		$tipo_input="checkbox";
 		$aNomeCampo .= "[]";
-		if(!is_array($aValore)) $aValore = explode( $stringa_separatrice, $aValore );
+		if(!is_array($aValore)) $aValore = explode($stringa_separatrice, $aValore);
 	} else {
 		if($tipo_campo=="s") $aValore = "$aValore";
 	}
 	$ret='';
-	foreach( $listaValori as $k=>$v ) {
+	foreach($listaValori as $k=>$v) {
 		$my_k = $tipo_campo=="s" ? "".$k : $k;
 		$ret .= "<input type=\"" . $tipo_input . "\" name=\"field_" . $aNomeCampo . "\" value=\"" . $k . "\" ";
-		if ($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
-		if ($size!=null) { $ret .= "size=\"" . $size . "\" "; }
-		if ($length!=null) { $ret .= "maxlength=\"" . $length . "\" "; }
-		if( $multiselezione===true || $multiselezione==1 ) {
+		if($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
+		if($size!=null) { $ret .= "size=\"" . $size . "\" "; }
+		if($length!=null) { $ret .= "maxlength=\"" . $length . "\" "; }
+		if($multiselezione===true || $multiselezione==1) {
 			foreach($aValore as $__k=>$tmpValore) {
 				$__tmpValore = $tipo_campo=='s' ? "$tmpValore" : $tmpValore;
-				if ($my_k===$__tmpValore) {	$ret .= " checked "; break;	}
+				if($my_k===$__tmpValore) {	$ret .= " checked "; break;	}
 			}
 		} else {
-			if ($my_k===$aValore) { $ret .= " checked "; }
+			if($my_k===$aValore) { $ret .= " checked "; }
 		}
 		$ret .= ">&nbsp;";
 		$ret .= $v;
@@ -1424,19 +1424,19 @@ function campoCheckBox( $aNomeCampo, $aValore, $aClasseCss, $size, $length, $lis
 	
 	return $ret;
 }
-function campoCheckBox_view( $aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $multiselezione, $stringa_separatrice, $tipo_campo ) {
+function campoCheckBox_view($aNomeCampo, $aValore, $aClasseCss, $size, $length, $listaValori, $multiselezione, $stringa_separatrice, $tipo_campo) {
 	$ret = '';
-	if( $multiselezione===true || $multiselezione==1 ) {
-		$aValore = explode( $stringa_separatrice, $aValore );
+	if($multiselezione===true || $multiselezione==1) {
+		$aValore = explode($stringa_separatrice, $aValore);
 		$tmp = array();
-		foreach( $aValore as $v ) {
-			if ( array_key_exists($v, $listaValori) && $listaValori[ $v ]!=null )	{
+		foreach($aValore as $v) {
+			if(array_key_exists($v, $listaValori) && $listaValori[ $v ]!=null )	{
 				$tmp[] = $listaValori[ $v ];
 			}
 		}
-		$ret = implode( $tmp, " " );
+		$ret = implode($tmp, " ");
 	} else {
-		if ( array_key_exists($aValore,$listaValori) && $listaValori[ $aValore ]!=null ) {
+		if(array_key_exists($aValore,$listaValori) && $listaValori[ $aValore ]!=null) {
 			$ret = $listaValori[ $aValore ];
 		}
 	}
@@ -1444,36 +1444,36 @@ function campoCheckBox_view( $aNomeCampo, $aValore, $aClasseCss, $size, $length,
 }
 
 /**	Renderizza un campo data in modalita' hidden. */
-function campoData_hidden( $aNomeCampo, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) {
+function campoData_hidden($aNomeCampo, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
 	if(strlen($aValore)==8) $aValore="YYYY-MM-DD $aValore";
-	$_anno = substr( $aValore, 0,4);	$_mese = substr( $aValore, 5, 2 );	$_giorno = substr( $aValore, 8 , 2 );
-	$_ore = substr( $aValore, 11,2);		$_minuti = substr( $aValore, 14,2);  $_secondi=substr( $aValore, 17,2);
+	$_anno = substr($aValore, 0,4);	$_mese = substr($aValore, 5, 2);	$_giorno = substr($aValore, 8 , 2);
+	$_ore = substr($aValore, 11,2);		$_minuti = substr($aValore, 14,2);  $_secondi=substr($aValore, 17,2);
 	$ret = '';
-	if ($aVisualizzaData) {
+	if($aVisualizzaData) {
 		$ret .= "<input type=\"hidden\" name=\"subfield_day_".$aNomeCampo."\" value=\"$_giorno\"><input type=\"hidden\" name=\"subfield_month_".$aNomeCampo."\" value=\"$_mese\"><input type=\"hidden\" name=\"subfield_year_".$aNomeCampo."\" value=\"$_anno\">";
 	}
-	if ($aVisualizzaOra) {
+	if($aVisualizzaOra) {
 		$ret .= "<input type=\"hidden\" name=\"subfield_hour_".$aNomeCampo."\" value=\"$_ore\"><input type=\"hidden\" name=\"subfield_minute_".$aNomeCampo."\" value=\"$_minuti\"><input type=\"hidden\" name=\"subfield_seconds_".$aNomeCampo."\" value=\"$_secondi\">";
 	}
 	return $ret;
 }
 /**	Renderizza un campo data in modalita' vista. */
-function campoData_view( $aNomeCampo, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) {
+function campoData_view($aNomeCampo, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
 	if(strlen($aValore)==8) $aValore="YYYY-MM-DD $aValore";
-	$_anno = substr( $aValore, 0,4);	$_mese = substr( $aValore, 5, 2 );	$_giorno = substr( $aValore, 8 , 2 );
-	$_ore = substr( $aValore, 11,2);	$_minuti = substr( $aValore, 14,2);  $_secondi=substr( $aValore, 17,2);
+	$_anno = substr($aValore, 0,4);	$_mese = substr($aValore, 5, 2);	$_giorno = substr($aValore, 8 , 2);
+	$_ore = substr($aValore, 11,2);	$_minuti = substr($aValore, 14,2);  $_secondi=substr($aValore, 17,2);
 	
 	$ret = '';
-	if ($aVisualizzaData) {
+	if($aVisualizzaData) {
 		if($_anno=='0000' && $_mese=='00' && $_giorno=='00') {
 			$ret .= '--/--/----';
 		} else
 			$ret .= $_giorno . "/" . $_mese . "/" . $_anno;
-		if ($aVisualizzaOra) {
+		if($aVisualizzaOra) {
 			$ret .= "&nbsp;";
 		}
 	}
-	if ($aVisualizzaOra) {
+	if($aVisualizzaOra) {
 		if($_ore=='00' && $_minuti=='00' && $_secondi=='00')
 			$ret .= "--:--:--";
 		else
@@ -1482,10 +1482,10 @@ function campoData_view( $aNomeCampo, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=n
 	return $ret;
 }
 /** Renderizza un campo data nel formato: YYYY-MM-DD HH:mm */
-function campoData( $aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) {
+function campoData($aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
 	if(strlen($aValore)==8) $aValore="YYYY-MM-DD $aValore";
-	$_anno = substr( $aValore, 0,4);	$_mese = substr( $aValore, 5,2);	$_giorno = substr( $aValore, 8,2);
-	$_ore = substr( $aValore, 11,2);	$_minuti = substr( $aValore, 14,2);  $_secondi=substr( $aValore, 17,2);
+	$_anno = substr($aValore, 0,4);	$_mese = substr($aValore, 5,2);	$_giorno = substr($aValore, 8,2);
+	$_ore = substr($aValore, 11,2);	$_minuti = substr($aValore, 14,2);  $_secondi=substr($aValore, 17,2);
 	$ret = '';
 	
 	global $VECCHIO_CALENDARIO;
@@ -1493,23 +1493,23 @@ function campoData( $aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TR
 	global $calendar_writtenLoadFiles;
 	
 	$formato_data = ""; $miovalore="";
-	if ($aVisualizzaData) { $formato_data.="%Y-%m-%d"; $miovalore.=substr($aValore,0,10); }
+	if($aVisualizzaData) { $formato_data.="%Y-%m-%d"; $miovalore.=substr($aValore,0,10); }
 	$_oggi = strtotime('now');
 	
-	if ($aVisualizzaData) {
-		if( !$VECCHIO_CALENDARIO ) {
+	if($aVisualizzaData) {
+		if(!$VECCHIO_CALENDARIO) {
 			ob_start();
 			// JsCalendar: inizio.
 			$lang = array_key_exists('lang',$_GET) ? $_GET['lang'] : null;
-			if ($lang==null)	$lang = array_key_exists('lang',$_REQUEST) ? $_REQUEST['lang'] : null;
-			if ($lang==null)	$lang = 'en';
+			if($lang==null)	$lang = array_key_exists('lang',$_REQUEST) ? $_REQUEST['lang'] : null;
+			if($lang==null)	$lang = 'en';
 	// 		$calendar = new DHTML_Calendar(ROOT_FOLDER.'formulator/jscalendar-1.0/', $lang, 'calendar-win2k-2', false);
 			if(!$calendar_writtenLoadFiles) { $calendar->load_files(); $calendar_writtenLoadFiles=true; }
 			$attributiHtml = array('style' => 'text-align: center',
 					'name'=> 'subfield_date_'.$aNomeCampo.'',
 					'value' => $miovalore,
 					);
-			if ($aClasseCss!=null && $aClasseCss!='') $attributiHtml['class']="$aClasseCss";
+			if($aClasseCss!=null && $aClasseCss!='') $attributiHtml['class']="$aClasseCss";
 			$calendar->make_input_field(
 				// calendar options go here; see the documentation and/or calendar-setup.js
 				array('firstDay' => 1, // show Monday first
@@ -1527,31 +1527,31 @@ function campoData( $aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TR
 		} else {
 			// Giorno
 			$ret .= "<select ";
-			if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_day_".$aNomeCampo."\"><option value=''>--</option>";
 			for ($_day=1; $_day<=31; $_day++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_day) . "\" ";
-				if ($_day==$_giorno) { $ret .= "selected"; }
+				if($_day==$_giorno) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_day) . "</option>";
 			}
 			$ret .= "</select> / ";
 			// Mese
 			$ret .= "<select ";
-			if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_month_".$aNomeCampo."\"><option value=''>--</option>";
 			for ($_month=1; $_month<=12; $_month++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_month) . "\" ";
-				if ($_month==$_mese) { $ret .= "selected"; }
+				if($_month==$_mese) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_month) . "</option>";
 			}
 			$ret .= "</select> / ";
 			// Anno
 			$ret .= "<select ";
-			if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+			if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 			$ret .= "name=\"subfield_year_".$aNomeCampo."\"><option value=''>--</option>";
 			for ($_year=2000; $_year<=2020; $_year++) {
 				$ret .="<option value=\"" . sprintf("%02d", $_year) . "\" ";
-				if ($_year==$_anno) { $ret .= "selected"; }
+				if($_year==$_anno) { $ret .= "selected"; }
 				$ret .=">" . sprintf("%02d", $_year) . "</option>";
 			}
 			$ret .= "</select>";
@@ -1561,35 +1561,35 @@ function campoData( $aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TR
 		echo "<input type=\"hidden\" name=\"subfield_month_".$aNomeCampo."\" value=\"00\" />";
 		echo "<input type=\"hidden\" name=\"subfield_year_".$aNomeCampo."\" value=\"0000\" />";
 	}
-	if ($aVisualizzaData && $aVisualizzaOra) $ret .= "&nbsp;";
-	if ($aVisualizzaOra) {
+	if($aVisualizzaData && $aVisualizzaOra) $ret .= "&nbsp;";
+	if($aVisualizzaOra) {
 		// Ore
 		$ret .= "<select ";
-		if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_hour_".$aNomeCampo."\"><option value=''>--</option>";
 		for ($_hour=0; $_hour<=23; $_hour++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_hour) . "\" ";
-			if ($_hour==$_ore) { $ret .= "selected"; }
+			if($_hour==$_ore) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_hour) . "</option>";
 		}
 		$ret .= "</select> : ";
 		// Minuti
 		$ret .= "<select ";
-		if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_minute_".$aNomeCampo."\"><option value=''>--</option>";
 		for ($_minute=0; $_minute<=59; $_minute++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_minute) . "\" ";
-			if ($_minute==$_minuti) { $ret .= "selected"; }
+			if($_minute==$_minuti) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_minute) . "</option>";
 		}
 		$ret .= "</select> : ";
 		// Secondi
 		$ret .= "<select ";
-		if ($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
+		if($aClasseCss!=null && $aClasseCss!='') $ret .= "class=\"$aClasseCss\" ";
 		$ret .= "name=\"subfield_seconds_".$aNomeCampo."\"><option value=''>--</option>";
 		for ($_second=0; $_second<=59; $_second++) {
 			$ret .="<option value=\"" . sprintf("%02d", $_second) . "\" ";
-			if ($_second==$_secondi) { $ret .= "selected"; }
+			if($_second==$_secondi) { $ret .= "selected"; }
 			$ret .=">" . sprintf("%02d", $_second) . "</option>";
 		}
 		$ret .= "</select>";
@@ -1603,7 +1603,7 @@ function campoData( $aNomeCampo, $aValore, $aClasseCss=null, $aVisualizzaData=TR
 } // campoData: fine.
 
 
-function campoPermissions( $aNomeCampo, $aValore='', $aClasseCss=null, $readonly=false) {
+function campoPermissions($aNomeCampo, $aValore='', $aClasseCss=null, $readonly=false) {
 	$ret = '';
 	$ret .= "<input type=\"hidden\" id=\"field_{$aNomeCampo}\" name=\"field_{$aNomeCampo}\" value=\"{$aValore}\" />";
 	$ret .= "<script type=\"text/javascript\">";
@@ -1651,7 +1651,7 @@ function campoPermissions( $aNomeCampo, $aValore='', $aClasseCss=null, $readonly
 	$ret .= "<td class=\"formtable\"><div class=\"permission".($aValore[8]=='-'?'':'Selected')."\" onclick=\"javascript:{$aNomeCampo}_select(this,8,'x');\">Exec</div></td>";
 	$ret .= "</tr>";
 	$ret .= "</table>";
-// 	if ($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
+// 	if($aClasseCss!=null) { $ret .= "class=\"" . $aClasseCss . "\" "; }
 	return $ret;
 }
 

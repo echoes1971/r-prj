@@ -37,13 +37,13 @@ class DBEDBVersion extends DBEntity {
                 'model_name'=> array('varchar(255)','not null'),
 				'version'=>array('int','not null'),
 			);
-	function DBEDBVersion( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function DBEDBVersion($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "dbversion"; }
 	
 	// Statica
-	var $_chiavi = array('model_name'=>'varchar(255)'); //array( 'version' => 'int' );
+	var $_chiavi = array('model_name'=>'varchar(255)'); //array('version' => 'int');
 	function getKeys() { return $this->_chiavi; }
 	function getOrderBy() { return array("version"); }
 	
@@ -65,20 +65,20 @@ class DBEUser extends DBEntity {
 				'fullname'=>array('text','default null'),
 				'group_id'=>array('uuid','not null'),
 			);
-	function DBEUser( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function DBEUser($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "users"; }
 	
 	// Statica
-	var $_chiavi = array( 'id' => 'uuid' );
+	var $_chiavi = array('id' => 'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'group_id','groups','id');
+			$this->_fk[] = new ForeignKey('group_id','groups','id');
 		}
 		return $this->_fk;
 	}
@@ -88,7 +88,7 @@ class DBEUser extends DBEntity {
 		$ret = true;
 /*		if($this->getValue('old_pwd')>'') {
 			$this->setValue('pwd',$this->getValue('old_pwd'));
-		} else if($this->getValue('new_pwd')>'' && $this->getValue('new_pwd')==$this->getValue('new2_pwd') ) {
+		} else if($this->getValue('new_pwd')>'' && $this->getValue('new_pwd')==$this->getValue('new2_pwd')) {
 			$this->setValue('pwd',$this->getValue('new_pwd'));
 		} else {
 			$ret = false;
@@ -101,8 +101,8 @@ class DBEUser extends DBEntity {
 	
 	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
-		$this->setValue( 'id', $myid );
-		if( $this->checkNewPassword() ) {
+		$this->setValue('id', $myid);
+		if($this->checkNewPassword()) {
 			$this->_createGroup($dbmgr);
 		}
 	}
@@ -154,19 +154,19 @@ class DBEGroup extends DBEntity {
 				'name'=>array('varchar(255)','not null'),
 				'description'=>array('text','default null'),
 			);
-	function DBEGroup( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function DBEGroup($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "groups"; }
 	
 	// Statica
-	var $_chiavi = array( 'id' => 'uuid' );
+	var $_chiavi = array('id' => 'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getOrderBy() { return array("name"); }
 	
 	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
-		$this->setValue( 'id', $myid );
+		$this->setValue('id', $myid);
 	}
 	/**
 	 * Assegna automaticamente il creatore del gruppo come membro (DBEUserGroup)
@@ -178,7 +178,7 @@ class DBEGroup extends DBEntity {
 		$dbe->setValue('group_id',$this->getValue('id'));
 		$dbe->setValue('user_id', $dbmgr->getDBEUser()->getValue('id'));
 		$dbmgr->insert($dbe);
-		$dbmgr->addGroup( $this->getValue('id') );
+		$dbmgr->addGroup($this->getValue('id'));
 	}
 	function _after_delete(&$dbmgr) {
 		$cerca=new DBEUserGroup();
@@ -192,8 +192,8 @@ class DBEGroup extends DBEntity {
 $dbschema_type_list[]='DBEGroup';
 class DBEUserGroup extends DBAssociation {
 	var $_typeName="DBEUserGroup";
-	function DBEUserGroup( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBAssociation( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns
+	function DBEUserGroup($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns
 			: array(
 				'user_id'=>array('uuid','not null'),
 				'group_id'=>array('uuid','not null'),
@@ -202,15 +202,15 @@ class DBEUserGroup extends DBAssociation {
 	function getTableName() { return "users_groups"; }
 	
 	// Statica
-	var $_chiavi = array( 'user_id' => 'uuid', 'group_id'=>'uuid' );
+	var $_chiavi = array('user_id' => 'uuid', 'group_id'=>'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'user_id','users','id');
-			$this->_fk[] = new ForeignKey( 'group_id','groups','id');
+			$this->_fk[] = new ForeignKey('user_id','users','id');
+			$this->_fk[] = new ForeignKey('group_id','groups','id');
 		}
 		return $this->_fk;
 	}
@@ -228,27 +228,27 @@ class DBELog extends DBEntity {
 				'note'=>array('varchar(255)',"not null default ''"),
 				'note2'=>array('text','not null'),
 			);
-	function DBELog( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function DBELog($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "log"; }
 	
 	// Statica
-	var $_chiavi = array( 'ip' => 'text', 'data'=>'date' );
+	var $_chiavi = array('ip' => 'text', 'data'=>'date');
 	function getKeys() {
 		$_chiavi = array();
 		$_chiavi[ 'ip' ] = 'varchar(16)';
 		$_chiavi[ 'data' ] = 'date';
 		return $_chiavi;
 	}
-	function getOrderBy() { return array( 'data desc','ora desc' ); }
+	function getOrderBy() { return array('data desc','ora desc'); }
 	
 	function _before_insert(&$dbmgr) {
-// 		$nomeTabella = $dbmgr->_buildTableName( "seq_id" );
-// 		$tmp = $dbmgr->select( $nomeTabella, "select id as id from $nomeTabella" );
+// 		$nomeTabella = $dbmgr->_buildTableName("seq_id");
+// 		$tmp = $dbmgr->select($nomeTabella, "select id as id from $nomeTabella");
 // 		$myid = $tmp[0]->getValue('id') + 1;
 //  		$myid = $dbmgr->getNextId($this);
-//  		$this->setValue( 'id', $myid );
+//  		$this->setValue('id', $myid);
 	}
 }
 $dbschema_type_list[]="DBELog";
@@ -272,8 +272,8 @@ class DBEObject extends DBEntity {
 				'name'=>array('varchar(255)','not null'),
 				'description'=>array('text','default null'),
 			);
-	function DBEObject( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys
+	function DBEObject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys
 			,$columns!==null ? $columns
 			: self::$_mycolumns
 			);
@@ -287,7 +287,7 @@ class DBEObject extends DBEntity {
 	function getTableName() { return "objects"; }
 	
 	// Statica
-	var $_chiavi = array( 'id' => 'uuid' );
+	var $_chiavi = array('id' => 'uuid');
 	function getKeys() {
 		return $this->_chiavi;
 	}
@@ -299,19 +299,19 @@ class DBEObject extends DBEntity {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'owner','users','id');
-			$this->_fk[] = new ForeignKey( 'group_id','groups','id');
-			$this->_fk[] = new ForeignKey( 'creator','users','id');
-			$this->_fk[] = new ForeignKey( 'last_modify','users','id');
-			$this->_fk[] = new ForeignKey( 'deleted_by','users','id');
-			$this->_fk[] = new ForeignKey( 'father_id',$this->getTableName(),'id');
+			$this->_fk[] = new ForeignKey('owner','users','id');
+			$this->_fk[] = new ForeignKey('group_id','groups','id');
+			$this->_fk[] = new ForeignKey('creator','users','id');
+			$this->_fk[] = new ForeignKey('last_modify','users','id');
+			$this->_fk[] = new ForeignKey('deleted_by','users','id');
+			$this->_fk[] = new ForeignKey('father_id',$this->getTableName(),'id');
 		}
 		return $this->_fk;
 	}
 	
 	function _getTodayString() {
-		$oggi_array = getdate( time() );
-		$oggi = $oggi_array['year'] . "/" . ( strlen($oggi_array['mon'])<2 ? "0" : "" ) . $oggi_array['mon'] . "/" . ( strlen($oggi_array['mday'])<2 ? "0" : "" ) . $oggi_array['mday'] . " " . ( strlen($oggi_array['hours'])<2 ? "0" : "" ) . $oggi_array['hours'] . ":" . ( strlen($oggi_array['minutes'])<2 ? "0" : "" ) . $oggi_array['minutes'];
+		$oggi_array = getdate(time());
+		$oggi = $oggi_array['year'] . "-" . (strlen($oggi_array['mon'])<2 ? "0" : "") . $oggi_array['mon'] . "-" . (strlen($oggi_array['mday'])<2 ? "0" : "") . $oggi_array['mday'] . " " . (strlen($oggi_array['hours'])<2 ? "0" : "") . $oggi_array['hours'] . ":" . (strlen($oggi_array['minutes'])<2 ? "0" : "") . $oggi_array['minutes'] . ":00";
 		return $oggi;
 	}
 	
@@ -322,44 +322,44 @@ class DBEObject extends DBEntity {
 	function isDeleted() { return $this->getValue('deleted_date')>'0000-00-00 00:00:00'; }
 	
 	function canRead($kind='') {
-		if( !($this->getValue('permissions')>'') ) return true;
+		if(!($this->getValue('permissions')>'')) return true;
 		switch($kind) {
 			case 'U': // User
-				return substr( $this->getValue('permissions'), 0+0, 1 )=='r';
+				return substr($this->getValue('permissions'), 0+0, 1)=='r';
 				break;
 			case 'G': // Group
-				return substr( $this->getValue('permissions'), 0+3, 1 )=='r';
+				return substr($this->getValue('permissions'), 0+3, 1)=='r';
 				break;
 			default: // All
-				return substr( $this->getValue('permissions'), 0+6, 1 )=='r';
+				return substr($this->getValue('permissions'), 0+6, 1)=='r';
 				break;
 		}
 	}
 	function canWrite($kind='') {
-		if( !($this->getValue('permissions')>'') ) return true;
+		if(!($this->getValue('permissions')>'')) return true;
 		switch($kind) {
 			case 'U': // User
-				return substr( $this->getValue('permissions'), 1+0, 1 )=='w';
+				return substr($this->getValue('permissions'), 1+0, 1)=='w';
 				break;
 			case 'G': // Group
-				return substr( $this->getValue('permissions'), 1+3, 1 )=='w';
+				return substr($this->getValue('permissions'), 1+3, 1)=='w';
 				break;
 			default: // All
-				return substr( $this->getValue('permissions'), 1+6, 1 )=='w';
+				return substr($this->getValue('permissions'), 1+6, 1)=='w';
 				break;
 		}
 	}
 	function canExecute($kind='') {
-		if( !($this->getValue('permissions')>'') ) return true;
+		if(!($this->getValue('permissions')>'')) return true;
 		switch($kind) {
 			case 'U': // User
-				return substr( $this->getValue('permissions'), 2+0, 1 )=='x';
+				return substr($this->getValue('permissions'), 2+0, 1)=='x';
 				break;
 			case 'G': // Group
-				return substr( $this->getValue('permissions'), 2+3, 1 )=='x';
+				return substr($this->getValue('permissions'), 2+3, 1)=='x';
 				break;
 			default: // All
-				return substr( $this->getValue('permissions'), 2+6, 1 )=='x';
+				return substr($this->getValue('permissions'), 2+6, 1)=='x';
 				break;
 		}
 	}
@@ -385,7 +385,7 @@ class DBEObject extends DBEntity {
 			
 			// ATTENZIONE: questo non ce l'hanno tutti gli oggetti!!!
 			if($this->getValue('fk_obj_id')>'') {
-				$fkobj = $dbmgr->objectById( $this->getValue('fk_obj_id') );
+				$fkobj = $dbmgr->objectById($this->getValue('fk_obj_id'));
 				// 2011.09.06 the owner is BY DEFAULT the creator - $this->setValue('owner',$fkobj->getValue('owner'));
 				$this->setValue('group_id',$fkobj->getValue('group_id'));
 				$this->setValue('permissions',$fkobj->getValue('permissions'));
@@ -394,7 +394,7 @@ class DBEObject extends DBEntity {
 				$this->setValue('father_id',$this->getValue('fk_obj_id'));
 			}
 		} else {
-			$father = $dbmgr->objectById( $this->getValue('father_id') );
+			$father = $dbmgr->objectById($this->getValue('father_id'));
 			if($father!==null) {
 // 				$this->setValue('owner',$father->getValue('owner'));
 				$this->setValue('group_id',$father->getValue('group_id'));
@@ -406,7 +406,7 @@ class DBEObject extends DBEntity {
 	
 	function _before_insert(&$dbmgr) {
 		$myid = $dbmgr->getNextUuid($this);
-		$this->setValue( 'id', $myid );
+		$this->setValue('id', $myid);
 		$this->setDefaultValues($dbmgr);
 	}
 	function _before_update(&$dbmgr) {
@@ -437,11 +437,11 @@ class ObjectMgr extends DBMgr {
 	function canRead(&$obj) {
 		$ret = false;
 		$myuser = $this->getDBEUser();
-		if( $obj->canRead() )
+		if($obj->canRead())
 			$ret=true;
-		elseif( $obj->canRead('G') && $this->hasGroup( $obj->getGroupId() ) )
+		elseif($obj->canRead('G') && $this->hasGroup($obj->getGroupId()))
 			$ret=true;
-		elseif( $obj->canRead('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId() )
+		elseif($obj->canRead('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId())
 			$ret=true;
 		return $ret;
 	}
@@ -453,11 +453,11 @@ class ObjectMgr extends DBMgr {
 			$ret=true;
 		} else {
 		// 2012.05.16: end.
-			if( $obj->canWrite() )
+			if($obj->canWrite())
 				$ret=true;
-			elseif( $obj->canWrite('G') && $this->hasGroup( $obj->getGroupId() ) )
+			elseif($obj->canWrite('G') && $this->hasGroup($obj->getGroupId()))
 				$ret=true;
-			elseif( $obj->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId() )
+			elseif($obj->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId())
 				$ret=true;
 		// 2012.05.16: start.
 		}
@@ -472,11 +472,11 @@ class ObjectMgr extends DBMgr {
 			$ret=true;
 		} else {
 		// 2012.05.16: end.
-			if( $obj->canExecute() )
+			if($obj->canExecute())
 				$ret=true;
-			elseif( $obj->canExecute('G') && $this->hasGroup( $obj->getGroupId() ) )
+			elseif($obj->canExecute('G') && $this->hasGroup($obj->getGroupId()))
 				$ret=true;
-			elseif( $obj->canExecute('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId() )
+			elseif($obj->canExecute('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId())
 				$ret=true;
 		// 2012.05.16: start.
 		}
@@ -493,28 +493,28 @@ class ObjectMgr extends DBMgr {
 			return $tmp;
 		$ret = array();
 		foreach($tmp as $obj) {
-			if( is_a($obj, 'DBEObject') ) {
+			if(is_a($obj, 'DBEObject')) {
 				if($myuser!==null && $obj->getValue('creator')==$myuser->getValue('id')) {
 					$ret[]=$obj;
 					continue;
 				}
 				if($this->_verbose) { print "ObjectMgr.select: obj.deleted_date=".$obj->getValue('deleted_date')."<br/>\n"; }
-				if( $obj->isDeleted() )
+				if($obj->isDeleted())
 					continue;
-				if( $obj->canRead() )
+				if($obj->canRead())
 					$ret[]=$obj;
-				elseif( $obj->canRead('G') && $this->hasGroup( $obj->getGroupId() ) )
+				elseif($obj->canRead('G') && $this->hasGroup($obj->getGroupId()))
 					$ret[]=$obj;
-				elseif( $obj->canRead('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId() )
+				elseif($obj->canRead('U') && $myuser!==null && $myuser->getValue('id')==$obj->getOwnerId())
 					$ret[]=$obj;
 				continue;
 /* 2012.05.16: start.
-			} elseif( is_a($obj, 'DBEUser') ) {
+			} elseif(is_a($obj, 'DBEUser')) {
 				if($myuser===null || $this->hasGroup($GROUP_ADMIN) || $obj->getValue('id')==$myuser->getValue('id'))
 					$ret[]=$obj;
 				continue;
-			} elseif( is_a($obj, 'DBEGroup') ) {
-				if( $myuser===null || $this->hasGroup($GROUP_ADMIN) || $this->hasGroup( $obj->getValue('id') ) )
+			} elseif(is_a($obj, 'DBEGroup')) {
+				if($myuser===null || $this->hasGroup($GROUP_ADMIN) || $this->hasGroup($obj->getValue('id')))
 					$ret[]=$obj;
 				continue;
 2012.05.16: end. */
@@ -529,7 +529,7 @@ class ObjectMgr extends DBMgr {
 	}
 	function insert($dbe) {
 		$have_permission=true;
-		if( is_a($dbe, 'DBEObject') ) {
+		if(is_a($dbe, 'DBEObject')) {
 			// 2012.05.16: start.
 // FIXME if default values are not setted, the following will FAIL!!!!
 			$have_permission = $this->canWrite($dbe);
@@ -538,11 +538,11 @@ class ObjectMgr extends DBMgr {
 			if($myuser!==null && $dbe->getValue('creator')==$myuser->getValue('id')) {
 				$have_permission=true;
 			} else {
-				if( $dbe->canWrite() )
+				if($dbe->canWrite())
 					$have_permission=true;
-				elseif( $dbe->canWrite('G') && $this->hasGroup( $dbe->getGroupId() ) )
+				elseif($dbe->canWrite('G') && $this->hasGroup($dbe->getGroupId()))
 					$have_permission=true;
-				elseif( $dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId() )
+				elseif($dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId())
 					$have_permission=true;
 			}
 */			// 2012.05.16: end.
@@ -552,7 +552,7 @@ class ObjectMgr extends DBMgr {
 	
 	function update($dbe) {
 		$have_permission=true;
-		if( is_a($dbe, 'DBEObject') ) {
+		if(is_a($dbe, 'DBEObject')) {
 			// 2012.05.16: start.
 			$have_permission = $this->canWrite($dbe);
 /*			$have_permission=false;
@@ -560,11 +560,11 @@ class ObjectMgr extends DBMgr {
 			if($myuser!==null && $dbe->getValue('creator')==$myuser->getValue('id')) {
 				$have_permission=true;
 			} else {
-				if( $dbe->canWrite() )
+				if($dbe->canWrite())
 					$have_permission=true;
-				elseif( $dbe->canWrite('G') && $this->hasGroup( $dbe->getGroupId() ) )
+				elseif($dbe->canWrite('G') && $this->hasGroup($dbe->getGroupId()))
 					$have_permission=true;
-				elseif( $dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId() )
+				elseif($dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId())
 					$have_permission=true;
 			}
 */			// 2012.05.16: end.
@@ -574,12 +574,12 @@ class ObjectMgr extends DBMgr {
 	
 	function delete($dbe) {
 		$have_permission=true;
-		if( is_a($dbe, 'DBEObject') ) {
+		if(is_a($dbe, 'DBEObject')) {
 			// FIXME 2012.04.03: start.
 			// FIXME 2012.04.03: HORRIBLE PATCH!!!
-			$tmpdbe = $this->fullObjectById( $dbe->getValue('id'), false );
+			$tmpdbe = $this->fullObjectById($dbe->getValue('id'), false);
 			$dbe = $tmpdbe===null ? $dbe : $tmpdbe;
-// 			$dbe = $this->fullObjectById( $dbe->getValue('id'), false );
+// 			$dbe = $this->fullObjectById($dbe->getValue('id'), false);
 			// FIXME 2012.04.03: end.
 			// 2012.05.16: start.
 			$have_permission = $this->canWrite($dbe);
@@ -588,27 +588,28 @@ class ObjectMgr extends DBMgr {
 			if($myuser!==null && $dbe->getValue('creator')==$myuser->getValue('id')) {
 				$have_permission=true;
 			} else {
-				if( $dbe->canWrite() )
+				if($dbe->canWrite())
 					$have_permission=true;
-				elseif( $dbe->canWrite('G') && $this->hasGroup( $dbe->getGroupId() ) )
+				elseif($dbe->canWrite('G') && $this->hasGroup($dbe->getGroupId()))
 					$have_permission=true;
-				elseif( $dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId() )
+				elseif($dbe->canWrite('U') && $myuser!==null && $myuser->getValue('id')==$dbe->getOwnerId())
 					$have_permission=true;
 			}
 */			// 2012.05.16: end.
 		}
-		if( $have_permission ) {
-			if( !is_a($dbe, 'DBEObject') || $dbe->isDeleted() ) {
+		if($have_permission) {
+			if(!is_a($dbe, 'DBEObject') || $dbe->isDeleted()) {
 				return parent::delete($dbe);
 			} else {
 				$this->connect();
-				$dbe->_before_delete( $this );
-				$sqlString = $this->_buildUpdateString( $dbe );
-				if ($this->_verbose ) {
+				$dbe->_before_delete($this);
+				$sqlString = $this->_buildUpdateString($dbe);
+				if ($this->_verbose) {
 					print "ObjectMgr.delete: sqlString = $sqlString<br />\n";
 				}
-				$result = $this->db_query( $sqlString );
-				$dbe->_after_delete( $this );
+				$result = $this->db_query($sqlString);
+// 				echo "DB Error:" . $this->db_error() . "<br/>\n";
+				$dbe->_after_delete($this);
 				return $dbe;
 			}
 		} else {
@@ -642,13 +643,13 @@ class ObjectMgr extends DBMgr {
 	 * @par full_object retrieve the whole data of the object, only common object attributes otherwise
 	 */
 	function search($dbe, $uselike=1, $caseSensitive=false, $orderby=null,$ignore_deleted=true,$full_object=true) {
-		if ($this->_verbose ) { printf("ObjectMgr::search: start.<br/>\n"); }
+		if ($this->_verbose) { printf("ObjectMgr::search: start.<br/>\n"); }
 		if($dbe->getTypeName()!='DBEObject') {
-			if( is_a($dbe,'DBEObject') && $ignore_deleted===true ) $dbe->setValue('deleted_date','0000-00-00 00:00:00');
+			if(is_a($dbe,'DBEObject') && $ignore_deleted===true) $dbe->setValue('deleted_date','0000-00-00 00:00:00');
 			return parent::search($dbe, $uselike, $caseSensitive, $orderby);
 		}
 		// 2011.05.16: if unspecified, I want non deleted objects
-		if( $ignore_deleted===true ) $dbe->setValue('deleted_date','0000-00-00 00:00:00');
+		if($ignore_deleted===true) $dbe->setValue('deleted_date','0000-00-00 00:00:00');
 		$ret=array();
 		$tmp = parent::search($dbe, $uselike, $caseSensitive, $orderby);
 		// 2012.03.05: start.
@@ -684,7 +685,7 @@ class ObjectMgr extends DBMgr {
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
 		$searchString = implode($q, " union ");
-		if ($this->_verbose ) { printf("query: $searchString<br/>\n"); }
+		if ($this->_verbose) { printf("query: $searchString<br/>\n"); }
 		$lista = $this->select('DBEObject', "objects", $searchString);
 		return count($lista)==1 ? $lista[0] : null;
 	}
@@ -694,7 +695,7 @@ class ObjectMgr extends DBMgr {
 		eval("\$cerca=new ".$myobj->getValue('classname')."();");
 		$cerca->setValue('id',$myobj->getValue('id'));
 		$lista = $this->search($cerca,0,false,null,$a_ignore_deleted);
-		if ($this->_verbose ) { printf("ObjectMgr.fullObjectById: lista=".count($lista)."<br/>\n"); }
+		if ($this->_verbose) { printf("ObjectMgr.fullObjectById: lista=".count($lista)."<br/>\n"); }
 		return count($lista)==1 ? $lista[0] : null;
 	}
 	/** Ricerca gli oggetti per nome, tipo wiki */
@@ -711,7 +712,7 @@ class ObjectMgr extends DBMgr {
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
 		$searchString = implode($q, " union ");
-		if ($this->_verbose ) {
+		if ($this->_verbose) {
 			printf("query: $searchString<br/>\n");
 		}
 		// 2012.05.07: start.
@@ -741,19 +742,19 @@ class ObjectMgr extends DBMgr {
 	}
 	// 2012.04.30: start.
 	function login($login,$pwd) {
-		$valori = array( 'login'=>$login, 'pwd'=>$pwd, );
+		$valori = array('login'=>$login, 'pwd'=>$pwd,);
 		$cerca = new DBEUser(null,null,null,$attrs=$valori,null) ;
-		$ris = $this->search( $cerca, $uselike=0 );
+		$ris = $this->search($cerca, $uselike=0);
 		
 		$__utente=null;
 		
-		if ( count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1 ) {
+		if (count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1) {
 			// User FOUND
 			$__utente = $ris[0];
 			$this->setDBEUser($__utente);
 			$cerca = new DBEUserGroup();
 			$cerca->readFKFrom($__utente);
-			$lista=$this->search( $cerca, $uselike=0 );
+			$lista=$this->search($cerca, $uselike=0);
 			$lista_gruppi=array();
 			foreach($lista as $g) { $lista_gruppi[]=$g->getValue('group_id'); }
 			if(!in_array($__utente->getValue('group_id'), $lista_gruppi))
@@ -787,11 +788,11 @@ class DBECountry extends DBEntity {
 		'ISO_3166_1_Number'=>array('varchar(255)','default null'),
 		'IANA_Country_Code_TLD'=>array('varchar(255)','default null'),
 	);
-	function DBECountry( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEntity( $tablename, $names, $values, $attrs, $keys, self::$_mycolumns );
+	function DBECountry($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEntity($tablename, $names, $values, $attrs, $keys, self::$_mycolumns);
 	}
 	function getTableName() { return "countrylist"; }
-	var $_chiavi = array( 'id' => 'uuid' );
+	var $_chiavi = array('id' => 'uuid');
 	function getKeys() {
 		return $this->_chiavi;
 	}
@@ -804,8 +805,8 @@ class DBECompany extends DBEObject {
 	var $_typeName="DBECompany";
 	protected static $__mycolumns = null;
 	
-	function DBECompany( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBECompany($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -830,21 +831,21 @@ class DBECompany extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_countrylist_id','countrylist','id');
+			$this->_fk[] = new ForeignKey('fk_countrylist_id','countrylist','id');
 		}
 		return $this->_fk;
 	}
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 	}
 }
 $dbschema_type_list[]="DBECompany";
 class DBEPeople extends DBEObject {
 	var $_typeName="DBEPeople";
 	protected static $__mycolumns = null;
-	function DBEPeople( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEPeople($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -876,15 +877,15 @@ class DBEPeople extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_countrylist_id','countrylist','id');
-			$this->_fk[] = new ForeignKey( 'fk_companies_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_users_id','users','id');
+			$this->_fk[] = new ForeignKey('fk_countrylist_id','countrylist','id');
+			$this->_fk[] = new ForeignKey('fk_companies_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_users_id','users','id');
 		}
 		return $this->_fk;
 	}
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 	}
 }
 $dbschema_type_list[]="DBEPeople";
@@ -895,8 +896,8 @@ class DBEEvent extends DBEObject {
 	var $_typeName="DBEEvent";
 	function getTableName() { return "events"; }
 	protected static $__mycolumns = null;
-	function DBEEvent( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEEvent($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -960,13 +961,13 @@ class DBEEvent extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-//			$this->_fk[] = new ForeignKey( 'fk_obj_id','pages','id');
-//			$this->_fk[] = new ForeignKey( 'father_id','pages','id');
+//			$this->_fk[] = new ForeignKey('fk_obj_id','pages','id');
+//			$this->_fk[] = new ForeignKey('father_id','pages','id');
 			
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','folders','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','people','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
 		}
 		return $this->_fk;
 	}
@@ -979,8 +980,8 @@ class DBEFile extends DBEObject {
 	
 	var $dest_directory;
 	
-	function DBEFile( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEFile($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1007,12 +1008,12 @@ class DBEFile extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'father_id','folders','id');
+			$this->_fk[] = new ForeignKey('father_id','folders','id');
 			
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','pages','id');
-			$this->_fk[] = new ForeignKey( 'father_id','pages','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','news','id');
-			$this->_fk[] = new ForeignKey( 'father_id','news','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','pages','id');
+			$this->_fk[] = new ForeignKey('father_id','pages','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','news','id');
+			$this->_fk[] = new ForeignKey('father_id','news','id');
 		}
 		return $this->_fk;
 	}
@@ -1064,7 +1065,7 @@ class DBEFile extends DBEObject {
 		$w = imagesx($imorig);
 		$h = imagesy($imorig);
 		$max_pixel = $w>$h ? $w : $h;
-		$scale = $max_pixel / ( $w>$h ? $pix_width : $pix_height );
+		$scale = $max_pixel / ($w>$h ? $pix_width : $pix_height);
 		$pix_width = intval($w / $scale);
 		$pix_height = intval($h / $scale);
 		$im = imagecreatetruecolor($pix_width,$pix_height);
@@ -1081,35 +1082,35 @@ class DBEFile extends DBEObject {
 	// Image management: end.
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
-		if( $father_id>0 ) {
+		if($father_id>0) {
 			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id=".$this->getValue('father_id');
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-			if( count($tmp)==1 ) {
-				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id') );
+			if(count($tmp)==1) {
+				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));
 			}
 		}
 		
 		// Aggiungo il prefisso al nome del file
-		if( $this->getValue('filename')>'' ) {
+		if($this->getValue('filename')>'') {
 			$dest_path = $this->generaObjectPath();
 			$from_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			if($dest_path>'') $dest_dir.="/$dest_path";
-			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755 );
+			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755);
 			// con basename() ottengo solo il nome del file senza il path relativo nel quale e' stato caricato
 			$nuovo_filename = $this->generaFilename($this->getValue('id'), basename($this->getValue('filename')));
-			rename( $from_dir."/".$this->getValue('filename'), $dest_dir."/".$nuovo_filename );
-			if( !($this->getValue('name')>'') ) $this->setValue('name',basename($this->getValue('filename')) );
+			rename($from_dir."/".$this->getValue('filename'), $dest_dir."/".$nuovo_filename);
+			if(!($this->getValue('name')>'')) $this->setValue('name',basename($this->getValue('filename')));
 			$this->setValue('filename', $nuovo_filename);
 		}
 		// Checksum
 		$_fullpath = $this->getFullpath();
 		if(file_exists($_fullpath)) {
-			$newchecksum = sha1_file( $_fullpath );
+			$newchecksum = sha1_file($_fullpath);
 			$this->setValue('checksum',$newchecksum);
 		} else {
 			$this->setValue('checksum',"File '".$this->getValue('filename')."' not found!");
@@ -1139,33 +1140,33 @@ class DBEFile extends DBEObject {
 			$this->createThumbnail($_fullpath);
 	}
 	function _before_update(&$dbmgr) {
-		parent::_before_update( $dbmgr );
+		parent::_before_update($dbmgr);
 		
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
-		if( $father_id>0 ) {
+		if($father_id>0) {
 			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id=".$this->getValue('father_id');
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-			if( count($tmp)==1 ) {
-				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id') );
+			if(count($tmp)==1) {
+				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));
 			}
 		}
 		
 		// Controllo se ho già un file salvato
-		eval( "\$cerca = new ".get_class($this)."();" );
+		eval("\$cerca = new ".get_class($this)."();");
 		$cerca->setValue('id', $this->getValue('id'));
 		$tmp=$dbmgr->search($cerca,$uselike=0);
 		$myself=$tmp[0];
-		if( $this->getValue('filename')>'' && $myself->getValue('filename')!=$this->getValue('filename') ) {
+		if($this->getValue('filename')>'' && $myself->getValue('filename')!=$this->getValue('filename')) {
 			// Filename diversi ==> elimino il vecchio
 			$dest_path = $myself->generaObjectPath();
 			$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			if($dest_path>'') $dest_dir.="/$dest_path";
 			$dest_file = $dest_dir."/".$myself->generaFilename();
-			if( !file_exists($dest_file) ) {
+			if(!file_exists($dest_file)) {
 				// Do nothing
 			} else {
-				unlink( $dest_file );
+				unlink($dest_file);
 				// Image
 				if($this->isImage())
 					$this->deleteThumbnail($dest_file);
@@ -1173,14 +1174,14 @@ class DBEFile extends DBEObject {
 		}
 		
 		// Aggiungo il prefisso al nome del file
-		if( $this->getValue('filename')>'' ) {
+		if($this->getValue('filename')>'') {
 			$from_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			$dest_path = $this->generaObjectPath();
 			$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			if($dest_path>'') $dest_dir.="/$dest_path";
-			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755 );
+			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755);
 			$nuovo_filename = $this->generaFilename($this->getValue('id'), basename($this->getValue('filename')));
-			rename( "$from_dir/".$this->getValue('filename'),"$dest_dir/$nuovo_filename" );
+			rename("$from_dir/".$this->getValue('filename'),"$dest_dir/$nuovo_filename");
 			$this->setValue('filename', $nuovo_filename);
 		} else if($myself->getValue('path')!=$this->getValue('path')) {
 			$from_path = $myself->generaObjectPath();
@@ -1189,8 +1190,8 @@ class DBEFile extends DBEObject {
 			$dest_path = $this->generaObjectPath();
 			$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 			if($dest_path>'') $dest_dir.="/$dest_path";
-			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755 );
-			rename( "$from_dir/".$myself->getValue('filename'),"$dest_dir/".$myself->getValue('filename') );
+			if(!file_exists($dest_dir)) mkdir($dest_dir, 0755);
+			rename("$from_dir/".$myself->getValue('filename'),"$dest_dir/".$myself->getValue('filename'));
 			// TODO controllare se funziona
 			$this->setValue('filename', $myself->getValue('filename'));
 		} else {
@@ -1200,7 +1201,7 @@ class DBEFile extends DBEObject {
 		// Checksum
 		$_fullpath = $this->getFullpath();
 		if(file_exists($_fullpath)) {
-			$newchecksum = sha1_file( $_fullpath );
+			$newchecksum = sha1_file($_fullpath);
 			$this->setValue('checksum',$newchecksum);
 		} else {
 			$this->setValue('checksum',"File '".$this->getValue('filename')."' not found!");
@@ -1232,7 +1233,7 @@ class DBEFile extends DBEObject {
 	function _before_delete(&$dbmgr) {
 		// Has it been marked deleted before?
 		$is_deleted = $this->isDeleted();
-		parent::_before_delete( $dbmgr );
+		parent::_before_delete($dbmgr);
 		// If it has been marked deleted, then now is a REAL delete, so remove the file
 		if($is_deleted) {
 			// Controllo se ho già un file salvato
@@ -1242,14 +1243,14 @@ class DBEFile extends DBEObject {
 			$tmp=$dbmgr->search($cerca,0,false,null,false);
 // 			$tmp=$dbmgr->search($cerca,$uselike=0);
 			// BUGFIX 2012.04.04: end.
-			if( count($tmp)>0 ) {
+			if(count($tmp)>0) {
 				$myself=$tmp[0];
-				if( $myself->getValue('filename')>'' ) {
+				if($myself->getValue('filename')>'') {
 					// ==> elimino il file
 					$dest_path = $myself->generaObjectPath();
 					$dest_dir=realpath($GLOBALS['root_directory'].'/'.$this->dest_directory);
 					if($dest_path>'') $dest_dir.="/$dest_path";
-					unlink( $dest_dir."/".$myself->generaFilename() );
+					unlink($dest_dir."/".$myself->generaFilename());
 					
 					// Image
 					if($this->isImage())
@@ -1267,8 +1268,8 @@ class DBEFolder extends DBEObject {
 		return "folders";
 	}
 	protected static $__mycolumns = null;
-	function DBEFolder( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEFolder($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1283,9 +1284,9 @@ class DBEFolder extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','people','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
 		}
 		return $this->_fk;
 	}
@@ -1306,28 +1307,28 @@ class DBEFolder extends DBEObject {
 	}
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
-		if( $father_id>0 ) {
+		if($father_id>0) {
 			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id='".str_replace(' ','\0',sprintf("%-16s",$this->getValue('father_id')))."'";
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-			if( count($tmp)==1 ) {
-				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id') );
+			if(count($tmp)==1) {
+				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));
 			}
 		}
 	}
 	function _before_update(&$dbmgr) {
-		parent::_before_update( $dbmgr );
+		parent::_before_update($dbmgr);
 		
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
-		if( $father_id>0 ) {
+		if($father_id>0) {
 			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id='".str_replace(' ','\0',sprintf("%-16s",$this->getValue('father_id')))."'";
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-			if( count($tmp)==1 ) {
-				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id') );
+			if(count($tmp)==1) {
+				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));
 			}
 		}
 	}
@@ -1338,8 +1339,8 @@ class DBELink extends DBEObject {
 	var $_typeName="DBELink";
 	function getTableName() { return "links"; }
 	protected static $__mycolumns = null;
-	function DBELink( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBELink($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1356,15 +1357,15 @@ class DBELink extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','folders','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','people','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
 
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','pages','id');
-			$this->_fk[] = new ForeignKey( 'father_id','pages','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','news','id');
-			$this->_fk[] = new ForeignKey( 'father_id','news','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','pages','id');
+			$this->_fk[] = new ForeignKey('father_id','pages','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','news','id');
+			$this->_fk[] = new ForeignKey('father_id','news','id');
 		}
 		return $this->_fk;
 	}
@@ -1379,8 +1380,8 @@ class DBENote extends DBEObject {
 		return "notes";
 	}
 	protected static $__mycolumns = null;
-	function DBENote( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBENote($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1395,10 +1396,10 @@ class DBENote extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','folders','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','people','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
 		}
 		return $this->_fk;
 	}
@@ -1410,8 +1411,8 @@ class DBEPage extends DBEObject {
 	var $_typeName="DBEPage";
 	function getTableName() { return "pages"; }
 	protected static $__mycolumns = null;
-	function DBEPage( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEPage($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1429,10 +1430,10 @@ class DBEPage extends DBEObject {
 		if(count($this->_fk)==0) {
 			parent::getFK();
 			
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','folders','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','people','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
 		}
 		return $this->_fk;
 	}
@@ -1444,8 +1445,8 @@ class DBENews extends DBEPage {
 	var $_typeName="DBENews";
 	function getTableName() { return "news"; }
 	protected static $__mycolumns = null;
-	function DBENews( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEPage( $tablename, $names, $values, $attrs, $keys );
+	function DBENews($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEPage($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEPage::$__mycolumns;
@@ -1468,8 +1469,8 @@ class DBEProject extends DBEObject {
 	function getTableName() {
 		return "projects";
 	}
-	function DBEProject( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys, DBEObject::$_mycolumns );
+	function DBEProject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys, DBEObject::$_mycolumns);
 		
 // 		$this->_columns['p_iva']=array('varchar(16)');
 	}
@@ -1479,7 +1480,7 @@ class DBEProject extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-// 			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
+// 			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
 		}
 		return $this->_fk;
 	}
@@ -1487,7 +1488,7 @@ class DBEProject extends DBEObject {
 	 * @TODO da finire?
 	 */
 	function _before_delete(&$dbmgr) {
-		parent::_before_delete( $dbmgr );
+		parent::_before_delete($dbmgr);
 		
 		// Cancello i legami con le compagnie
 		// Cancello i legami con le persone
@@ -1501,8 +1502,8 @@ $dbschema_type_list[]="DBEProject";
 class DBEProjectCompanyRole extends DBEObject {
 	var $_typeName="DBEProjectCompanyRole";
 	protected static $__mycolumns = null;
-	function DBEProjectCompanyRole( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEProjectCompanyRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1513,7 +1514,7 @@ class DBEProjectCompanyRole extends DBEObject {
 	function getTableName() {
 		return "projects_companies_roles";
 	}
-	protected static $__chiavi = array( 'id' => 'uuid' );
+	protected static $__chiavi = array('id' => 'uuid');
 	function getKeys() { return self::$__chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
@@ -1521,21 +1522,21 @@ class DBEProjectCompanyRole extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-// 			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
+// 			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
 		}
 		return $this->_fk;
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-		if( count($tmp)==1 ) {
-			$this->setValue('order_position', intval( $tmp[0]->getValue('order_position') ) + 1 );
+		if(count($tmp)==1) {
+			$this->setValue('order_position', intval($tmp[0]->getValue('order_position')) + 1);
 		} else {
-			$this->setValue('order_position', 1 );
+			$this->setValue('order_position', 1);
 		}
 	}
 }
@@ -1551,21 +1552,21 @@ class DBEProjectCompany extends DBAssociation {
 			'company_id'=>array('uuid',"not null default ''"),
 			'projects_companies_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectCompany( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBAssociation( $tablename, $names, $values, $attrs, $keys, self::$__mycolumns );
+	function DBEProjectCompany($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
-	var $_chiavi = array( 'project_id' => 'uuid', 'company_id'=>'uuid', 'projects_companies_role_id'=>'uuid' );
+	var $_chiavi = array('project_id' => 'uuid', 'company_id'=>'uuid', 'projects_companies_role_id'=>'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'project_id','projects','id'); // From
-			$this->_fk[] = new ForeignKey( 'company_id','companies','id'); // To
-			$this->_fk[] = new ForeignKey( 'projects_companies_role_id','projects_companies_roles','id'); // Attribute
+			$this->_fk[] = new ForeignKey('project_id','projects','id'); // From
+			$this->_fk[] = new ForeignKey('company_id','companies','id'); // To
+			$this->_fk[] = new ForeignKey('projects_companies_role_id','projects_companies_roles','id'); // Attribute
 		}
 		return $this->_fk;
 	}
@@ -1580,8 +1581,8 @@ class DBEProjectPeopleRole extends DBAssociation {
 	function getTableName() {
 		return "projects_people_roles";
 	}
-	function DBEProjectPeopleRole( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBAssociation( $tablename, $names, $values, $attrs, $keys );
+	function DBEProjectPeopleRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBAssociation($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1589,7 +1590,7 @@ class DBEProjectPeopleRole extends DBAssociation {
 		}
 		$this->_columns=&self::$__mycolumns;
 	}
-	protected static $_chiavi = array( 'id' => 'uuid' );
+	protected static $_chiavi = array('id' => 'uuid');
 	function getKeys() {
 		return self::$_chiavi;
 	}
@@ -1599,7 +1600,7 @@ class DBEProjectPeopleRole extends DBAssociation {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-// 			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
+// 			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
 		}
 		return $this->_fk;
 	}
@@ -1610,10 +1611,10 @@ class DBEProjectPeopleRole extends DBAssociation {
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-		if( count($tmp)==1 ) {
-			$this->setValue('order_position', intval( $tmp[0]->getValue('order_position') ) + 1 );
+		if(count($tmp)==1) {
+			$this->setValue('order_position', intval($tmp[0]->getValue('order_position')) + 1);
 		} else {
-			$this->setValue('order_position', 1 );
+			$this->setValue('order_position', 1);
 		}
 	}
 }
@@ -1629,21 +1630,21 @@ class DBEProjectPeople extends DBAssociation {
 				'people_id'=>array('uuid',"not null default ''"),
 				'projects_people_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectPeople( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBAssociation( $tablename, $names, $values, $attrs, $keys, self::$__mycolumns );
+	function DBEProjectPeople($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
-	var $_chiavi = array( 'project_id' => 'uuid', 'people_id'=>'uuid', 'projects_people_role_id'=>'uuid' );
+	var $_chiavi = array('project_id' => 'uuid', 'people_id'=>'uuid', 'projects_people_role_id'=>'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'project_id','projects','id'); // From
-			$this->_fk[] = new ForeignKey( 'people_id','people','id'); // To
-			$this->_fk[] = new ForeignKey( 'projects_people_role_id','projects_people_roles','id'); // Attribute
+			$this->_fk[] = new ForeignKey('project_id','projects','id'); // From
+			$this->_fk[] = new ForeignKey('people_id','people','id'); // To
+			$this->_fk[] = new ForeignKey('projects_people_role_id','projects_people_roles','id'); // Attribute
 		}
 		return $this->_fk;
 	}
@@ -1658,8 +1659,8 @@ class DBEProjectProjectRole extends DBEObject {
 		return "projects_projects_roles";
 	}
 	protected static $__mycolumns = null;
-	function DBEProjectProjectRole( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBEProjectProjectRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1673,7 +1674,7 @@ class DBEProjectProjectRole extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-// 			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
+// 			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
 		}
 		return $this->_fk;
 	}
@@ -1684,10 +1685,10 @@ class DBEProjectProjectRole extends DBEObject {
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-		if( count($tmp)==1 ) {
-			$this->setValue('order_position', intval( $tmp[0]->getValue('order_position') ) + 1 );
+		if(count($tmp)==1) {
+			$this->setValue('order_position', intval($tmp[0]->getValue('order_position')) + 1);
 		} else {
-			$this->setValue('order_position', 1 );
+			$this->setValue('order_position', 1);
 		}
 	}
 }
@@ -1703,21 +1704,21 @@ class DBEProjectProject extends DBAssociation {
 				'project2_id'=>array('uuid',"not null default ''"),
 				'projects_projects_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectProject( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBAssociation( $tablename, $names, $values, $attrs, $keys, self::$__mycolumns );
+	function DBEProjectProject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
-	var $_chiavi = array( 'project_id' => 'uuid', 'project2_id'=>'uuid', 'projects_projects_role_id'=>'uuid' );
+	var $_chiavi = array('project_id' => 'uuid', 'project2_id'=>'uuid', 'projects_projects_role_id'=>'uuid');
 	function getKeys() { return $this->_chiavi; }
 	function getFK() {
 		if($this->_fk==null) {
 			$this->_fk=array();
 		}
 		if(count($this->_fk)==0) {
-			$this->_fk[] = new ForeignKey( 'project_id','projects','id'); // From
-			$this->_fk[] = new ForeignKey( 'project2_id','projects','id'); // To
-			$this->_fk[] = new ForeignKey( 'projects_projects_role_id','projects_projects_roles','id'); // Attribute
+			$this->_fk[] = new ForeignKey('project_id','projects','id'); // From
+			$this->_fk[] = new ForeignKey('project2_id','projects','id'); // To
+			$this->_fk[] = new ForeignKey('projects_projects_role_id','projects_projects_roles','id'); // Attribute
 		}
 		return $this->_fk;
 	}
@@ -1729,8 +1730,8 @@ class DBETimetrack extends DBEObject {
 	function getTableName() {
 		return "timetracks";
 	}
-	function DBETimetrack( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBETimetrack($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['fk_obj_id']=array('uuid','default null');
 		$this->_columns['fk_progetto']=array('uuid','default null');
@@ -1752,11 +1753,11 @@ class DBETimetrack extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','projects','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'fk_obj_id','todo','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','projects','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','folders','id');
+			$this->_fk[] = new ForeignKey('fk_obj_id','todo','id');
 			
-			$this->_fk[] = new ForeignKey( 'fk_progetto','projects','id');
+			$this->_fk[] = new ForeignKey('fk_progetto','projects','id');
 		}
 		return $this->_fk;
 	}
@@ -1770,8 +1771,8 @@ class DBETimetrack extends DBEObject {
 		$fks = $dbe_master->getFKForTable('projects');
 		$myfks = $this->getFKForTable('projects');
 		for($m=0; $m<count($fks); $m++) {
-			$master_value = $dbe_master->getValue( $fks[$m]->colonna_fk );
-			if( $master_value!=null ) {
+			$master_value = $dbe_master->getValue($fks[$m]->colonna_fk);
+			if($master_value!=null) {
 				for($f=0; $f<count($myfks); $f++) {
 					// Controllo che non sia già presente un'altra clausola in $ret
 					$trovata = false;
@@ -1786,7 +1787,7 @@ class DBETimetrack extends DBEObject {
 				}
 			}
 		}
-		return join( $ret, "&" );
+		return join($ret, "&");
 	}
 	
 }
@@ -1797,8 +1798,8 @@ class DBETodo extends DBEObject {
 	function getTableName() {
 		return "todo";
 	}
-	function DBETodo( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBETodo($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['priority']=array('int','not null default 0');
 		$this->_columns['data_segnalazione']=array('datetime',"not null default '0000-00-00 00:00:00'");
@@ -1819,28 +1820,28 @@ class DBETodo extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-			$this->_fk[] = new ForeignKey( 'fk_segnalato_da','people','id');
-			$this->_fk[] = new ForeignKey( 'fk_cliente','companies','id');
-			$this->_fk[] = new ForeignKey( 'fk_progetto','projects','id');
+			$this->_fk[] = new ForeignKey('fk_segnalato_da','people','id');
+			$this->_fk[] = new ForeignKey('fk_cliente','companies','id');
+			$this->_fk[] = new ForeignKey('fk_progetto','projects','id');
 			
-			$this->_fk[] = new ForeignKey( 'father_id','folders','id');
-			$this->_fk[] = new ForeignKey( 'father_id','todo','id');
+			$this->_fk[] = new ForeignKey('father_id','folders','id');
+			$this->_fk[] = new ForeignKey('father_id','todo','id');
 			
-			$this->_fk[] = new ForeignKey( 'fk_tipo','todo_tipo','id');
+			$this->_fk[] = new ForeignKey('fk_tipo','todo_tipo','id');
 		}
 		return $this->_fk;
 	}
 	function getOrderBy() { return array('priority desc','data_segnalazione desc','fk_progetto','name'); }
 	
-	function getFKCGIConditionFromMaster( &$dbe_master ) {
+	function getFKCGIConditionFromMaster(&$dbe_master) {
 		$ret=array();
-		$ret[] = parent::getFKCGIConditionFromMaster( $dbe_master );
+		$ret[] = parent::getFKCGIConditionFromMaster($dbe_master);
 		// Recupero la fk verso i progetti
 		$fks = $dbe_master->getFKForTable('projects');
 		$myfks = $this->getFKForTable('projects');
-		if( count($fks)==1 && count($myfks)==1 ) {
-			$master_value = $dbe_master->getValue( $fks[0]->colonna_fk );
-			if( $master_value!=null ) {
+		if(count($fks)==1 && count($myfks)==1) {
+			$master_value = $dbe_master->getValue($fks[0]->colonna_fk);
+			if($master_value!=null) {
 				// Controllo che non sia già presente un'altra clausola in $ret
 				$trovata = false;
 				$stringa_nome = "field_" . $myfks[0]->colonna_fk;
@@ -1852,11 +1853,11 @@ class DBETodo extends DBEObject {
 				    $ret[] = "field_" . $myfks[0]->colonna_fk . "=" . $master_value;
 			}
 		}
-		return join( $ret, "&" );
+		return join($ret, "&");
 	}
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		$data_segnalazione = $this->getValue('data_segnalazione');
 		if($data_segnalazione==null || $data_segnalazione=="" || $data_segnalazione=="00:00" || $data_segnalazione=="0000/00/00 00:00") {
@@ -1867,7 +1868,7 @@ class DBETodo extends DBEObject {
 	}
 	
 	function _before_update(&$dbmgr) {
-		parent::_before_update( $dbmgr );
+		parent::_before_update($dbmgr);
 		
 		// Controllo stato=100%
 		$this->_RULE_controllo_chiusura();
@@ -1911,8 +1912,8 @@ class DBETodoTipo extends DBEObject {
 	function getTableName() {
 		return "todo_tipo";
 	}
-	function DBETodoTipo( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null ) {
-		$this->DBEObject( $tablename, $names, $values, $attrs, $keys );
+	function DBETodoTipo($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['order_position']=array('int','default 0');
 	}
@@ -1922,21 +1923,21 @@ class DBETodoTipo extends DBEObject {
 		}
 		if(count($this->_fk)==0) {
 			parent::getFK();
-// 			$this->_fk[] = new ForeignKey( 'fk_obj_id','companies','id');
+// 			$this->_fk[] = new ForeignKey('fk_obj_id','companies','id');
 		}
 		return $this->_fk;
 	}
 	function getOrderBy() { return array("order_position","id"); }
 	
 	function _before_insert(&$dbmgr) {
-		parent::_before_insert( $dbmgr );
+		parent::_before_insert($dbmgr);
 		
 		$query="select max(order_position) as order_position from ". $dbmgr->buildTableName($this);
 		$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
-		if( count($tmp)==1 ) {
-			$this->setValue('order_position', intval( $tmp[0]->getValue('order_position') ) + 1 );
+		if(count($tmp)==1) {
+			$this->setValue('order_position', intval($tmp[0]->getValue('order_position')) + 1);
 		} else {
-			$this->setValue('order_position', 1 );
+			$this->setValue('order_position', 1);
 		}
 	}
 }
@@ -1956,20 +1957,20 @@ class DBETestDBLayer extends DBEntity {
                 'prezzo'=>array('float'),
                 'data_disponibilita'=>array('datetime'),
             );
-    function DBETestDBLayer( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-        $this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+    function DBETestDBLayer($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
     }
     function getSchemaName() { return "test"; }
     function getTableName() { return "test_dblayer"; }
     
     // Statica
-    var $_chiavi = array( 'id' => 'uuid' );
+    var $_chiavi = array('id' => 'uuid');
     function getKeys() { return $this->_chiavi; }
     function getOrderBy() { return array("nome"); }
     
     function _before_insert(&$dbmgr) {
         $myid = $dbmgr->getNextUuid($this);
-        $this->setValue( 'id', $myid );
+        $this->setValue('id', $myid);
     }
 }
 $dbschema_type_list[]='DBETestDBLayer';
@@ -1992,20 +1993,20 @@ class DBESocieta extends DBEntity {
                 'tipo'=>array('text'),
                 'data_creazione'=>array('datetime'),
             );
-    function DBESocieta( $tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null ) {
-        $this->DBEntity( $tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+    function DBESocieta($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
     }
     function getSchemaName() { return "test"; }
     function getTableName() { return "societa"; }
     
     // Statica
-    var $_chiavi = array( 'id' => 'uuid' );
+    var $_chiavi = array('id' => 'uuid');
     function getKeys() { return $this->_chiavi; }
     function getOrderBy() { return array("ragione_sociale"); }
     
     function _before_insert(&$dbmgr) {
         $myid = $dbmgr->getNextUuid($this);
-        $this->setValue( 'id', $myid );
+        $this->setValue('id', $myid);
     }
 }
 $dbschema_type_list[]='DBESocieta';
@@ -2015,11 +2016,11 @@ $dbschema_type_list[]='DBESocieta';
 /** *********************************** DBEFactory *********************************** */
 
 class MyDBEFactory extends DBEFactory {
-	function MyDBEFactory( $verbose = 0 ) {
-		$this->DBEFactory( $verbose );
+	function MyDBEFactory($verbose = 0) {
+		$this->DBEFactory($verbose);
 		
 		global $dbschema_type_list;
-		foreach( $dbschema_type_list as $mytype )
+		foreach($dbschema_type_list as $mytype)
 			$this->register($mytype);
 	}
 }
