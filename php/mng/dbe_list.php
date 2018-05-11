@@ -84,5 +84,8 @@ $lista_title=$lista_form->getListTitle();
 $lista_colonne = $lista_form->getListColumnNames();
 $prefisso_pagine = $lista_form->getPagePrefix();
 
+// *************** Gestione Menu ***************
+require_once(ROOT_FOLDER . "mng/_mng_menu.php");
+
 require_once( getSkinPage("mng/dbe_list.php") );
 ?>

@@ -99,5 +99,8 @@ $myform->setValues( $mydbe->getValuesDictionary() );
 
 $campiVisibili = $myform->getDetailColumnNames();
 
+// *************** Gestione Menu ***************
+require_once(ROOT_FOLDER . "mng/_mng_menu.php");
+
 require_once( getSkinPage("mng/dbe_view.php") );
 ?>

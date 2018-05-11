@@ -62,5 +62,8 @@ $myform->setValues($mydbe->getValuesDictionary());
 $campiVisibili = $myform->getDetailColumnNames();
 $campiReadonly = $myform->getDetailReadOnlyColumnNames();
 
-require_once( getSkinPage("mng/dbe_new.php") );
+// *************** Gestione Menu ***************
+require_once(ROOT_FOLDER . "mng/_mng_menu.php");
+
+require_once(getSkinPage("mng/dbe_new.php"));
 ?>

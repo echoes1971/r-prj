@@ -47,7 +47,7 @@ $dbmgr->connect();
 if(!$dbmgr->isConnected()) {
 }
 
-
+// *************** root_obj ***************
 if(!array_key_exists('root_obj',$_SESSION) || $_SESSION['root_obj']===null) {
 	if($dbmgr->hasGroup($GROUP_ADMIN)) {
 		$redir_page = ROOT_FOLDER."main.php?messaggio=Root object not found in session!";
@@ -59,6 +59,11 @@ if(!array_key_exists('root_obj',$_SESSION) || $_SESSION['root_obj']===null) {
 					. "/".$redir_page);
 	exit();
 }
+
+// *************** Gestione Menu ***************
+require_once(ROOT_FOLDER . "mng/_mng_menu.php");
+
+
 
 require_once( getSkinPage("mng/gestione.php") );
 ?>
