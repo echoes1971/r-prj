@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PRJ_HOME=/home/roberto/projects/r-prj
+PRJ_HOME=`cd ..; pwd`
 RPRJ_IMG=rprj-image
 PHP_APP=rprj-php
 MYSQL_APP=rprj-mysql
@@ -23,6 +23,7 @@ if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
+ #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
@@ -33,6 +34,7 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=mysecret \
   -d mysql:5.7
+ echo "Initialize DB with: docker exec -it rprj-mysql mysql -pmysecret -e \"create database rproject;\""
 fi
 
 # PHP
@@ -53,6 +55,7 @@ if [ -z "$PHP_EXISTS" ]; then
  -d $RPRJ_IMG
 fi
 
+echo "Point your browser to: http://localhost:8080/"
 read -p "Press any key to continue... " -n1 -s
 echo
 
