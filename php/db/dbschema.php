@@ -994,7 +994,7 @@ class DBEFile extends DBEObject {
 		}
 		$this->_columns=&self::$__mycolumns;
 		
-		$this->dest_directory=$dest_directory==null ? $GLOBALS[ 'files_directory' ] : $dest_directory;
+		$this->dest_directory=$dest_directory==null ? $GLOBALS['files_directory'] : $dest_directory;
 	}
 	
 	function getTableName() { return "files"; }
