@@ -43,10 +43,10 @@ $files_directory="files";
 $files_downloader="$root_uri/download.php";
 // $files_downloader="$root_uri/".(ROOT_FOLDER>''?ROOT_FOLDER:"")."download.php";
 
-$GLOBALS[ 'root_uri' ] = $root_uri;
-$GLOBALS[ 'root_directory' ] = $root_directory;
-$GLOBALS[ 'files_directory' ] = $files_directory;
-$GLOBALS[ 'files_downloader' ] = $files_downloader;
+$GLOBALS['root_uri'] = $root_uri;
+$GLOBALS['root_directory'] = $root_directory;
+$GLOBALS['files_directory'] = $files_directory;
+$GLOBALS['files_downloader'] = $files_downloader;
 $GLOBALS['skin'] = 'default';
 $GLOBALS['site_title'] = ':: R-Project ::';
 
@@ -61,9 +61,9 @@ $db_schema = "rprj";
 
 // Languages
 $lingue_sito = array('ita','eng','ted','esp');
-$GLOBALS[ 'lingue_sito' ] = $lingue_sito;
+$GLOBALS['lingue_sito'] = $lingue_sito;
 $lingue_sito_decode = array('ita'=>'Italiano','eng'=>'Inglese','ted'=>'Tedesco','esp'=>'Spagnolo');
-$GLOBALS[ 'lingue_sito_decode' ] = $lingue_sito_decode;
+$GLOBALS['lingue_sito_decode'] = $lingue_sito_decode;
 
 // Predefined Groups
 $GROUP_ADMIN='-2';

@@ -24,7 +24,7 @@ $redir_page="mng/login.php";
 
 $utente = array_key_exists('utente',$_SESSION) ? $_SESSION['utente'] : null;
 
-if ($utente==null) {
+if($utente==null) {
 	$nuovo_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
 						. dirname($_SERVER['PHP_SELF'])
 						. "/". ROOT_FOLDER

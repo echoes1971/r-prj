@@ -30,14 +30,14 @@ require_once(ROOT_FOLDER . "skins.php");
 require_once(ROOT_FOLDER . "utils.php");
 
 $dbmgr = array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
-if ($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
+if($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
 	$_SESSION['dbmgr'] = $dbmgr;
 }
 $dbmgr->setVerbose(false);
 $formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
-if ($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
+if($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
 	$formulator = new MyFormFactory;
 	$_SESSION['formulator'] = $formulator;
 }
@@ -80,7 +80,7 @@ if( is_a( $myform, 'FMasterDetail' ) ) {
 		$childDbe = $childForm->getDBE();
 		$childDbe->readFKFrom($mydbe);
 		$tmp = $dbmgr->search($childDbe,$uselike=0);
-		if ( is_a( $childForm, 'FAssociation' ) ) {
+		if( is_a( $childForm, 'FAssociation' ) ) {
 			$tmp2=array();
 			$dest_form = get_class($myform)==get_class( $childForm->getFromForm() ) ? $childForm->getToForm() : $childForm->getFromForm();
 			$dest_dbe = $dest_form->getDBE();

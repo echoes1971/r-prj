@@ -18,7 +18,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-require_once( getSkinFile("mng/gestione_header.php") );
+require_once(getSkinFile("mng/gestione_header.php"));
 
 $maxTabs = max( count($myform->getGroupNames()), $myform->getDetailFormsCount() ); if($maxTabs>1) $maxTabs++; // + 1 tab ALL
 

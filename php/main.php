@@ -31,14 +31,14 @@ require_once(ROOT_FOLDER . "utils.php");
 
 
 $dbmgr = array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
-if ($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
+if($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
 	$_SESSION['dbmgr'] = $dbmgr;
 }
 $dbmgr->setVerbose(false);
 $formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
-if ($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
+if($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
 	$formulator = new MyFormFactory;
 	$_SESSION['formulator'] = $formulator;
 }
@@ -73,7 +73,7 @@ $search_object = array_key_exists('search_object',$_REQUEST) ? $_REQUEST['search
 $current_obj = $current_obj_name>'' ? $dbmgr->fullObjectByName($current_obj_name) : $dbmgr->fullObjectById($current_obj_id);
 if($current_obj_name>'' && $current_obj!==null) $current_obj_id = $current_obj->getValue('id');
 $root_obj = array_key_exists('root_obj', $_SESSION) ? $_SESSION['root_obj'] : null;
-if ($root_obj===null || get_class($root_obj)=='__PHP_Incomplete_Class') {
+if($root_obj===null || get_class($root_obj)=='__PHP_Incomplete_Class') {
 	$root_obj = $dbmgr->fullObjectById($root_obj_id);
 	// 2011.06.27: start.
 	// 2011.06.27: if not found with a generic search, let's search a folder
@@ -230,7 +230,7 @@ function getChilds($my_obj_id,&$current_obj,&$current_form,$without_index_page=t
 
 // Menu Top
 $menu_top = array_key_exists('menu_top',$_SESSION) ? $_SESSION['menu_top'] : null;
-if ($menu_top===null || is_array($menu_top)) {
+if($menu_top===null || is_array($menu_top)) {
         $__current__form = $formulator->getInstanceByDBEName("DBEFolder");
 	$menu_top = getChilds($root_obj_id,$root_obj,$__current__form);//$current_obj->getTypeName() );)
 	$_SESSION['menu_top']=$menu_top;

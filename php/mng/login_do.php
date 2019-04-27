@@ -31,14 +31,14 @@ require_once(ROOT_FOLDER . "plugins.php");
 $redir_page = ROOT_FOLDER."main.php";
 
 $dbmgr = array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
-if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
+if($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
 	$_SESSION['dbmgr'] = $dbmgr;
 }
 $dbmgr->setVerbose(false);
 $formulator = array_key_exists('formulator',$_SESSION) ? $_SESSION['formulator'] : null;
-if ($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
+if($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
 	$formulator = new MyFormFactory;
 	$_SESSION['formulator'] = $formulator;
 }
@@ -51,7 +51,7 @@ $cerca = new DBEUser(NULL,NULL,NULL,$attrs=$valori,NULL) ;
 $ris = $dbmgr->search( $cerca, $uselike=0 );
 
 
-if ( count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1 ) {
+if( count($valori)==2 && $valori['login']>"" && $valori['pwd']>"" && count($ris)==1 ) {
 	// Utente trovato
 	$utente = $ris[0];
 	$_SESSION['utente'] = $utente;

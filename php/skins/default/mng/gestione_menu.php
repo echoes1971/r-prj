@@ -18,12 +18,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-require_once( getSkinFile("mng/gestione_header.php") );
+require_once(getSkinFile("mng/gestione_header.php"));
 
 ?><script>
 function hideMenu(numero_menu,numero_sottolivelli,sublevel_1,sublevel_2) {
 	item_no=0;
-	while( showHide( 'menu_'+numero_menu+'_'+item_no) ) {
+	while(showHide( 'menu_'+numero_menu+'_'+item_no)) {
 		item_no++;
 	}
 }

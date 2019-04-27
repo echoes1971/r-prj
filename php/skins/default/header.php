@@ -20,9 +20,9 @@
 
 $messaggio = '';
 $popupMessaggio=null;
-if( array_key_exists('messaggio',$_REQUEST) ) {
-	$messaggio = $_REQUEST['messaggio'];
-	$popupMessaggio = new WTPopupDiv('header_message',"Message","$messaggio");
+if(array_key_exists('messaggio',$_REQUEST)) {
+ $messaggio = $_REQUEST['messaggio'];
+ $popupMessaggio = new WTPopupDiv('header_message',"Message","$messaggio");
 }
 $popupIframe = new WTPopupIFrame('main_actions','New','','800px', '600px');
 
@@ -34,7 +34,7 @@ $popupIframe = new WTPopupIFrame('main_actions','New','','800px', '600px');
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" /><?php
 if($dbmgr->getDBEUser()!==null) {
 } else {
-	echo "<meta http-equiv=\"refresh\" content=\"120\" />";
+ echo "<meta http-equiv=\"refresh\" content=\"120\" />";
 }
 ?><style type="text/css">
 
@@ -43,33 +43,33 @@ if($dbmgr->getDBEUser()!==null) {
 <link href="<?php echo getSkinFile("widgets.css"); ?>" rel="stylesheet" type="text/css" />
 <?php
 if(strpos($_SERVER['HTTP_USER_AGENT'], "MSIE ")>0 ) {
-	echo "<link href=\"".getSkinFile("style_ie.css")."\" rel=\"stylesheet\" type=\"text/css\" />";
+ echo "<link href=\"".getSkinFile("style_ie.css")."\" rel=\"stylesheet\" type=\"text/css\" />";
 }
 foreach($plugins_enabled as $plugin_name) {
-	echo "<link rel=\"stylesheet\" href=\"".getPluginSkinFolder($plugin_name)."$plugin_name.css\" type=\"text/css\" />\n";
+ echo "<link rel=\"stylesheet\" href=\"".getPluginSkinFolder($plugin_name)."$plugin_name.css\" type=\"text/css\" />\n";
 }
 ?>
 <script type="text/javascript" src="<?php echo ROOT_FOLDER; ?>js/3rdparties/prototype.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_FOLDER; ?>js/3rdparties/scriptaculous.js"></script>
 <script type="text/javascript">
-	function showHide(aDiv_name) {
-		var aDiv = document.getElementById(aDiv_name);
-		if(aDiv) {
-			var shown = (aDiv.style.display != 'none');
-			aDiv.style.display = shown ? 'none' : '';
-			return true;
-		} else
-			return false;
-	}
+ function showHide(aDiv_name) {
+  var aDiv = document.getElementById(aDiv_name);
+  if(aDiv) {
+   var shown = (aDiv.style.display != 'none');
+   aDiv.style.display = shown ? 'none' : '';
+   return true;
+  } else
+   return false;
+ }
 function reload() {
-	document.location.href=document.location.href;
+ document.location.href=document.location.href;
 }
 </script>
 </head>
 <body onload="javascript:<?php echo $popupIframe->getOnload().";"; if($messaggio>'') { echo $popupMessaggio->getOnload().";header_message_mostra();"; } ?>">
 <?php
 if ( $messaggio>'' ) {
-	echo $popupMessaggio->render();
+ echo $popupMessaggio->render();
 }
 // popup iframe
 echo $popupIframe->render();
@@ -88,10 +88,10 @@ if($dbmgr->getDBEUser()!==null) {
   echo $dbmgr->getDBEUser()->getValue('fullname');
   echo "<br/><a href=\"".ROOT_FOLDER."logout_do.php\">Logout</a></b></font>&nbsp;";
 } elseif($dbmgr->isConnected()) {
-	echo "<a href=\"".ROOT_FOLDER."mng/login.php".( isset($current_obj_id) ? "?obj_id=$current_obj_id" : '' )."\">Login</a>";
+ echo "<a href=\"".ROOT_FOLDER."mng/login.php".(isset($current_obj_id) ? "?obj_id=$current_obj_id" : '')."\">Login</a>";
 }
 if($dbmgr->isConnected()) {
-	echo "</div>";
+ echo "</div>";
 }
 
 echo "<div id=\"search_div\">";
@@ -101,28 +101,28 @@ echo "</form>";
 echo "</div>";
 
 if($dbmgr->isConnected()) {
-	echo "<div id=\"top_menu\">";
-	do_hook('topmenu_before');
-	echo " :: ";
-	if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
-		echo "<a href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a> ::";
-	}
-	if(array_key_exists('menu_top',$_SESSION) && is_array($_SESSION['menu_top'])) {
-		foreach($_SESSION['menu_top'] as $menu_item) {
-			if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
-			if($menu_item->getTypeName()=='DBELink') {
-				$tmpform = new FLink(); $tmpform->setValues($menu_item->getValuesDictionary());
-				echo " ".$tmpform->render_view($dbmgr)." ::";
-			} else
-				echo " <a href=\"".ROOT_FOLDER."main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a> ::";
-		}
-	}
-	if($dbmgr->getDBEUser()!==null) {
-		echo " <a href=\"".ROOT_FOLDER."mng/gestione.php\">Manage</a> ::";
-	}
-	echo " ";
-	do_hook('topmenu_after');
-	echo "</div>";
+ echo "<div id=\"top_menu\">";
+ do_hook('topmenu_before');
+ echo " :: ";
+ if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
+  echo "<a href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a> ::";
+ }
+ if(array_key_exists('menu_top',$_SESSION) && is_array($_SESSION['menu_top'])) {
+  foreach($_SESSION['menu_top'] as $menu_item) {
+   if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
+   if($menu_item->getTypeName()=='DBELink') {
+    $tmpform = new FLink(); $tmpform->setValues($menu_item->getValuesDictionary());
+    echo " ".$tmpform->render_view($dbmgr)." ::";
+   } else
+    echo " <a href=\"".ROOT_FOLDER."main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a> ::";
+  }
+ }
+ if($dbmgr->getDBEUser()!==null) {
+  echo " <a href=\"".ROOT_FOLDER."mng/gestione.php\">Manage</a> ::";
+ }
+ echo " ";
+ do_hook('topmenu_after');
+ echo "</div>";
 }
 
 do_hook('divheader_after');

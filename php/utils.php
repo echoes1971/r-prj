@@ -20,46 +20,46 @@
 
 function getRootUri($path_separator="/") {
 	// 2011.03.31: start.
-	$filepath=array_reverse( explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])) );
-	$uri=array_reverse( explode("/",dirname($_SERVER["PHP_SELF"])) );
-// 	$filepath=array_reverse( explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])) );
-// 	$uri=array_reverse( explode("/",dirname($_SERVER["PHP_SELF"])) );
+	$filepath=array_reverse(explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])));
+	$uri=array_reverse(explode("/",dirname($_SERVER["PHP_SELF"])));
+// 	$filepath=array_reverse(explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])));
+// 	$uri=array_reverse(explode("/",dirname($_SERVER["PHP_SELF"])));
 	// 2011.03.31: end.
-	$maxindice=min( count($filepath), count($uri) );
+	$maxindice=min( count($filepath), count($uri));
 	$indice_diversi=-1;
 	for($i=0; $indice_diversi<0 && $i<$maxindice; $i++) {
-		if( $filepath[$i]!=$uri[$i] )
+		if($filepath[$i]!=$uri[$i])
 			$indice_diversi=$i;
 	}
-	$ret = implode("/", array_reverse( array_slice($uri,$indice_diversi-1) ) );
+	$ret = implode("/", array_reverse(array_slice($uri,$indice_diversi-1)));
 	return $ret;
 }
 function getRootFolder($path_separator="/") {
 	// 2011.03.31: start.
-	$filepath=array_reverse( explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])) );
-	$uri=array_reverse( explode("/",dirname($_SERVER["PHP_SELF"])) );
-// 	$filepath=array_reverse( explode($path_separator,$_SERVER["SCRIPT_FILENAME"]) );
-// 	$uri=array_reverse( explode("/",$_SERVER["PHP_SELF"]) );
+	$filepath=array_reverse(explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])));
+	$uri=array_reverse(explode("/",dirname($_SERVER["PHP_SELF"])));
+// 	$filepath=array_reverse(explode($path_separator,$_SERVER["SCRIPT_FILENAME"]));
+// 	$uri=array_reverse(explode("/",$_SERVER["PHP_SELF"]));
 	// 2011.03.31: end.
-	$maxindice=min( count($filepath), count($uri) );
+	$maxindice=min( count($filepath), count($uri));
 	$indice_diversi=-1;
 	for($i=0; $indice_diversi<0 && $i<$maxindice; $i++) {
-		if( $filepath[$i]!=$uri[$i] )
+		if($filepath[$i]!=$uri[$i])
 			$indice_diversi=$i;
 	}
 	// 2011.03.11: start.
 	$ret = $indice_diversi>0 ?
-			implode($path_separator, array_reverse( array_slice($filepath,$indice_diversi-1) ) )
+			implode($path_separator, array_reverse(array_slice($filepath,$indice_diversi-1)))
 			: dirname($_SERVER["SCRIPT_FILENAME"]);
-// 	$ret = implode($path_separator, array_reverse( array_slice($filepath,$indice_diversi-1) ) );
+// 	$ret = implode($path_separator, array_reverse(array_slice($filepath,$indice_diversi-1)));
 	// 2011.03.11: end.
 	return $ret;
 }
 
 function getTodayString($with_time=true, $date_separator="/") {
 	$oggi_array = getdate(time());
-	$oggi = $oggi_array['year'].$date_separator.( strlen($oggi_array['mon'])<2 ? "0" : "" ).$oggi_array['mon'].$date_separator.( strlen($oggi_array['mday'])<2 ? "0" : "" ).$oggi_array['mday'];
-	if($with_time) $oggi.=" ".( strlen($oggi_array['hours'])<2 ? "0" : "" ).$oggi_array['hours'].":".( strlen($oggi_array['minutes'])<2 ? "0" : "" ).$oggi_array['minutes'];
+	$oggi = $oggi_array['year'].$date_separator.( strlen($oggi_array['mon'])<2 ? "0" : "").$oggi_array['mon'].$date_separator.( strlen($oggi_array['mday'])<2 ? "0" : "").$oggi_array['mday'];
+	if($with_time) $oggi.=" ".( strlen($oggi_array['hours'])<2 ? "0" : "").$oggi_array['hours'].":".( strlen($oggi_array['minutes'])<2 ? "0" : "").$oggi_array['minutes'];
 	return $oggi;
 }
 
@@ -67,7 +67,7 @@ function getTodayString($with_time=true, $date_separator="/") {
  * Data una DBE, ritorna una stringa con i valori dei campi chiave
  */
 function getKeyString($dbe) {
-	return implode("_", array_values( $dbe->getKeysDictionary() ) );
+	return implode("_", array_values( $dbe->getKeysDictionary()));
 }
 function setKeyString($dbe,$key_string) {
 	$chiavi = array_keys($dbe->getKeys());
@@ -79,13 +79,13 @@ function setKeyString($dbe,$key_string) {
 }
 
 /** Reads parameters from request starting with field_ */
-function readFromRequest( $aRequest, $prefix='field_' ) {
+function readFromRequest( $aRequest, $prefix='field_') {
 	$ret = array();
 	$len_ret = 0;
-	$chiavi = array_keys( $aRequest );
-	foreach ( $chiavi as $c ) {
-		$pos = strpos( $c, $prefix );
-		if ( $pos === false ) {
+	$chiavi = array_keys( $aRequest);
+	foreach ( $chiavi as $c) {
+		$pos = strpos( $c, $prefix);
+		if($pos === false) {
 		} else {
 			$v = $aRequest[ $c ];
 			$ret[ substr($c, strlen($prefix)) ] = $v;
@@ -94,13 +94,13 @@ function readFromRequest( $aRequest, $prefix='field_' ) {
 	return $ret;
 }
 /** Reads parameters from a generic array starting with field_ */
-function readFromArray( &$aArray, $prefix='field_' ) {
+function readFromArray( &$aArray, $prefix='field_') {
 	$ret = array();
 	$len_ret = 0;
-	$chiavi = array_keys( $aArray );
-	foreach ( $chiavi as $c ) {
-		$pos = strpos( $c, $prefix );
-		if ( $pos === false ) {
+	$chiavi = array_keys( $aArray);
+	foreach ( $chiavi as $c) {
+		$pos = strpos( $c, $prefix);
+		if($pos === false) {
 		} else {
 			$v = $aArray[ $c ];
 			$ret[ substr($c, strlen($prefix)) ] = $v;
@@ -117,19 +117,19 @@ function readFromArray( &$aArray, $prefix='field_' ) {
 function getClientLanguage() {
 	$linguaggio='';
 	// SE viene passato il parametro language
-	if ( array_key_exists('language',$_REQUEST) && $_REQUEST['language']!='' ) {
+	if(array_key_exists('language',$_REQUEST) && $_REQUEST['language']!='') {
 		// setto il linguaggio in sessione
 		$_SESSION['language'] = $_REQUEST['language'];
 	}
-	if ( array_key_exists('language',$_SESSION) && $_SESSION['language']!='' ) {
+	if(array_key_exists('language',$_SESSION) && $_SESSION['language']!='') {
 		$linguaggio = $_SESSION['language'];
 	} else {
-		if( array_key_exists('HTTP_ACCEPT_LANGUAGE', $_ENV) )
+		if(array_key_exists('HTTP_ACCEPT_LANGUAGE', $_ENV))
 			$linguaggio = $_ENV[ 'HTTP_ACCEPT_LANGUAGE' ];
 	}
 	
-	$_pos = strpos( $linguaggio, 'it' );
-	if ( $_pos === false ) {
+	$_pos = strpos( $linguaggio, 'it');
+	if($_pos === false) {
 		return 'eng';
 	} else {
 		return 'ita';
@@ -147,10 +147,10 @@ function rproject_mylog($note=null,$note2=null,$debug=false) {
 	if(array_key_exists('HTTP_X_FORWARDED_FOR',$_SERVER) && $_SERVER['HTTP_X_FORWARDED_FOR']>'') {
 		$remote_ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
 	}
-	$oggi = strftime("%Y-%m-%d", date(time()) );
-	$ora = strftime("%H:%M:%S", date(time()) );
+	$oggi = strftime("%Y-%m-%d", date(time()));
+	$ora = strftime("%H:%M:%S", date(time()));
 	
-	if ($debug) {
+	if($debug) {
 		echo "remote_ip: $remote_ip<br>";
 		echo "oggi: $oggi<br>";
 		echo "ora: $ora<br>";
@@ -159,50 +159,50 @@ function rproject_mylog($note=null,$note2=null,$debug=false) {
 	// Checking if an old entry exists
 	// 2012.07.21: start.
 // 	$cerca = new DBELog();
-// 	$cerca->setValue('ip', $remote_ip );
-// 	$listaPast = $dbmgr->search( $cerca, 0, 'url desc' );
-// 	if ($debug) { print "$listaPast: $listaPast"; }
+// 	$cerca->setValue('ip', $remote_ip);
+// 	$listaPast = $dbmgr->search( $cerca, 0, 'url desc');
+// 	if($debug) { print "$listaPast: $listaPast"; }
 	// 2012.07.21: end.
 	
 	// Checking if today's entry exists
 	$cerca = new DBELog();
-	$cerca->setValue('ip', $remote_ip );
-	$cerca->setValue('data', $oggi );
-	$lista = $dbmgr->search( $cerca, 0, '' );
-	if ($debug) { print "lista: "; var_dump( $lista ); }
+	$cerca->setValue('ip', $remote_ip);
+	$cerca->setValue('data', $oggi);
+	$lista = $dbmgr->search( $cerca, 0, '');
+	if($debug) { print "lista: "; var_dump( $lista); }
 	
 	$mydbe=new DBELog;
-	$mydbe->setValue('ip', $remote_ip );
-	$mydbe->setValue('data', $oggi );
-	$mydbe->setValue('ora', $ora );
+	$mydbe->setValue('ip', $remote_ip);
+	$mydbe->setValue('data', $oggi);
+	$mydbe->setValue('ora', $ora);
 	
 	// 2012.07.21: start.
 // 	// IF I have older entries for the same IP
-// 	if( count($listaPast)>0 ) $mydbe->setValue('url', $listaPast[0]->getValue('url') );
+// 	if(count($listaPast)>0) $mydbe->setValue('url', $listaPast[0]->getValue('url'));
 	// 2012.07.21: end.
 	
-	if (count($lista)==0) {
+	if(count($lista)==0) {
 		// 2012.07.21: start.
 		// FIXME maybe using a max on url desc could work better, something like
 		// FIXME select max(url) as url from _log where ip='remote_ip'
 		$cerca = new DBELog();
-		$cerca->setValue('ip', $remote_ip );
-		$listaPast = $dbmgr->search( $cerca, 0, 'url desc' );
-		if ($debug) { print "$listaPast: $listaPast"; }
+		$cerca->setValue('ip', $remote_ip);
+		$listaPast = $dbmgr->search( $cerca, 0, 'url desc');
+		if($debug) { print "$listaPast: $listaPast"; }
 		// IF I have older entries for the same IP
-		if( count($listaPast)>0 ) $mydbe->setValue('url', $listaPast[0]->getValue('url') );
+		if(count($listaPast)>0) $mydbe->setValue('url', $listaPast[0]->getValue('url'));
 		// 2012.07.21: end.
 		// New entry
-		$mydbe->setValue('count', 1 );
+		$mydbe->setValue('count', 1);
 		// ONLY IN CASE OF A NEW ENTRY
 		if($my_note!=null && strlen($my_note)>0)
-			$mydbe->setValue('note', $my_note );
+			$mydbe->setValue('note', $my_note);
 		if($my_note2!=null && strlen($my_note2)>0)
 			$mydbe->setValue('note2', "$ora-$my_note2");
 		$dbmgr->insert($mydbe);
 	} else {
 		// Updating counter
-		$mydbe->setValue('count', $lista[0]->getValue('count')+1 );
+		$mydbe->setValue('count', $lista[0]->getValue('count')+1);
 		if($my_note2!=null && strlen($my_note2)>0)
 			$mydbe->setValue('note2', $lista[0]->getValue('note2') . "\n$ora-$my_note2");
 		$dbmgr->update($mydbe);
