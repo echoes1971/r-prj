@@ -24,12 +24,15 @@ if [ -n "$MYSQL_EXISTS" ]; then
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
  #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
+ echo "Access mysql with: mysql -h 172.17.0.1 -p -u root rproject"
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
  echo "* Creating container $MYSQL_APP"
  #docker container rm $MYSQL_APP
- docker run --name $MYSQL_APP \
+ docker run \
+  -p 3306:3306 \
+  --name $MYSQL_APP \
   -v $PRJ_HOME/data:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=mysecret \
