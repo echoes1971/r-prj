@@ -12,7 +12,7 @@ $db_server = "rprj-mysql";
 $db_user = "root";
 $db_pwd = "mysecret";
 
-$skin = 'ami2';
+$skin = 'flat';
 
 $plugins_enabled[]='tinymce';
 ?>

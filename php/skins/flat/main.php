@@ -277,7 +277,7 @@ do_hook('divmiddle_after');
             $childDBE->readFKFrom($current_obj);
             $newUrl = "mng/". $childForm->getPagePrefix()."_new.php?dbetype=".$childDBE->getTypeName()."&formtype=".get_class($childForm)."&".$childDBE->getFKCGIConditionFromMaster($current_obj, true);
             $newTitle = "Add ".$dest_form->getDetailTitle();
-            ?><li class="obj_actions"><a href="javascript:main_actions_mostra_url('<?php echo $newTitle; ?>','<?php echo $newUrl; ?>');"><img title="<?php echo $newTitle; ?>" alt="<?php echo $newTitle; ?>" src="<?php echo getSkinFile("mng/icone/New16.gif"); ?>" border="0" /> <?php echo $dest_form->getDetailTitle(); ?></a></li><?php
+            ?><li class="obj_actions"><a href="<?php echo getRootUri().$newUrl; ?>"><img title="<?php echo $newTitle; ?>" alt="<?php echo $newTitle; ?>" src="<?php echo getSkinFile("mng/icone/New16.gif"); ?>" border="0" /> <?php echo $dest_form->getDetailTitle(); ?></a></li><?php
         }
     }
     echo "</ul>";
