@@ -29,7 +29,9 @@ fi
 if [ -z "$MYSQL_EXISTS" ]; then
  echo "* Creating container $MYSQL_APP"
  #docker container rm $MYSQL_APP
- docker run --name $MYSQL_APP \
+ docker run \
+  -p 3306:3306 \
+  --name $MYSQL_APP \
   -v $PRJ_HOME/data:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=mysecret \
