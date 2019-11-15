@@ -82,10 +82,15 @@ $nome = implode("_",$tmp_nome);
 // 2011.03.17: fine.
 
 // To write a note message instead of RDownload
+// $log_note = array_key_exists('note',$_REQUEST) ? $_REQUEST['note'] : "RDownload";
+// rproject_mylog($log_note,"[".$cerca->getValue('id')."] filename: $nome");
+
+
+// To write a note message instead of RDownload
 $log_note = array_key_exists('note',$_REQUEST) ? $_REQUEST['note'] : "RDownload";
-rproject_mylog($log_note,"[".$cerca->getValue('id')."] filename: $nome");
-
-
+$log_note2 = array_key_exists('note2',$_REQUEST) ? $_REQUEST['note2'] : "[".$cerca->getValue('id')."] filename: $nome";
+rproject_mylog($log_note, $log_note2);
+// http://www.africa-film.com/download.php?field_id=uuid6f6d2e35373462306131333863316538&note=username&note2=modelname
 
 header("Content-Type: " . mime_content_type($filename));
 header("Content-Length: " .filesize($filename));
