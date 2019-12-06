@@ -1,0 +1,134 @@
+---
+# ansible-playbook -i ./hosts rprj_ubuntu.yml
+- hosts: R-Prj
+  become: yes
+  become_user: root
+  vars:
+    dest_dir: /opt/rprj
+    is_test: true
+    apache_vhosts_enabled:
+      - servername:
+
+  tasks:
+
+  #- debug: var=ansible_facts
+
+  - name: Upgrade System
+    apt:
+      update_cache: yes
+      upgrade: yes
+      autoclean: yes
+      autoremove: yes
+    notify:
+    - Restart Server
+
+  #- name: Debug restart
+     #command: /bin/true
+     #notify: Start CBFox
+
+  - name: Install Packages
+    apt:
+      name:
+      - mysql-server
+      - php
+      - php-mysql
+      # for ansible
+      - python-pymysql
+      - python-selinux
+
+  - name: Enable Apache Modules
+    apache2_module:
+      state: present
+      name: ssl
+
+  - name: Ensure mysql is running
+    service:
+      name: mysql
+      state: started
+
+  - name: Ensure apache2 is running
+    service:
+      name: apache2
+      state: started
+
+  #- name: Create DB
+    #become: yes
+    #become_user: mysql
+    #mysql_db:
+      ##login_host: ""
+      #login_user: root
+      #name: rproject
+      #state: present
+
+  - name: Create DB
+    command:
+      #cmd: mysql -u root -e "show databases"
+      cmd: mysql -u root -e "create database if not exists rproject"
+
+  - name: GIT clone and update
+    git:
+      repo: https://git.code.sf.net/p/r-prj/gitcode
+      dest: "{{ dest_dir }}"
+      version: master
+    register: git_updated
+  - debug: "msg={{ git_updated.changed }}"
+
+  - name: Remove default site
+    file:
+      path: /etc/apache2/sites-enabled/000-default.conf
+      state: absent
+
+  - name: Copy apache config if git changed
+    copy:
+      src: templates/rprj.conf
+      dest: /etc/apache2/sites-available/rprj.conf
+    when: git_updated.changed
+
+  - name: Copy apache SSL config if git changed
+    copy:
+      src: templates/ssl_rprj.conf
+      dest: /etc/apache2/sites-available/ssl_rprj.conf
+    when: git_updated.changed
+
+  - name: Link default default site
+    file:
+      src: /etc/apache2/sites-available/rprj.conf
+      dest: /etc/apache2/sites-enabled/rprj.conf
+      state: link
+    notify: Restart Apache Service
+
+  - name: Create a directory if it does not exist
+    file:
+      path: /var/www/rprj
+      state: directory
+      mode: '0755'
+
+  - name: Copy the PHP sources
+    command:
+      cmd: cp -R /opt/rprj/php/ /var/www/rprj/
+    when: git_updated.changed
+
+  - name: Link default default SSL site
+    file:
+      src: /etc/apache2/sites-available/ssl_rprj.conf
+      dest: /etc/apache2/sites-enabled/ssl_rprj.conf
+      state: link
+    notify: Restart Apache Service
+
+  - name: Restart Apache Service if git changed
+    service:
+      name: apache2
+      state: restarted
+    when: git_updated.changed
+
+  handlers:
+
+  - name: Restart Server
+    become: yes
+    become_user: root
+    command: shutdown -r now
+
+  - name: Restart Apache Service
+    service:
+      name: apache2
+      state: restarted
