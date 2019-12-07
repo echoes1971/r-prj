@@ -41,7 +41,7 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=mysecret \
   -d mysql:5.7
- echo "Initialize DB with: docker exec -it rprj-mysql mysql -pmysecret -e \"create database rproject;\""
+ echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -pmysecret -e \"create database rproject;\""
 fi
 
 # PHP

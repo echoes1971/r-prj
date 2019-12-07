@@ -48,16 +48,15 @@ if(!$dbmgr->isConnected()) {
 	echo "Not connected.<br/>\n";
 }
 
-
-$action_descr = $dbmgr->db_version()==0 ?
-				"Install" :
-				$dbmgr->db_version()<DB_VERSION ?
-					"Update" :
-					"Check";
-
+$action_descr = $dbmgr->db_version()===0 ?
+                "Install" :
+                ($dbmgr->db_version()<DB_VERSION ?
+                    "Update" :
+                    "Check"
+                    );
 
 $utente = $dbmgr->getDBEUser();
 
-require_once( getSkinPage("mng/db_update.php") );
+require_once(getSkinPage("mng/db_update.php"));
 
 ?>

@@ -354,8 +354,16 @@ if($new_db_version<DB_VERSION) {
 	echo "\n";
 	echo "Please <a target=\"_top\" href=\"".ROOT_FOLDER."logout_do.php\" style=\"font-weight:bold;color:green;\">LOGOUT</a>.\n";
 	echo "\n";
+	
+	// DO a redirect to the logout page
+	$nuovo_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
+						. dirname($_SERVER['PHP_SELF'])
+						. "/". ROOT_FOLDER
+						. "logout_do.php";
+    echo "<script>window.top.location='$nuovo_url';</script>";
 }
 echo "\n";
 
 ?></pre>
 </body>
+</html>

@@ -22,10 +22,17 @@ require_once getSkinFile("mng/gestione_header.php");
 
 // Message: start.
 $msg = array_key_exists('messaggio',$_REQUEST) ? $_REQUEST['messaggio'] : null;
-if ( $msg!=null ) {
+if($msg!=null) {
 	echo $popupMessaggio->render();
 }
 // Message: end.
+
+/*
+$do_update_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
+                    . dirname($_SERVER['PHP_SELF'])
+                    . "/". ROOT_FOLDER
+                    . "mng/db_update_do.php";
+*/
 
 ?><h1>DB <?php echo $action_descr; ?></h1><?php
 
