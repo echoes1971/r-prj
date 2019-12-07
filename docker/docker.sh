@@ -29,6 +29,7 @@ if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
+ #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
@@ -67,6 +68,7 @@ echo "Interact with the containers with:"
 echo " docker exec -it $MYSQL_APP bash"
 echo " docker exec -it $PHP_APP bash"
 echo "Point your browser to: http://localhost:8080/"
+echo "Initialize DB with: http://localhost:8080/mng/db_update.php"
 read -p "Press any key to continue... " -n1 -s
 echo
 
