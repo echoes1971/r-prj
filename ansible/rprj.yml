@@ -1,16 +1,12 @@
 ---
 # ansible-playbook -i ./hosts rprj.yml
-- hosts: R-Prj
+
+- hosts: all
   become: yes
   become_user: root
-  vars:
-    git_dir: /opt/rprj
-    www_dir: /var/www/rprj
 
   tasks:
-
   #- debug: var=ansible_facts
-
   - name: Upgrade System
     apt:
       update_cache: yes
@@ -19,6 +15,23 @@
       autoremove: yes
     notify:
     - Restart Server
+
+  handlers:
+  - name: Restart Server
+    become: yes
+    become_user: root
+    command: shutdown -r now
+
+
+- hosts: R-Prj
+  become: yes
+  become_user: root
+  vars:
+    git_dir: /opt/rprj
+    www_dir: /var/www/rprj
+    mysql_password: mysecretpass
+
+  tasks:
 
   #- name: Debug restart
      #command: /bin/true
@@ -49,19 +62,25 @@
       name: apache2
       state: started
 
+  #- name: Set Root Password
+    #command:
+      ##cmd: mysql -u root -e "show databases"
+      #cmd: "mysql -u root -e \"update user set authentication_string=PASSWORD(\\\"{{ mysql_password }}\\\") where User='root';\" mysql"
+
   #- name: Create DB
     #become: yes
     #become_user: mysql
     #mysql_db:
       ##login_host: ""
       #login_user: root
+      #login_password: "{{ mysql_password }}"
       #name: rproject
       #state: present
 
-  - name: Create DB
-    command:
-      #cmd: mysql -u root -e "show databases"
-      cmd: mysql -u root -e "create database if not exists rproject"
+  #- name: Create DB
+    #command:
+      ##cmd: mysql -u root -e "show databases"
+      #cmd: mysql -u root -e "create database if not exists rproject"
 
   - name: GIT clone and update
     git:
@@ -120,11 +139,6 @@
     when: git_updated.changed
 
   handlers:
-
-  - name: Restart Server
-    become: yes
-    become_user: root
-    command: shutdown -r now
 
   - name: Restart Apache Service
     service:
