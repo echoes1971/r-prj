@@ -1,13 +1,11 @@
 ---
-# ansible-playbook -i ./hosts rprj_ubuntu.yml
+# ansible-playbook -i ./hosts rprj.yml
 - hosts: R-Prj
   become: yes
   become_user: root
   vars:
-    dest_dir: /opt/rprj
-    is_test: true
-    apache_vhosts_enabled:
-      - servername:
+    git_dir: /opt/rprj
+    www_dir: /var/www/rprj
 
   tasks:
 
@@ -68,7 +66,7 @@
   - name: GIT clone and update
     git:
       repo: https://git.code.sf.net/p/r-prj/gitcode
-      dest: "{{ dest_dir }}"
+      dest: "{{ git_dir }}"
       version: master
     register: git_updated
   - debug: "msg={{ git_updated.changed }}"
@@ -99,13 +97,13 @@
 
   - name: Create a directory if it does not exist
     file:
-      path: /var/www/rprj
+      path: "{{ www_dir }}"
       state: directory
       mode: '0755'
 
   - name: Copy the PHP sources
     command:
-      cmd: cp -R /opt/rprj/php/ /var/www/rprj/
+      cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
     when: git_updated.changed
 
   - name: Link default default SSL site
