@@ -24,6 +24,7 @@ if [ -n "$MYSQL_EXISTS" ]; then
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
  #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
+ sed -i s/rprj-mariadb/$MYSQL_APP/g ../php/config_local.php
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then

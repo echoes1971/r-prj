@@ -8,7 +8,7 @@ $db_db = "rproject";
 $db_schema = "rprj";
 */
 
-$db_server = "rprj-mysql";
+$db_server = "rprj-mariadb";
 $db_user = "root";
 $db_pwd = "mysecret";
 

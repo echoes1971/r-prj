@@ -43,10 +43,12 @@ if ($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
 }
 
 // -1. DB Connected?
+$dbmgr->setVerbose(true);
 $dbmgr->connect();
 if(!$dbmgr->isConnected()) {
 	echo "Not connected.<br/>\n";
 }
+$dbmgr->setVerbose(false);
 
 $action_descr = $dbmgr->db_version()===0 ?
                 "Install" :
