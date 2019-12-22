@@ -30,6 +30,8 @@
     git_dir: /opt/rprj
     www_dir: /var/www/rprj
     mysql_password: mysecretpass
+    dbpkg: mariadb-server
+    #dbpkg: mysql-server
 
   tasks:
 
@@ -40,7 +42,7 @@
   - name: Install Packages
     apt:
       name:
-      - mysql-server
+      - "{{ dbpkg }}"
       - php
       - php-mysql
       # for ansible
@@ -112,6 +114,15 @@
       src: /etc/apache2/sites-available/rprj.conf
       dest: /etc/apache2/sites-enabled/rprj.conf
       state: link
+    when: git_updated.changed
+    notify: Restart Apache Service
+
+  - name: Link default default SSL site
+    file:
+      src: /etc/apache2/sites-available/ssl_rprj.conf
+      dest: /etc/apache2/sites-enabled/ssl_rprj.conf
+      state: link
+    when: git_updated.changed
     notify: Restart Apache Service
 
   - name: Create a directory if it does not exist
@@ -123,14 +134,7 @@
   - name: Copy the PHP sources
     command:
       cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
-    when: git_updated.changed
-
-  - name: Link default default SSL site
-    file:
-      src: /etc/apache2/sites-available/ssl_rprj.conf
-      dest: /etc/apache2/sites-enabled/ssl_rprj.conf
-      state: link
-    notify: Restart Apache Service
+    #when: git_updated.changed
 
   - name: Restart Apache Service if git changed
     service:
