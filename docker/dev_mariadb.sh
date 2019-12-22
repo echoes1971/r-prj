@@ -5,6 +5,18 @@ RPRJ_IMG=rprj-mariadb-dev-image
 PHP_APP=rprj-mariadb-dev-php
 MYSQL_APP=rprj-mariadb
 
+if [ "$1" = "clean" ]; then
+ echo "Deleting image and containers...";
+ docker container rm $PHP_APP
+ docker container rm $MYSQL_APP
+ docker image rm $RPRJ_IMG
+ echo
+#  docker container ls -a
+#  docker image ls -a
+#  exit 1
+fi
+
+
 sed -i s/rprj-mysql/$MYSQL_APP/g ../php/config_local.php
 
 IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
@@ -19,8 +31,8 @@ if [ -z "$IMG_EXISTS" ]; then
 fi
 
 # MySQL
-MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP`
-#echo $MYSQL_EXISTS
+MYSQL_EXISTS=`docker container ls -a | grep -v "$MYSQL_APP-php" | grep $MYSQL_APP`
+# echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
  #docker container stop $MYSQL_APP
