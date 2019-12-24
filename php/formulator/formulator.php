@@ -709,6 +709,13 @@ class FFileField extends FField {
 		if(array_key_exists($nome_campo,$_FILES) && is_uploaded_file($_FILES[$nome_campo]['tmp_name'])) {
 			if(!move_uploaded_file($_FILES[$nome_campo]['tmp_name'], $dest_dir."/".$_FILES[$nome_campo]['name'])) {
 				user_error("<p>Errore nel caricamento del file!</p>");
+                user_error("<!--\n");
+                user_error($_SERVER["SCRIPT_FILENAME"]);
+                user_error($GLOBALS['root_directory']);
+                user_error($this->dest_directory);
+                user_error("From: ".$_FILES[$nome_campo]['tmp_name']."\n");
+                user_error("To: ".$dest_dir."/".$_FILES[$nome_campo]['name']."\n");
+                user_error("-->\n");
 				$this->aValore=null;
 			} else
 				$this->aValore=$_FILES[$nome_campo]['name'];

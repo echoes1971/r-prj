@@ -82,7 +82,7 @@
   #- name: Create DB
     #command:
       ##cmd: mysql -u root -e "show databases"
-      #cmd: mysql -u root -e "create database if not exists rproject"
+      #cmd: mysql -u root -p "{{ mysql_password }}" -e "create database if not exists rproject"
 
   - name: GIT clone and update
     git:
@@ -134,7 +134,21 @@
   - name: Copy the PHP sources
     command:
       cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
-    #when: git_updated.changed
+    when: git_updated.changed
+
+  - name: Create a directory if it does not exist
+    file:
+      path: "{{ www_dir }}/php/files"
+      state: directory
+      mode: '0755'
+      owner: www-data
+      group: www-data
+
+  - name: Link files dir in mng folder
+    file:
+      src: "{{ www_dir }}/php/files"
+      dest: "{{ www_dir }}/php/mng/files"
+      state: link
 
   - name: Restart Apache Service if git changed
     service:

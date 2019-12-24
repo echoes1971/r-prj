@@ -36,12 +36,12 @@ function getRootUri($path_separator="/") {
 }
 function getRootFolder($path_separator="/") {
 	// 2011.03.31: start.
-	$filepath=array_reverse( explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])) );
-	$uri=array_reverse( explode("/",dirname($_SERVER["PHP_SELF"])) );
+	$filepath=array_reverse(explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])));
+	$uri=array_reverse(explode("/",dirname($_SERVER["PHP_SELF"])));
 // 	$filepath=array_reverse( explode($path_separator,$_SERVER["SCRIPT_FILENAME"]) );
 // 	$uri=array_reverse( explode("/",$_SERVER["PHP_SELF"]) );
 	// 2011.03.31: end.
-	$maxindice=min( count($filepath), count($uri) );
+	$maxindice=min(count($filepath), count($uri));
 	$indice_diversi=-1;
 	for($i=0; $indice_diversi<0 && $i<$maxindice; $i++) {
 		if( $filepath[$i]!=$uri[$i] )
