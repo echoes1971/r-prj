@@ -84,8 +84,6 @@ $nome = implode("_",$tmp_nome);
 // To write a note message instead of RDownload
 // $log_note = array_key_exists('note',$_REQUEST) ? $_REQUEST['note'] : "RDownload";
 // rproject_mylog($log_note,"[".$cerca->getValue('id')."] filename: $nome");
-$log_note = array_key_exists('note',$_REQUEST) ? $_REQUEST['note'] : "RDownload";
-rproject_mylog($log_note,"[".$cerca->getValue('id')."] filename: $nome");
 
 
 // To write a note message instead of RDownload

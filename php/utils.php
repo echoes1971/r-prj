@@ -181,7 +181,7 @@ function rproject_mylog($note=null,$note2=null,$debug=false) {
 // 	if( count($listaPast)>0 ) $mydbe->setValue('url', $listaPast[0]->getValue('url') );
 	// 2012.07.21: end.
 	
-	if (count($lista)==0) {
+	if(count($lista)==0) {
 		// 2012.07.21: start.
 		// FIXME maybe using a max on url desc could work better, something like
 		// FIXME select max(url) as url from _log where ip='remote_ip'
