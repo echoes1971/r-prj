@@ -1,0 +1,10 @@
+---
+git_dir: /opt/rprj
+www_dir: /var/www/rprj
+db_host: localhost
+db_name: rproject
+db_user: rprj
+db_password: mysecretpass
+db_schema: rprj
+db_root_password: rprjrootpwd
+dbpkg: mariadb-server

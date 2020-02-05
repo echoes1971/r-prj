@@ -1,41 +1,19 @@
 ---
 # ansible-playbook -i ./hosts rprj_all.yml rprj_db.yml rprj.yml
 
-- hosts: all
-  become: yes
-  become_user: root
-
-  tasks:
-  #- debug: var=ansible_facts
-  - name: Upgrade System
-    apt:
-      update_cache: yes
-      upgrade: yes
-      autoclean: yes
-      autoremove: yes
-    notify:
-    - Restart Server
-
-  handlers:
-  - name: Restart Server
-    become: yes
-    become_user: root
-    command: shutdown -r now
-
-
 - hosts: R-Prj
   become: yes
   become_user: root
-  vars:
-    git_dir: /opt/rprj
-    www_dir: /var/www/rprj
-    db_host: localhost
-    db_name: rproject
-    db_user: rprj
-    db_password: mysecretpass
-    db_root_password: rprjrootpwd
-    dbpkg: mariadb-server
-    #dbpkg: mysql-server
+  vars_files:
+    - config.yml
+  #vars:
+    #git_dir: /opt/rprj
+    #www_dir: /var/www/rprj
+    #db_host: localhost
+    #db_name: rproject
+    #db_user: rprj
+    #db_password: mysecretpass
+    #db_root_password: rprjrootpwd
 
   tasks:
 
@@ -45,7 +23,6 @@
       - "{{ dbpkg }}"
       - php
       - php-mysql
-      - python-pymysql
       - python-selinux
 
   - name: Enable Apache Modules
@@ -53,72 +30,10 @@
       state: present
       name: ssl
 
-  - name: Ensure mysql is running
-    service:
-      name: mysql
-      state: started
-
   - name: Ensure apache2 is running
     service:
       name: apache2
       state: started
-
-  - name: Create DB
-    mysql_db:
-      login_unix_socket: /var/run/mysqld/mysqld.sock
-      name: "{{ db_name }}"
-      state: present
-    register: db_updated
-
-  - name: update db user password
-    mysql_user:
-      login_unix_socket: /var/run/mysqld/mysqld.sock
-      host: "{{ item }}"
-      name: "{{ db_user }}"
-      password: "{{ db_password }}"
-      check_implicit_admin: yes
-      priv: "*.*:ALL,GRANT"
-      state: present
-    with_items:
-      #- "{{ db_name }}"
-      - localhost
-      #- "{{ ansible_hostname }}"
-      #- 127.0.0.1
-      #- ::1
-    register: db_updated
-
-  #- name: update db root password
-    #mysql_user:
-      #login_unix_socket: /var/run/mysqld/mysqld.sock
-      #host: "{{ item }}"
-      #name: root
-      #password: "{{ db_root_password }}"
-      #check_implicit_admin: yes
-      #priv: "*.*:ALL,GRANT"
-      #state: present
-    #with_items:
-      #- "{{ db_name }}"
-      #- "{{ ansible_hostname }}"
-      #- 127.0.0.1
-      #- ::1
-      #- localhost
-    #register: db_updated
-
-  - name: Restart MySQL if DB changed
-    service:
-      name: mysql
-      state: restarted
-    when: db_updated.changed
-
-  - name: Dump DBs
-    mysql_db:
-      login_unix_socket: /var/run/mysqld/mysqld.sock
-      state: dump
-      name:
-        - "{{ db_name }}"
-      target: /tmp/dump.sql
-    when: not db_updated.changed
-    notify: Download DB Dump
 
   - name: GIT clone and update
     git:
@@ -182,6 +97,11 @@
       cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
     when: git_updated.changed or db_updated.changed
 
+  - name: config_local.php - mysql db name
+    command:
+      cmd: "sed -i 's/db_db = \".*\"/db_db = \"{{ db_name }}\"/g' {{ www_dir }}/php/config_local.php"
+    when: git_updated.changed or db_updated.changed
+
   - name: config_local.php - mysql user name
     command:
       cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
@@ -190,6 +110,11 @@
   - name: config_local.php - mysql user password
     command:
       cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
+    when: git_updated.changed or db_updated.changed
+
+  - name: config_local.php - mysql db_schema
+    command:
+      cmd: "sed -i 's/db_schema = \".*\"/db_schema = \"{{ db_schema }}\"/g' {{ www_dir }}/php/config_local.php"
     when: git_updated.changed or db_updated.changed
 
   - name: Create a directory if it does not exist
@@ -213,12 +138,6 @@
     when: git_updated.changed
 
   handlers:
-  - name: Download DB Dump
-    fetch:
-      src: /tmp/dump.sql
-      dest: "../db_{{ db_name }}.sql"
-      flat: yes
-
   - name: Restart Apache Service
     service:
       name: apache2

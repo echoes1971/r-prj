@@ -4,15 +4,17 @@
 - hosts: RPrj_DB
   become: yes
   become_user: root
-  vars:
-    git_dir: /opt/rprj
-    db_host: localhost
-    db_name: rproject
-    db_user: rprj
-    db_password: mysecretpass
-    db_root_password: rprjrootpwd
-    dbpkg: mariadb-server
-    #dbpkg: mysql-server
+  vars_files:
+    - config.yml
+  #vars:
+    ##git_dir: /opt/rprj
+    #db_host: localhost
+    #db_name: rproject
+    #db_user: rprj
+    #db_password: mysecretpass
+    #db_root_password: rprjrootpwd
+    #dbpkg: mariadb-server
+    ##dbpkg: mysql-server
 
   tasks:
 

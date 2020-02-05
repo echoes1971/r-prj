@@ -1,16 +1,10 @@
 <?php
 
-/*
-$db_server = "localhost";
-$db_user = "root";
-$db_pwd = "";
-$db_db = "rproject";
-$db_schema = "rprj";
-*/
-
 $db_server = "rprj-mariadb";
 $db_user = "root";
 $db_pwd = "mysecret";
+$db_db = "rproject";
+$db_schema = "rprj";
 
 $skin = 'ami2';
 
