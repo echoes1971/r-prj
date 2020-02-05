@@ -116,7 +116,7 @@
       dest: "{{ git_dir }}"
       version: master
     register: git_updated
-  - debug: "msg={{ git_updated.changed }}"
+  #- debug: "msg={{ git_updated.changed }}"
 
   - name: Remove default site
     file:
