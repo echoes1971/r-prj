@@ -92,30 +92,39 @@
       #cmd: "cp {{ git_dir }}/php/config_local.php {{ www_dir }}/php/"
     #when: git_updated.changed or db_updated.changed
 
-  - name: config_local.php - server name
-    command:
-      cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
-    when: git_updated.changed or db_updated.changed
+  #- name: config_local.php - server name
+    #command:
+      #cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed or db_updated.changed
 
-  - name: config_local.php - mysql db name
-    command:
-      cmd: "sed -i 's/db_db = \".*\"/db_db = \"{{ db_name }}\"/g' {{ www_dir }}/php/config_local.php"
-    when: git_updated.changed or db_updated.changed
+  #- name: config_local.php - mysql db name
+    #command:
+      #cmd: "sed -i 's/db_db = \".*\"/db_db = \"{{ db_name }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed or db_updated.changed
 
-  - name: config_local.php - mysql user name
-    command:
-      cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
-    when: git_updated.changed or db_updated.changed
+  #- name: config_local.php - mysql user name
+    #command:
+      #cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed or db_updated.changed
 
-  - name: config_local.php - mysql user password
-    command:
-      cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
-    when: git_updated.changed or db_updated.changed
+  #- name: config_local.php - mysql user password
+    #command:
+      #cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed or db_updated.changed
 
-  - name: config_local.php - mysql db_schema
-    command:
-      cmd: "sed -i 's/db_schema = \".*\"/db_schema = \"{{ db_schema }}\"/g' {{ www_dir }}/php/config_local.php"
-    when: git_updated.changed or db_updated.changed
+  #- name: config_local.php - mysql db_schema
+    #command:
+      #cmd: "sed -i 's/db_schema = \".*\"/db_schema = \"{{ db_schema }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed or db_updated.changed
+
+  - name: config_local.php
+    template:
+      src: templates/config_local.php.j2
+      dest: "{{ www_dir }}/php/config_local.php"
+      mode: '0755'
+      owner: www-data
+      group: www-data
+    #when: git_updated.changed or db_updated.changed
 
   - name: Create a directory if it does not exist
     file:
