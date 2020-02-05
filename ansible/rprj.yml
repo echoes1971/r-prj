@@ -29,15 +29,15 @@
   vars:
     git_dir: /opt/rprj
     www_dir: /var/www/rprj
-    mysql_password: mysecretpass
+    db_host: localhost
+    db_name: rproject
+    db_user: rprj
+    db_password: mysecretpass
+    db_root_password: rprjrootpwd
     dbpkg: mariadb-server
     #dbpkg: mysql-server
 
   tasks:
-
-  #- name: Debug restart
-     #command: /bin/true
-     #notify: Start CBFox
 
   - name: Install Packages
     apt:
@@ -45,7 +45,6 @@
       - "{{ dbpkg }}"
       - php
       - php-mysql
-      # for ansible
       - python-pymysql
       - python-selinux
 
@@ -64,25 +63,52 @@
       name: apache2
       state: started
 
-  #- name: Set Root Password
-    #command:
-      ##cmd: mysql -u root -e "show databases"
-      #cmd: "mysql -u root -e \"update user set authentication_string=PASSWORD(\\\"{{ mysql_password }}\\\") where User='root';\" mysql"
+  - name: Create DB
+    mysql_db:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      name: "{{ db_name }}"
+      state: present
+    register: db_updated
 
-  #- name: Create DB
-    #become: yes
-    #become_user: mysql
-    #mysql_db:
-      ##login_host: ""
-      #login_user: root
-      #login_password: "{{ mysql_password }}"
-      #name: rproject
+  - name: update db user password
+    mysql_user:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      host: "{{ item }}"
+      name: "{{ db_user }}"
+      password: "{{ db_password }}"
+      check_implicit_admin: yes
+      priv: "*.*:ALL,GRANT"
+      state: present
+    with_items:
+      - "{{ db_name }}"
+      #- "{{ ansible_hostname }}"
+      #- 127.0.0.1
+      #- ::1
+      - localhost
+    register: db_updated
+
+  #- name: update db root password
+    #mysql_user:
+      #login_unix_socket: /var/run/mysqld/mysqld.sock
+      #host: "{{ item }}"
+      #name: root
+      #password: "{{ db_root_password }}"
+      #check_implicit_admin: yes
+      #priv: "*.*:ALL,GRANT"
       #state: present
+    #with_items:
+      #- "{{ db_name }}"
+      #- "{{ ansible_hostname }}"
+      #- 127.0.0.1
+      #- ::1
+      #- localhost
+    #register: db_updated
 
-  #- name: Create DB
-    #command:
-      ##cmd: mysql -u root -e "show databases"
-      #cmd: mysql -u root -p "{{ mysql_password }}" -e "create database if not exists rproject"
+  - name: Restart Apache Service if git changed
+    service:
+      name: mysql
+      state: restarted
+    when: db_updated.changed
 
   - name: GIT clone and update
     git:
@@ -136,6 +162,26 @@
       cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
     when: git_updated.changed
 
+  #- name: Copy config_local.php
+    #command:
+      #cmd: "cp {{ git_dir }}/php/config_local.php {{ www_dir }}/php/"
+    #when: git_updated.changed
+
+  - name: config_local.php - server name
+    command:
+      cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed
+
+  - name: config_local.php - mysql user name
+    command:
+      cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed
+
+  - name: config_local.php - mysql user password
+    command:
+      cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
+    #when: git_updated.changed
+
   - name: Create a directory if it does not exist
     file:
       path: "{{ www_dir }}/php/files"
@@ -154,7 +200,7 @@
     service:
       name: apache2
       state: restarted
-    when: git_updated.changed
+    #when: git_updated.changed
 
   handlers:
 
