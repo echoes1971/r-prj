@@ -81,10 +81,10 @@
       state: present
     with_items:
       - "{{ db_name }}"
+      - localhost
       #- "{{ ansible_hostname }}"
       #- 127.0.0.1
       #- ::1
-      - localhost
     register: db_updated
 
   #- name: update db root password
@@ -165,22 +165,22 @@
   #- name: Copy config_local.php
     #command:
       #cmd: "cp {{ git_dir }}/php/config_local.php {{ www_dir }}/php/"
-    #when: git_updated.changed
+    #when: git_updated.changed or db_updated.changed
 
   - name: config_local.php - server name
     command:
       cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed
+    when: git_updated.changed or db_updated.changed
 
   - name: config_local.php - mysql user name
     command:
       cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed
+    when: git_updated.changed or db_updated.changed
 
   - name: config_local.php - mysql user password
     command:
       cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed
+    when: git_updated.changed or db_updated.changed
 
   - name: Create a directory if it does not exist
     file:

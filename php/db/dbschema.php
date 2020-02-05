@@ -34,7 +34,7 @@ $dbschema_type_list=array();
 class DBEDBVersion extends DBEntity {
 	var $_typeName="DBEDBVersion";
 	public static $_mycolumns = array(
-                'model_name'=> array('varchar(250)','not null'),
+                'model_name'=> array('varchar(100)','not null'),
 				'version'=>array('int','not null'),
 			);
 	function DBEDBVersion($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
