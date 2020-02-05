@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+    DocumentRoot {{ www_dir }}/php
+{% if www_domain %}
+    ServerName {{ www_domain }}
+    ServerAdmin {{ www_admin }}
+{% endif %}
+    ErrorLog  ${APACHE_LOG_DIR}/{{ www_name }}-error_log
+    CustomLog ${APACHE_LOG_DIR}/{{ www_name }}-access_log common
+    LogLevel info
+</VirtualHost>

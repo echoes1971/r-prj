@@ -48,11 +48,30 @@
       path: /etc/apache2/sites-enabled/000-default.conf
       state: absent
 
-  - name: Copy apache config if git changed
-    copy:
-      src: templates/rprj.conf
-      dest: /etc/apache2/sites-available/rprj.conf
-    when: git_updated.changed
+  #- name: Copy apache config if git changed
+    #copy:
+      #src: templates/rprj.conf
+      #dest: /etc/apache2/sites-available/rprj.conf
+    #when: git_updated.changed
+
+  - name: Apache Site config
+    template:
+      src: templates/rprj.conf.j2
+      #dest: /etc/apache2/sites-available/cippa.conf
+      dest: /etc/apache2/sites-available/{{ www_name }}.conf
+      mode: '0644'
+      owner: root
+      group: root
+    #when: git_updated.changed
+
+  - name: Apache SSL Site config
+    template:
+      src: templates/ssl_rprj.conf.j2
+      dest: /etc/apache2/sites-available/ssl_{{ www_name }}.conf
+      mode: '0644'
+      owner: root
+      group: root
+    #when: git_updated.changed
 
   - name: Copy apache SSL config if git changed
     copy:
@@ -87,36 +106,6 @@
       cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
     when: git_updated.changed
 
-  #- name: Copy config_local.php
-    #command:
-      #cmd: "cp {{ git_dir }}/php/config_local.php {{ www_dir }}/php/"
-    #when: git_updated.changed or db_updated.changed
-
-  #- name: config_local.php - server name
-    #command:
-      #cmd: "sed -i 's/db_server = \".*\"/db_server = \"{{ db_host }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed or db_updated.changed
-
-  #- name: config_local.php - mysql db name
-    #command:
-      #cmd: "sed -i 's/db_db = \".*\"/db_db = \"{{ db_name }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed or db_updated.changed
-
-  #- name: config_local.php - mysql user name
-    #command:
-      #cmd: "sed -i 's/db_user = \".*\"/db_user = \"{{ db_user }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed or db_updated.changed
-
-  #- name: config_local.php - mysql user password
-    #command:
-      #cmd: "sed -i 's/db_pwd = \".*\"/db_pwd = \"{{ db_password }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed or db_updated.changed
-
-  #- name: config_local.php - mysql db_schema
-    #command:
-      #cmd: "sed -i 's/db_schema = \".*\"/db_schema = \"{{ db_schema }}\"/g' {{ www_dir }}/php/config_local.php"
-    #when: git_updated.changed or db_updated.changed
-
   - name: config_local.php
     template:
       src: templates/config_local.php.j2
@@ -124,7 +113,7 @@
       mode: '0755'
       owner: www-data
       group: www-data
-    #when: git_updated.changed or db_updated.changed
+    when: git_updated.changed
 
   - name: Create a directory if it does not exist
     file:
