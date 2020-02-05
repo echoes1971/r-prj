@@ -1,0 +1,28 @@
+---
+# ansible-playbook -i ./hosts rprj_all.yml
+
+- hosts: all
+  become: yes
+  become_user: root
+
+  tasks:
+  #- debug: var=ansible_facts
+  - name: Upgrade System
+    apt:
+      update_cache: yes
+      upgrade: yes
+      autoclean: yes
+      autoremove: yes
+    notify:
+    - Restart Server
+
+  - name: Install Packages
+    apt:
+      name:
+      - python-selinux
+
+  handlers:
+  - name: Restart Server
+    become: yes
+    become_user: root
+    command: shutdown -r now

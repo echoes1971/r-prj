@@ -1,5 +1,5 @@
 ---
-# ansible-playbook -i ./hosts rprj.yml
+# ansible-playbook -i ./hosts rprj_all.yml rprj_db.yml rprj.yml
 
 - hosts: all
   become: yes
@@ -80,7 +80,7 @@
       priv: "*.*:ALL,GRANT"
       state: present
     with_items:
-      - "{{ db_name }}"
+      #- "{{ db_name }}"
       - localhost
       #- "{{ ansible_hostname }}"
       #- 127.0.0.1
@@ -104,11 +104,21 @@
       #- localhost
     #register: db_updated
 
-  - name: Restart Apache Service if git changed
+  - name: Restart MySQL if DB changed
     service:
       name: mysql
       state: restarted
     when: db_updated.changed
+
+  - name: Dump DBs
+    mysql_db:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      state: dump
+      name:
+        - "{{ db_name }}"
+      target: /tmp/dump.sql
+    when: not db_updated.changed
+    notify: Download DB Dump
 
   - name: GIT clone and update
     git:
@@ -200,9 +210,14 @@
     service:
       name: apache2
       state: restarted
-    #when: git_updated.changed
+    when: git_updated.changed
 
   handlers:
+  - name: Download DB Dump
+    fetch:
+      src: /tmp/dump.sql
+      dest: "../db_{{ db_name }}.sql"
+      flat: yes
 
   - name: Restart Apache Service
     service:
