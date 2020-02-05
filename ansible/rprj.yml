@@ -48,12 +48,6 @@
       path: /etc/apache2/sites-enabled/000-default.conf
       state: absent
 
-  #- name: Copy apache config if git changed
-    #copy:
-      #src: templates/rprj.conf
-      #dest: /etc/apache2/sites-available/rprj.conf
-    #when: git_updated.changed
-
   - name: Apache Site config
     template:
       src: templates/rprj.conf.j2
@@ -62,7 +56,7 @@
       mode: '0644'
       owner: root
       group: root
-    #when: git_updated.changed
+    when: git_updated.changed
 
   - name: Apache SSL Site config
     template:
@@ -71,26 +65,20 @@
       mode: '0644'
       owner: root
       group: root
-    #when: git_updated.changed
-
-  - name: Copy apache SSL config if git changed
-    copy:
-      src: templates/ssl_rprj.conf
-      dest: /etc/apache2/sites-available/ssl_rprj.conf
     when: git_updated.changed
 
   - name: Link default default site
     file:
-      src: /etc/apache2/sites-available/rprj.conf
-      dest: /etc/apache2/sites-enabled/rprj.conf
+      src: /etc/apache2/sites-available/{{ www_name }}.conf
+      dest: /etc/apache2/sites-enabled/{{ www_name }}.conf
       state: link
     when: git_updated.changed
     notify: Restart Apache Service
 
   - name: Link default default SSL site
     file:
-      src: /etc/apache2/sites-available/ssl_rprj.conf
-      dest: /etc/apache2/sites-enabled/ssl_rprj.conf
+      src: /etc/apache2/sites-available/ssl_{{ www_name }}.conf
+      dest: /etc/apache2/sites-enabled/ssl_{{ www_name }}.conf
       state: link
     when: git_updated.changed
     notify: Restart Apache Service
