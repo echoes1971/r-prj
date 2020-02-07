@@ -7,8 +7,10 @@
 <IfModule mod_ssl.c>
     <VirtualHost _default_:443>
         DocumentRoot {{ www_dir }}/php
+{% if www_domain %}
         ServerName {{ www_domain }}
         ServerAdmin {{ www_admin }}
+{% endif %}
         ErrorLog ${APACHE_LOG_DIR}/{{ www_name }}_ssl-error_log
         CustomLog ${APACHE_LOG_DIR}/{{ www_name }}_ssl-access_log combined
         LogLevel info

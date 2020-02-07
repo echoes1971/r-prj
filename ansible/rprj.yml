@@ -51,7 +51,6 @@
   - name: Apache Site config
     template:
       src: templates/rprj.conf.j2
-      #dest: /etc/apache2/sites-available/cippa.conf
       dest: /etc/apache2/sites-available/{{ www_name }}.conf
       mode: '0644'
       owner: root

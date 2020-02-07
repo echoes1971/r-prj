@@ -1,7 +1,7 @@
 ---
 # ansible-playbook -i ./hosts rprj_all.yml
 
-- hosts: all
+- hosts: R-Prj,RPrj_DB
   become: yes
   become_user: root
 
