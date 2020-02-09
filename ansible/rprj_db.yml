@@ -6,15 +6,6 @@
   become_user: root
   vars_files:
     - config.yml
-  #vars:
-    ##git_dir: /opt/rprj
-    #db_host: localhost
-    #db_name: rproject
-    #db_user: rprj
-    #db_password: mysecretpass
-    #db_root_password: rprjrootpwd
-    #dbpkg: mariadb-server
-    ##dbpkg: mysql-server
 
   tasks:
 
@@ -32,6 +23,8 @@
   - name: Create DB
     mysql_db:
       login_unix_socket: /var/run/mysqld/mysqld.sock
+      #login_user: root
+      #login_password: 
       name: "{{ db_name }}"
       state: present
     register: db_created
@@ -39,6 +32,8 @@
   - name: update db user password
     mysql_user:
       login_unix_socket: /var/run/mysqld/mysqld.sock
+      #login_user: root
+      #login_password: 
       host: "{{ item }}"
       name: "{{ db_user }}"
       password: "{{ db_password }}"
@@ -76,20 +71,20 @@
       state: restarted
     when: db_created.changed or db_updated.changed
 
-  - name: Upload Initial DB
-    copy:
-      src: ./db_rproject.sql
-      dest: /tmp/db_rproject.sql
-    when: db_created.changed
+  #- name: Upload Initial DB
+    #copy:
+      #src: ./db_rproject.sql
+      #dest: /tmp/db_rproject.sql
+    #when: db_created.changed
 
-  - name: Import Initial DB
-    mysql_db:
-      login_unix_socket: /var/run/mysqld/mysqld.sock
-      name: "{{ db_name }}"
-      state: import
-      target: /tmp/db_rproject.sql
-    when: db_created.changed
-    notify: Restart MySQL
+  #- name: Import Initial DB
+    #mysql_db:
+      #login_unix_socket: /var/run/mysqld/mysqld.sock
+      #name: "{{ db_name }}"
+      #state: import
+      #target: /tmp/db_rproject.sql
+    #when: db_created.changed
+    #notify: Restart MySQL
 
   - name: Dump DBs
     mysql_db:

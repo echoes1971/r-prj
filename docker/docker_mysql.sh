@@ -1,15 +1,15 @@
 #!/bin/bash
 
 PRJ_HOME=`cd ..; pwd`
-RPRJ_IMG=rprj-mariadb-image
-PHP_APP=rprj-mariadb-php
-MYSQL_APP=rprj-mariadb
+RPRJ_IMG=rprj-image
+PHP_APP=rprj-php
+MYSQL_APP=rprj-mysql
 
 # Copy sources
 rm -rf build
 mkdir build
 cp -R ../php/* ./build/
-sed -i s/rprj-mysql/$MYSQL_APP/g ./build/config_local.php
+
 
 IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
 #echo $IMG_EXISTS
@@ -38,10 +38,10 @@ if [ -z "$MYSQL_EXISTS" ]; then
  docker run \
   -p 3306:3306 \
   --name $MYSQL_APP \
-  -v $PRJ_HOME/mariadb:/var/lib/mysql \
+  -v $PRJ_HOME/data:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=mysecret \
-  -d mariadb:10.3
+  -d mysql:5.7
  echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -pmysecret -e \"create database rproject;\""
 fi
 
@@ -59,11 +59,12 @@ if [ -z "$PHP_EXISTS" ]; then
  #docker container rm $PHP_APP
  docker run -p 8080:80 --name $PHP_APP \
  --link $MYSQL_APP:mysql \
+ -v "$PRJ_HOME/files":/var/www/html/files \
+ -v "$PRJ_HOME/files":/var/www/html/mng/files \
  -d $RPRJ_IMG
- #-v "$PRJ_HOME/php":/var/www/html \
 fi
 
-echo "Access mysql with: docker exec -it $MYSQL_APP mysql -pmysecret"
+echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
 echo "Interact with the containers with:"
 echo " docker exec -it $MYSQL_APP bash"
 echo " docker exec -it $PHP_APP bash"
