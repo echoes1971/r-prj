@@ -4,6 +4,7 @@ PRJ_HOME=`cd ..; pwd`
 RPRJ_IMG=rprj-mariadb-image
 PHP_APP=rprj-mariadb-php
 MYSQL_APP=rprj-mariadb
+MYSQL_PASSWORD=mysecret
 
 if [ "$1" = "clean" ]; then
  echo "Deleting image and containers...";
@@ -34,14 +35,13 @@ if [ -z "$IMG_EXISTS" ]; then
 fi
 
 # MySQL
-echo "docker container ls -a | grep $MYSQL_APP | grep -v $MYSQL_APP-dev-php"
 MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP | grep -v $MYSQL_APP-dev-php`
-echo $MYSQL_EXISTS
+#echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
- #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
+ #echo "Access mysql with: docker exec -it rprj-mysql mysql -p$MYSQL_PASSWORD"
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
@@ -52,9 +52,9 @@ if [ -z "$MYSQL_EXISTS" ]; then
   --name $MYSQL_APP \
   -v $PRJ_HOME/mariadb:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
-  -e MYSQL_ROOT_PASSWORD=mysecret \
+  -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
   -d mariadb:10.3
- echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -pmysecret -e \"create database rproject;\""
+ echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database rproject;\""
 fi
 
 # PHP
@@ -76,7 +76,7 @@ if [ -z "$PHP_EXISTS" ]; then
  -d $RPRJ_IMG
 fi
 
-echo "Access mysql with: docker exec -it $MYSQL_APP mysql -pmysecret"
+echo "Access mysql with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD"
 echo "Interact with the containers with:"
 echo " docker exec -it $MYSQL_APP bash"
 echo " docker exec -it $PHP_APP bash"
