@@ -13,7 +13,7 @@ if [ "$1" = "clean" ]; then
  echo
 #  docker container ls -a
 #  docker image ls -a
-#  exit 1
+ exit 1
 fi
 
 
@@ -31,7 +31,7 @@ if [ -z "$IMG_EXISTS" ]; then
 fi
 
 # MySQL
-MYSQL_EXISTS=`docker container ls -a | grep -v "$MYSQL_APP-php" | grep $MYSQL_APP`
+MYSQL_EXISTS=`docker container ls -a | grep -v "$MYSQL_APP-image" | grep -v "$MYSQL_APP-php" | grep $MYSQL_APP`
 # echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
