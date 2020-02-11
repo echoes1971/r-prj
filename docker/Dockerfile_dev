@@ -22,4 +22,5 @@ RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
 RUN docker-php-ext-install gd
 
 # Copy the source
-COPY build/ /var/www/html/
+#COPY php/ /var/www/html/
+

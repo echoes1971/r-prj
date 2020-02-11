@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2020 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: db_update.php $
  * @package rproject
@@ -43,21 +43,22 @@ if($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
 }
 
 // -1. DB Connected?
+$dbmgr->setVerbose(true);
 $dbmgr->connect();
 if(!$dbmgr->isConnected()) {
 	echo "Not connected.<br/>\n";
 }
+$dbmgr->setVerbose(false);
 
-
-$action_descr = $dbmgr->db_version()==0 ?
-				"Install" :
-				$dbmgr->db_version()<DB_VERSION ?
-					"Update" :
-					"Check";
-
+$action_descr = $dbmgr->db_version()===0 ?
+                "Install" :
+                ($dbmgr->db_version()<DB_VERSION ?
+                    "Update" :
+                    "Check"
+                    );
 
 $utente = $dbmgr->getDBEUser();
 
-require_once( getSkinPage("mng/db_update.php") );
+require_once(getSkinPage("mng/db_update.php"));
 
 ?>

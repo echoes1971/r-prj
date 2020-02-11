@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2020 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: db_update_do.php $
  * @package rproject
@@ -354,8 +354,16 @@ if($new_db_version<DB_VERSION) {
 	echo "\n";
 	echo "Please <a target=\"_top\" href=\"".ROOT_FOLDER."logout_do.php\" style=\"font-weight:bold;color:green;\">LOGOUT</a>.\n";
 	echo "\n";
+	
+	// DO a redirect to the logout page
+	$nuovo_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
+						. dirname($_SERVER['PHP_SELF'])
+						. "/". ROOT_FOLDER
+						. "logout_do.php";
+    echo "<script>window.top.location='$nuovo_url';</script>";
 }
 echo "\n";
 
 ?></pre>
 </body>
+</html>

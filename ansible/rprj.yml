@@ -1,39 +1,28 @@
 ---
-# ansible-playbook -i ./hosts rprj_ubuntu.yml
+# ansible-playbook -i ./hosts rprj_all.yml rprj_db.yml rprj.yml
+
 - hosts: R-Prj
   become: yes
   become_user: root
-  vars:
-    dest_dir: /opt/rprj
-    is_test: true
-    apache_vhosts_enabled:
-      - servername:
+  vars_files:
+    - config.yml
+  #vars:
+    #git_dir: /opt/rprj
+    #www_dir: /var/www/rprj
+    #db_host: localhost
+    #db_name: rproject
+    #db_user: rprj
+    #db_password: mysecretpass
+    #db_root_password: rprjrootpwd
 
   tasks:
-
-  #- debug: var=ansible_facts
-
-  - name: Upgrade System
-    apt:
-      update_cache: yes
-      upgrade: yes
-      autoclean: yes
-      autoremove: yes
-    notify:
-    - Restart Server
-
-  #- name: Debug restart
-     #command: /bin/true
-     #notify: Start CBFox
 
   - name: Install Packages
     apt:
       name:
-      - mysql-server
+      - "{{ dbpkg }}"
       - php
       - php-mysql
-      # for ansible
-      - python-pymysql
       - python-selinux
 
   - name: Enable Apache Modules
@@ -41,79 +30,95 @@
       state: present
       name: ssl
 
-  - name: Ensure mysql is running
-    service:
-      name: mysql
-      state: started
-
   - name: Ensure apache2 is running
     service:
       name: apache2
       state: started
 
-  #- name: Create DB
-    #become: yes
-    #become_user: mysql
-    #mysql_db:
-      ##login_host: ""
-      #login_user: root
-      #name: rproject
-      #state: present
-
-  - name: Create DB
-    command:
-      #cmd: mysql -u root -e "show databases"
-      cmd: mysql -u root -e "create database if not exists rproject"
-
   - name: GIT clone and update
     git:
       repo: https://git.code.sf.net/p/r-prj/gitcode
-      dest: "{{ dest_dir }}"
+      dest: "{{ git_dir }}"
       version: master
     register: git_updated
-  - debug: "msg={{ git_updated.changed }}"
+  #- debug: "msg={{ git_updated.changed }}"
 
-  - name: Remove default site
-    file:
-      path: /etc/apache2/sites-enabled/000-default.conf
-      state: absent
+  #- name: Remove default site
+    #file:
+      #path: /etc/apache2/sites-enabled/000-default.conf
+      #state: absent
+  #- name: Remove default SSL site
+    #file:
+      #path: /etc/apache2/sites-enabled/default-ssl.conf
+      #state: absent
 
-  - name: Copy apache config if git changed
-    copy:
-      src: templates/rprj.conf
-      dest: /etc/apache2/sites-available/rprj.conf
+  - name: Apache Site config
+    template:
+      src: templates/rprj.conf.j2
+      dest: /etc/apache2/sites-available/{{ www_name }}.conf
+      mode: '0644'
+      owner: root
+      group: root
     when: git_updated.changed
 
-  - name: Copy apache SSL config if git changed
-    copy:
-      src: templates/ssl_rprj.conf
-      dest: /etc/apache2/sites-available/ssl_rprj.conf
+  - name: Apache SSL Site config
+    template:
+      src: templates/ssl_rprj.conf.j2
+      dest: /etc/apache2/sites-available/ssl_{{ www_name }}.conf
+      mode: '0644'
+      owner: root
+      group: root
     when: git_updated.changed
 
   - name: Link default default site
     file:
-      src: /etc/apache2/sites-available/rprj.conf
-      dest: /etc/apache2/sites-enabled/rprj.conf
+      src: /etc/apache2/sites-available/{{ www_name }}.conf
+      dest: /etc/apache2/sites-enabled/{{ www_name }}.conf
       state: link
+    when: git_updated.changed
+    notify: Restart Apache Service
+
+  - name: Link default default SSL site
+    file:
+      src: /etc/apache2/sites-available/ssl_{{ www_name }}.conf
+      dest: /etc/apache2/sites-enabled/ssl_{{ www_name }}.conf
+      state: link
+    when: git_updated.changed
     notify: Restart Apache Service
 
   - name: Create a directory if it does not exist
     file:
-      path: /var/www/rprj
+      path: "{{ www_dir }}"
       state: directory
       mode: '0755'
 
   - name: Copy the PHP sources
     command:
-      cmd: cp -R /opt/rprj/php/ /var/www/rprj/
+      cmd: "cp -R {{ git_dir }}/php/ {{ www_dir }}/"
     when: git_updated.changed
 
-  - name: Link default default SSL site
+  - name: config_local.php
+    template:
+      src: templates/config_local.php.j2
+      dest: "{{ www_dir }}/php/config_local.php"
+      mode: '0755'
+      owner: www-data
+      group: www-data
+    when: git_updated.changed
+
+  - name: Create a directory if it does not exist
     file:
-      src: /etc/apache2/sites-available/ssl_rprj.conf
-      dest: /etc/apache2/sites-enabled/ssl_rprj.conf
+      path: "{{ www_dir }}/php/files"
+      state: directory
+      mode: '0755'
+      owner: www-data
+      group: www-data
+
+  - name: Link files dir in mng folder
+    file:
+      src: "{{ www_dir }}/php/files"
+      dest: "{{ www_dir }}/php/mng/files"
       state: link
-    notify: Restart Apache Service
 
   - name: Restart Apache Service if git changed
     service:
@@ -122,12 +127,6 @@
     when: git_updated.changed
 
   handlers:
-
-  - name: Restart Server
-    become: yes
-    become_user: root
-    command: shutdown -r now
-
   - name: Restart Apache Service
     service:
       name: apache2

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2020 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: utils.php $
  * @package rproject
@@ -25,7 +25,7 @@ function getRootUri($path_separator="/") {
 // 	$filepath=array_reverse(explode($path_separator,dirname($_SERVER["SCRIPT_FILENAME"])));
 // 	$uri=array_reverse(explode("/",dirname($_SERVER["PHP_SELF"])));
 	// 2011.03.31: end.
-	$maxindice=min( count($filepath), count($uri));
+	$maxindice=min(count($filepath), count($uri));
 	$indice_diversi=-1;
 	for($i=0; $indice_diversi<0 && $i<$maxindice; $i++) {
 		if($filepath[$i]!=$uri[$i])
@@ -41,7 +41,7 @@ function getRootFolder($path_separator="/") {
 // 	$filepath=array_reverse(explode($path_separator,$_SERVER["SCRIPT_FILENAME"]));
 // 	$uri=array_reverse(explode("/",$_SERVER["PHP_SELF"]));
 	// 2011.03.31: end.
-	$maxindice=min( count($filepath), count($uri));
+	$maxindice=min(count($filepath), count($uri));
 	$indice_diversi=-1;
 	for($i=0; $indice_diversi<0 && $i<$maxindice; $i++) {
 		if($filepath[$i]!=$uri[$i])
@@ -83,12 +83,12 @@ function readFromRequest( $aRequest, $prefix='field_') {
 	$ret = array();
 	$len_ret = 0;
 	$chiavi = array_keys( $aRequest);
-	foreach ( $chiavi as $c) {
+	foreach($chiavi as $c) {
 		$pos = strpos( $c, $prefix);
 		if($pos === false) {
 		} else {
-			$v = $aRequest[ $c ];
-			$ret[ substr($c, strlen($prefix)) ] = $v;
+			$v = $aRequest[$c];
+			$ret[substr($c, strlen($prefix))] = $v;
 		}
 	}
 	return $ret;
@@ -97,13 +97,13 @@ function readFromRequest( $aRequest, $prefix='field_') {
 function readFromArray( &$aArray, $prefix='field_') {
 	$ret = array();
 	$len_ret = 0;
-	$chiavi = array_keys( $aArray);
-	foreach ( $chiavi as $c) {
-		$pos = strpos( $c, $prefix);
+	$chiavi = array_keys($aArray);
+	foreach($chiavi as $c) {
+		$pos = strpos($c, $prefix);
 		if($pos === false) {
 		} else {
-			$v = $aArray[ $c ];
-			$ret[ substr($c, strlen($prefix)) ] = $v;
+			$v = $aArray[$c];
+			$ret[substr($c, strlen($prefix))] = $v;
 		}
 	}
 	return $ret;

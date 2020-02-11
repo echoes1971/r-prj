@@ -1,27 +1,9 @@
 #!/bin/bash
 
 PRJ_HOME=`cd ..; pwd`
-RPRJ_IMG=rprj-mariadb-image
-PHP_APP=rprj-mariadb-php
-MYSQL_APP=rprj-mariadb
-MYSQL_PASSWORD=mysecret
-
-if [ "$1" = "clean" ]; then
- echo "Deleting image and containers...";
- docker container rm $PHP_APP
- docker container rm $MYSQL_APP
- docker image rm $RPRJ_IMG
- echo
-#  docker container ls -a
-#  docker image ls -a
- exit 1
-fi
-
-# Copy sources
-rm -rf build
-mkdir build
-cp -R ../php/* ./build/
-sed -i s/rprj-mysql/$MYSQL_APP/g ./build/config_local.php
+RPRJ_IMG=rprj-dev-image
+PHP_APP=rprj-dev-php
+MYSQL_APP=rprj-mysql
 
 IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
 #echo $IMG_EXISTS
@@ -31,17 +13,18 @@ if [ -n "$IMG_EXISTS" ]; then
 fi
 if [ -z "$IMG_EXISTS" ]; then
  echo "* Creating image $RPRJ_IMG"
- docker build -t $RPRJ_IMG .
+ docker build -f Dockerfile_dev -t $RPRJ_IMG .
 fi
 
 # MySQL
-MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP | grep -v $MYSQL_APP-dev-php`
+MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP`
 #echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
  #docker container stop $MYSQL_APP
  #docker container rm $MYSQL_APP
- #echo "Access mysql with: docker exec -it rprj-mysql mysql -p$MYSQL_PASSWORD"
+ #echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
+ sed -i s/rprj-mariadb/$MYSQL_APP/g ../php/config_local.php
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
@@ -50,11 +33,11 @@ if [ -z "$MYSQL_EXISTS" ]; then
  docker run \
   -p 3306:3306 \
   --name $MYSQL_APP \
-  -v $PRJ_HOME/mariadb:/var/lib/mysql \
+  -v $PRJ_HOME/data:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
-  -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
-  -d mariadb:10.3
- echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database rproject;\""
+  -e MYSQL_ROOT_PASSWORD=mysecret \
+  -d mysql:5.7
+ echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -pmysecret -e \"create database rproject;\""
 fi
 
 # PHP
@@ -70,13 +53,12 @@ if [ -z "$PHP_EXISTS" ]; then
  echo "* Creating container $PHP_APP"
  #docker container rm $PHP_APP
  docker run -p 8080:80 --name $PHP_APP \
- -v "$PRJ_HOME/files":/var/www/html/files \
- -v "$PRJ_HOME/files":/var/www/html/mng/files \
+ -v "$PRJ_HOME/php":/var/www/html \
  --link $MYSQL_APP:mysql \
  -d $RPRJ_IMG
 fi
 
-echo "Access mysql with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD"
+echo "Access mysql with: docker exec -it rprj-mysql mysql -pmysecret"
 echo "Interact with the containers with:"
 echo " docker exec -it $MYSQL_APP bash"
 echo " docker exec -it $PHP_APP bash"

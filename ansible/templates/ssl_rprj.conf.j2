@@ -6,11 +6,13 @@
 
 <IfModule mod_ssl.c>
     <VirtualHost _default_:443>
-        DocumentRoot /var/www/rprj/php
-        #ServerName www.africa-film.com
-        #ServerAdmin webmaster@africa-film.com
-        ErrorLog ${APACHE_LOG_DIR}/rprj_ssl-error_log
-        CustomLog ${APACHE_LOG_DIR}/rprj_ssl-access_log combined
+        DocumentRoot {{ www_dir }}/php
+{% if www_domain %}
+        ServerName {{ www_domain }}
+        ServerAdmin {{ www_admin }}
+{% endif %}
+        ErrorLog ${APACHE_LOG_DIR}/{{ www_name }}_ssl-error_log
+        CustomLog ${APACHE_LOG_DIR}/{{ www_name }}_ssl-access_log combined
         LogLevel info
 
         SSLEngine on

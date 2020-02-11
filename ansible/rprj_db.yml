@@ -1,0 +1,117 @@
+---
+# ansible-playbook -i ./hosts rprj_all.yml rprj_db.yml
+
+- hosts: RPrj_DB
+  become: yes
+  become_user: root
+  vars_files:
+    - config.yml
+
+  tasks:
+
+  - name: Install Packages
+    apt:
+      name:
+      - "{{ dbpkg }}"
+      - python-pymysql
+
+  - name: Ensure mysql is running
+    service:
+      name: mysql
+      state: started
+
+  - name: Create DB
+    mysql_db:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      #login_user: root
+      #login_password: 
+      name: "{{ db_name }}"
+      state: present
+    register: db_created
+
+  - name: update db user password
+    mysql_user:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      #login_user: root
+      #login_password: 
+      host: "{{ item }}"
+      name: "{{ db_user }}"
+      password: "{{ db_password }}"
+      check_implicit_admin: yes
+      priv: "*.*:ALL,GRANT"
+      state: present
+    with_items:
+      #- "{{ db_name }}"
+      - localhost
+      #- "{{ ansible_hostname }}"
+      #- 127.0.0.1
+      #- ::1
+    register: db_updated
+
+  #- name: update db root password
+    #mysql_user:
+      #login_unix_socket: /var/run/mysqld/mysqld.sock
+      #host: "{{ item }}"
+      #name: root
+      #password: "{{ db_root_password }}"
+      #check_implicit_admin: yes
+      #priv: "*.*:ALL,GRANT"
+      #state: present
+    #with_items:
+      #- "{{ db_name }}"
+      #- "{{ ansible_hostname }}"
+      #- 127.0.0.1
+      #- ::1
+      #- localhost
+    #register: db_updated
+
+  - name: Restart MySQL if DB changed
+    service:
+      name: mysql
+      state: restarted
+    when: db_created.changed or db_updated.changed
+
+  #- name: Upload Initial DB
+    #copy:
+      #src: ./db_rproject.sql
+      #dest: /tmp/db_rproject.sql
+    #when: db_created.changed
+
+  #- name: Import Initial DB
+    #mysql_db:
+      #login_unix_socket: /var/run/mysqld/mysqld.sock
+      #name: "{{ db_name }}"
+      #state: import
+      #target: /tmp/db_rproject.sql
+    #when: db_created.changed
+    #notify: Restart MySQL
+
+  - name: Dump DBs
+    mysql_db:
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+      state: dump
+      quick: no
+      name: "{{ db_name }}"
+      target: /tmp/dump.sql
+    when: not db_created.changed and not db_updated.changed
+    notify: Download DB Dump
+
+  #- name: GIT clone and update
+    #git:
+      #repo: https://git.code.sf.net/p/r-prj/gitcode
+      #dest: "{{ git_dir }}"
+      #version: master
+    #register: git_updated
+  ##- debug: "msg={{ git_updated.changed }}"
+
+  handlers:
+  - name: Download DB Dump
+    fetch:
+      src: /tmp/dump.sql
+      dest: "../db_{{ db_name }}.sql"
+      flat: yes
+
+  - name: Restart MySQL
+    service:
+      name: mysql
+      state: restarted
