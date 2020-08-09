@@ -85,6 +85,11 @@ if [ -z "$PHP_EXISTS" ]; then
  -v "$PRJ_HOME/files":/var/www/html/mng/files \
  --link $MYSQL_APP:mysql \
  -d $RPRJ_IMG
+
+ DA QUI:
+ https://hub.docker.com/_/php
+ /var/www/html/mng/db_update_do.php
+ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:7.0-cli php your-script.php
 fi
 
 
