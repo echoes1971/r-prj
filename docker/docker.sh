@@ -2,8 +2,9 @@
 
 PRJ_HOME=`cd ..; pwd`
 RPRJ_IMG=rprj-mariadb-image
-PHP_APP=rprj-mariadb-php
+PHP_APP=rprj-php-mariadb
 MYSQL_APP=rprj-mariadb
+MYSQL_DB=rproject
 MYSQL_PASSWORD=mysecret
 
 if [ "$1" = "clean" ]; then
@@ -15,23 +16,6 @@ if [ "$1" = "clean" ]; then
 #  docker container ls -a
 #  docker image ls -a
  exit 1
-fi
-
-# Copy sources
-rm -rf build
-mkdir build
-cp -R ../php/* ./build/
-sed -i s/rprj-mysql/$MYSQL_APP/g ./build/config_local.php
-
-IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
-#echo $IMG_EXISTS
-# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
-if [ -n "$IMG_EXISTS" ]; then
- echo "* Image $RPRJ_IMG exists"
-fi
-if [ -z "$IMG_EXISTS" ]; then
- echo "* Creating image $RPRJ_IMG"
- docker build -t $RPRJ_IMG .
 fi
 
 # MySQL
@@ -54,10 +38,37 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
   -d mariadb:10.3
- echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database rproject;\""
+ echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
+ docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database $MYSQL_DB if not exists;"
 fi
 
-# PHP
+# #### Create PHP Image
+# Copy sources
+rm -rf build
+mkdir build
+cp -R ../php/* ./build/
+sed -i s/rprj-mysql/$MYSQL_APP/g ./build/config_local.php
+sed -i s/rproject/$MYSQL_DB/g ./build/config_local.php
+sed -i s/mysecret/$MYSQL_PASSWORD/g ./build/config_local.php
+sed -i s/setVerbose\(false\)/setVerbose\(true\)/g ./build/mng/db_update_do.php
+
+IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
+#echo $IMG_EXISTS
+# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
+if [ -n "$IMG_EXISTS" ]; then
+ echo "* Image $RPRJ_IMG exists"
+fi
+if [ -z "$IMG_EXISTS" ]; then
+ echo "* Creating image $RPRJ_IMG"
+ docker build -t $RPRJ_IMG .
+fi
+
+# #### MYSQL: create DB if not exists. At this point a new /var/lib/mmysql folder should have been created
+# if [ -z "$MYSQL_EXISTS" ]; then
+ docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;"
+# fi
+
+# #### PHP
 PHP_EXISTS=`docker container ls -a | grep $PHP_APP`
 #echo $PHP_EXISTS
 if [ -n "$PHP_EXISTS" ]; then
@@ -75,6 +86,7 @@ if [ -z "$PHP_EXISTS" ]; then
  --link $MYSQL_APP:mysql \
  -d $RPRJ_IMG
 fi
+
 
 echo "Access mysql with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD"
 echo "Interact with the containers with:"

@@ -23,3 +23,7 @@ RUN docker-php-ext-install gd
 
 # Copy the source
 COPY build/ /var/www/html/
+
+WORKDIR /var/www/html/mng/
+CMD [ "php", "/var/www/html/mng/db_update_do.php" ]
+
