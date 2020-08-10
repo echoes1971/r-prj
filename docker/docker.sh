@@ -39,7 +39,6 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
   -d mariadb:10.3
  echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
- docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database $MYSQL_DB if not exists;"
 fi
 
 # #### Create PHP Image
@@ -63,7 +62,7 @@ if [ -z "$IMG_EXISTS" ]; then
  docker build -t $RPRJ_IMG .
 fi
 
-# #### MYSQL: create DB if not exists. At this point a new /var/lib/mmysql folder should have been created
+# #### MYSQL: create DB if not exists. At this point a new /var/lib/mysql folder should have been created
 # if [ -z "$MYSQL_EXISTS" ]; then
  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;"
 # fi
@@ -86,10 +85,8 @@ if [ -z "$PHP_EXISTS" ]; then
  --link $MYSQL_APP:mysql \
  -d $RPRJ_IMG
 
- DA QUI:
- https://hub.docker.com/_/php
- /var/www/html/mng/db_update_do.php
- docker run -it --rm --name my-running-script -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:7.0-cli php your-script.php
+ # Init DB
+ docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php"
 fi
 
 
