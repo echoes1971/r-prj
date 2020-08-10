@@ -23,14 +23,10 @@ MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP | grep -v $MYSQL_APP-dev-
 #echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
  echo "* Container $MYSQL_APP exists"
- #docker container stop $MYSQL_APP
- #docker container rm $MYSQL_APP
- #echo "Access mysql with: docker exec -it rprj-mysql mysql -p$MYSQL_PASSWORD"
  docker container start $MYSQL_APP
 fi
 if [ -z "$MYSQL_EXISTS" ]; then
  echo "* Creating container $MYSQL_APP"
- #docker container rm $MYSQL_APP
  docker run \
   -p 3306:3306 \
   --name $MYSQL_APP \
@@ -72,13 +68,10 @@ PHP_EXISTS=`docker container ls -a | grep $PHP_APP`
 #echo $PHP_EXISTS
 if [ -n "$PHP_EXISTS" ]; then
  echo "* Container $PHP_APP exists"
- #docker container stop $PHP_APP
- #docker container rm $PHP_APP
  docker container start $PHP_APP
 fi
 if [ -z "$PHP_EXISTS" ]; then
  echo "* Creating container $PHP_APP"
- #docker container rm $PHP_APP
  docker run -p 8080:80 --name $PHP_APP \
  -v "$PRJ_HOME/files":/var/www/html/files \
  -v "$PRJ_HOME/files":/var/www/html/mng/files \
