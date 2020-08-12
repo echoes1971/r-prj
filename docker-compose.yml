@@ -3,22 +3,23 @@ services:
   rprj-web:
     build: .
     environment:
-      SITE_TITLE: Cippa Lippa
+      SITE_TITLE: ":: R-Project ::"
+      RPRJ_ADMIN_PASS: mysecretpass
     ports:
     - "8080:80"
+    volumes:
+    - ./files:/var/www/html/files
+    - ./files:/var/www/html/mng/files
     depends_on:
       - rprj-db
   rprj-db:
-    #image: mariadb:10.3
     build:
+      context: .
       dockerfile: Dockerfile_db
     environment:
       MYSQL_ROOT_PASSWORD: mysecret
       MYSQL_DATABASE: rproject
-    ports:
-    - "3306:3306"
+    #ports:
+    #- "3306:3306"
     volumes:
-    - ./testdb:/var/lib/mysql
-    #- "$PRJ_HOME"/mariadb:/var/lib/mysql
-    #- "${PRJ_HOME}/mariadb:/var/lib/mysql"
-    #- ./testdb:/var/lib/mysql
+    - ./mariadb:/var/lib/mysql
