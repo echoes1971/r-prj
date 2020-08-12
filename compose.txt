@@ -1,0 +1,25 @@
+
+docker-compose up
+docker-compose up -d
+
+docker-compose up rprj-db
+
+docker-compose stop
+
+docker-compose up --build rprj-web
+docker-compose stop rprj-web
+docker-compose rm -f rprj-web
+docker-compose up rprj-web
+
+
+docker-compose stop rprj-db
+docker-compose rm -f rprj-db
+docker-compose up rprj-db
+
+# Refresh the sources
+rm -rf build ; mkdir build ; cp -R ../php/* ./build/
+
+# to remove both containers AND volumes used
+docker-compose down --volumes
+# remove all
+docker-compose down -v --remove-orphans --rmi local
