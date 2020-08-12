@@ -39,4 +39,4 @@ cd /var/www/html/mng/ ; php /var/www/html/mng/db_update_do.php > /var/log/webent
 chmod 777 /var/www/html/files
 chmod 777 /var/www/html/mng/files
 
-exec "$@"
+exec "$@" 
