@@ -1,0 +1,14 @@
+version: '3'
+services:
+  rprj-web:
+    environment:
+      SITE_TITLE: ":: R-Project Test ::"
+      RPRJ_ADMIN_PASS: pass
+      MYSQL_PASSWORD: cippa
+    volumes:
+      - ./php:/var/www/html
+    #ports:
+      #- 5000:80
+  rprj-db:
+    environment:
+      MYSQL_ROOT_PASSWORD: cippa

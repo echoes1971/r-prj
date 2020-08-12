@@ -31,10 +31,11 @@ sed -i s/rprj-mariadb/$MYSQL_APP/g /var/www/html/config_local.php
 sed -i s/rproject/$MYSQL_DB/g /var/www/html/config_local.php
 sed -i s/mysecret/$MYSQL_PASSWORD/g /var/www/html/config_local.php
 # sed -i s/setVerbose\(false\)/setVerbose\(true\)/g /var/www/html/mng/db_update_do.php
-sed -i s/adm\',\'adm\'/adm\',\'$RPRJ_ADMIN_PASS\'/g /var/www/html/mng/db_update_do.php
 
+sed -i s/adm\',\'adm\'/adm\',\'$RPRJ_ADMIN_PASS\'/g /var/www/html/mng/db_update_do.php
 cd /var/www/html/mng/ ; php /var/www/html/mng/docker_waitdb.php # > /dev/null 2>&1
 cd /var/www/html/mng/ ; php /var/www/html/mng/db_update_do.php > /var/log/webentrypoint.log 2>&1
+sed -i s/adm\',\'$RPRJ_ADMIN_PASS\'/adm\',\'adm\'/g /var/www/html/mng/db_update_do.php
 
 chmod 777 /var/www/html/files
 chmod 777 /var/www/html/mng/files

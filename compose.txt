@@ -2,6 +2,9 @@
 docker-compose up
 docker-compose up -d
 
+# This for developing
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
 docker-compose up rprj-db
 
 docker-compose stop
@@ -23,4 +26,4 @@ rm -rf build ; mkdir build ; cp -R ../php/* ./build/
 docker-compose down --volumes
 # remove all
 docker-compose down -v --remove-orphans --rmi local
-docker-compose down -v --remove-orphans --rmi local ; sudo rm -rf mariadb/* files/*
+docker-compose down -v --remove-orphans --rmi local ; sudo rm -rf mariadb/* files/* ; git checkout -- php/config_local.php php/mng/db_update_do.php
