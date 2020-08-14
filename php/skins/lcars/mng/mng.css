@@ -1,0 +1,319 @@
+/**
+ * @copyright &copy; 2011 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
+ * @version $Id: mng.css $
+ * @package rproject
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/* grep color php/skins/lcars/mng/mng.css | grep -v transition|grep -v \/ | awk '{print $2}' | sort | uniq -c */
+
+body {
+/* background-color: #000000; */
+  background-color: transparent;
+  color: #bb9900;
+  font-family: Ubuntu,Verdana,sans-serif;
+  font-size: 10px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+a:link {
+  text-decoration: none;
+  color: #cccc00;
+}
+a:active {
+  color: #ffff00;
+}
+a:visited {
+  text-decoration: none;
+  color: #aaaa00;
+}
+a:hover {
+  color: #ffff88;
+}
+
+form {
+  margin: 0px;
+}
+
+hr {
+  border: 0px solid #bb9900;
+  background-color: #bb9900;
+  height: 2px;
+  padding: 0px;
+
+  border-radius:2px;-moz-border-radius:2px;-webkit-border-radius:2px;
+}
+
+iframe { margin: 0px; border:0px; padding: 0px; }
+
+
+/* Gestione Menu */
+table.menu {
+/*
+  border: 1px solid #0088ff;
+*/
+  background-color: #000000;
+  /* CSS3 */
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+}
+th.menu {
+  color: #002244;
+  background-color: #ffcc66;
+  font-size: 12px;
+  font-weight: bold;
+  /* CSS3 */
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+}
+td.menu {
+  color: #ffcc66;
+  background-color: #002244;
+/*   color: #ff8800; */
+/*   background-color: #221100; */
+  font-size: 12px;
+  font-weight: normal;
+  /* CSS3 */
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  transition:background-color 1s;-webkit-transition:background-color 1s;-moz-transition:background-color 1s;-o-transition:background-color 1s;
+}
+td.menu:hover {
+  background-color: #cc6600;
+}
+/* UNUSED? */
+/* input.menu { */
+/*   color: #0077ee; */
+/*   background-color: #00dd00; */
+/*   border: 1px solid #008800; */
+/* } */
+a.menu:link {
+  text-decoration: none;
+  color: #cccc00;
+}
+a.menu:active {
+  color: #ffff00;
+}
+a.menu:visited {
+  text-decoration: none;
+  color: #aaaa00;
+}
+a.menu:hover {
+  color: #ffff88;
+}
+
+table.formtable, table.formtableGroup {
+  /*border-collapse: collapse;*/
+  /*background-color: transparent;*/
+  background-color: #221100;
+  text-align: left;
+  width: 100%;
+  padding: 2px;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+}
+table.formtableGroup {
+  border: 1px solid #ff8800;
+  border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+th.formtable,th.formtableSelected {
+  color: #221100;
+  text-align: center;
+  background-color: #ff8800;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  padding: 2px;
+}
+th.formtableSelected {
+  background-color: #ffaa22;
+}
+td.formtable,td.formtableSelected {
+  color: #ff8800;
+  font-size: 12px;
+  font-weight: normal;
+}
+td.formtableSelected {
+  background-color: #ff4400;
+/*   background-color: #e87000; */
+}
+input.formtable {
+  color: #ffdd00;
+  background-color: #cc6600;
+  border: 1px solid #ff8800;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  padding: 2px;
+}
+textarea.formtable {
+  color: #ffdd00;
+  background-color: #cc6600;
+  text-align: left;
+  border: 1px solid #ff8800;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  padding: 2px;
+}
+select.formtable {
+  text-align: left;
+  background-color: #cc6600;
+  border: 1px solid #ff8800;
+  color: #ccdd00;
+  font-size: 10px;
+  font-weight: normal;
+  text-indent: 2px;
+  /* CSS3 */
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+}
+file.formtable {
+  color: #dd7700;
+  border: 1px solid #ff8800;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  padding: 2px;
+}
+
+table.listaDBE {}
+th.listaDBE {
+  color: #221100;
+  text-align: center;
+  background-color: #ff8800;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;
+}
+td.listaDBE_pari, td.listaDBE_bottoniera {
+  color: #ff8800;
+  background-color: #000000;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+}
+td.listaDBE_pari {
+  background-color: #221100;
+  /* CSS3 */
+  transition:background-color 1s;-webkit-transition:background-color 1s;-moz-transition:background-color 1s;-o-transition:background-color 1s;
+}
+td.listaDBE_dispari {
+  color: #ff8800;
+  background-color: #442200;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+  /* CSS3 */
+  transition:background-color 1s;-webkit-transition:background-color 1s;-moz-transition:background-color 1s;-o-transition:background-color 1s;
+}
+td.listaDBE_pari:hover, td.listaDBE_dispari:hover {
+  background-color: #884400;
+}
+
+hr.listaDBE {
+  color: #ff8800;
+  background-color: #ff8800;
+  border: 0;
+  height: 1px;
+}
+td.listaDBE_bottoniera {
+  border: 1px solid #ff8800;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  padding: 4px;
+}
+
+.pannello {
+  padding: 4px;
+}
+table.pannello {
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  border-spacing: 0px;
+}
+th.pannello {
+
+  color: #221100;
+  background-color: #ff8800;
+/*   color: #ff8800; */
+/*   background-color: #221100; */
+
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #ff8800;
+  padding:0px;
+  border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+td.pannello, td.pannelloToolbar {
+  color: #ff8800;
+  background-color: #000000;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: top;
+}
+tr.pannelloToolbar {
+  padding-left: 20px;
+}
+td.pannelloToolbar {
+  height: 24px;
+  margin:0px;
+  padding:0px;
+}
+#pannelloToolbar {
+  background-color: #221100;
+  height: 24px;
+  text-align: left;
+  vertical-align: middle;
+  margin:0px 10px;
+  border: 1px solid #ff8800;
+  border-top: 0px;
+  padding: 1px 5px;
+  /* CSS3 */
+  border-radius: 0px 0px 4px 4px;-moz-border-radius: 0px 0px 4px 4px;-webkit-border-radius: 0px 0px 4px 4px;
+}
+
+#pannelloFiltroRicerca { height: 5%; }
+
+.filtroRicerca {
+  padding: 0px;
+}
+table.filtroRicerca {
+  background-color: #221100;
+  border: 1px solid #ff8800;
+  border-top: 0px;
+  /* CSS3 */
+  border-radius: 0px 0px 8px 8px;-moz-border-radius: 0px 0px 8px 8px;-webkit-border-radius: 0px 0px 8px 8px;
+}
+th.filtroRicerca {
+  color: #ff8800;
+  font-size: 12px;
+  font-weight: bold;
+  border: 0px solid #ff8800;
+  height: 5%;
+  text-align: right;
+  vertical-align: top;
+}
+td.filtroRicerca {
+  color: #ff8800;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+  vertical-align: top;
+}
+
+.permission, .permissionSelected {
+  text-align: center;
+  border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+}
+.permissionSelected {
+  background-color: #442200;
+}
