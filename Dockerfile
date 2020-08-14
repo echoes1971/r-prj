@@ -5,6 +5,7 @@ ENV MYSQL_APP rprj-db
 ENV MYSQL_DB rproject
 ENV MYSQL_PASSWORD mysecret
 ENV RPRJ_ADMIN_PASS myrprjsecret
+ENV RPRJ_SKIN default
 
 RUN apt-get update -y
 RUN apt-get install -y zlib1g-dev libzip-dev
