@@ -420,7 +420,7 @@ class FMasterDetail extends FForm {
 		}
 		$this->masterForms=$tmp;
 	}
-	function getMasterFormsCount() { return count($this->masterForms); }
+	function getMasterFormsCount() { return $this->masterForms ? count($this->masterForms) : 0; }
 	function getMasterName($i) { return $this->masterForms[$i]; }
 	function getMaster($i) {
 		if(is_string($this->masterForms[$i])) {

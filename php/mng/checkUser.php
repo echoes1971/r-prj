@@ -43,7 +43,7 @@ if($utente==null) {
 //         echo $_SERVER['PHP_SELF'] . "<br/>\n";
     }
 
-    if(strpos($_SERVER['PHP_SELF'], "mng/db_update.php")===false && strpos($_SERVER['PHP_SELF'], "mng/db_update_do.php")===false) {
+    if(strpos($_SERVER['PHP_SELF'], "mng/db_update.php")===false && strpos($_SERVER['PHP_SELF'], "mng/db_update_do.php")===false && strpos($_SERVER['PHP_SELF'], "mng/docker_waitdb.php")===false) {
         echo "<script>window.top.location='$nuovo_url';</script>";
     }
 }

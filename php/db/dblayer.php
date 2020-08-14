@@ -730,6 +730,7 @@ class DBMgr {
     function setConnection($_conn) { $this->conn = $_conn; }
     function getConnection() { return $this->conn; }
     function setConnectionProvider($_conn) { $this->connProvider = $_conn; }
+    function getConnectionProvider() { return $this->connProvider; }
     
     /** sed -i '' 's/_verbose=\(.*\);/setVerbose(\1);/g' *.php*/
     function setVerbose($b) { $this->_verbose = $b; $this->connProvider->setVerbose($b); }

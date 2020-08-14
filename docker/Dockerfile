@@ -1,4 +1,10 @@
-FROM php:7.0-apache
+FROM php:7.4-apache
+
+ENV SITE_TITLE My Site
+ENV MYSQL_APP rprj-db
+ENV MYSQL_DB rproject
+ENV MYSQL_PASSWORD mysecret
+
 # Install mysqli
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
@@ -8,18 +14,26 @@ RUN apt-get update -y && apt-get install -y apt-utils \
     libfreetype6-dev
 RUN apt-get update && \
     apt-get install -y \
-        zlib1g-dev 
+        zlib1g-dev
 
-RUN docker-php-ext-install mbstring
+# Already loaded?
+# RUN docker-php-ext-install mbstring
 
 RUN apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
 
-RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
-    --with-png-dir --with-zlib-dir --with-xpm-dir --with-freetype-dir \
-    --enable-gd-native-ttf
+RUN docker-php-ext-configure gd
+# RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
+#     --with-png-dir --with-zlib-dir --with-xpm-dir --with-freetype-dir \
+#     --enable-gd-native-ttf
 
 RUN docker-php-ext-install gd
 
 # Copy the source
 COPY build/ /var/www/html/
+
+# COPY webentrypoint.sh /usr/local/bin/
+COPY webentrypoint.sh /usr/local/bin/docker-php-entrypoint
+
+
+# ENTRYPOINT /usr/local/bin/webentrypoint.sh

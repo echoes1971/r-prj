@@ -1,0 +1,26 @@
+version: '3'
+services:
+  rprj-web:
+    build: .
+    environment:
+      SITE_TITLE: ":: R-Project ::"
+      RPRJ_ADMIN_PASS: mysecretpass
+      MYSQL_APP: rprj-db
+    ports:
+    - "8080:80"
+    volumes:
+    - ./files:/var/www/html/files
+    - ./files:/var/www/html/mng/files
+    depends_on:
+      - rprj-db
+  rprj-db:
+    build:
+      context: .
+      dockerfile: Dockerfile_db
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecret
+      MYSQL_DATABASE: rproject
+    #ports:
+    #- "3306:3306"
+    volumes:
+    - ./mariadb:/var/lib/mysql

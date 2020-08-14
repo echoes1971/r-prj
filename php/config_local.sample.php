@@ -8,7 +8,7 @@ $db_pwd = "mysecret";
 $db_db = "rproject";
 $db_schema = "rprj";
 
-$skin = 'ang';
+$skin = 'ami2';
 
 $plugins_enabled[]='tinymce';
 ?>
