@@ -26,6 +26,7 @@ echo
 # echo "$MYSQL_PASSWORD"
 # echo "==============="
 
+cp /var/www/html/config_local.sample.php /var/www/html/config_local.php
 sed -i "s/:: R-Project ::/$SITE_TITLE/g" /var/www/html/config_local.php
 sed -i s/rprj-mariadb/$MYSQL_APP/g /var/www/html/config_local.php
 sed -i s/rproject/$MYSQL_DB/g /var/www/html/config_local.php
