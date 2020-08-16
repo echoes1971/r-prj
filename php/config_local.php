@@ -1,15 +1,15 @@
 <?php
 
-$site_title = ':: R-Project ::';
-$site_title_2 = ':: Project and Time Tracking Management System ::';
+$site_title = ':: Flatskin Dev ::';
+$site_title_2 = ':: Testing Skins ::';
 
-$db_server = "rprj-mariadb";
+$db_server = "rprj-db";
 $db_user = "root";
-$db_pwd = "mysecret";
+$db_pwd = "cippa";
 $db_db = "rproject";
 $db_schema = "rprj";
 
-$skin = 'flat';
+$skin = 'ami';
 
 $plugins_enabled[]='tinymce';
 ?>
