@@ -2,7 +2,7 @@ version: '3'
 services:
   rprj-web:
     environment:
-      SITE_TITLE: ":: R-Project Dev ::"
+      SITE_TITLE: ":: Flatskin Dev ::"
       RPRJ_ADMIN_PASS: pass
       MYSQL_PASSWORD: cippa
     volumes:
