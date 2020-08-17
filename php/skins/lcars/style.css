@@ -262,7 +262,7 @@ div.formView {
 div.formView_row {
   display:table-row;
 }
-div.formView_title, div.formView_group {
+div.formView_title, div.formView_group_left, div.formView_group {
   display:table-cell;
   vertical-align: top;
   text-align: right;
@@ -277,12 +277,23 @@ div.formView_title {
   border-radius-topleft:8px;-moz-border-radius-topleft:8px;-webkit-border-top-left-radius:8px;
   border-radius-bottomleft:8px;-moz-border-radius-bottomleft:8px;-webkit-border-bottom-left-radius:8px;
 }
-div.formView_group {
+div.formView_group_left, div.formView_group {
   color: #442200;
   background-color: #ee7700;
   text-align: center;
-  /* CSS3 */
-  border-radius:8px;-moz-border-radius:8px;-webkit-border-radius:8px;
+  border: 2px solid #000000;
+}
+div.formView_group_left {
+  border-right: 0px;
+  border-radius-topleft:8px;-moz-border-radius-topleft:8px;-webkit-border-top-left-radius:8px;
+  border-radius-bottomleft:8px;-moz-border-radius-bottomleft:8px;-webkit-border-bottom-left-radius:8px;
+}
+div.formView_group {
+    font-size: 14px;
+  border-left: 0px;
+/*   border-radius:8px;-moz-border-radius:8px;-webkit-border-radius:8px; */
+  border-radius-topright:8px;-moz-border-radius-topright:8px;-webkit-border-top-right-radius:8px;
+  border-radius-bottomright:8px;-moz-border-radius-bottomright:8px;-webkit-border-bottom-right-radius:8px;
 }
 div.formView_value {
   display:table-cell;
