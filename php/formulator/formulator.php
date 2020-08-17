@@ -325,7 +325,7 @@ class FForm {
 				$decodedGroupName = $this->decodeGroupName($nome_gruppo);
 				if($decodedGroupName>"") {
 					$ret.="<div class=\"formView_row\">";
-					$ret.="<div class=\"formView_value\">&nbsp;</div>";
+					$ret.="<div class=\"formView_group_left\">&nbsp;</div>";
 					$ret.="<div class=\"formView_group\">$decodedGroupName</div>";
 					$ret.="</div>";
 // 				} else {
