@@ -3,11 +3,13 @@ services:
   rprj-web:
     environment:
       SITE_TITLE: ":: R-Project Dev ::"
+      SITE_TITLE_2: "Just testing skins"
       RPRJ_ADMIN_PASS: pass
       RPRJ_SKIN: lcars
       MYSQL_PASSWORD: cippa
     volumes:
       - ./php:/var/www/html
+      - ./docker/webentrypoint.sh:/usr/local/bin/docker-php-entrypoint
     #ports:
       #- 5000:80
   rprj-db:

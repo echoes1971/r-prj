@@ -11,4 +11,6 @@ $db_schema = "rprj";
 $skin = 'default';
 
 $plugins_enabled[]='tinymce';
+
+$root_obj_id='-10';
 ?>
