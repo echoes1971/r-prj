@@ -1,11 +1,13 @@
 FROM php:7.4-apache
 
 ENV SITE_TITLE My Site
+ENV SITE_TITLE_2 My cool subtitle
 ENV MYSQL_APP rprj-db
 ENV MYSQL_DB rproject
 ENV MYSQL_PASSWORD mysecret
 ENV RPRJ_ADMIN_PASS myrprjsecret
 ENV RPRJ_SKIN default
+ENV RPRJ_ROOT_OBJ -10
 
 RUN apt-get update -y
 RUN apt-get install -y apt-utils zlib1g-dev libzip-dev

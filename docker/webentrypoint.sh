@@ -28,11 +28,13 @@ echo
 
 cp /var/www/html/config_local.sample.php /var/www/html/config_local.php
 sed -i "s/:: R-Project ::/$SITE_TITLE/g" /var/www/html/config_local.php
+sed -i "s/:: Testing skins ::/$SITE_TITLE_2/g" /var/www/html/config_local.php
 sed -i s/rprj-mariadb/$MYSQL_APP/g /var/www/html/config_local.php
 sed -i s/rproject/$MYSQL_DB/g /var/www/html/config_local.php
 sed -i s/mysecret/$MYSQL_PASSWORD/g /var/www/html/config_local.php
 sed -i s/mysecret/$MYSQL_PASSWORD/g /var/www/html/config_local.php
 sed -i "s/skin = 'default'/skin = '$RPRJ_SKIN'/g" /var/www/html/config_local.php
+sed -i s/-10/$RPRJ_ROOT_OBJ/g /var/www/html/config_local.php
 # sed -i s/setVerbose\(false\)/setVerbose\(true\)/g /var/www/html/mng/db_update_do.php
 
 sed -i s/adm\',\'adm\'/adm\',\'$RPRJ_ADMIN_PASS\'/g /var/www/html/mng/db_update_do.php
