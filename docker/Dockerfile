@@ -1,33 +1,12 @@
-FROM php:7.4-apache
+FROM rprj-php-base
 
-ENV SITE_TITLE My Site
+ENV SITE_TITLE :: R-Project ::
+ENV SITE_TITLE_2 :: Personal CMS ::
 ENV MYSQL_APP rprj-db
 ENV MYSQL_DB rproject
 ENV MYSQL_PASSWORD mysecret
-
-# Install mysqli
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-
-# See: https://stackoverflow.com/questions/39657058/installing-gd-in-docker
-RUN apt-get update -y && apt-get install -y apt-utils \
-    libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
-    libfreetype6-dev
-RUN apt-get update && \
-    apt-get install -y \
-        zlib1g-dev
-
-# Already loaded?
-# RUN docker-php-ext-install mbstring
-
-RUN apt-get install -y libzip-dev
-RUN docker-php-ext-install zip
-
-RUN docker-php-ext-configure gd
-# RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
-#     --with-png-dir --with-zlib-dir --with-xpm-dir --with-freetype-dir \
-#     --enable-gd-native-ttf
-
-RUN docker-php-ext-install gd
+ENV RPRJ_SKIN default
+ENV RPRJ_ROOT_OBJ -10
 
 # Copy the source
 COPY build/ /var/www/html/
