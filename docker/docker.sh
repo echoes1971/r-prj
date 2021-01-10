@@ -43,16 +43,28 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -d mariadb:10.3
  #echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
 
- echo -n "Creating DB..."
- docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null 2&>1
+ echo -n "Waiting DB..."
+ docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "show databases;" > /dev/null
  retVal=$?
  while [ $retVal -ne 0 ]; do
   echo -n "."
   sleep 1
-  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null
+  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "show databases;" > /dev/null
   retVal=$?
  done
- echo " done."
+ echo " online."
+
+# ## Moved inside db_update_do.php
+#  echo -n "Creating DB..."
+#  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null 2&>1
+#  retVal=$?
+#  while [ $retVal -ne 0 ]; do
+#   echo -n "."
+#   sleep 1
+#   docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null
+#   retVal=$?
+#  done
+#  echo " done."
 fi
 
 # #### Create PHP Image

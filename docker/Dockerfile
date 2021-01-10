@@ -7,6 +7,7 @@ ENV MYSQL_DB rproject
 ENV MYSQL_PASSWORD mysecret
 ENV RPRJ_SKIN default
 ENV RPRJ_ROOT_OBJ -10
+ENV RPRJ_ADMIN_PASS adm
 
 # Copy the source
 COPY build/ /var/www/html/

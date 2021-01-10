@@ -26,6 +26,7 @@ echo "$MYSQL_DB"
 echo "$MYSQL_PASSWORD"
 echo "$RPRJ_SKIN"
 echo "$RPRJ_ROOT_OBJ"
+echo "$RPRJ_ADMIN_PASS"
 echo "==============="
 
 cp /var/www/html/config_local.sample.php /var/www/html/config_local.php
