@@ -54,17 +54,6 @@ if [ -z "$MYSQL_EXISTS" ]; then
  done
  echo " online."
 
-# ## Moved inside db_update_do.php
-#  echo -n "Creating DB..."
-#  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null 2&>1
-#  retVal=$?
-#  while [ $retVal -ne 0 ]; do
-#   echo -n "."
-#   sleep 1
-#   docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null
-#   retVal=$?
-#  done
-#  echo " done."
 fi
 
 # #### Create PHP Image
@@ -120,19 +109,6 @@ if [ -z "$PHP_EXISTS" ]; then
  -v "$PRJ_HOME/files":/var/www/html/mng/files \
  --link $MYSQL_APP:mysql \
  -d $RPRJ_IMG
-
- # Init DB
- echo -n "Init DB..."
- docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php" > /dev/null
- retVal=$?
- while [ $retVal -ne 0 ]; do
-  echo -n "."
-  sleep 1
-  docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php" > /dev/null
-  retVal=$?
- done
- echo " done!"
- #docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "show tables;" $MYSQL_DB
 fi
 
 
