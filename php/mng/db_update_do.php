@@ -53,6 +53,9 @@ $dbmgr->setVerbose(false);
 //  exit(1);
 // }
 
+// If not exists
+$dbmgr->create_db();
+
 $my_db_version = $dbmgr->db_version();
 $new_db_version = $my_db_version;
 
@@ -77,6 +80,7 @@ echo "Updating from version: $my_db_version\n";
 echo "\n";
 
 $update_errors=array();
+
 
 // Table definitions update
 $tables_update_errors=array();

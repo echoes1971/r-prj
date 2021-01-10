@@ -598,6 +598,15 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         return $ret;
     }
+    
+    function create_db() {
+        $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd);
+        $this->db_query("create database if not exists ".$this->_dbname.";");
+        $errors = $this->db_error();
+        if($this->_verbose) { echo "DBMgr.db_version: $errors<br />\n"; }
+        $this->conn = null;
+    }
+    
     function connect() {
         if($this->isConnected()) return;
         ob_start();
@@ -776,7 +785,13 @@ class DBMgr {
         $messaggi = ob_get_contents();
         ob_end_clean();
         if($this->_verbose) { echo "DBMgr.db_version: $messaggi<br />\n"; }
-        return count($ris)==1 ? $ris[0]->version() : 0;
+        
+        $ret = count($ris)==1 ? $ris[0]->version() : 0;
+        return $ret;
+    }
+    
+    function create_db() {
+        $this->connProvider->create_db();
     }
     
     function _buildKeysCondition($dbe) {
