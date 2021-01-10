@@ -47,6 +47,12 @@ if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 }
 $dbmgr->setVerbose(false);
 
+// $dbmgr->getConnectionProvider()->setVerbose(true);
+// $dbmgr->connect();
+// if(!$dbmgr->isConnected()) {
+//  exit(1);
+// }
+
 $my_db_version = $dbmgr->db_version();
 $new_db_version = $my_db_version;
 

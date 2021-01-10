@@ -8,6 +8,9 @@ MYSQL_DB=rproject
 MYSQL_PASSWORD=mysecret
 
 if [ "$1" = "clean" ]; then
+ echo "Stopping containers..."
+ docker container stop $PHP_APP
+ docker container stop $MYSQL_APP
  echo "Deleting image and containers...";
  docker container rm $PHP_APP
  docker container rm $MYSQL_APP
@@ -34,7 +37,18 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
   -d mariadb:10.3
- echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
+ #echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
+
+ echo -n "Creating DB"
+ docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null 2&>1
+ retVal=$?
+ while [ $retVal -ne 0 ]; do
+  echo -n "."
+  sleep 1
+  docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;" > /dev/null
+  retVal=$?
+ done
+ echo " done."
 fi
 
 # #### Create PHP Image
@@ -42,10 +56,12 @@ fi
 rm -rf build
 mkdir build
 cp -R ../php/* ./build/
-sed -i s/rprj-mysql/$MYSQL_APP/g ./build/config_local.php
-sed -i s/rproject/$MYSQL_DB/g ./build/config_local.php
-sed -i s/mysecret/$MYSQL_PASSWORD/g ./build/config_local.php
-sed -i s/setVerbose\(false\)/setVerbose\(true\)/g ./build/mng/db_update_do.php
+# Config_local
+cp ../php/config_local.sample.php ./build/config_local.php
+sed -i s/rprj-db-server/$MYSQL_APP/g ./build/config_local.php
+sed -i s/rprj-db-db/$MYSQL_DB/g ./build/config_local.php
+sed -i s/rprj-db-pwd/$MYSQL_PASSWORD/g ./build/config_local.php
+#sed -i s/setVerbose\(false\)/setVerbose\(true\)/g ./build/mng/db_update_do.php
 
 IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
 #echo $IMG_EXISTS
@@ -58,10 +74,6 @@ if [ -z "$IMG_EXISTS" ]; then
  docker build -t $RPRJ_IMG .
 fi
 
-# #### MYSQL: create DB if not exists. At this point a new /var/lib/mysql folder should have been created
-# if [ -z "$MYSQL_EXISTS" ]; then
- docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "create database if not exists $MYSQL_DB;"
-# fi
 
 # #### PHP
 PHP_EXISTS=`docker container ls -a | grep $PHP_APP`
@@ -79,7 +91,15 @@ if [ -z "$PHP_EXISTS" ]; then
  -d $RPRJ_IMG
 
  # Init DB
- docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php"
+ docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php" > /dev/null
+ retVal=$?
+ while [ $retVal -ne 0 ]; do
+  echo -n "."
+  sleep 1
+  docker exec -it $PHP_APP bash -c "cd /var/www/html/mng/ ; php db_update_do.php" > /dev/null
+  retVal=$?
+ done
+ docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e "show tables;" $MYSQL_DB
 fi
 
 

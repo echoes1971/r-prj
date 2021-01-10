@@ -19,12 +19,12 @@ echo "                    |__/            "
 echo
 echo "(C) 2005-2020 by Roberto Rocco-Angeloni"
 echo
-# echo "Environment:"
-# echo "$SITE_TITLE"
-# echo "$MYSQL_APP"
-# echo "$MYSQL_DB"
-# echo "$MYSQL_PASSWORD"
-# echo "==============="
+echo "Environment:"
+echo "$SITE_TITLE"
+echo "$MYSQL_APP"
+echo "$MYSQL_DB"
+echo "$MYSQL_PASSWORD"
+echo "==============="
 
 cp /var/www/html/config_local.sample.php /var/www/html/config_local.php
 sed -i "s/:: R-Project ::/$SITE_TITLE/g" /var/www/html/config_local.php
