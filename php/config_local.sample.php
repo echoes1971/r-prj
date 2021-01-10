@@ -1,6 +1,7 @@
 <?php
 
 $site_title = ':: R-Project ::';
+$site_title_2 = ':: Personal CMS ::';
 
 $db_server = "rprj-db-server";
 $db_user = "root";
