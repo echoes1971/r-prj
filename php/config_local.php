@@ -1,7 +1,7 @@
 <?php
 
-$site_title = ':: Flatskin Dev ::';
-$site_title_2 = ':: Testing Skins ::';
+$site_title = ':: R-Project ::';
+$site_title_2 = ':: Testing skins ::';
 
 $db_server = "rprj-db";
 $db_user = "root";

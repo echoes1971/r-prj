@@ -1,12 +1,12 @@
 <?php
 
 $site_title = ':: R-Project ::';
-$site_title_2 = ':: Testing skins ::';
+$site_title_2 = ':: Personal CMS ::';
 
-$db_server = "rprj-mariadb";
+$db_server = "rprj-db-server";
 $db_user = "root";
-$db_pwd = "mysecret";
-$db_db = "rproject";
+$db_pwd = "rprj-db-pwd";
+$db_db = "rprj-db-db";
 $db_schema = "rprj";
 
 $skin = 'ami';
