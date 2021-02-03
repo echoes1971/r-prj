@@ -1,13 +1,15 @@
 #!/bin/bash
 
 PRJ_HOME=`cd ..; pwd`
-RPRJ_IMG_DB=rprj-img-db
-RPRJ_IMG_BASE=rprj-php-base
-RPRJ_IMG=rprj-mariadb-image
-PHP_APP=rprj-php-mariadb
-MYSQL_APP=rprj-mariadb
-MYSQL_DB=rproject
-MYSQL_PASSWORD=mysecret
+# RPRJ_IMG_DB=rprj-img-db-mariadb
+# RPRJ_IMG_BASE=rprj-img-php
+# RPRJ_IMG=rprj-img-app
+# PHP_APP=rprj-php-mariadb
+# MYSQL_APP=rprj-mariadb
+# MYSQL_DB=rproject
+# MYSQL_PASSWORD=mysecret
+
+. ./docker.config
 
 if [ "$1" = "clean" ] || [ "$1" = "cleanall" ]; then
  echo "Stopping containers..."
@@ -70,6 +72,13 @@ if [ -z "$IMG_EXISTS" ]; then
  cp -R $PRJ_HOME/php/* ./build/
  echo "* Creating image $RPRJ_IMG"
  docker build -t $RPRJ_IMG .
+fi
+
+
+if [ "$1" = "images" ]; then
+ # build only the images and then exits
+ docker image ls
+ exit 0
 fi
 
 

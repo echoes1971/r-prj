@@ -1,4 +1,4 @@
-FROM rprj-php-base
+FROM rprj-img-php
 
 ENV SERVER_NAME www.r-prj.ch
 ENV SITE_TITLE :: R-Project ::

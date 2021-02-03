@@ -35,6 +35,29 @@ export MINIKUBE_ACTIVE_DOCKERD="minikube"
 env | grep DOCKER
 ```
 
+## Commands
+
+```
+kubectl apply -f rprj_db.yaml
+kubectl apply -f rprj_fe.yaml
+
+kubectl delete -f rprj_fe.yaml
+kubectl delete -f rprj_db.yaml
+
+kubectl get pods
+
+kubectl logs -f deployment.apps/rprj-mariadb -c rprj-mariadb
+kubectl logs -f deployment.apps/rprj-php-mariadb -c rprj-php-mariadb
+
+kubectl exec my-pod -c my-container -- ls /
+kubectl exec --stdin --tty deployment.apps/rprj-php-mariadb -c rprj-php-mariadb -- /bin/bash
+kubectl exec --stdin --tty deployment.apps/rprj-mariadb -c rprj-mariadb -- /bin/bash
+kubectl exec --stdin --tty deployment.apps/rprj-mariadb -c rprj-mariadb -- mysql -pmysecret
+
+
+kubectl get pvc
+
+```
 
 # References
 

@@ -31,6 +31,7 @@ echo "$RPRJ_ROOT_OBJ"
 echo "$RPRJ_ADMIN_PASS"
 echo "==============="
 
+# Write configuration
 cp /var/www/html/config_local.sample.php /var/www/html/config_local.php
 sed -i "s/__site_title__/$SITE_TITLE/g" /var/www/html/config_local.php
 sed -i "s/__site_title_2__/$SITE_TITLE_2/g" /var/www/html/config_local.php
@@ -44,7 +45,7 @@ sed -i s/-10/$RPRJ_ROOT_OBJ/g /var/www/html/config_local.php
 sed -i s/_servername_com_/$SERVER_NAME/g /etc/apache2/sites-available/000-default.conf
 
 
-
+# Wait DB to be online and then run the db_update_do.php
 sed -i s/adm\',\'adm\'/adm\',\'$RPRJ_ADMIN_PASS\'/g /var/www/html/mng/db_update_do.php
 cd /var/www/html/mng/ ; php /var/www/html/mng/docker_waitdb.php # > /dev/null 2>&1
 cd /var/www/html/mng/ ; php /var/www/html/mng/db_update_do.php > /var/log/webentrypoint.log 2>&1
