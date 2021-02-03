@@ -49,6 +49,7 @@ $GLOBALS['files_directory']=$files_directory;
 $GLOBALS['files_downloader']=$files_downloader;
 $GLOBALS['skin'] = 'default';
 $GLOBALS['site_title'] = ':: R-Project ::';
+$GLOBALS['site_title_2'] = ':: R-Project ::';
 
 //	DB
 $db_connection_provider='MYConnectionProvider';
