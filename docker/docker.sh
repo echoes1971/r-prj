@@ -1,12 +1,15 @@
 #!/bin/bash
 
 PRJ_HOME=`cd ..; pwd`
-RPRJ_IMG_BASE=rprj-php-base
-RPRJ_IMG=rprj-mariadb-image
-PHP_APP=rprj-php-mariadb
-MYSQL_APP=rprj-mariadb
-MYSQL_DB=rproject
-MYSQL_PASSWORD=mysecret
+# RPRJ_IMG_DB=rprj-img-db-mariadb
+# RPRJ_IMG_BASE=rprj-img-php
+# RPRJ_IMG=rprj-img-app
+# PHP_APP=rprj-php-mariadb
+# MYSQL_APP=rprj-mariadb
+# MYSQL_DB=rproject
+# MYSQL_PASSWORD=mysecret
+
+. ./docker.config
 
 if [ "$1" = "clean" ] || [ "$1" = "cleanall" ]; then
  echo "Stopping containers..."
@@ -16,6 +19,7 @@ if [ "$1" = "clean" ] || [ "$1" = "cleanall" ]; then
  docker container rm $PHP_APP
  docker container rm $MYSQL_APP
  docker image rm $RPRJ_IMG
+ docker image rm $RPRJ_IMG_DB
  if [ "$1" = "cleanall" ]; then
   docker image rm $RPRJ_IMG_BASE
  fi
@@ -25,7 +29,61 @@ if [ "$1" = "clean" ] || [ "$1" = "cleanall" ]; then
  exit 1
 fi
 
+
+# #### Creating Images ####
+
 # MySQL
+IMG_DB_EXISTS=`docker image ls | grep $RPRJ_IMG_DB`
+#echo $IMG_DB_EXISTS
+# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
+if [ -n "$IMG_DB_EXISTS" ]; then
+ echo "* Image $RPRJ_IMG_DB exists"
+fi
+if [ -z "$IMG_DB_EXISTS" ]; then
+ cp $PRJ_HOME/config/mysql/disable_strict_mode.cnf .
+ echo "* Creating image $RPRJ_IMG_DB"
+ docker build -f ./Dockerfile_db -t $RPRJ_IMG_DB .
+ rm disable_strict_mode.cnf
+fi
+
+# PHP Base
+IMG_BASE_EXISTS=`docker image ls | grep $RPRJ_IMG_BASE`
+#echo $IMG_BASE_EXISTS
+# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
+if [ -n "$IMG_BASE_EXISTS" ]; then
+ echo "* Image $RPRJ_IMG_BASE exists"
+fi
+if [ -z "$IMG_BASE_EXISTS" ]; then
+ echo "* Creating image $RPRJ_IMG_BASE"
+ docker build -f ./Dockerfile_base -t $RPRJ_IMG_BASE .
+fi
+
+# R-Prj Image
+IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
+#echo $IMG_EXISTS
+# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
+if [ -n "$IMG_EXISTS" ]; then
+ echo "* Image $RPRJ_IMG exists"
+fi
+if [ -z "$IMG_EXISTS" ]; then
+ # Copy sources
+ rm -rf build
+ mkdir build
+ cp -R $PRJ_HOME/php/* ./build/
+ echo "* Creating image $RPRJ_IMG"
+ docker build -t $RPRJ_IMG .
+fi
+
+
+if [ "$1" = "images" ]; then
+ # build only the images and then exits
+ docker image ls
+ exit 0
+fi
+
+
+# #### Creating Containers ####
+
 MYSQL_EXISTS=`docker container ls -a | grep $MYSQL_APP | grep -v $MYSQL_APP-dev-php`
 #echo $MYSQL_EXISTS
 if [ -n "$MYSQL_EXISTS" ]; then
@@ -38,9 +96,9 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -p 3306:3306 \
   --name $MYSQL_APP \
   -v $PRJ_HOME/mariadb:/var/lib/mysql \
-  -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
-  -d mariadb:10.3
+  -d $RPRJ_IMG_DB
+#   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
  #echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
 
  echo -n "Waiting DB..."
@@ -54,41 +112,6 @@ if [ -z "$MYSQL_EXISTS" ]; then
  done
  echo " online."
 
-fi
-
-# #### Create PHP Image
-# Copy sources
-rm -rf build
-mkdir build
-cp -R ../php/* ./build/
-
-# # Config_local
-# cp ../php/config_local.sample.php ./build/config_local.php
-# sed -i s/rprj-db-server/$MYSQL_APP/g ./build/config_local.php
-# sed -i s/rprj-db-db/$MYSQL_DB/g ./build/config_local.php
-# sed -i s/rprj-db-pwd/$MYSQL_PASSWORD/g ./build/config_local.php
-# #sed -i s/setVerbose\(false\)/setVerbose\(true\)/g ./build/mng/db_update_do.php
-
-IMG_BASE_EXISTS=`docker image ls | grep $RPRJ_IMG_BASE`
-#echo $IMG_BASE_EXISTS
-# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
-if [ -n "$IMG_BASE_EXISTS" ]; then
- echo "* Image $RPRJ_IMG_BASE exists"
-fi
-if [ -z "$IMG_BASE_EXISTS" ]; then
- echo "* Creating image $RPRJ_IMG_BASE"
- docker build -f ./Dockerfile_base -t $RPRJ_IMG_BASE .
-fi
-
-IMG_EXISTS=`docker image ls | grep $RPRJ_IMG`
-#echo $IMG_EXISTS
-# See: http://timmurphy.org/2010/05/19/checking-for-empty-string-in-bash/
-if [ -n "$IMG_EXISTS" ]; then
- echo "* Image $RPRJ_IMG exists"
-fi
-if [ -z "$IMG_EXISTS" ]; then
- echo "* Creating image $RPRJ_IMG"
- docker build -t $RPRJ_IMG .
 fi
 
 
