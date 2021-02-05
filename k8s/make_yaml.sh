@@ -4,6 +4,34 @@ PRJ_HOME=`cd ..; pwd`
 
 . $PRJ_HOME/docker/docker.config
 
+cat <<EOF >./rprj_pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: $MYSQL_APP-pvc
+  labels:
+    app: $PHP_APP
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi #5 GB
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: $PHP_APP-pvc
+  labels:
+    app: $PHP_APP
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi #5 GB
+EOF
+
 cat <<EOF >./rprj_db.yaml
 apiVersion: v1
 kind: Service
@@ -47,9 +75,43 @@ spec:
         ports:
         - containerPort: 3306
           name: rprj-db
+        volumeMounts:
+        - name: $MYSQL_APP-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: $MYSQL_APP-persistent-storage
+        persistentVolumeClaim:
+          claimName: $MYSQL_APP-pvc
 EOF
 
 cat <<EOF >./rprj_fe.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: $PHP_APP-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+#     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+#   tls:
+#   - hosts:
+#     - localhost
+#     - $SERVER_NAME
+#     secretName: $PHP_APP-tls
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - backend:
+          serviceName: $PHP_APP
+          servicePort: 80
+  - host: $SERVER_NAME
+    http:
+      paths:
+      - backend:
+          serviceName: $PHP_APP
+          servicePort: 80
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -93,8 +155,18 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: $MYSQL_PASSWORD
         ports:
-        - containerPort: 8080
+        - containerPort: 80
+          targetPort: 8080
           #name: $PHP_APP
+        volumeMounts:
+        - name: $PHP_APP-persistent-storage
+          mountPath: /var/www/html/files
+        - name: $PHP_APP-persistent-storage
+          mountPath: /var/www/html/mng/files
+      volumes:
+      - name: $PHP_APP-persistent-storage
+        persistentVolumeClaim:
+          claimName: $PHP_APP-pvc
 EOF
 
 # cat <<EOF >./rprj.yaml
@@ -107,5 +179,6 @@ EOF
 
 echo "kubectl get services $PHP_APP"
 echo "minikube service $PHP_APP --url"
+echo "minikube service $PHP_APP"
 
 

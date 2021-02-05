@@ -1,6 +1,20 @@
 
 # k8s
 
+## minikube
+
+```
+minikube start --mount-string .\Projects\k8s:/data --mount
+minikube start
+minikube stop
+
+minikube ssh
+
+minikube service list
+
+minikube service rprj-php-mariadb --url
+```
+
 ## Install kubectl
 
 ```
@@ -38,13 +52,19 @@ env | grep DOCKER
 ## Commands
 
 ```
+kubectl apply -f rprj_pvc.yaml
 kubectl apply -f rprj_db.yaml
 kubectl apply -f rprj_fe.yaml
 
 kubectl delete -f rprj_fe.yaml
 kubectl delete -f rprj_db.yaml
+kubectl delete -f rprj_pvc.yaml
 
 kubectl get pods
+kubectl get pvc
+kubectl get services
+kubectl get ingresses
+kubectl describe ingress rprj-php-mariadb-ingress
 
 kubectl logs -f deployment.apps/rprj-mariadb -c rprj-mariadb
 kubectl logs -f deployment.apps/rprj-php-mariadb -c rprj-php-mariadb
@@ -55,7 +75,6 @@ kubectl exec --stdin --tty deployment.apps/rprj-mariadb -c rprj-mariadb -- /bin/
 kubectl exec --stdin --tty deployment.apps/rprj-mariadb -c rprj-mariadb -- mysql -pmysecret
 
 
-kubectl get pvc
 
 ```
 
