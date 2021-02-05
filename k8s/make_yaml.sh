@@ -156,7 +156,7 @@ spec:
           value: $MYSQL_PASSWORD
         ports:
         - containerPort: 80
-          targetPort: 8080
+          #targetPort: 8080
           #name: $PHP_APP
         volumeMounts:
         - name: $PHP_APP-persistent-storage
