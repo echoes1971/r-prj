@@ -85,33 +85,33 @@ spec:
 EOF
 
 cat <<EOF >./rprj_fe.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: $PHP_APP-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+# apiVersion: networking.k8s.io/v1beta1
+# kind: Ingress
+# metadata:
+#   name: $PHP_APP
+#   annotations:
+#     kubernetes.io/ingress.class: "nginx"
 #     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
+# spec:
 #   tls:
 #   - hosts:
 #     - localhost
 #     - $SERVER_NAME
 #     secretName: $PHP_APP-tls
-  rules:
-  - host: localhost
-    http:
-      paths:
-      - backend:
-          serviceName: $PHP_APP
-          servicePort: 80
-  - host: $SERVER_NAME
-    http:
-      paths:
-      - backend:
-          serviceName: $PHP_APP
-          servicePort: 80
----
+#   rules:
+#   - host: localhost
+#     http:
+#       paths:
+#       - backend:
+#           serviceName: $PHP_APP
+#           servicePort: 80
+#   - host: $SERVER_NAME
+#     http:
+#       paths:
+#       - backend:
+#           serviceName: $PHP_APP
+#           servicePort: 80
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -119,9 +119,16 @@ metadata:
   labels:
     app: $PHP_APP
 spec:
+#    type: NodePort
+#    ports:
+#    - port: 8080
+#      nodePort: 30080
+#      name: omninginx
   type: LoadBalancer
   ports:
     - port: 80
+      nodePort: 30080
+      #targetPort: 5678
       protocol: TCP
   selector:
     app: $PHP_APP
@@ -155,9 +162,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: $MYSQL_PASSWORD
         ports:
-        - containerPort: 80
-          #targetPort: 8080
-          #name: $PHP_APP
+        - containerPort: 5678
         volumeMounts:
         - name: $PHP_APP-persistent-storage
           mountPath: /var/www/html/files
