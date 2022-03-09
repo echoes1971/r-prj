@@ -40,7 +40,8 @@ if [ -z "$MYSQL_EXISTS" ]; then
   -v $PRJ_HOME/mariadb:/var/lib/mysql \
   -v $PRJ_HOME/config/mysql:/etc/mysql/conf.d \
   -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD \
-  -d mariadb:10.3
+  -d mariadb:10.7
+ # -d mariadb:10.3
  #echo "Initialize DB with: docker exec -it $MYSQL_APP mysql -p$MYSQL_PASSWORD -e \"create database $MYSQL_DB;\""
 
  echo -n "Creating DB"
