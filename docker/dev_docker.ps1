@@ -1,3 +1,5 @@
+# IF the sript execution is blocked, do:
+#  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 
 # Write-Output ""  | Out-File -Encoding "ASCII" .\dev_docker.log
 Write-Output "" > .\dev_docker.log
