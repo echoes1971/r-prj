@@ -40,16 +40,12 @@ require_once(ROOT_FOLDER . "mng/checkUser.php");
 require_once(ROOT_FOLDER . "plugins.php");
 
 $dbmgr = is_array($_SESSION) && array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
-if ($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
-	echo "SUNCHI\n";
+if($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
-	echo "SUNTI\n";
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
-	echo "SUNLI\n";
 	$dbmgr->connect();
 	$_SESSION['dbmgr'] = $dbmgr;
 }
-echo "SUNMI\n";
 $dbmgr->setVerbose(false);
 
 // $dbmgr->getConnectionProvider()->setVerbose(true);
@@ -312,8 +308,9 @@ if($all_ok && $my_db_version<1) {
 	$countries = explode(";",$contents);
 	for($q=0; $q<count($countries); $q++) {
 		$_query = str_replace("insert into rra_","insert into ".$dbmgr->getSchema()."_",$countries[$q]);
+		$_query = str_replace("rra_countrylist",$dbmgr->getSchema()."_countrylist",$_query);
 		$_query = str_replace("\n","",$_query);
-		if( !($_query>'')
+		if( !(trim($_query)>'')
 			|| substr($_query,0,10)=='drop table'
 			|| substr($_query,0,12)=='create table'
 			)
@@ -321,10 +318,13 @@ if($all_ok && $my_db_version<1) {
 		$dbmgr->connect();
 		$dbmgr->db_query($_query);
 		$errors = $dbmgr->db_error();
-		if(substr($errors,0,15)=='Duplicate entry') $errors='';
-		else echo htmlentities(" $_query\n");
+		if(substr($errors,0,15)=='Duplicate entry') {
+			$errors='';
+		} else {
+			echo htmlentities(" $_query\n");
+		}
 		if($errors>'') {
-			echo "DB Error: $errors\n";
+			echo "DB Error: $errors\n$_query";
 			$all_ok = false;
 			$update_errors[]=$errors;
 			break;
