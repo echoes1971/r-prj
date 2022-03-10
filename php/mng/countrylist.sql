@@ -1,20 +1,3 @@
-drop table if exists rra_countrylist;
-create table rra_countrylist ( 
- id int primary key,
-  Common_Name varchar(255),
-  Formal_Name varchar(255),
-  Type varchar(255),
-  Sub_Type varchar(255),
-  Sovereignty varchar(255),
-  Capital varchar(255),
-  ISO_4217_Currency_Code varchar(255),
-  ISO_4217_Currency_Name varchar(255),
-  ITU_T_Telephone_Code varchar(255),
-  ISO_3166_1_2_Letter_Code varchar(255),
-  ISO_3166_1_3_Letter_Code varchar(255),
-  ISO_3166_1_Number varchar(255),
-  IANA_Country_Code_TLD varchar(255)
-); 
 insert into rra_countrylist values ( 1,'Afghanistan','Islamic State of Afghanistan','Independent State','','','Kabul','AFN','Afghani','+93','AF','AFG','004','.af' );
 insert into rra_countrylist values ( 2,'Albania','Republic of Albania','Independent State','','','Tirana','ALL','Lek','+355','AL','ALB','008','.al' );
 insert into rra_countrylist values ( 3,'Algeria','People''s Democratic Republic of Algeria','Independent State','','','Algiers','DZD','Dinar','+213','DZ','DZA','012','.dz' );
@@ -53,8 +36,8 @@ insert into rra_countrylist values ( 35,'Chile','Republic of Chile','Independent
 insert into rra_countrylist values ( 36,'China, People''s Republic of','People''s Republic of China','Independent State','','','Beijing','CNY','Yuan Renminbi','+86','CN','CHN','156','.cn' );
 insert into rra_countrylist values ( 37,'Colombia','Republic of Colombia','Independent State','','','Bogota','COP','Peso','+57','CO','COL','170','.co' );
 insert into rra_countrylist values ( 38,'Comoros','Union of Comoros','Independent State','','','Moroni','KMF','Franc','+269','KM','COM','174','.km' );
-insert into rra_countrylist values ( 39,'Congo, Democratic Republic of the (Congo – Kinshasa)','Democratic Republic of the Congo','Independent State','','','Kinshasa','CDF','Franc','+243','CD','COD','180','.cd' );
-insert into rra_countrylist values ( 40,'Congo, Republic of the (Congo – Brazzaville)','Republic of the Congo','Independent State','','','Brazzaville','XAF','Franc','+242','CG','COG','178','.cg' );
+insert into rra_countrylist values ( 39,'Congo, Democratic Republic of the (Congo ï¿½ Kinshasa)','Democratic Republic of the Congo','Independent State','','','Kinshasa','CDF','Franc','+243','CD','COD','180','.cd' );
+insert into rra_countrylist values ( 40,'Congo, Republic of the (Congo ï¿½ Brazzaville)','Republic of the Congo','Independent State','','','Brazzaville','XAF','Franc','+242','CG','COG','178','.cg' );
 insert into rra_countrylist values ( 41,'Costa Rica','Republic of Costa Rica','Independent State','','','San Jose','CRC','Colon','+506','CR','CRI','188','.cr' );
 insert into rra_countrylist values ( 42,'Cote d''Ivoire (Ivory Coast)','Republic of Cote d''Ivoire','Independent State','','','Yamoussoukro','XOF','Franc','+225','CI','CIV','384','.ci' );
 insert into rra_countrylist values ( 43,'Croatia','Republic of Croatia','Independent State','','','Zagreb','HRK','Kuna','+385','HR','HRV','191','.hr' );
@@ -228,7 +211,7 @@ insert into rra_countrylist values ( 210,'Saint Barthelemy','Collectivity of Sai
 insert into rra_countrylist values ( 211,'Saint Martin','Collectivity of Saint Martin','Dependency','Overseas Collectivity','France','Marigot','EUR','Euro','+590','GP','GLP','312','.gp' );
 insert into rra_countrylist values ( 212,'Saint Pierre and Miquelon','Territorial Collectivity of Saint Pierre and Miquelon','Dependency','Overseas Collectivity','France','Saint-Pierre','EUR','Euro','+508','PM','SPM','666','.pm' );
 insert into rra_countrylist values ( 213,'Wallis and Futuna','Collectivity of the Wallis and Futuna Islands','Dependency','Overseas Collectivity','France','Mata''utu','XPF','Franc','+681','WF','WLF','876','.wf' );
-insert into rra_countrylist values ( 214,'French Southern and Antarctic Lands','Territory of the French Southern and Antarctic Lands','Dependency','Overseas Territory','France','Martin-de-Viviès','','','','TF','ATF','260','.tf' );
+insert into rra_countrylist values ( 214,'French Southern and Antarctic Lands','Territory of the French Southern and Antarctic Lands','Dependency','Overseas Territory','France','Martin-de-Viviï¿½s','','','','TF','ATF','260','.tf' );
 insert into rra_countrylist values ( 215,'Clipperton Island','','Dependency','Possession','France','','','','','PF','PYF','258','.pf' );
 insert into rra_countrylist values ( 216,'Bouvet Island','','Dependency','Territory','Norway','','','','','BV','BVT','074','.bv' );
 insert into rra_countrylist values ( 217,'Cook Islands','','Dependency','Self-Governing in Free Association','New Zealand','Avarua','NZD','Dollar','+682','CK','COK','184','.ck' );
