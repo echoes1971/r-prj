@@ -434,6 +434,11 @@ $dbschema_type_list[]='DBEObject';
 
 
 class ObjectMgr extends DBMgr {
+	// function ObjectMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
+	// 	echo "STOCAZZO\n";
+	// 	$this->DBMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory,$dbeuser, $user_groups_list);
+	// 	echo "STOPPARDI\n";
+	// }
 	function canRead(&$obj) {
 		$ret = false;
 		$myuser = $this->getDBEUser();

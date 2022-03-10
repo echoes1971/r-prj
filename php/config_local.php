@@ -1,7 +1,7 @@
 <?php
 
-$site_title = ':: R-Project ::';
-$site_title_2 = ':: Testing skins ::';
+$site_title = ':: R-Prj ::';
+$site_title_2 = '-= Development version =-';
 
 $db_server = "rprj-mariadb";
 $db_user = "root";

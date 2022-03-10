@@ -601,7 +601,8 @@ class FUuid extends FString {
 }
 class FPassword extends FString {
 	var $old_pwd;
-	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false) {
+
+	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		if(array_key_exists($prefix.'new_'.$this->aNomeCampo,$aArray)
 			&& array_key_exists($prefix.'new2_'.$this->aNomeCampo,$aArray)
 			&& $aArray[$prefix.'new_'.$this->aNomeCampo]>''
@@ -698,10 +699,11 @@ class FFileField extends FField {
 		return "<a href='$download_link' target='_download_'>".$this->myform->getValue('name')."</a>";
 	}
 	
-	function render() {
+	function render(&$dbmgr=null) {
 		return $this->render_view(). '&nbsp;' . campoGenerico($tipoCampo='file', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 	}
-	function readValueFromArray(&$aArray,$prefix="field_") {
+
+	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		parent::readValueFromArray($aArray,$prefix);
 // 		echo "root_directory: " . $GLOBALS['root_directory'] . "<br>\n";
 // 		echo "this->dest_directory: " . $this->dest_directory . "<br>\n";
@@ -1009,7 +1011,7 @@ class FKField extends FField {
 		return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione);
 	}
 	
-	function render(&$dbmgr) {
+	function render(&$dbmgr=null) {
 		if($this->viewmode=='select') {
 			$dbeFactory = $dbmgr->getFactory();
 			$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
@@ -1084,7 +1086,7 @@ class FKField extends FField {
 		return $link;
 	}
 	
-	function render_view(&$dbmgr) {
+	function render_view(&$dbmgr=null) {
 		$dbeFactory = $dbmgr->getFactory();
 		$cerca = $dbeFactory->getInstanceByTableName($this->myFK->tabella_riferita);
 		$lista = $dbmgr->search($cerca, $cerca->getOrderBy());
@@ -1103,7 +1105,7 @@ class FKField extends FField {
 		return campoLista_view($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $lista_valori, $this->altezza, $this->multiselezione);
 	}
 	
-	function render_readonly(&$dbmgr) {
+	function render_readonly(&$dbmgr=null) {
 		return $this->render_view($dbmgr) . $this->render_hidden($dbmgr);
 	}
 }
@@ -1172,7 +1174,7 @@ class FKObjectField extends FKField {
 		return campoLista($this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, 50, $valori, $this->altezza, $this->multiselezione);
 	}
 	
-	function render(&$dbmgr) {
+	function render(&$dbmgr=null) {
 		if($this->viewmode=='distinct') {
 			return $this->render_distinct($dbmgr);
 		}
@@ -1193,7 +1195,7 @@ class FKObjectField extends FKField {
 		return $this->render_hidden($dbmgr).$ret;
 	}
 	
-	function render_view(&$dbmgr, $showlink=false) {
+	function render_view(&$dbmgr=null, $showlink=false) {
 		$tmp=$this->_searchObject($dbmgr);
 		$mydbe=$tmp[0]; $mydestform=$tmp[1]; $nomeclasse=$tmp[2];
 		if($mydbe==null) return '';
@@ -1205,7 +1207,7 @@ class FKObjectField extends FKField {
 	}
 }
 class FChildSort extends FList {
-	function render(&$dbmgr) {
+	function render(&$dbmgr=null) {
 		$current_obj_id = $this->getForm()->getValue('id');
 		if($current_obj_id===0 || $current_obj_id==='') return ""; // Nothing to sort :-P
 		// 2012.02.25: start.

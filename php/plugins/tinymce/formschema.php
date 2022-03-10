@@ -18,7 +18,7 @@ class FNews2 extends FNews {
 }
 
 // FIX
-$formulator = array_key_exists('formulator',$_SESSION) ? $_SESSION['formulator'] : null;
+$formulator = is_array($_SESSION) && array_key_exists('formulator',$_SESSION) ? $_SESSION['formulator'] : null;
 if(isset($formulator) && $formulator!==null) {
 	$formulator->register("FPage","FPage2");
 	$formulator->register("FNews","FNews2");
