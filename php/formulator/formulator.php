@@ -1448,7 +1448,7 @@ function campoCheckBox_view($aNomeCampo, $aValore, $aClasseCss, $size, $length, 
 				$tmp[] = $listaValori[$v];
 			}
 		}
-		$ret = implode($tmp, " ");
+		$ret = implode(" ", $tmp);
 	} else {
 		if(array_key_exists($aValore,$listaValori) && $listaValori[$aValore]!=null) {
 			$ret = $listaValori[$aValore];

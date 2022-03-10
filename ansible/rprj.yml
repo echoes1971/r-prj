@@ -23,6 +23,7 @@
       - "{{ dbpkg }}"
       - php
       - php-mysql
+      - php-sqlite3
       - python-selinux
 
   - name: Enable Apache Modules

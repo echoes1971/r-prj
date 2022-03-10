@@ -17,7 +17,7 @@ echo " |   /___|  _/ '_/ _ \| / -_) _|  _|"
 echo " |_|_\   |_| |_| \___// \___\__|\__|"
 echo "                    |__/            "
 echo
-echo "(C) 2005-2021 by Roberto Rocco-Angeloni"
+echo "(C) 2005-2022 by Roberto Rocco-Angeloni"
 echo
 echo "Environment:"
 echo "$SERVER_NAME"

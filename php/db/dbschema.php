@@ -635,7 +635,7 @@ class ObjectMgr extends DBMgr {
 					"select '$classname' as classname,id,owner,group_id,permissions,creator,creation_date,last_modify,last_modify_date,father_id,name,description ",
 					parent::_buildSelectString($mydbe,$uselike,$caseSensitive));
 		}
-		$searchString = implode($q, " union ");
+		$searchString = implode(" union ", $q);
 		return $searchString;
 	}
 	
@@ -665,6 +665,7 @@ class ObjectMgr extends DBMgr {
 		// 2012.03.05: end.
 		// FIXME ottimizzare
 		foreach($tmp as $_obj) {
+			$cerca = null;
 			eval("\$cerca=new ".$_obj->getValue('classname')."();");
 			$cerca->setValue('id',$_obj->getValue('id'));
 			$lista = $this->search($cerca,$uselike=0);
@@ -689,7 +690,7 @@ class ObjectMgr extends DBMgr {
 					." where id='".DBEntity::hex2uuid($id)."'"
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
-		$searchString = implode($q, " union ");
+		$searchString = implode(" union ", $q);
 		if($this->_verbose) { printf("query: $searchString<br/>\n"); }
 		$lista = $this->select('DBEObject', "objects", $searchString);
 		return count($lista)==1 ? $lista[0] : null;
@@ -716,7 +717,7 @@ class ObjectMgr extends DBMgr {
 					." where name='$name'"
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
-		$searchString = implode($q, " union ");
+		$searchString = implode(" union ", $q);
 		if($this->_verbose) {
 			printf("query: $searchString<br/>\n");
 		}
@@ -1792,7 +1793,7 @@ class DBETimetrack extends DBEObject {
 				}
 			}
 		}
-		return join($ret, "&");
+		return implode("&", $ret);
 	}
 	
 }
@@ -1858,7 +1859,7 @@ class DBETodo extends DBEObject {
 				    $ret[] = "field_" . $myfks[0]->colonna_fk . "=" . $master_value;
 			}
 		}
-		return join($ret, "&");
+		return implode("&", $ret);
 	}
 	
 	function _before_insert(&$dbmgr) {

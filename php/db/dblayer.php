@@ -173,7 +173,7 @@ class DBEntity {
         $fks = $this->getFKForTable($dbe->getTableName());
         foreach ($fks as $f) {
             $v = $dbe->getValue($f->colonna_riferita);
-            if(is_integer($v)) { $v = int($v); }
+            if(is_integer($v)) { $v = intval($v); }
             if($v) {
                 $this->setValue($f->colonna_fk, $v);
             }
@@ -352,7 +352,7 @@ class DBEntity {
             $v = $this->getValue($k);
             $clausole[ $clausole_index++ ] = $prefix.$k."=".urlencode($v);
         }
-        return join($clausole, "&");
+        return implode("&", $clausole);
     }
     /**    Ritorna una stringa con l'hash (sha1) dei <b>valori</b> della chiave */
     function getKeyAsHash() {
@@ -386,7 +386,7 @@ class DBEntity {
                 $ret[] = "field_" . $f->colonna_fk . "=" . urlencode($v);
             }
         }
-        return join($ret, "&");
+        return implode("&", $ret);
     }
 }
 
@@ -814,7 +814,7 @@ class DBMgr {
                 $ret[ count($ret) ] = "$chiave='$valore'";
             }
         }
-        return join(' AND ', $ret);
+        return implode(' AND ', $ret);
     }
     
     /** RRA: in mysql non esistono schemi, questo e' un'escamotage per emulare l'esistenza di schemi all'interno dello stesso DB */
@@ -861,8 +861,8 @@ class DBMgr {
             }
         }
         $mytablename = $this->_buildTableName($dbe);
-        $mynomi = join(", ", $tmpnomi);
-        $myvalori = join(", ", $tmpvalori);
+        $mynomi = implode(", ", $tmpnomi);
+        $myvalori = implode(", ", $tmpvalori);
         $query = "insert into $mytablename ( $mynomi ) values ( $myvalori )";
         return $query;
     }
@@ -905,7 +905,7 @@ class DBMgr {
             }
         }
         $mytablename = $this->_buildTableName($dbe);
-        $myvalori = join(", ", $setstring);
+        $myvalori = implode(", ", $setstring);
         $condizioneChiavi = $this->_buildKeysCondition($dbe);
         $query = "update $mytablename set $myvalori where $condizioneChiavi";
         return $query;
@@ -975,7 +975,7 @@ class DBMgr {
         }
         $mytablename = $this->_buildTableName($dbe);
         if(count($clausole)>0) {
-            $myclausole = join(" and ", $clausole);
+            $myclausole = implode(" and ", $clausole);
             $query = "select * from $mytablename where $myclausole";
         } else {
             $query = "select * from $mytablename";
