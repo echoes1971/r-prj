@@ -3,9 +3,9 @@
 $site_title = ':: R-Prj ::';
 $site_title_2 = '-= Development version =-';
 
-$db_server = "rprj-db";
+$db_server = "rprj-mariadb";
 $db_user = "root";
-$db_pwd = "cippa";
+$db_pwd = "mysecret";
 $db_db = "rproject";
 $db_schema = "rprj";
 
