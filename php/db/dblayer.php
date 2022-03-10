@@ -277,7 +277,8 @@ class DBEntity {
         $hex = "";
         $i = 0;
         do {
-            $hex .= dechex(ord($str{$i}));
+            $hex .= dechex(ord($str[$i]));
+            // $hex .= dechex(ord($str{$i}));
             $i++;
         } while ($i<$str_len);
         return 'uuid'.$hex;
@@ -290,7 +291,8 @@ class DBEntity {
         $i = 0;
         $str_len = strlen($str);
         do {
-            $bin .= chr(hexdec($str{$i}.$str{($i + 1)}));
+            $bin .= chr(hexdec($str[$i].$str[($i + 1)]));
+            // $bin .= chr(hexdec($str{$i}.$str{($i + 1)}));
             $i += 2;
         } while ($i < $str_len);
         return $bin;
@@ -301,10 +303,10 @@ class DBEntity {
             $tipo_v=$this->getColumnType($chiave);
             switch($tipo_v) {
                 case 'uuid':
-                    return self::uuid2hex($this->_dict[ $chiave ]);
+                    return self::uuid2hex($this->_dict[$chiave]);
                     break;
                 default:
-                    return $this->_dict[ $chiave ];
+                    return $this->_dict[$chiave];
                     break;
             }
         } else {
@@ -315,10 +317,10 @@ class DBEntity {
         $tipo_v=$this->getColumnType($chiave);
         switch($tipo_v) {
             case 'uuid':
-                $this->_dict[ $chiave ] = self::hex2uuid($valore);
+                $this->_dict[$chiave] = self::hex2uuid($valore);
                 break;
             default:
-                $this->_dict[ $chiave ] = $valore;
+                $this->_dict[$chiave] = $valore;
                 break;
         }
     }
@@ -728,13 +730,13 @@ class DBMgr {
         $this->conn = null;
         $this->connProvider = null;
         $myeval = "\$this->connProvider = new ".$GLOBALS['db_connection_provider']."(\$server, \$user, \$pwd, \$dbname, \$schema);\n";
-//         user_error("myeval: $myeval");
         eval($myeval);
         $this->_factory = $aDBEFactory;
         
         $this->dbeuser = $dbeuser;
         $this->user_groups_list = $user_groups_list;
     }
+
     
     function setConnection($_conn) { $this->conn = $_conn; }
     function getConnection() { return $this->conn; }
@@ -742,7 +744,10 @@ class DBMgr {
     function getConnectionProvider() { return $this->connProvider; }
     
     /** sed -i '' 's/_verbose=\(.*\);/setVerbose(\1);/g' *.php*/
-    function setVerbose($b) { $this->_verbose = $b; $this->connProvider->setVerbose($b); }
+    function setVerbose($b) {
+        $this->_verbose = $b;
+        if($this->connProvider!==null) $this->connProvider->setVerbose($b);
+    }
     
     /** Ritorna il DBE Factory    */
     function getFactory() { return $this->_factory; }

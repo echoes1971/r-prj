@@ -22,7 +22,7 @@ if(!defined("ROOT_FOLDER")) define("ROOT_FOLDER",     "../");
 
 $redir_page="mng/login.php";
 
-$utente = array_key_exists('utente',$_SESSION) ? $_SESSION['utente'] : null;
+$utente = is_array($_SESSION) && array_key_exists('utente',$_SESSION) ? $_SESSION['utente'] : null;
 
 if($utente==null) {
 	$nuovo_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
@@ -31,11 +31,11 @@ if($utente==null) {
 						. $redir_page;
 	
 	// Check DB Version before redirecting
-	$dbmgr = array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
+	$dbmgr = is_array($_SESSION) && array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
 // 	echo "dbmgr: ".($dbmgr==null ? "null" : $dbmgr->db_version())."<br/>\n";
     // IF the version is zero ==> REDIRECT to the db_update page
     if($dbmgr!==null && $dbmgr->db_version()===0) {
-        $nuovo_url="http".(array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
+        $nuovo_url="http".(is_array($_SERVER) && array_key_exists("HTTPS",$_SERVER) && $_SERVER["HTTPS"]>''?'s':'')."://" . $_SERVER['HTTP_HOST']
 						. dirname($_SERVER['PHP_SELF'])
 						. "/". ROOT_FOLDER
 						. "mng/db_update.php";

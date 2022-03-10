@@ -39,10 +39,11 @@ session_start();
 require_once(ROOT_FOLDER . "mng/checkUser.php");
 require_once(ROOT_FOLDER . "plugins.php");
 
-$dbmgr = $_SESSION['dbmgr'];
-if($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
+$dbmgr = is_array($_SESSION) && array_key_exists('dbmgr',$_SESSION) ? $_SESSION['dbmgr'] : null;
+if($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
+	$dbmgr->connect();
 	$_SESSION['dbmgr'] = $dbmgr;
 }
 $dbmgr->setVerbose(false);

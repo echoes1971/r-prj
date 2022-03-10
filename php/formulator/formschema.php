@@ -34,23 +34,23 @@ $formschema_type_list=array();
 /** *********************************** RRA Framework: inizio. *********************************** */
 class FUser extends FMasterDetail {
 	function FUser( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo );
+		parent::FMasterDetail( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'id', new FNumber( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'login', new FString( 'login', "Login", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'pwd', new FPassword( 'pwd', "Password", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'id', new FNumber( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'login', new FString( 'login', "Login", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'pwd', new FPassword( 'pwd', "Password", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		$array_valori=array(''=>'-','md5'=>'MD5','sha1'=>'SHA1');
-		$this->addField( '', -1, 'pwd_salt', new FList( 'pwd_salt', "Password encrypting", 'Password encrypt saalt', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
-		$this->addField( '', -1, 'fullname', new FString( 'fullname', "Full Name", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'pwd_salt', new FList( 'pwd_salt', "Password encrypting", 'Password encrypt saalt', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
+		$this->addField('', -1, 'fullname', new FString( 'fullname', "Full Name", 'Inserire la login', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( '', -1, 'group_id',
+		$this->addField('', -1, 'group_id',
 									new FKField( 'group_id', "Group", 'Active group.', $aSize=50, $aValore='-4', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('group_id'), $description_columns=array('name'), $destform="FGroup", $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('group_id'), $description_columns=array('name'), $destform="FGroup", $viewmode='select'  ));
 		
-		$this->addDetail( "FUserGroupAssociation" );
-		$this->addDetail( "FPeople","1" );
+		$this->addDetail("FUserGroupAssociation");
+		$this->addDetail("FPeople","1");
 	}
 	function getDetailIcon() { return "icons/user.png"; }
 	function getDetailTitle() { return "User"; }
@@ -74,13 +74,13 @@ class FUser extends FMasterDetail {
 $formschema_type_list[]="FUser";
 class FGroup extends FMasterDetail {
 	function FGroup( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo );
+		parent::FMasterDetail( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'id', new FNumber( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'name', new FString( 'name', "Name", 'Nome del gruppo.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'description', new FTextArea( 'description', "Description", 'Descrizione del gruppo.', 255, '', $aClasseCss='formtable', 50, 5) );
+		$this->addField('', -1, 'id', new FNumber( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'name', new FString( 'name', "Name", 'Nome del gruppo.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'description', new FTextArea( 'description', "Description", 'Descrizione del gruppo.', 255, '', $aClasseCss='formtable', 50, 5));
 		
-		$this->addDetail( "FUserGroupAssociation" );
+		$this->addDetail("FUserGroupAssociation");
 	}
 	function getDetailIcon() { return "icons/group_16x16.gif"; }
 	function getDetailTitle() { return "Group"; }
@@ -105,17 +105,17 @@ class FUserGroupAssociation extends FAssociation {
 $formschema_type_list[]="FUserGroupAssociation";
 class FLog extends FMasterDetail {
 	function FLog( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo );
+		parent::FMasterDetail( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'ip', new FString( 'ip', "IP", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'data', new FDateTime( 'data', "Date", $aDescription='', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ) );
-		$this->addField( '', -1, 'ora', new FDateTime( 'ora', "Hour", $aDescription='', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ) );
-		$this->addField( '', -1, 'count', new FNumber( 'count', "Count", '', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'url', new FString( 'url', "URL", '', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'note', new FString( 'note', "Note", '', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'note2', new FTextArea( 'note2', "Note 2", '', 255, '', $aClasseCss='formtable', 50, 5) );
+		$this->addField('', -1, 'ip', new FString( 'ip', "IP", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'data', new FDateTime( 'data', "Date", $aDescription='', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ));
+		$this->addField('', -1, 'ora', new FDateTime( 'ora', "Hour", $aDescription='', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ));
+		$this->addField('', -1, 'count', new FNumber( 'count', "Count", '', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'url', new FString( 'url', "URL", '', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'note', new FString( 'note', "Note", '', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'note2', new FTextArea( 'note2', "Note 2", '', 255, '', $aClasseCss='formtable', 50, 5));
 		
 		// Valori di defaults per la ricerca
 		$this->setValue('data',getTodayString($with_time=false,$date_separator="-"));
@@ -179,12 +179,12 @@ $formschema_type_list[]="FLog";
 class FLogFilter extends FLog {
 	function getDetailTitle() { return "Log Filter"; }
 	function FLogFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FLog( $nome, $azione, $metodo );
+		parent::FLog( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'from_ip', new FString( 'from_ip', "IP >=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'to_ip', new FString( 'to_ip', "IP <=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'from_data', new FDateTime( 'from_data', "Date >=", $aDescription='Date from', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ) );
-		$this->addField( '', -1, 'to_data', new FDateTime( 'to_data', "Date <=", $aDescription='Date to', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ) );
+		$this->addField('', -1, 'from_ip', new FString( 'from_ip', "IP >=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'to_ip', new FString( 'to_ip', "IP <=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'from_data', new FDateTime( 'from_data', "Date >=", $aDescription='Date from', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
+		$this->addField('', -1, 'to_data', new FDateTime( 'to_data', "Date <=", $aDescription='Date to', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
 		
 		// Valori di defaults per la ricerca
 		$this->setValue('from_data',getTodayString($with_time=false,$date_separator="-"));
@@ -196,38 +196,38 @@ $formschema_type_list[]="FLogFilter";
 
 class FObject extends FMasterDetail {
 	function FObject( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo );
+		parent::FMasterDetail( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'id', new FUuid( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '_permission', -1, 'owner',
+		$this->addField('', -1, 'id', new FUuid( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('_permission', -1, 'owner',
 									new FKField( 'owner', "Owner", 'Proprietario.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('owner'), $description_columns=array('login'), $destform="FUser", $viewmode='select'  ) );
-		$this->addField( '_permission', -1, 'group_id',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('owner'), $description_columns=array('login'), $destform="FUser", $viewmode='select'  ));
+		$this->addField('_permission', -1, 'group_id',
 									new FKField( 'group_id', "Group", 'Active group.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('group_id'), $description_columns=array('name'), $destform="FGroup", $viewmode='select'  ) );
-		$this->addField( '_permission', -1, 'permissions', new FPermissions( 'permissions', "Permissions", 'Unix style', $aSize=9, $aLength=9, $aValore='rwx------', $aClasseCss='formtable' ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('group_id'), $description_columns=array('name'), $destform="FGroup", $viewmode='select'  ));
+		$this->addField('_permission', -1, 'permissions', new FPermissions( 'permissions', "Permissions", 'Unix style', $aSize=9, $aLength=9, $aValore='rwx------', $aClasseCss='formtable' ));
 
-		$this->addField( '', -1, 'creator',
+		$this->addField('', -1, 'creator',
 									new FKField( 'creator', "Created by", 'Creatore', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('creator'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ) );
-		$this->addField( '', -1, 'creation_date', new FDateTimeReadOnly( 'creation_date', "Created on", $aDescription='Creato il', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) );
-		$this->addField( '', -1, 'last_modify',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('creator'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ));
+		$this->addField('', -1, 'creation_date', new FDateTimeReadOnly( 'creation_date', "Created on", $aDescription='Creato il', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ));
+		$this->addField('', -1, 'last_modify',
 									new FKField( 'last_modify', "Modified by", 'Modificato da', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('last_modify'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ) );
-		$this->addField( '', -1, 'last_modify_date', new FDateTimeReadOnly( 'last_modify_date', "Modified on", $aDescription='Ultima modifica', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) );
-		$this->addField( '', -1, 'deleted_by',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('last_modify'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ));
+		$this->addField('', -1, 'last_modify_date', new FDateTimeReadOnly( 'last_modify_date', "Modified on", $aDescription='Ultima modifica', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ));
+		$this->addField('', -1, 'deleted_by',
 									new FKField( 'deleted_by', "Deleted by", 'Deleted by', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('deleted_by'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ) );
-		$this->addField( '', -1, 'deleted_date', new FDateTimeReadOnly( 'deleted_date', "Deleted on", $aDescription='Deleted on', $aValore='0000-00-00 00:00:00', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('deleted_by'), $description_columns=array('login'), $destform="FUser", $viewmode='readonly'  ));
+		$this->addField('', -1, 'deleted_date', new FDateTimeReadOnly( 'deleted_date', "Deleted on", $aDescription='Deleted on', $aValore='0000-00-00 00:00:00', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ));
 		
-		$this->addField( '', -1, 'father_id',
+		$this->addField('', -1, 'father_id',
 									new FKObjectField( 'father_id', "Parent", 'Padre', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('father_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('father_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
 		
-		$this->addField( '', -1, 'name', new FString( 'name', "Name", 'Nome del gruppo.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'description', new FTextArea( 'description', "Description", 'Descrizione del gruppo.', 255, '', $aClasseCss='formtable', 50, 5) );
+		$this->addField('', -1, 'name', new FString( 'name', "Name", 'Nome del gruppo.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'description', new FTextArea( 'description', "Description", 'Descrizione del gruppo.', 255, '', $aClasseCss='formtable', 50, 5));
 	}
 	function getDetailTitle() { return "Object"; }
 	function getDetailColumnNames() { return array(
@@ -245,7 +245,7 @@ class FObject extends FMasterDetail {
 		); }*/
 	function getListTitle() { return "Objects"; }
 	function getListColumnNames() { return array('id','name','description'); }
-	function getDecodeGroupNames() { return array("_permission"=>"Permissions", ); }
+	function getDecodeGroupNames() { return array("_permission"=>"Permissions",); }
 	function getPagePrefix() { return "dbe"; }
 	function getDBE() { return new DBEObject(); }
 	function getShortDescription($dbmgr = NULL) { return $this->getValue('name'); }
@@ -272,32 +272,32 @@ $formschema_type_list[]="FObject";
 
 class FCompany extends FObject {
 	function FCompany( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
 		$_mydbe = $this->getDBE();
 		
-		$this->addField( '', -1, 'p_iva', new FString( 'p_iva', "P.IVA", 'Partita IVA', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'p_iva', new FString( 'p_iva', "P.IVA", 'Partita IVA', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( 'phone', -1, 'phone', new FString( 'phone', "Phone", 'Telefono', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'phone', -1, 'fax', new FString( 'fax', "Fax", 'Fax', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('phone', -1, 'phone', new FString( 'phone', "Phone", 'Telefono', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('phone', -1, 'fax', new FString( 'fax', "Fax", 'Fax', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( 'web', -1, 'email', new FString( 'email', "Email", 'Email', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'web', -1, 'url', new FString( 'url', "URL", 'Sito web', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('web', -1, 'email', new FString( 'email', "Email", 'Email', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('web', -1, 'url', new FString( 'url', "URL", 'Sito web', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( 'address', -1, 'street', new FString( 'street', "Street", 'Via', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'zip', new FString( 'zip', "ZIP", 'CAP', $aSize=10, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'city', new FString( 'city', "City", 'Città.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'state', new FString( 'state', "State", 'Provincia.', $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'fk_countrylist_id',
+		$this->addField('address', -1, 'street', new FString( 'street', "Street", 'Via', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'zip', new FString( 'zip', "ZIP", 'CAP', $aSize=10, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'city', new FString( 'city', "City", 'Città.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'state', new FString( 'state', "State", 'Provincia.', $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'fk_countrylist_id',
 									new FKField( 'fk_countrylist_id', "Country", 'Nazione.', $aSize=50, $aValore=82, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_countrylist_id'), $description_columns=array('Common_Name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_countrylist_id'), $description_columns=array('Common_Name'), $destform=null, $viewmode='select'  ));
 		
-		$this->addDetail( "FFolder" );
-		$this->addDetail( "FProjectCompany" );
-		$this->addDetail( "FPeople" );
-		$this->addDetail( "FPage" );
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FNote" );
+		$this->addDetail("FFolder");
+		$this->addDetail("FProjectCompany");
+		$this->addDetail("FPeople");
+		$this->addDetail("FPage");
+		$this->addDetail("FLink");
+		$this->addDetail("FNote");
 	}
 	function getDetailIcon() { return "icons/company_16x16.gif"; }
 	function getDetailTitle() { return "Company"; }
@@ -316,46 +316,46 @@ class FCompany extends FObject {
 		'city','fk_countrylist_id');
 	}
 	function getDecodeGroupNames() { return array_merge( parent::getDecodeGroupNames(),
-										array("phone"=>"Phone", "address"=>"Address", "web"=>"Web" ) ); }
+										array("phone"=>"Phone", "address"=>"Address", "web"=>"Web" )); }
 	function getDBE() { return new DBECompany(); }
 }
 $formschema_type_list[]="FCompany";
 class FPeople extends FObject {
 	function FPeople( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
 		$_mydbe = $this->getDBE();
 		
-		$this->addField( '', -1, 'fk_users_id',
+		$this->addField('', -1, 'fk_users_id',
 									new FKField( 'fk_users_id', "User", 'Utente.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_users_id'), $description_columns=array('login'), $destform="FUser", $viewmode='select'  ) );
-		$this->addField( '', -1, 'fk_companies_id',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_users_id'), $description_columns=array('login'), $destform="FUser", $viewmode='select'  ));
+		$this->addField('', -1, 'fk_companies_id',
 									new FKField( 'fk_companies_id', "Company", 'Organizzazione.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_companies_id'), $description_columns=array('name','state'), $destform="FCompany", $viewmode='select'  ) );
-		$this->addField( '', -1, 'codice_fiscale', new FString( 'codice_fiscale', "Codice Fiscale", 'Codice Fiscale', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'p_iva', new FString( 'p_iva', "P.IVA", 'Partita IVA', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_companies_id'), $description_columns=array('name','state'), $destform="FCompany", $viewmode='select'  ));
+		$this->addField('', -1, 'codice_fiscale', new FString( 'codice_fiscale', "Codice Fiscale", 'Codice Fiscale', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'p_iva', new FString( 'p_iva', "P.IVA", 'Partita IVA', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( 'phone', -1, 'office_phone', new FString( 'office_phone', "Office Phone", 'Telefono Ufficio', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'phone', -1, 'mobile', new FString( 'mobile', "Mobile", 'Cellulare', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'phone', -1, 'phone', new FString( 'phone', "Phone", 'Telefono', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'phone', -1, 'fax', new FString( 'fax', "Fax", 'Fax', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('phone', -1, 'office_phone', new FString( 'office_phone', "Office Phone", 'Telefono Ufficio', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('phone', -1, 'mobile', new FString( 'mobile', "Mobile", 'Cellulare', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('phone', -1, 'phone', new FString( 'phone', "Phone", 'Telefono', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('phone', -1, 'fax', new FString( 'fax', "Fax", 'Fax', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addField( 'address', -1, 'street', new FString( 'street', "Street", 'Via', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'zip', new FString( 'zip', "ZIP", 'CAP', $aSize=10, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'city', new FString( 'city', "City", 'Città.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'state', new FString( 'state', "State", 'Provincia.', $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'address', -1, 'fk_countrylist_id',
+		$this->addField('address', -1, 'street', new FString( 'street', "Street", 'Via', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'zip', new FString( 'zip', "ZIP", 'CAP', $aSize=10, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'city', new FString( 'city', "City", 'Città.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'state', new FString( 'state', "State", 'Provincia.', $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('address', -1, 'fk_countrylist_id',
 									new FKField( 'fk_countrylist_id', "Country", 'Nazione.', $aSize=50, $aValore=82, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_countrylist_id'), $description_columns=array('Common_Name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_countrylist_id'), $description_columns=array('Common_Name'), $destform=null, $viewmode='select'  ));
 		
-		$this->addField( 'web', -1, 'email', new FString( 'email', "Email", 'Email', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'web', -1, 'url', new FString( 'url', "URL", 'Sito web', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('web', -1, 'email', new FString( 'email', "Email", 'Email', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('web', -1, 'url', new FString( 'url', "URL", 'Sito web', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
-		$this->addDetail( "FFolder" );
-		$this->addDetail( "FProjectPeople" );
-		$this->addDetail( "FPage" );
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FNote" );
+		$this->addDetail("FFolder");
+		$this->addDetail("FProjectPeople");
+		$this->addDetail("FPage");
+		$this->addDetail("FLink");
+		$this->addDetail("FNote");
 	}
 	function getDetailIcon() { return "icons/people.png"; }
 	function getDetailTitle() { return "Person"; }
@@ -371,7 +371,7 @@ class FPeople extends FObject {
 	function getListTitle() { return "People"; }
 	function getListColumnNames() { return array('name','phone','email','fk_companies_id'); }
 	function getDecodeGroupNames() { return array_merge( parent::getDecodeGroupNames(),
-										array("phone"=>"Phone", "address"=>"Address", "web"=>"Web" ) ); }
+										array("phone"=>"Phone", "address"=>"Address", "web"=>"Web" )); }
 	function getDBE() {
 		return new DBEPeople();
 	}
@@ -384,38 +384,38 @@ $formschema_type_list[]="FPeople";
 /** *********************************** CMS: start. *********************************** */
 class FEvent extends FObject {
 	function FEvent( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
 		
-		$this->addField( 'event', -1, 'start_date', new FDateTime( 'start_date', "Start", $aDescription='Start', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ) );
-		$this->addField( 'event', -1, 'end_date', new FDateTime( 'end_date', "End", $aDescription='End', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ) );
-		$array_valori = array( '0'=>'No', '1'=>'Yes', );
-		$this->addField( 'event', -1, 'all_day', new FList( 'all_day', "All day", 'All day event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
+		$this->addField('event', -1, 'start_date', new FDateTime( 'start_date', "Start", $aDescription='Start', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ));
+		$this->addField('event', -1, 'end_date', new FDateTime( 'end_date', "End", $aDescription='End', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ));
+		$array_valori = array('0'=>'No', '1'=>'Yes',);
+		$this->addField('event', -1, 'all_day', new FList( 'all_day', "All day", 'All day event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
 
-		$this->addField( 'event', -1, 'url', new FString( 'url', "Url", 'Url', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'event', -1, 'category', new FString( 'category', "Category", 'Category', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-// 		$this->addField( 'event', -1, 'private', new FList( 'private', "Private", 'Private event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
+		$this->addField('event', -1, 'url', new FString( 'url', "Url", 'Url', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('event', -1, 'category', new FString( 'category', "Category", 'Category', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+// 		$this->addField('event', -1, 'private', new FList( 'private', "Private", 'Private event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
 
 		// TODO how to implement an alarm?
-// 		$this->addField( 'alarm', -1, 'alarm', new FList( 'alarm', "Alarm", 'Alarm', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
-// 		$array_valori_unit = array( '0'=>'No', '1'=>'Yes', );
-// 		$this->addField( 'alarm', -1, 'alarm_unit', new FList( 'alarm_unit', "Alarm unit", 'Alarm unit', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_unit, $altezza=1, $multiselezione=false ) );
-// 		$this->addField( 'alarm', -1, 'alarm_minute', new FNumber('alarm_minute', "Time units", 'Num. time units', $aValore='', $aClasseCss='formtable' ) );
-// 		$array_valori_before_event = array( '0'=>'Before', '1'=>'After', );
-// 		$this->addField( 'alarm', -1, 'before_event', new FList( 'before_event', "Alarm", 'Alarm before or after event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_before_event, $altezza=1, $multiselezione=false ) );
+// 		$this->addField('alarm', -1, 'alarm', new FList( 'alarm', "Alarm", 'Alarm', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
+// 		$array_valori_unit = array('0'=>'No', '1'=>'Yes',);
+// 		$this->addField('alarm', -1, 'alarm_unit', new FList( 'alarm_unit', "Alarm unit", 'Alarm unit', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_unit, $altezza=1, $multiselezione=false ));
+// 		$this->addField('alarm', -1, 'alarm_minute', new FNumber('alarm_minute', "Time units", 'Num. time units', $aValore='', $aClasseCss='formtable' ));
+// 		$array_valori_before_event = array('0'=>'Before', '1'=>'After',);
+// 		$this->addField('alarm', -1, 'before_event', new FList( 'before_event', "Alarm", 'Alarm before or after event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_before_event, $altezza=1, $multiselezione=false ));
 
 		// TODO recurrence
-// 		$this->addField( 'recurrence', -1, 'recurrence', new FList( 'recurrence', "Recurrent", 'Recurrent event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
-// 		$array_valori_recurrence_type = array( '0'=>'Daily', '1'=>'Weekly', '2'=>'Monthly', '3'=>'Yearly', );
-// 		$this->addField( 'recurrence', -1, 'recurrence_type', new FList( 'recurrence_type', "Type", 'Recurrence type', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_recurrence_type, $altezza=1, $multiselezione=false ) );
+// 		$this->addField('recurrence', -1, 'recurrence', new FList( 'recurrence', "Recurrent", 'Recurrent event', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
+// 		$array_valori_recurrence_type = array('0'=>'Daily', '1'=>'Weekly', '2'=>'Monthly', '3'=>'Yearly',);
+// 		$this->addField('recurrence', -1, 'recurrence_type', new FList( 'recurrence_type', "Type", 'Recurrence type', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori_recurrence_type, $altezza=1, $multiselezione=false ));
 
-		$this->addDetail( "FPeople" ); // FIXME while creating, results associated with ALL the people in the table
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FFile" );
+		$this->addDetail("FPeople"); // FIXME while creating, results associated with ALL the people in the table
+		$this->addDetail("FLink");
+		$this->addDetail("FFile");
 	}
 	function getDetailIcon() { return "icons/event_16x16.png"; }
 	function getDetailTitle() { return "Event"; }
@@ -442,10 +442,10 @@ $formschema_type_list[]="FEvent";
 class FEventFilter extends FEvent {
 	function getDetailTitle() { return "Event Filter"; }
 	function FEventFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FEvent( $nome, $azione, $metodo );
+		parent::FEvent( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'from_start_date', new FDateTime( 'from_start_date', "Date >=", $aDescription='Date from', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ) );
-		$this->addField( '', -1, 'to_start_date', new FDateTime( 'to_start_date', "Date <=", $aDescription='Date to', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ) );
+		$this->addField('', -1, 'from_start_date', new FDateTime( 'from_start_date', "Date >=", $aDescription='Date from', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ));
+		$this->addField('', -1, 'to_start_date', new FDateTime( 'to_start_date', "Date <=", $aDescription='Date to', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ));
 
 		// Valori di defaults per la ricerca
 		$this->setValue('from_start_date',getTodayString($with_time=false,$date_separator="-"));
@@ -461,18 +461,18 @@ $formschema_type_list[]="FEventFilter";
 
 class FFile extends FObject {
 	function FFile( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
 		
-		$this->addField( 'file', -1, 'path', new FString( 'path', "Path", 'Percorso', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'file', -1, 'filename', new FFileField( 'filename', "File name", 'Nome del file', $GLOBALS[ 'files_directory' ], $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'file', -1, 'checksum', new FString( 'checksum', "Checksum", 'Checksum SHA1', $aSize=40, $aLength=40, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'file', -1, 'mime', new FString( 'mime', 'Mime type', 'Mime type', $aSize=40, $aLength=40, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'file', -1, 'alt_link', new FString( 'alt_link', "Alternative Link", 'Link alternativo', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('file', -1, 'path', new FString( 'path', "Path", 'Percorso', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('file', -1, 'filename', new FFileField( 'filename', "File name", 'Nome del file', $GLOBALS[ 'files_directory' ], $aSize=20, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('file', -1, 'checksum', new FString( 'checksum', "Checksum", 'Checksum SHA1', $aSize=40, $aLength=40, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('file', -1, 'mime', new FString( 'mime', 'Mime type', 'Mime type', $aSize=40, $aLength=40, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('file', -1, 'alt_link', new FString( 'alt_link', "Alternative Link", 'Link alternativo', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 		
 		// Valori di defaults per la ricerca
 		$this->setValue('father_id',0);
@@ -484,7 +484,7 @@ class FFile extends FObject {
 		'owner','group_id','permissions',
 // 		'creator','creation_date','last_modify','last_modify_date',
 	); }
-	function getDetailReadOnlyColumnNames() { return array_merge( parent::getDetailReadOnlyColumnNames(), array('checksum'), array('mime') ); }
+	function getDetailReadOnlyColumnNames() { return array_merge( parent::getDetailReadOnlyColumnNames(), array('checksum'), array('mime')); }
 	function getFilterForm() { return new FFile; }
 	function getFilterFields() { return array('father_id','name','description'); } //,'fk_obj_id',); }
 	function getListTitle() { return "Files"; }
@@ -499,7 +499,11 @@ class FFile extends FObject {
 	/**
 	 * @par alternative_link link alternativo per permettere download da linkbucks :-) 2010.09.27
 	 */
-	function render_view($with_thumbnail=true,$alternative_link='') {
+	// FForm::render_view(&$dbmgr, $nome_field = null)
+	//function render_view($with_thumbnail=true,$alternative_link='') {
+	function render_view(&$dbmgr, $nome_field = null) {
+		$with_thumbnail=true;
+		$alternative_link='';
 		$__alt_link = $this->getValue('alt_link');
 		if($__alt_link===null || $__alt_link=='') {
 			$__alt_link = $alternative_link;
@@ -511,7 +515,7 @@ class FFile extends FObject {
 
 	function getActions() {
 		$ret = parent::getActions();
-		$ret['download'] = array( 'Download','download.png' );
+		$ret['download'] = array('Download','download.png');
 		return $ret;
 	}
 }
@@ -519,23 +523,23 @@ $formschema_type_list[]="FFile";
 
 class FFolder extends FObject {
 	function FFolder( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 			new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-			$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( '', -1, 'childs_sort_order', new FChildSort( 'childs_sort_order', "Sort order", 'Ordinamento dei figli diretti', 255, $aLength=40, $aValore='', $aClasseCss='formtable', $listaValori=array(), $altezza=10, $multiselezione=true) );
+			$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('', -1, 'childs_sort_order', new FChildSort( 'childs_sort_order', "Sort order", 'Ordinamento dei figli diretti', 255, $aLength=40, $aValore='', $aClasseCss='formtable', $listaValori=array(), $altezza=10, $multiselezione=true));
 		
-		$this->addDetail( "FFolder" );
-		$this->addDetail( "FPage" );
-		$this->addDetail( "FNews" );
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FNote" );
-		$this->addDetail( "FEvent" );
-		$this->addDetail( "FFile" );
-		$this->addDetail( "FTodo" );
-		$this->addDetail( "FTimetrack" );
+		$this->addDetail("FFolder");
+		$this->addDetail("FPage");
+		$this->addDetail("FNews");
+		$this->addDetail("FLink");
+		$this->addDetail("FNote");
+		$this->addDetail("FEvent");
+		$this->addDetail("FFile");
+		$this->addDetail("FTodo");
+		$this->addDetail("FTimetrack");
 	}
 	function getDetailIcon() { return "icons/folder_16x16.gif"; }
 	function getDetailTitle() { return "Folder"; }
@@ -557,14 +561,14 @@ $formschema_type_list[]="FFolder";
 
 class FLink extends FObject {
 	function FLink( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( 'link', -1, 'href', new FString( 'href', "Href", 'Url destinazione', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( 'link', -1, 'target', new FString( 'target', "Target", 'Frame target.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('link', -1, 'href', new FString( 'href', "Href", 'Url destinazione', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
+		$this->addField('link', -1, 'target', new FString( 'target', "Target", 'Frame target.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailIcon() { return $this->isInternal() ? "icons/list-disc_16x16.png" : "icons/link_16x16.gif"; }
 	function getDetailTitle() { return "Link"; }
@@ -577,13 +581,13 @@ class FLink extends FObject {
 	function getListTitle() { return "Links"; }
 	function getListColumnNames() { return array('creation_date','fk_obj_id','name','href'); }
 	function getDecodeGroupNames() { return array_merge( parent::getDecodeGroupNames(),
-										array("link"=>"Link",) ); }
+										array("link"=>"Link",)); }
 	function getDBE() { return new DBELink(); }
 	
 	function render_view(&$dbmgr, $nome_field=null) {
 		$ret = '';
 		if ( $nome_field!==null ) {
-			$_field = $this->getField( $nome_field );
+			$_field = $this->getField( $nome_field);
 			$ret .= $_field->render_view();
 		} else {
 			$_target = $this->getValue('target');
@@ -599,12 +603,12 @@ $formschema_type_list[]="FLink";
 
 class FNote extends FObject {
 	function FNote( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
 											
 		$this->getField('description')->width=60;
 		$this->getField('description')->height=20;
@@ -628,19 +632,19 @@ $formschema_type_list[]="FNote";
 
 class FPage extends FObject {
 	function FPage( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( '', -1, 'html', new FHtml( 'html', "Html", 'Contenuto html.', 255, '', 'formtable', 120, 100) );
-		$this->addField( '', -1, 'language', new FLanguage( 'language', "Language", 'Page language', $aSize=50, $aLength=255, $aValore='en_US', $aClasseCss='formtable') );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('', -1, 'html', new FHtml( 'html', "Html", 'Contenuto html.', 255, '', 'formtable', 120, 100));
+		$this->addField('', -1, 'language', new FLanguage( 'language', "Language", 'Page language', $aSize=50, $aLength=255, $aValore='en_US', $aClasseCss='formtable'));
 		
-		$this->addDetail( "FPage" );
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FFile" );
-		$this->addDetail( "FEvent" );
+		$this->addDetail("FPage");
+		$this->addDetail("FLink");
+		$this->addDetail("FFile");
+		$this->addDetail("FEvent");
 	}
 	function getDetailIcon() { return "icons/page_16x16.gif"; }
 	function getDetailTitle() { return "Page"; }
@@ -653,20 +657,20 @@ class FPage extends FObject {
 	function getListTitle() { return "Pages"; }
 	function getListColumnNames() { return array('creation_date','name','fk_obj_id'); }
 	function getDecodeGroupNames() { return array_merge( parent::getDecodeGroupNames(),
-										array("html"=>"Html",) ); }
+										array("html"=>"Html",)); }
 	function getDBE() { return new DBEPage(); }
 }
 $formschema_type_list[]="FPage";
 
 class FNews extends FPage {
 	function FNews( $nome='', $azione='', $metodo="POST" ) {
-		parent::FPage( $nome, $azione, $metodo );
+		parent::FPage( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-// 		$this->addField( 'html', -1, 'html', new FHtml( 'html', "Html", 'Contenuto html.', 255, '', $aClasseCss='formtable', 50, 5) );
-		$this->removeDetail( "FPage" );
-		$this->addDetail( "FNews" );
-// 		$this->addDetail( "FEvent" );
+// 		$this->addField('html', -1, 'html', new FHtml( 'html', "Html", 'Contenuto html.', 255, '', $aClasseCss='formtable', 50, 5));
+		$this->removeDetail( "FPage");
+		$this->addDetail("FNews");
+// 		$this->addDetail("FEvent");
 	}
 	function getDetailIcon() { return "icons/news.png"; }
 	function getDetailTitle() { return "News"; }
@@ -682,7 +686,7 @@ class FNews extends FPage {
 	function getListTitle() { return "News"; }
 	function getListColumnNames() { return array('creation_date','name','fk_obj_id'); }
 	function getDecodeGroupNames() { return array_merge( parent::getDecodeGroupNames(),
-										array("html"=>"Html",) ); }
+										array("html"=>"Html",)); }
 	function getDBE() { return new DBENews(); }
 }
 $formschema_type_list[]="FNews";
@@ -693,18 +697,18 @@ $formschema_type_list[]="FNews";
 /** *********************************** RRA Projects: inizio. *********************************** */
 class FProject extends FObject {
 	function FProject( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
-		$this->addDetail( "FFolder" );
-		$this->addDetail( "FProjectProject" );
-		$this->addDetail( "FProjectCompany" );
-		$this->addDetail( "FProjectPeople" );
-		$this->addDetail( "FTodo" );
-		$this->addDetail( "FTimetrack" );
-		$this->addDetail( "FPage" );
-		$this->addDetail( "FLink" );
-		$this->addDetail( "FNote" );
-		$this->addDetail( "FEvent" );
+		$this->addDetail("FFolder");
+		$this->addDetail("FProjectProject");
+		$this->addDetail("FProjectCompany");
+		$this->addDetail("FProjectPeople");
+		$this->addDetail("FTodo");
+		$this->addDetail("FTimetrack");
+		$this->addDetail("FPage");
+		$this->addDetail("FLink");
+		$this->addDetail("FNote");
+		$this->addDetail("FEvent");
 	}
 	function getDetailIcon() { return "icons/project_16x16.gif"; }
 	function getDetailTitle() { return "Project"; }
@@ -712,7 +716,7 @@ class FProject extends FObject {
 		'creator','creation_date', // 'owner','last_modify','last_modify_date',
 		'owner','group_id','permissions',
 	); }
-	function getViewColumnNames() { return array( 'name','description', ); }
+	function getViewColumnNames() { return array('name','description',); }
 	function getListTitle() { return "Projects"; }
 	function getListColumnNames() { return array('name','description'); }
 	function getDBE() { return new DBEProject(); }
@@ -726,9 +730,9 @@ class FProjectCompany extends FAssociation {
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'projects_companies_role_id',
+		$this->addField('', -1, 'projects_companies_role_id',
 									new FKField( 'projects_companies_role_id', "Role", 'Ruolo.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_companies_role_id'), $description_columns=array('projects_companies_role_id',), $destform="FCompany", $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_companies_role_id'), $description_columns=array('projects_companies_role_id',), $destform="FCompany", $viewmode='select'  ));
 	}
 	function getDBE() { return new DBEProjectCompany(); }
 	function getFromForm() { return FForm::getInstance("FProject"); } // 2011.04.04 new FProject(); }
@@ -737,9 +741,9 @@ class FProjectCompany extends FAssociation {
 $formschema_type_list[]="FProjectCompany";
 class FProjectCompanyRole extends FObject {
 	function FProjectCompanyRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailTitle() { return "Project-Company Role"; }
 	function getDetailColumnNames() { return array('name','description',
@@ -759,9 +763,9 @@ class FProjectPeople extends FAssociation {
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'projects_people_role_id',
+		$this->addField('', -1, 'projects_people_role_id',
 									new FKField( 'projects_people_role_id', "Role", 'Ruolo.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_people_role_id'), $description_columns=array('projects_people_role_id',), $destform="FPeople", $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_people_role_id'), $description_columns=array('projects_people_role_id',), $destform="FPeople", $viewmode='select'  ));
 	}
 	function getDBE() { return new DBEProjectPeople(); }
 	function getFromForm() { return FForm::getInstance("FProject"); } // 2011.04.04 new FProject(); }
@@ -770,9 +774,9 @@ class FProjectPeople extends FAssociation {
 $formschema_type_list[]="FProjectPeople";
 class FProjectPeopleRole extends FObject {
 	function FProjectPeopleRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailTitle() { return "Project-People Role"; }
 	function getDetailColumnNames() { return array('name','description','order_position',); }
@@ -788,9 +792,9 @@ class FProjectProject extends FAssociation {
 		
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'projects_projects_role_id',
+		$this->addField('', -1, 'projects_projects_role_id',
 									new FKField( 'projects_projects_role_id', "Role", 'Ruolo.', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_projects_role_id'), $description_columns=array('projects_projects_role_id',), $destform="FProject", $viewmode='select'  ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('projects_projects_role_id'), $description_columns=array('projects_projects_role_id',), $destform="FProject", $viewmode='select'  ));
 	}
 	function getDetailTitle() { return "Association Project-Project"; }
 	function getDBE() { return new DBEProjectProject(); }
@@ -800,9 +804,9 @@ class FProjectProject extends FAssociation {
 $formschema_type_list[]="FProjectProject";
 class FProjectProjectRole extends FObject {
 	function FProjectProjectRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailTitle() { return "Project-Project Role"; }
 	function getDetailColumnNames() { return array('name','description','order_position',); }
@@ -814,26 +818,26 @@ $formschema_type_list[]="FProjectCompanyRole";
 
 class FTimetrack extends FObject {
 	function FTimetrack( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'fk_obj_id',
+		$this->addField('', -1, 'fk_obj_id',
 									new FKObjectField( 'fk_obj_id', "Linked to", 'Collegata a', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( '', -1, 'fk_progetto',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_obj_id'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('', -1, 'fk_progetto',
 									new FKObjectField( 'fk_progetto', "Project", 'Progetto', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_progetto'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( '', -1, 'dalle_ore', new FDateTime( 'dalle_ore', "From", $aDescription='Dalle Ore', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ) );
-		$this->addField( '', -1, 'alle_ore', new FDateTime( 'alle_ore', "To", $aDescription='Alle Ore', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ) );
-		$this->addField( '', -1, 'ore_intervento', new FDateTime( 'ore_intervento', "Hours of Work", $aDescription='Ore Intervento', $aValore='', $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ) );
-		$this->addField( '', -1, 'ore_viaggio', new FDateTime( 'ore_viaggio', "Hours of Travel", $aDescription='Ore Viaggio', $aValore='', $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ) );
-		$this->addField( '', -1, 'km_viaggio', new FNumber('km_viaggio', "KM Travels", 'KM Viaggio', $aValore='', $aClasseCss='formtable' ) );
-		$array_valori = array( ''=>'','0'=>'Office', '1'=>'From office (via ssh/telnet/ecc.)', '2'=>'On site',  );
-		$this->addField( '', -1, 'luogo_di_intervento', new FList( 'luogo_di_intervento', "Luogo di intervento", 'Luogo di intervento', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
-		$array_valori = array( ''=>'', '0'=>'da fatturare', '1'=>'non fatturare', '2'=>'fatturato', '3'=>'assistenza', );
-		$this->addField( '', -1, 'stato', new FList( 'stato', "State", 'Stato', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ) );
-		$this->addField( '', -1, 'costo_per_ora', new FNumber('costo_per_ora', "Cost per hour", 'Cost per hour', $aValore=0, $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'costo_valuta', new FString( 'costo_valuta', "Currency", 'Currency', $aSize=50, $aLength=255, $aValore='euro', $aClasseCss='formtable' ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_progetto'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('', -1, 'dalle_ore', new FDateTime( 'dalle_ore', "From", $aDescription='Dalle Ore', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ));
+		$this->addField('', -1, 'alle_ore', new FDateTime( 'alle_ore', "To", $aDescription='Alle Ore', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true ));
+		$this->addField('', -1, 'ore_intervento', new FDateTime( 'ore_intervento', "Hours of Work", $aDescription='Ore Intervento', $aValore='', $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ));
+		$this->addField('', -1, 'ore_viaggio', new FDateTime( 'ore_viaggio', "Hours of Travel", $aDescription='Ore Viaggio', $aValore='', $aClasseCss='formtable', $aVisualizzaData=false, $aVisualizzaOra=true ));
+		$this->addField('', -1, 'km_viaggio', new FNumber('km_viaggio', "KM Travels", 'KM Viaggio', $aValore='', $aClasseCss='formtable' ));
+		$array_valori = array(''=>'','0'=>'Office', '1'=>'From office (via ssh/telnet/ecc.)', '2'=>'On site', );
+		$this->addField('', -1, 'luogo_di_intervento', new FList( 'luogo_di_intervento', "Luogo di intervento", 'Luogo di intervento', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
+		$array_valori = array(''=>'', '0'=>'da fatturare', '1'=>'non fatturare', '2'=>'fatturato', '3'=>'assistenza',);
+		$this->addField('', -1, 'stato', new FList( 'stato', "State", 'Stato', $aSize=255, $aLength=40, $aValore='0', $aClasseCss='formtable', $listaValori=$array_valori, $altezza=1, $multiselezione=false ));
+		$this->addField('', -1, 'costo_per_ora', new FNumber('costo_per_ora', "Cost per hour", 'Cost per hour', $aValore=0, $aClasseCss='formtable' ));
+		$this->addField('', -1, 'costo_valuta', new FString( 'costo_valuta', "Currency", 'Currency', $aSize=50, $aLength=255, $aValore='euro', $aClasseCss='formtable' ));
 	}
 	function getDetailIcon() { return "icons/timetrack_16x16.gif"; }
 	function getDetailTitle() { return "Timetrack"; }
@@ -860,30 +864,30 @@ $formschema_type_list[]="FTimetrack";
 
 class FTodo extends FObject {
 	function FTodo( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
+		parent::FObject( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
-		$this->addField( '', -1, 'priority', new FNumber('priority', "Priority", 'Priorita', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'data_segnalazione', new FDateTime( 'data_segnalazione', "Reported on", $aDescription='Data segnalazione', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true) );
-		$this->addField( '', -1, 'fk_segnalato_da',
+		$this->addField('', -1, 'priority', new FNumber('priority', "Priority", 'Priorita', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'data_segnalazione', new FDateTime( 'data_segnalazione', "Reported on", $aDescription='Data segnalazione', $aValore=getTodayString(), $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=true));
+		$this->addField('', -1, 'fk_segnalato_da',
 									new FKField( 'fk_segnalato_da', "Reporter", 'Segnalato da', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_segnalato_da'), $description_columns=array('name',), $destform="FPeople", $viewmode='select'  ) );
-		$this->addField( '', -1, 'fk_cliente',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_segnalato_da'), $description_columns=array('name',), $destform="FPeople", $viewmode='select'  ));
+		$this->addField('', -1, 'fk_cliente',
 									new FKField( 'fk_cliente', "Customer", 'Cliente', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_cliente'), $description_columns=array('name',), $destform="FCompany", $viewmode='select'  ) );
-		$this->addField( '', -1, 'fk_progetto',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_cliente'), $description_columns=array('name',), $destform="FCompany", $viewmode='select'  ));
+		$this->addField('', -1, 'fk_progetto',
 									new FKObjectField( 'fk_progetto', "Project", 'Progetto', $aSize=50, $aValore=null, $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_progetto'), $description_columns=array('name'), $destform=null, $viewmode='select'  ) );
-		$this->addField( '', -1, 'fk_tipo',
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_progetto'), $description_columns=array('name'), $destform=null, $viewmode='select'  ));
+		$this->addField('', -1, 'fk_tipo',
 									new FKField( 'fk_tipo', "Kind", 'Tipo', $aSize=50, $aValore='', $aClasseCss='formtable',
-											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_tipo'), $description_columns=array('name',), $destform="FTodoTipo", $viewmode='select'  ) );
-		$this->addField( '', -1, 'stato', new FPercent('stato', "State (%)", 'Stato di avanzamento %', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'descrizione', new FTextArea( 'descrizione', "Description", 'Descrizione del todo.', 255, '', $aClasseCss='formtable', 50, 5) );
-		$this->addField( '', -1, 'intervento', new FTextArea( 'intervento', "Resolution", 'Intervento eseguito.', 255, '', $aClasseCss='formtable', 50, 5) );
-		$this->addField( '', -1, 'data_chiusura', new FDateTimeReadOnly( 'data_chiusura', "Closed on", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ) );
+											$mydbe=$_mydbe, $myFK = $_mydbe->getFKDefinition('fk_tipo'), $description_columns=array('name',), $destform="FTodoTipo", $viewmode='select'  ));
+		$this->addField('', -1, 'stato', new FPercent('stato', "State (%)", 'Stato di avanzamento %', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'descrizione', new FTextArea( 'descrizione', "Description", 'Descrizione del todo.', 255, '', $aClasseCss='formtable', 50, 5));
+		$this->addField('', -1, 'intervento', new FTextArea( 'intervento', "Resolution", 'Intervento eseguito.', 255, '', $aClasseCss='formtable', 50, 5));
+		$this->addField('', -1, 'data_chiusura', new FDateTimeReadOnly( 'data_chiusura', "Closed on", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE ));
 		
-		$this->addDetail( "FTodo" );
-		$this->addDetail( "FTimetrack" );
+		$this->addDetail("FTodo");
+		$this->addDetail("FTimetrack");
 	}
 	function getDetailIcon() { return "icons/task_16x16.gif"; }
 	function getDetailTitle() { return "Todo"; }
@@ -915,8 +919,8 @@ class FTodo extends FObject {
 	}
 	function getActions() {
 		$ret = parent::getActions();
-		$ret['start_timetracking'] = array( 'Start Time Tracking','play.png' );
-		$ret['stop_timetracking'] = array( 'Stop Time Tracking','stop.png' );
+		$ret['start_timetracking'] = array('Start Time Tracking','play.png');
+		$ret['stop_timetracking'] = array('Stop Time Tracking','stop.png');
 		return $ret;
 	}
 }
@@ -928,13 +932,13 @@ $formschema_type_list[]="FTodo";
 class FTodoFilter extends FTodo {
 	function getDetailTitle() { return "Todo Filter"; }
 	function FTodoFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FTodo( $nome, $azione, $metodo );
+		parent::FTodo( $nome, $azione, $metodo);
 		
-		$this->addField( '', -1, 'from_data_chiusura', new FDateTime( 'from_data_chiusura', "Closed on >=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ) );
-		$this->addField( '', -1, 'to_data_chiusura', new FDateTime( 'to_data_chiusura', "Closed on <=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ) );
+		$this->addField('', -1, 'from_data_chiusura', new FDateTime( 'from_data_chiusura', "Closed on >=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
+		$this->addField('', -1, 'to_data_chiusura', new FDateTime( 'to_data_chiusura', "Closed on <=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
 
-		$this->addField( '', -1, 'from_stato', new FPercent('from_stato', "State (%) >=", 'Stato di avanzamento %', $aValore='', $aClasseCss='formtable' ) );
-		$this->addField( '', -1, 'to_stato', new FPercent('to_stato', "State (%) <=", 'Stato di avanzamento %', $aValore='99', $aClasseCss='formtable' ) );
+		$this->addField('', -1, 'from_stato', new FPercent('from_stato', "State (%) >=", 'Stato di avanzamento %', $aValore='', $aClasseCss='formtable' ));
+		$this->addField('', -1, 'to_stato', new FPercent('to_stato', "State (%) <=", 'Stato di avanzamento %', $aValore='99', $aClasseCss='formtable' ));
 	}
 	function getFilterFields() {
 		return array('name','priority','data_segnalazione','fk_segnalato_da','fk_cliente','fk_progetto','father_id','fk_tipo','from_stato','to_stato',);
@@ -945,8 +949,8 @@ $formschema_type_list[]="FTodoFilter";
 
 class FTodoTipo extends FObject {
 	function FTodoTipo( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo );
-		$this->addField( '', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ) );
+		parent::FObject( $nome, $azione, $metodo);
+		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailTitle() { return "Todo::Kind"; }
 	function getDetailColumnNames() { return array('name','description','order_position',); }
@@ -961,7 +965,7 @@ $formschema_type_list[]="FTodoTipo";
 /** *********************************** Form Factory *********************************** */
 class MyFormFactory extends FormFactory {
 	function MyFormFactory( $verbose = 0 ) {
-		$this->FormFactory( $verbose );
+		$this->FormFactory( $verbose);
 		
 		global $formschema_type_list;
 		
