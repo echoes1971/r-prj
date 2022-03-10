@@ -965,12 +965,12 @@ class DBMgr {
                 }
                 $clausole[ $len_clausole++ ] = " ( " . implode($subclause," OR ") . " ) ";
             } else {
-                    if($is_from) {
-                        $clausole[ $len_clausole++ ] =  substr($n,5).">=$v" ;
-                    } else if($is_to) {
-                        $clausole[ $len_clausole++ ] =  substr($n,3)."<=$v" ;
-                    } else
-                        $clausole[ $len_clausole++ ] =  "$n=$v" ;
+                if($is_from) {
+                    $clausole[ $len_clausole++ ] =  substr($n,5).">=$v" ;
+                } else if($is_to) {
+                    $clausole[ $len_clausole++ ] =  substr($n,3)."<=$v" ;
+                } else
+                    $clausole[ $len_clausole++ ] =  "$n=$v" ;
             }
         }
         $mytablename = $this->_buildTableName($dbe);
@@ -999,8 +999,8 @@ class DBMgr {
          $names = $this->_description2names($result);
         if($this->_verbose) { print "DBMgr._select: found $numres rows.<br />\n"; }
         $ret = array();
-         for ($i=0; $i<$numres; $i++) {
-             $_array = $this->db_fetch_array($result);
+        for ($i=0; $i<$numres; $i++) {
+            $_array = $this->db_fetch_array($result);
             $_tmp = $this->_factory->getInstance($classname, $names, $_array);
             if($this->_verbose) print "DBMgr._select: tmp=" . $_tmp->to_string() . "<br />\n";
             $ret[ $i ] = $_tmp;
