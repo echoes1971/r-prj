@@ -348,9 +348,9 @@ class DBEntity {
         $mychiavi = is_array($this->getKeys()) ? array_keys($this->getKeys()) : array();
         $clausole = array();    $clausole_index=0;
         for($i=0; $i<count($mychiavi) ; $i++) {
-            $k = $mychiavi[ $i ];
+            $k = $mychiavi[$i];
             $v = $this->getValue($k);
-            $clausole[ $clausole_index++ ] = $prefix.$k."=".urlencode($v);
+            $clausole[$clausole_index++] = $prefix.$k."=".urlencode($v);
         }
         return implode("&", $clausole);
     }
@@ -359,7 +359,7 @@ class DBEntity {
         $mychiavi = is_array($this->getKeys()) ? array_keys($this->getKeys()) : array();
         $tmp = "";
         for($i=0; $i<count($mychiavi) ; $i++) {
-            $tmp .= $this->getValue($mychiavi[ $i ]);
+            $tmp .= $this->getValue($mychiavi[$i]);
         }
         return sha1($tmp);
     }
@@ -421,7 +421,7 @@ class DBEFactory {
     function register($aClassName) {
         eval("\$istanza = new $aClassName();");
         $this->classname2type[$aClassName]=$aClassName;
-        $this->tablename2type[ $istanza->getTableName() ]=$aClassName;
+        $this->tablename2type[$istanza->getTableName()]=$aClassName;
     }
     
     function getRegisteredTypes() {
@@ -508,7 +508,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         if(mysqli_num_rows($result)>0) {
             $colonna=1;
             while ($row = mysqli_fetch_assoc($result)) {
-                $ret[ $row["Field"] ]=$row;
+                $ret[$row["Field"]]=$row;
             }
         }
         if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$ret."<br/>\n";
@@ -671,7 +671,7 @@ class SQLiteConnectionProvider extends DBConnectionProvider {
         $num_fields = $_desc===false ? 0 : sqlite_num_fields($_desc);
         for($i=0; $i<$num_fields; $i++) {
             $_tmp = sqlite_field_name($_desc, $i);
-            $ret[ $i ] = $_tmp;
+            $ret[$i] = $_tmp;
         }
         return $ret;
     }
@@ -807,11 +807,11 @@ class DBMgr {
             $tipo_v = $dbe->getColumnType($chiave);
             if($tipo_v===null) $tipo_v=gettype($valore);
             if($tipo=='uuid' || $tipo_v=='uuid') {
-                $ret[ count($ret) ] = "$chiave='".DBEntity::hex2uuid($valore)."'";
+                $ret[count($ret)] = "$chiave='".DBEntity::hex2uuid($valore)."'";
             } elseif($tipo=='number') {
-                $ret[ count($ret) ] = "$chiave=$valore";
+                $ret[count($ret)] = "$chiave=$valore";
             } else {
-                $ret[ count($ret) ] = "$chiave='$valore'";
+                $ret[count($ret)] = "$chiave='$valore'";
             }
         }
         return implode(' AND ', $ret);
@@ -846,18 +846,18 @@ class DBMgr {
         foreach($nomicampi as $nomeCampo) {
             $v = $dbe->getValue($nomeCampo);
             if($v===null) { continue; }
-            $tmpnomi[ count($tmpnomi) ] = $nomeCampo;
+            $tmpnomi[count($tmpnomi)] = $nomeCampo;
             $tipo_v = $dbe->getColumnType($nomeCampo);
             if($tipo_v===null) $tipo_v=gettype($v);
             if($tipo_v=='string' || $tipo_v=='datetime' || $tipo_v=='date' || $tipo_v=='time') {
                 if($tipo_v=='datetime' && strlen($v)==8) $v="0000-00-00 ".$v;
-                $tmpvalori[ count($tmpvalori) ] = "'".$this->db_escape_string($v)."'";
+                $tmpvalori[count($tmpvalori)] = "'".$this->db_escape_string($v)."'";
             } elseif($tipo_v=='uuid') {
-                $tmpvalori[ count($tmpvalori) ] = "'".DBEntity::hex2uuid($v)."'";
+                $tmpvalori[count($tmpvalori)] = "'".DBEntity::hex2uuid($v)."'";
             } elseif($tipo_v=='int') {
-                $tmpvalori[ count($tmpvalori) ] = intval($v);
+                $tmpvalori[count($tmpvalori)] = intval($v);
             } else {
-                $tmpvalori[ count($tmpvalori) ] = "$v";
+                $tmpvalori[count($tmpvalori)] = "$v";
             }
         }
         $mytablename = $this->_buildTableName($dbe);
@@ -876,7 +876,7 @@ class DBMgr {
             $campoEChiave = array_search($nomeCampo, $chiavi);
             if($campoEChiave==null || $campoEChiave==false) {
                 if($v===null) {
-                    //$setstring[ count($setstring) ] = "$nomeCampo IS null";
+                    //$setstring[count($setstring)] = "$nomeCampo IS null";
                 } else {
                     $tipo_v = $dbe->getColumnType($nomeCampo);
                     if($tipo_v===null) $tipo_v=gettype($v);
@@ -936,19 +936,19 @@ class DBMgr {
             if($tipo_v=='string' || $tipo_v=='datetime' || $tipo_v=='date' || $tipo_v=='time') {
                 if($v!=='') {
                     if($is_from) {
-                        $clausole[ $len_clausole++ ] =  substr($n,5).">='".$this->db_escape_string($v)."'" ;
+                        $clausole[$len_clausole++] =  substr($n,5).">='".$this->db_escape_string($v)."'" ;
                     } else if($is_to) {
-                        $clausole[ $len_clausole++ ] =  substr($n,3)."<='".$this->db_escape_string($v)."'" ;
+                        $clausole[$len_clausole++] =  substr($n,3)."<='".$this->db_escape_string($v)."'" ;
                     } else if(!$dbe->isFK($n) && $uselike==1) {
-                        $clausole[ $len_clausole++ ] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
+                        $clausole[$len_clausole++] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
                     } else {
-                        $clausole[ $len_clausole++ ] =  "$n='".$this->db_escape_string($v)."'" ;
+                        $clausole[$len_clausole++] =  "$n='".$this->db_escape_string($v)."'" ;
                     }
                 }
             } elseif($tipo_v=='uuid') {
                 $uuid_v = DBEntity::hex2uuid($v);
                 if($uuid_v!=='') {
-                    $clausole[ $len_clausole++ ]="$n='$uuid_v'";
+                    $clausole[$len_clausole++]="$n='$uuid_v'";
                 }
             } elseif(is_array($v)) {
                 $subclause=array();
@@ -963,14 +963,14 @@ class DBMgr {
                         $subclause[] =  "$n=$v1" ;
                     }
                 }
-                $clausole[ $len_clausole++ ] = " ( " . implode($subclause," OR ") . " ) ";
+                $clausole[$len_clausole++] = " ( " . implode(" OR ", $subclause) . " ) ";
             } else {
                 if($is_from) {
-                    $clausole[ $len_clausole++ ] =  substr($n,5).">=$v" ;
+                    $clausole[$len_clausole++] =  substr($n,5).">=$v" ;
                 } else if($is_to) {
-                    $clausole[ $len_clausole++ ] =  substr($n,3)."<=$v" ;
+                    $clausole[$len_clausole++] =  substr($n,3)."<=$v" ;
                 } else
-                    $clausole[ $len_clausole++ ] =  "$n=$v" ;
+                    $clausole[$len_clausole++] =  "$n=$v" ;
             }
         }
         $mytablename = $this->_buildTableName($dbe);
@@ -1003,7 +1003,7 @@ class DBMgr {
             $_array = $this->db_fetch_array($result);
             $_tmp = $this->_factory->getInstance($classname, $names, $_array);
             if($this->_verbose) print "DBMgr._select: tmp=" . $_tmp->to_string() . "<br />\n";
-            $ret[ $i ] = $_tmp;
+            $ret[$i] = $_tmp;
         }
         if($result!==false) $this->db_free_result($result);
         return $ret;
