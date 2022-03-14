@@ -2,5 +2,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# Local DB and file storage
 mariadb
+files
 
