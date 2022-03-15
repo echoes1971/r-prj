@@ -4,7 +4,7 @@ services:
     ports:
     - "3000:3000"
     volumes:
-      - ./rprj-app:/usr/src/app
+    - ./rprj-app:/usr/src/app
   rprj-web:
     environment:
       SITE_TITLE: ":: R-Project Dev ::"

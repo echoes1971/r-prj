@@ -9,7 +9,6 @@ RUN npm install react-scripts@5.0.0 -g --silent
 # See: https://mherman.org/blog/dockerizing-a-react-app/
 RUN npm install --silent
 
-RUN npm rebuild node-sass
 # RUN npm install react-scripts@5.0.0 -g
 
 # If you are building your code for production
@@ -18,5 +17,6 @@ RUN npm rebuild node-sass
 # Bundle app source
 COPY rprj-app/ .
 
+RUN npm rebuild node-sass
 
 CMD [ "npm", "start" ]

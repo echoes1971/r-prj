@@ -9,8 +9,9 @@ function App() {
       <header className="App-header">
         <RNav/>
       </header>
-      Cippa
+      Cippa Lippa
       <div class="container">
+        Lippa
       </div>
     </div>
   );
