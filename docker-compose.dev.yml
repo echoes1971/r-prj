@@ -4,7 +4,10 @@ services:
     ports:
     - "3000:3000"
     volumes:
-    - ./rprj-app:/usr/src/app
+    - ./rprj-app/package.json:/usr/src/app/package.json
+    - ./rprj-app/public:/usr/src/app/public
+    - ./rprj-app/src:/usr/src/app/src
+    - ./rprj-app/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
   rprj-web:
     environment:
       SITE_TITLE: ":: R-Project Dev ::"

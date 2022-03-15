@@ -11,7 +11,7 @@ function App() {
       </header>
       Cippa Lippa
       <div class="container">
-        Lippa
+        Lippo Lippi
       </div>
     </div>
   );
