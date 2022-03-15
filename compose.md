@@ -23,6 +23,11 @@ docker-compose stop rprj-db
 docker-compose rm -f rprj-db
 docker-compose up rprj-db
 
+# Debugging
+
+docker exec -it r-prj_rprj-app_1 sh
+
+
 # Refresh the sources
 rm -rf build ; mkdir build ; cp -R ../php/* ./build/
 
