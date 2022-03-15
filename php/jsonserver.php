@@ -18,6 +18,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+header('Access-Control-Allow-Origin: http://localhost:3000');
+
 header('Content-type: application/json');
 
 define("ROOT_FOLDER",     "./");
@@ -354,7 +356,7 @@ function Download($uuid,$view_thumb) {
 $json_response = array();
 
 $mymethod = $json_request->method=='echo' ? '_echo' : $json_request->method;
-//echo "mymethod: $mymethod\n";
+// echo "mymethod: $mymethod\n";
 
 $myparams = array();
 if($json_request!==null) {
