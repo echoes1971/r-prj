@@ -17,9 +17,10 @@ class App extends Component {
     this.msg = ''
     this.abody = 'mo zao'
 
+    // See: https://it.reactjs.org/
     this.state = { value: 'Ciao, mondo!' };
 
-    this.handleChange = this.handleChange.bind(this);
+    //this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -39,9 +40,9 @@ class App extends Component {
     this.dbmgr.ping(a_callback);
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value })
-  }
+  //handleChange(e) {
+  //  this.setState({ value: e.target.value })
+  //}
 
   render() {
     return (
