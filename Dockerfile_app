@@ -4,11 +4,12 @@ WORKDIR /usr/src/app
 
 COPY rprj-app/package*.json ./
 
-RUN npm install react-scripts@5.0.0 -g
+RUN npm install react-scripts@5.0.0 -g --silent
 
 # See: https://mherman.org/blog/dockerizing-a-react-app/
-RUN npm install
+RUN npm install --silent
 
+RUN npm rebuild node-sass
 # RUN npm install react-scripts@5.0.0 -g
 
 # If you are building your code for production
