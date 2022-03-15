@@ -6,9 +6,9 @@ ENV SITE_TITLE_2 :: Project and Time Tracking Management System ::
 ENV MYSQL_APP rprj-db
 ENV MYSQL_DB rproject
 ENV MYSQL_PASSWORD mysecret
+ENV RPRJ_ADMIN_PASS adm
 ENV RPRJ_SKIN default
 ENV RPRJ_ROOT_OBJ -10
-ENV RPRJ_ADMIN_PASS adm
 
 # Copy the source
 COPY build/ /var/www/html/

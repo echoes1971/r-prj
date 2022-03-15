@@ -1,9 +1,9 @@
 <?php
 
-$site_title = ':: R-Prj ::';
-$site_title_2 = '-= Development version =-';
+$site_title = ':: R-Project Dev ::';
+$site_title_2 = 'Just testing stuff';
 
-$db_server = "rprj-mariadb";
+$db_server = "rprj-db";
 $db_user = "root";
 $db_pwd = "mysecret";
 $db_db = "rproject";

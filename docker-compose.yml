@@ -1,7 +1,17 @@
 version: '3'
 services:
+  rprj-app:
+    build:
+      context: .
+      dockerfile: Dockerfile_app
+    ports:
+    - "8081:3000"
+    depends_on:
+    - rprj-web
   rprj-web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile_web
     environment:
       SITE_TITLE: ":: R-Project ::"
       SITE_TITLE_2: "A CMS Project"

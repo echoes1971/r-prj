@@ -1,17 +1,22 @@
 version: '3'
 services:
+  rprj-app:
+    ports:
+    - "3000:3000"
+    volumes:
+      - ./rprj-app:/usr/src/app
   rprj-web:
     environment:
       SITE_TITLE: ":: R-Project Dev ::"
-      SITE_TITLE_2: "Just testing skins"
-      RPRJ_ADMIN_PASS: pass
-      RPRJ_SKIN: lcars
-      MYSQL_PASSWORD: cippa
+      SITE_TITLE_2: "Just testing stuff"
+      # RPRJ_ADMIN_PASS: pass
+      # RPRJ_SKIN: lcars
+      # MYSQL_PASSWORD: cippa
     volumes:
       - ./php:/var/www/html
       - ./docker/webentrypoint.sh:/usr/local/bin/docker-php-entrypoint
     #ports:
       #- 5000:80
-  rprj-db:
-    environment:
-      MYSQL_ROOT_PASSWORD: cippa
+  # rprj-db:
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: cippa
