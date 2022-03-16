@@ -27,6 +27,17 @@ docker-compose up rprj-db
 
 docker exec -it r-prj_rprj-app_1 sh
 
+# Developing on Windows
+
+```
+cd rprj-app
+del .\node_modules\*
+docker container stop r-prj_rprj-app_1
+npm install --silent
+npm start
+```
+
+
 
 # Refresh the sources
 rm -rf build ; mkdir build ; cp -R ../php/* ./build/

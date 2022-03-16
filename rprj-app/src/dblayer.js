@@ -2,6 +2,7 @@
 
 class DBMgr {
     constructor() {
+        this.endpoint = 'http://localhost:8080/jsonserver.php'
     }
 
     ping(a_callback = null) {
@@ -24,7 +25,7 @@ class DBMgr {
         xhr.addEventListener('load', default_callback)
         // xhr.addEventListener('load', a_callback ? a_callback(&xhr) : default_callback)
         // open the request with the verb and the url
-        xhr.open('POST', 'http://localhost:8080/jsonserver.php')
+        xhr.open('POST', this.endpoint)
 
         var mydata = { method: "ping", params: []}
 

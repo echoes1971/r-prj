@@ -10,21 +10,18 @@ COPY rprj-app/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN npm install -g npm@8.5.4
 
-RUN npm install react-scripts@5.0.0 -g
+# RUN npm install react-scripts@5.0.0 -g
 # --silent
 
 # See: https://mherman.org/blog/dockerizing-a-react-app/
 RUN npm install
 # --silent
 
-# RUN npm install react-scripts@5.0.0 -g
+RUN npm install react-scripts@5.0.0 -g
 
 # If you are building your code for production
 # RUN npm ci --only=production
 
-# # Bundle app source
-# COPY rprj-app/ .
-
-RUN npm rebuild node-sass
+# RUN npm rebuild node-sass
 
 CMD [ "npm", "start" ]

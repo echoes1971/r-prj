@@ -13,7 +13,7 @@ class App extends Component {
   constructor() {
     super()
 
-    this.dbmgr = new DBMgr;
+    this.dbmgr = new DBMgr();
     this.msg = ''
     this.abody = 'mo zao'
 
@@ -24,7 +24,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    var self = this
     var a_callback = (function(xhr) {
       console.log("SUNCHI"+this.abody)
       // update the state of the component with the result here
@@ -35,7 +34,6 @@ class App extends Component {
       console.log("SUNCHI"+this.abody)
 
       this.setState({ value: jsonObj[1] })
-
     }).bind(this)
     this.dbmgr.ping(a_callback);
   }
@@ -47,15 +45,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <RNav/>
-        </header>
-        Cippa Lippa
+        <RNav/>
         <div class="container">
-          Msg: {this.msg}
+          Msg: {this.msg}testina
           <hr/>
           {this.state.value}
-          <hr/>
+          <hr/>aaaaa
         </div>
       </div>
     );
