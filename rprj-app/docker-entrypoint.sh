@@ -12,7 +12,7 @@ fi
 
 npm install
 # --silent
-npm rebuild node-sass
+# npm rebuild node-sass
 
 # Customization: end.
 
