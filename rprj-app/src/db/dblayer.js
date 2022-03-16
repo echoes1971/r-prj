@@ -184,14 +184,14 @@ function JSONDBConnection(connectionString,verbose) {
 		var callback = function(ret) { myobj.connected=true; };
 		var callErr = function(ret) { myobj.connected=false; alert('DBConnection Error: '+ret); };
 		var callFinal = function() { if(on_connect_callback!=null) on_connect_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return false; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return true;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return false; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return true;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	};
 	this.disconnect = function(on_disconnect_callback) { this.connected=false; if(on_disconnect_callback!=null) on_disconnect_callback(); };
 	this.isConnected = function() { return this.connected; };
@@ -226,14 +226,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj._rs_user=null; myobj._dbe_user=null; alert('Login Error: '+ret); };
 		var callFinal = function() { if(on_login_callback!=null) on_login_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj._dbe_user;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj._dbe_user;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	};
 	this.getLoggedUser = function(on_my_callback) {
 		var myobj = this;
@@ -247,15 +247,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj._rs_user=null; myobj._dbe_user=null; alert('getLoggedUser Error: '+ret); };
 		var callFinal = function() { if(on_my_callback!=null) on_my_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-// 			alert(ret);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj._dbe_user;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj._dbe_user;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	};
 	
 	this.execute = function(tablename,sql_string,on_execute_callback) {
@@ -265,14 +264,14 @@ function JSONDBConnection(connectionString,verbose) {
 		var callback = function(ret) { myobj.rs=myobj.obj2resultset(ret); };
 		var callErr = function(ret) { myobj.rs=null; alert('Execute Error: '+ret); };
 		var callFinal = function() { if(on_execute_callback!=null) on_execute_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj.rs;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj.rs;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	};
 	
 	// **************** Proxy Connections: start. *********************
@@ -289,21 +288,19 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Insert Error: '+ret); };
 		var callFinal = function() { if(on_insert_callback!=null) on_insert_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) {
-// 				callErr(ret);
-				this.rs=null; this.dbe=null; alert('Insert Error: '+ret);
-				return null;
-			}; // FIXME farlo meglio
-// 			callback(ret);
-			this.rs=myobj.obj2resultset(ret);
-			this.dbe = new DBEntity(dbe.dbename,dbe.tablename);
-			this.dbe.fromRS(myobj.rs,0);
-			callFinal();
-			return this.dbe;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) {
+		// 		this.rs=null; this.dbe=null; alert('Insert Error: '+ret);
+		// 		return null;
+		// 	}; // FIXME farlo meglio
+		// 	this.rs=myobj.obj2resultset(ret);
+		// 	this.dbe = new DBEntity(dbe.dbename,dbe.tablename);
+		// 	this.dbe.fromRS(myobj.rs,0);
+		// 	callFinal();
+		// 	return this.dbe;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	}
 	this.Update = function(dbe, on_finish_callback) {
 		var myobj = this;
@@ -316,14 +313,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Update Error: '+ret); };
 		var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj.dbe;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj.dbe;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	}
 	this.Delete = function(dbe, on_finish_callback) {
 		var myobj = this;
@@ -342,14 +339,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Delete Error: '+ret); };
 		var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj.dbe;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj.dbe;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	}
 	this.Select = function(dbename,tablename,searchString, on_finish_callback) {
 // 		var dbename=dbe.dbename;
@@ -365,7 +362,7 @@ function JSONDBConnection(connectionString,verbose) {
 				myobj.dbelist = null;
 			} else {
 				for(var r=0; r<myobj.rs.getNumRows(); r++) {
-					dbe = new DBEntity(dbename,tablename);
+					var dbe = new DBEntity(dbename,tablename);
 					dbe.fromRS(myobj.rs,r);
 					myobj.dbelist.push(dbe);
 				}
@@ -373,14 +370,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj.rs=null; myobj.dbelist=null; alert('Select Error: '+ret); };
 		var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj.dbelist;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj.dbelist;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	}
 	this.Search = function( dbe, uselike, caseSensitive, orderBy, on_finish_callback) {
 		var dbename=dbe.dbename;
@@ -408,14 +405,14 @@ function JSONDBConnection(connectionString,verbose) {
 		};
 		var callErr = function(ret) { myobj.rs=null; myobj.dbelist=null; alert('Select Error: '+ret); };
 		var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		if(this.synchronous) {
-			var ret = xmlrpcSync(this.connectionString,xmethod,params);
-			if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-			callback(ret);
-			callFinal();
-			return myobj.dbelist;
-		} else
-			var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		// if(this.synchronous) {
+		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
+		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
+		// 	callback(ret);
+		// 	callFinal();
+		// 	return myobj.dbelist;
+		// } else
+		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 	}
 	// **************** Proxy Connections: end. *********************
 	
