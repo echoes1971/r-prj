@@ -1,6 +1,7 @@
 // Client
+import './db/dblayer'
 
-class DBMgr {
+class BackEndProxy {
     constructor() {
         this.endpoint = 'http://localhost:8080/jsonserver.php'
     }
@@ -34,4 +35,4 @@ class DBMgr {
     }
 }
 
-export { DBMgr };
+export { BackEndProxy };

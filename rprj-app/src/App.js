@@ -3,17 +3,17 @@ import React, { Component } from 'react'
 import logo from './logo.svg';
 import './App.scss';
 
-import { DBMgr } from './dblayer';
+import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 
 class App extends Component {
 
-  dbmgr = null
+  be = null
 
   constructor() {
     super()
 
-    this.dbmgr = new DBMgr();
+    this.be = new BackEndProxy();
     this.msg = ''
     this.abody = 'mo zao'
 
@@ -35,7 +35,7 @@ class App extends Component {
 
       this.setState({ value: jsonObj[1] })
     }).bind(this)
-    this.dbmgr.ping(a_callback);
+    this.be.ping(a_callback);
   }
 
   //handleChange(e) {
