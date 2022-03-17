@@ -10,8 +10,9 @@ class BackEndProxy {
 
 
 
-    ping(a_callback = null) {
-        // create a new XMLHttpRequest
+    ping(on_ping_callback = null) {
+        this.con.ping(on_ping_callback);
+/*         // create a new XMLHttpRequest
         var xhr = new XMLHttpRequest()
 
         var default_callback = (myxhr) => {
@@ -36,7 +37,7 @@ class BackEndProxy {
 
         // send the request
         xhr.send(JSON.stringify(mydata))
-    }
+ */    }
 }
 
 export { BackEndProxy };

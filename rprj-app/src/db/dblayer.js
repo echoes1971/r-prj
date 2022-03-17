@@ -1,5 +1,5 @@
 /**
- * @copyright &copy; 2011 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2011-2022 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: dblayer.js $
  * @package rproject
@@ -177,6 +177,32 @@ function JSONDBConnection(connectionString,verbose) {
 	this.setVerbose = function(b) { this.verbose=b; };
 	this.isVerbose = function() { return this.verbose; };
 	
+	this.ping = function(on_ping_callback=null) {
+		// create a new XMLHttpRequest
+		var xhr = new XMLHttpRequest()
+
+		var default_callback = (myxhr) => {
+			// update the state of the component with the result here
+			console.log(xhr.responseText)
+			const jsonObj = JSON.parse(xhr.responseText)
+			console.log(jsonObj)
+			console.log('== Msg =======================================')
+			console.log(atob(jsonObj[0]))
+			console.log('== BODY ======================================')
+			console.log(jsonObj[1])
+			console.log('==============================================')
+		};
+		// get a callback when the server responds
+		xhr.addEventListener('load', on_ping_callback ? on_ping_callback : default_callback)
+		// xhr.addEventListener('load', a_callback ? a_callback(&xhr) : default_callback)
+		// open the request with the verb and the url
+		xhr.open('POST', this.endpoint)
+
+		var mydata = { method: "ping", params: []}
+
+		// send the request
+		xhr.send(JSON.stringify(mydata))
+	};
 	this.connect = function(on_connect_callback) {
 		var myobj = this;
 		var xmethod = 'ping';

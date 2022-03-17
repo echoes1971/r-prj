@@ -52,7 +52,7 @@ class App extends Component {
           <hr/>
           {this.state.value}
           <hr/>
-          <TestBE prova="Cippa Lippa" />
+          <TestBE prova="Cippa Lippa" ref={this.myRef} />
         </div>
       </div>
     );
