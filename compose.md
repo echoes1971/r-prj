@@ -48,6 +48,7 @@ docker-compose down --volumes
 docker-compose down -v --remove-orphans --rmi local
 docker-compose down -v --remove-orphans --rmi local ; sudo rm -rf mariadb/* files/*
 # docker-compose down -v --remove-orphans --rmi local ; sudo rm -rf mariadb/* files/* ; git checkout -- php/config_local.php php/mng/db_update_do.php
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v --remove-orphans --rmi local
 
 
 # Docker stuff
