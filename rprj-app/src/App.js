@@ -47,10 +47,10 @@ class App extends Component {
       <div className="App">
         <RNav/>
         <div class="container">
-          Msg: {this.msg}testina
+          Msg: {this.msg}
           <hr/>
           {this.state.value}
-          <hr/>aaaaa
+          <hr/>
         </div>
       </div>
     );
