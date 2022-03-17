@@ -508,3 +508,5 @@ function DBMgr(_connection, verbose) {
 	// **************** Proxy Connections: end. *********************
 	
 }
+
+export { ResultSet, DBEntity, DBMgr, JSONDBConnection };

@@ -30,11 +30,17 @@ docker exec -it r-prj_rprj-app_1 sh
 # Developing on Windows
 
 ```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose stop rprj-app
+
 cd rprj-app
 del .\node_modules\*
 docker container stop r-prj_rprj-app_1
 npm install --silent
 npm start
+
+cd ..
+docker-compose down -v --remove-orphans --rmi local
 ```
 
 

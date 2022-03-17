@@ -5,6 +5,7 @@ import './App.scss';
 
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
+import TestBE from './comp.test.be';
 
 class App extends Component {
 
@@ -51,6 +52,7 @@ class App extends Component {
           <hr/>
           {this.state.value}
           <hr/>
+          <TestBE prova="Cippa Lippa" />
         </div>
       </div>
     );
