@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { BackEndProxy } from './be';
-import { JSONDBConnection } from './db/dblayer'
 
 class TestBE extends React.Component {
     constructor(props) {
@@ -11,6 +10,8 @@ class TestBE extends React.Component {
             connected: "--",
             date: new Date(),
             user: "--",
+            usr: '',
+            pwd: '',
             server_response_0: '--',
             server_response_1: '--'
         }
@@ -20,6 +21,9 @@ class TestBE extends React.Component {
         // Bindings
         this.default_server_callback = this.default_server_callback.bind(this);
         this.on_ping_callback = this.on_ping_callback.bind(this);
+
+        this.login_handleChange = this.login_handleChange.bind(this);
+        this.login_handleSubmit = this.login_handleSubmit.bind(this);
         this.on_login_callback = this.on_login_callback.bind(this);
 
         this.on_btn_ping_callback = this.on_btn_ping_callback.bind(this);
@@ -60,6 +64,14 @@ class TestBE extends React.Component {
     ping_handleSubmit(event) {
         event.preventDefault();
     }
+    login_handleSubmit(event) {
+        event.preventDefault();
+    }
+    login_handleChange(event) {
+        const tmp = {}
+        tmp[event.target.name] = event.target.value
+        this.setState(tmp);
+    }
     
     default_server_callback(jsonObj) {
         // console.log("TestBE.on_btn_ping_callback: start.");
@@ -80,7 +92,7 @@ class TestBE extends React.Component {
         this.setState({
             server_response_0: jsonObj[0],
             server_response_1: JSON.stringify(jsonObj[1]),
-            user: tmpUser ? tmpUser.to_string() : ''
+            user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
         })
         // console.log("TestBE.on_btn_ping_callback: end.");
     }
@@ -108,8 +120,8 @@ class TestBE extends React.Component {
     }
 
     btnLogin() {
-        var user = 'adm';
-        var pwd = 'adm2';
+        var user = this.state.usr;
+        var pwd = this.state.pwd;
         this.be.login(user,pwd,this.on_login_callback);
     }
 
@@ -135,7 +147,9 @@ class TestBE extends React.Component {
                         </form>
                     </div>
                     <div class="col text-start fw-bold">
-                        <form onSubmit={this.ping_handleSubmit}>
+                        <form onSubmit={this.login_handleSubmit}>
+                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.login_handleChange} />
+                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.login_handleChange} />
                             <button onClick={this.btnLogin}>Login</button>
                         </form>
                         User: {this.state.user}
