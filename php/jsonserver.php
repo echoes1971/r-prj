@@ -57,7 +57,10 @@ function _isAuthorized() {
 }
 
 function _dbeToJson(&$dbe) {
-  $tmpArray = array();
+	// 2022.03.18: start.
+	if($dbe===null) return array();
+	// 2022.03.18: end.
+	$tmpArray = array();
   $tmpArray["_typeName"] = $dbe->getTypeName();
   $tmpArray["_typename"] = $dbe->getTypeName();
   $dict = $dbe->getValuesDictionary();
@@ -387,8 +390,9 @@ if(function_exists($mymethod)) {
 		$tmpParams[]="\$par$_p";
 	}
 	$myeval .= "\$ret = $mymethod(".implode(",",$tmpParams).");";
-	//echo "myeval: $myeval\n";
+	// echo "myeval: $myeval\n";
 	eval($myeval);
+	// echo "ret: $ret\n";
 	$json_response=$ret;
 } elseif(strpos($mymethod,".")!==false) {
 	$myeval = "\$ret = \$".implode("->",explode(".",$mymethod))."(".implode(",",$myparams).");";
