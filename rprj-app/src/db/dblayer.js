@@ -156,7 +156,7 @@ function DBEntity(dbename,tablename) {
 }
 
 /**
- * Class: DBConnection
+ * Class: JSONDBConnection
  */
 function JSONDBConnection(connectionString,verbose) {
 	this.connected=false;
@@ -177,47 +177,37 @@ function JSONDBConnection(connectionString,verbose) {
 	this.setVerbose = function(b) { this.verbose=b; };
 	this.isVerbose = function() { return this.verbose; };
 	
-	this.ping = function(on_ping_callback=null) {
-		// create a new XMLHttpRequest
+	this._sendRequest = function(method, params, req_callback) {
+		if(this.verbose) { console.log("JSONDBConnection._sendRequest: start."); }
 		var xhr = new XMLHttpRequest()
-
-		var default_callback = (myxhr) => {
-			// update the state of the component with the result here
-			console.log(xhr.responseText)
+		var default_callback = (e) => {
+			// console.log("JSONDBConnection._sendRequest.default_callback: start.");
 			const jsonObj = JSON.parse(xhr.responseText)
-			console.log(jsonObj)
-			console.log('== Msg =======================================')
-			console.log(atob(jsonObj[0]))
-			console.log('== BODY ======================================')
-			console.log(jsonObj[1])
-			console.log('==============================================')
+			jsonObj[0] = atob(jsonObj[0])
+			// console.log(jsonObj)
+			// console.log('== Msg =======================================')
+			// console.log(jsonObj[0])
+			// console.log(atob(jsonObj[0]))
+			// console.log('== BODY ======================================')
+			// console.log(jsonObj[1])
+			// console.log('==============================================')
+			if(req_callback) req_callback(jsonObj)
+			// console.log("JSONDBConnection._sendRequest.default_callback: end.");
 		};
-		// get a callback when the server responds
-		xhr.addEventListener('load', on_ping_callback ? on_ping_callback : default_callback)
-		// xhr.addEventListener('load', a_callback ? a_callback(&xhr) : default_callback)
-		// open the request with the verb and the url
-		xhr.open('POST', this.endpoint)
-
-		var mydata = { method: "ping", params: []}
-
-		// send the request
+		xhr.addEventListener('load', (default_callback).bind(xhr));
+		xhr.open('POST', this.connectionString)
+		var mydata = { method: method, params: params}
 		xhr.send(JSON.stringify(mydata))
+		if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
+	}
+
+	this.ping = function(on_ping_callback=null) {
+		if(this.verbose) { console.log("JSONDBConnection.ping: start."); }
+		this._sendRequest('ping', [], on_ping_callback);
+		if(this.verbose) { console.log("JSONDBConnection.ping: end."); }
 	};
 	this.connect = function(on_connect_callback) {
-		var myobj = this;
-		var xmethod = 'ping';
-		var params = [];
-		var callback = function(ret) { myobj.connected=true; };
-		var callErr = function(ret) { myobj.connected=false; alert('DBConnection Error: '+ret); };
-		var callFinal = function() { if(on_connect_callback!=null) on_connect_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) { callErr(ret); return false; }; // FIXME farlo meglio
-		// 	callback(ret);
-		// 	callFinal();
-		// 	return true;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+		this.ping(on_connect_callback);
 	};
 	this.disconnect = function(on_disconnect_callback) { this.connected=false; if(on_disconnect_callback!=null) on_disconnect_callback(); };
 	this.isConnected = function() { return this.connected; };

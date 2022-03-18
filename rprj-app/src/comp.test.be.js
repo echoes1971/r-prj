@@ -4,7 +4,7 @@ import { BackEndProxy } from './be';
 import { JSONDBConnection } from './db/dblayer'
 
 class TestBE extends React.Component {
-    constructor(props, ref) {
+    constructor(props) {
         super(props);
         this.prova = props.prova
         this.state = {
@@ -15,17 +15,20 @@ class TestBE extends React.Component {
         }
 
         this.be = new BackEndProxy();
+
+        this.on_ping_callback = this.on_ping_callback.bind(this);
+        this.btnPingServer = this.btnPingServer.bind(this);
     }
 
     componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
+        // this.timerID = setInterval(
+        //     () => this.tick(),
+        //     1000
+        // );
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID);
+        // clearInterval(this.timerID);
     }
 
     tick() {
@@ -40,20 +43,17 @@ class TestBE extends React.Component {
         event.preventDefault();
     }
     
-
+    on_ping_callback(jsonObj) {
+        console.log("TestBE.on_ping_callback: start.");
+        // update the state of the component with the result here
+        console.log(jsonObj)    
+        this.setState({ ping_response_0: jsonObj[0], ping_response_1: jsonObj[1] })
+        console.log("TestBE.on_ping_callback: end.");
+    }
     btnPingServer() {
-        var on_ping_callback = (function(xhr) {
-            // update the state of the component with the result here
-            console.log(xhr.responseText)
-            const jsonObj = JSON.parse(xhr.responseText)
-        
-            this.setState({ ping_response_0: jsonObj[0], ping_response_1: jsonObj[1] })
-        }).bind(this);
-
-        // alert(this);
-        // alert(this.be);
-
-        this.be.ping(on_ping_callback);
+        console.log("TestBE.btnPingServer: start.");
+        this.be.ping(this.on_ping_callback);
+        console.log("TestBE.btnPingServer: end.");
     }
 
     render() {
@@ -70,7 +70,7 @@ class TestBE extends React.Component {
                 <div class="row">
                     <div class="col text-start fw-bold">
                         <form onSubmit={this.ping_handleSubmit}>
-                            <button onClick={this.btnPingServer()}>PING</button>
+                            <button onClick={this.btnPingServer}>PING</button>
                         </form>
                     </div>
                     <div class="col">{this.state.ping_response_0}</div>

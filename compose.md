@@ -34,7 +34,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 docker-compose stop rprj-app
 
 cd rprj-app
-del .\node_modules\*
+3#del .\node_modules\*
 docker container stop r-prj_rprj-app_1
 npm install --silent
 npm start
