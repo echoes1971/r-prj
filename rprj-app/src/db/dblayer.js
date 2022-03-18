@@ -194,20 +194,36 @@ function JSONDBConnection(connectionString,verbose) {
 			if(req_callback) req_callback(jsonObj)
 			// console.log("JSONDBConnection._sendRequest.default_callback: end.");
 		};
+		var error_cb = (e) => {
+			console.log("JSONDBConnection._sendRequest.error_cb: start.");
+			console.log(e)
+			console.log(xhr)
+			if(req_callback) req_callback(["NETWORK ERROR",[]])
+			console.log("JSONDBConnection._sendRequest.error_cb: end.");
+		}
 		xhr.addEventListener('load', (default_callback).bind(xhr));
+		xhr.addEventListener('error', (error_cb).bind(xhr));
 		xhr.open('POST', this.connectionString)
 		var mydata = { method: method, params: params}
 		xhr.send(JSON.stringify(mydata))
 		if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
 	}
 
-	this.ping = function(on_ping_callback=null) {
-		if(this.verbose) { console.log("JSONDBConnection.ping: start."); }
-		this._sendRequest('ping', [], on_ping_callback);
-		if(this.verbose) { console.log("JSONDBConnection.ping: end."); }
+	this.ping = function(a_callback=null) {
+		var self = this
+		var my_connect_callback = (jsonObj) => {
+			self.connected = jsonObj[1]=='pong'
+			a_callback(jsonObj)
+		}
+		this._sendRequest('ping', [], my_connect_callback.bind(self));
 	};
-	this.connect = function(on_connect_callback) {
-		this.ping(on_connect_callback);
+	this.connect = function(a_callback) {
+		var self = this
+		var my_connect_callback = (jsonObj) => {
+			self.connected = jsonObj[1]=='pong'
+			a_callback(jsonObj)
+		}
+		this.ping(my_connect_callback.bind(self));
 	};
 	this.disconnect = function(on_disconnect_callback) { this.connected=false; if(on_disconnect_callback!=null) on_disconnect_callback(); };
 	this.isConnected = function() { return this.connected; };

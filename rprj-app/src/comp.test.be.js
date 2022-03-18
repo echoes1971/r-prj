@@ -8,6 +8,7 @@ class TestBE extends React.Component {
         super(props);
         this.prova = props.prova
         this.state = {
+            connected: "--",
             date: new Date(),
             msg: 'di qualcosa.',
             ping_response_0: '--',
@@ -16,44 +17,66 @@ class TestBE extends React.Component {
 
         this.be = new BackEndProxy();
 
+        // Bindings
         this.on_ping_callback = this.on_ping_callback.bind(this);
+
+        this.on_btn_ping_callback = this.on_btn_ping_callback.bind(this);
         this.btnPingServer = this.btnPingServer.bind(this);
     }
 
     componentDidMount() {
-        // this.timerID = setInterval(
-        //     () => this.tick(),
-        //     1000
-        // );
+        this.timerID = setInterval(
+            () => this.tick_time(),
+            1000
+        );
+
+        this.tick_ping();
+        this.pingID = setInterval(
+            // () => this.be.ping(this.on_ping_callback),
+            () => this.tick_ping(),
+            15 * 1000                   // Better 60 seconds?
+        );
     }
 
     componentWillUnmount() {
-        // clearInterval(this.timerID);
+        clearInterval(this.timerID);
+        clearInterval(this.pingID);
     }
 
-    tick() {
+    tick_time() {
         this.setState({
             date: new Date()
         })
     }
 
+    tick_ping() {
+        this.be.ping(this.on_ping_callback);
+    }
+
     ping_handleSubmit(event) {
-        // alert('Blocked submits: ' + event);
-        // alert(this.be);
         event.preventDefault();
     }
     
     on_ping_callback(jsonObj) {
-        console.log("TestBE.on_ping_callback: start.");
-        // update the state of the component with the result here
-        console.log(jsonObj)    
-        this.setState({ ping_response_0: jsonObj[0], ping_response_1: jsonObj[1] })
-        console.log("TestBE.on_ping_callback: end.");
+        // console.log("TestBE.on_ping_callback: start.");
+        // console.log(jsonObj)
+        // console.log(this.be.isConnected())
+        this.setState({
+            connected: this.be.isConnected() ? "True" : "False"
+        })
+        // console.log("TestBE.on_ping_callback: end.");
+    }
+    on_btn_ping_callback(jsonObj) {
+        // console.log("TestBE.on_btn_ping_callback: start.");
+        // console.log(jsonObj)
+        // console.log(this.be.isConnected())
+        this.setState({
+            ping_response_0: jsonObj[0],
+            ping_response_1: jsonObj[1] })
+        // console.log("TestBE.on_btn_ping_callback: end.");
     }
     btnPingServer() {
-        console.log("TestBE.btnPingServer: start.");
-        this.be.ping(this.on_ping_callback);
-        console.log("TestBE.btnPingServer: end.");
+        this.be.ping(this.on_btn_ping_callback);
     }
 
     render() {
@@ -73,8 +96,16 @@ class TestBE extends React.Component {
                             <button onClick={this.btnPingServer}>PING</button>
                         </form>
                     </div>
-                    <div class="col">{this.state.ping_response_0}</div>
-                    <div class="col-10 text-start">{this.state.ping_response_1}</div>
+                </div>
+                <div class="row">
+                    <div class="col">Message:</div>
+                    <div class="col-5 text-start"><pre>{this.state.ping_response_0}</pre></div>
+                    <div class="col">Response:</div>
+                    <div class="col-5 text-start">{this.state.ping_response_1}</div>
+                </div>
+                <div class="row">
+                    <div class="col text-end fw-bold">Connected:</div>
+                    <div class="col-11 text-start">{this.state.connected}</div>
                 </div>
             </div>
         );

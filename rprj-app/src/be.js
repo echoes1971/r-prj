@@ -13,6 +13,16 @@ class BackEndProxy {
     ping(on_ping_callback = null) {
         this.con.ping(on_ping_callback);
     }
+
+    connect(a_callback = null) {
+        this.con.connect(a_callback);
+    }
+
+    isConnected() { return this.con.isConnected(); }
+
+    disconnect(a_callback = null) {
+        this.con.disconnect(a_callback);
+    }
 }
 
 export { BackEndProxy };
