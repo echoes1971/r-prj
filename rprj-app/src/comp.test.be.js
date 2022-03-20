@@ -159,12 +159,18 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
                 <div class="row">
-                    <div class="col-1">Message:</div>
-                    <div class="col text-start"><pre>{this.state.server_response_0}</pre></div>
-                </div>
-                <div class="row">
-                    <div class="col-1">Response:</div>
-                    <div class="col text-start">{this.state.server_response_1}</div>
+                    <div class="col">
+                        <div class="component border rounded">
+                            <div class="row">
+                                <div class="col-1">Message:</div>
+                                <div class="col text-start"><pre>{this.state.server_response_0}</pre></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1">Response:</div>
+                                <div class="col text-start">{this.state.server_response_1}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                 </div>
