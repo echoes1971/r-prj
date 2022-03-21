@@ -36,6 +36,10 @@ class BackEndProxy {
         this.con.getLoggedUser(a_callback);
     }
 
+    execute(tablename,sql_string,a_callback) {
+        this.con.execute(tablename,sql_string,a_callback);
+    }
+
 }
 
 export { BackEndProxy };

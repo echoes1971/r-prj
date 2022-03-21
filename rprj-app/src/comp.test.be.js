@@ -14,7 +14,9 @@ class TestBE extends React.Component {
             usr: '',
             pwd: '',
             server_response_0: '--',
-            server_response_1: '--'
+            server_response_1: '--',
+            tablename: 'folders',
+            sqlstring: 'select *\n  from rprj_folders'
         }
 
         this.be = new BackEndProxy(this.state.endpoint);
@@ -23,20 +25,24 @@ class TestBE extends React.Component {
         this.endpoint_handleChange = this.endpoint_handleChange.bind(this);
 
         this.default_server_callback = this.default_server_callback.bind(this);
-        this.on_ping_callback = this.on_ping_callback.bind(this);
 
         this.default_handleSubmit = this.default_handleSubmit.bind(this);
 
         this.login_handleChange = this.login_handleChange.bind(this);
         this.on_login_callback = this.on_login_callback.bind(this);
+        this.btnLogin = this.btnLogin.bind(this);
 
+        this.on_ping_callback = this.on_ping_callback.bind(this);
         this.on_btn_ping_callback = this.on_btn_ping_callback.bind(this);
         this.btnPingServer = this.btnPingServer.bind(this);
 
-        this.btnLogin = this.btnLogin.bind(this);
         this.on_fetchuser_callback = this.on_fetchuser_callback.bind(this);
         this.btnLoggedUser = this.btnLoggedUser.bind(this);
         this.btnLogout = this.btnLogout.bind(this);
+
+        this.execute_handleChange = this.execute_handleChange.bind(this);
+        this.on_execute_callback = this.on_execute_callback.bind(this);
+        this.btnExecute = this.btnExecute.bind(this);
     }
 
     componentDidMount() {
@@ -157,6 +163,34 @@ class TestBE extends React.Component {
         this.be.logout(this.default_server_callback);
     }
 
+    execute_handleChange(event) {
+        const tmp = {}
+        tmp[event.target.name] = event.target.value
+        this.setState(tmp);
+    
+    }
+    on_execute_callback(jsonObj, dbelist) {
+        console.log("TestBE.on_execute_callback: start.");
+        // console.log(jsonObj)
+        // console.log(this.be.isConnected())
+        var tmp = [];
+        for(var i=0; i<dbelist.length; i++) {
+            tmp.push(dbelist[i].to_string());
+        }
+        const tmpUser = this.be.getDBEUserFromConnection();
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: tmp.join("\r\n"), //JSON.stringify(jsonObj[1]),
+            user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
+        })
+        console.log("TestBE.on_execute_callback: end.");
+    }
+    btnExecute() {
+        var tablename = this.state.tablename;
+        var sqlstring = this.state.sqlstring;
+        this.be.execute(tablename,sqlstring,this.on_execute_callback);
+    }
+
     render() {
         return (
             <div class="component">
@@ -224,6 +258,21 @@ class TestBE extends React.Component {
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="col text-start fw-bold align-top">
+                        <form onSubmit={this.default_handleSubmit}>
+                            Table: <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.execute_handleChange} /> 
+                            &nbsp;
+                            Sql: <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.execute_handleChange} />
+                            &nbsp;
+                            <button onClick={this.btnExecute}>Select as Array</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">&nbsp;</div>
                 </div>
             </div>
         );

@@ -81,7 +81,6 @@ function DBEntity(dbename,tablename) {
 	this.getTableName = function() { return this.tablename; }
 	
 	this.fromRS = function(rs,row) {
-		console.log("")
 		var typenameIndex = rs.getColumnIndex('_typename');
 		if(typenameIndex>0) this.dbename=rs.getValue(row,typenameIndex);
 		for(var col=0; col<rs.getNumColumns(); col++) {
@@ -339,21 +338,41 @@ function JSONDBConnection(connectionString,verbose) {
 		this._sendRequest('logout', [], my_callback.bind(self));
 	};
 	
-	this.execute = function(tablename,sql_string,on_execute_callback) {
-		var myobj = this;
-		var xmethod = 'selectAsArray';
-		var params = [tablename,sql_string];
-		var callback = function(ret) { myobj.rs=myobj.obj2resultset(ret); };
-		var callErr = function(ret) { myobj.rs=null; alert('Execute Error: '+ret); };
-		var callFinal = function() { if(on_execute_callback!=null) on_execute_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-		// 	callback(ret);
-		// 	callFinal();
-		// 	return myobj.rs;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+	this.execute = function(tablename,sql_string,a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.execute.my_callback: start.");
+			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			var dbelist = [];
+			console.log( jsonObj[1] )
+			var myRS = self.obj2resultset(jsonObj[1]);
+			console.log("myRS: " + JSON.stringify(myRS));
+			var dbelist = [];
+			for(var i=0; i<myRS.getNumRows(); i++) {
+				try {
+					// console.log(myRS[i]);
+			// 		// self._rs_user=self.obj2resultset(jsonObj[1]);
+			// 		// console.log("self._rs_user: " + self._rs_user);
+			// 		// if(self._rs_user) {
+					var mydbe = new DBEntity(myRS.getValue(i,0), tablename);
+					mydbe.fromRS(myRS,i);
+					console.log("mydbe: " + mydbe.to_string());
+					dbelist.push(mydbe);
+			// 		// 	console.log("self._dbe_user: " + self._dbe_user.to_string());
+			// 		// } else {
+			// 		// 	self._dbe_user = null;
+			// 		// 	console.log("self._dbe_user: " + self._dbe_user);
+			// 		// }
+				} catch(e) {
+					console.log("ERROR" + e);
+				}
+			}
+			console.log(dbelist)
+			jsonObj[1] = dbelist;
+			a_callback(jsonObj, dbelist)
+			console.log("JSONDBConnection.execute.my_callback: end.");
+		}
+		this._sendRequest('selectAsArray', [tablename,sql_string], my_callback.bind(self).bind(tablename));
 	};
 	
 	// **************** Proxy Connections: start. *********************

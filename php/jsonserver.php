@@ -193,6 +193,34 @@ function search($dbe,$uselike,$caseSensitive,$orderby,$ignore_deleted = true,$fu
 	return $retArray;
 }
 
+function selectAsArray($tablename, $searchString) {
+    global $dbmgr;
+    global $xmlrpc_require_login;
+    
+    // ob_start();
+    $dbmgr->setVerbose(false);
+    $listadbe = array();
+    if(_isAuthorized()) {
+        $myfactory = $dbmgr->getFactory();
+        $classname = get_class($myfactory->getInstanceByTableName($tablename));
+        $listadbe = $dbmgr->select($classname, $tablename, $searchString);
+    } else {
+        echo "xmlrpc_server.selectAsArray: Authentication required!\n";
+    }
+    $dbmgr->setVerbose(false);
+    // $messaggi = ob_get_contents();
+    // ob_end_clean();
+    
+    $retArray=array();
+    foreach($listadbe as $mydbe ) {
+        // $retArray[]=$mydbe->getValuesDictionary();
+        // $retArray[]=_arrayToXmlrpc($mydbe->getValuesDictionary());
+        $retArray[]=_dbeToJson($mydbe);
+    }
+	return $retArray;
+}
+
+
 // ************* ObjectMgr: start.
 function objectById($myid,$ignore_deleted) {
 	global $dbmgr;
