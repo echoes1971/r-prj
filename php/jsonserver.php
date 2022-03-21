@@ -18,8 +18,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-// header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Origin: *');
+// **** Cross-site: start.
+// This to persist cookies in Cross-Site calls
+// On the client:
+// - xhr.withCredentials = true;
+// On the server side:
+// - Access-Control-Allow-Origin: http://localhost:3000
+// - Access-Control-Allow-Credentials: true
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Credentials: true');
+// header('Access-Control-Allow-Origin: *');
+// **** Cross-site: end.
+
+
 
 header('Content-type: application/json');
 

@@ -25,14 +25,18 @@ class TestBE extends React.Component {
         this.default_server_callback = this.default_server_callback.bind(this);
         this.on_ping_callback = this.on_ping_callback.bind(this);
 
+        this.default_handleSubmit = this.default_handleSubmit.bind(this);
+
         this.login_handleChange = this.login_handleChange.bind(this);
-        this.login_handleSubmit = this.login_handleSubmit.bind(this);
         this.on_login_callback = this.on_login_callback.bind(this);
 
         this.on_btn_ping_callback = this.on_btn_ping_callback.bind(this);
         this.btnPingServer = this.btnPingServer.bind(this);
 
         this.btnLogin = this.btnLogin.bind(this);
+
+        this.on_fetchuser_callback = this.on_fetchuser_callback.bind(this);
+        this.btnLoggedUser = this.btnLoggedUser.bind(this);
     }
 
     componentDidMount() {
@@ -71,12 +75,10 @@ class TestBE extends React.Component {
         this.setState({endpoint: event.target.value});
     }
 
-    ping_handleSubmit(event) {
+    default_handleSubmit(event) {
         event.preventDefault();
     }
-    login_handleSubmit(event) {
-        event.preventDefault();
-    }
+
     login_handleChange(event) {
         const tmp = {}
         tmp[event.target.name] = event.target.value
@@ -105,6 +107,18 @@ class TestBE extends React.Component {
             user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
         })
         // console.log("TestBE.on_btn_ping_callback: end.");
+    }
+    on_fetchuser_callback(jsonObj) {
+        console.log("TestBE.on_fetchuser_callback: start.");
+        console.log(jsonObj)
+        console.log(this.be.isConnected())
+        const tmpUser = this.be.getDBEUserFromConnection();
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: JSON.stringify(jsonObj[1]),
+            user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
+        })
+        console.log("TestBE.on_fetchuser_callback: end.");
     }
 
     on_ping_callback(jsonObj) {
@@ -135,6 +149,10 @@ class TestBE extends React.Component {
         this.be.login(user,pwd,this.on_login_callback);
     }
 
+    btnLoggedUser() {
+        this.be.getLoggedUser(this.on_fetchuser_callback);
+    }
+
     render() {
         return (
             <div class="component">
@@ -159,18 +177,25 @@ class TestBE extends React.Component {
                 </div>
                 <div class="row">
                     <div class="col text-start fw-bold">
-                        <form onSubmit={this.ping_handleSubmit}>
+                        <form onSubmit={this.default_handleSubmit}>
                             <button onClick={this.btnPingServer}>PING</button>
                         </form>
                     </div>
                     <div class="col text-start fw-bold">
-                        <form onSubmit={this.login_handleSubmit}>
-                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.login_handleChange} />
-                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.login_handleChange} />
+                        <form onSubmit={this.default_handleSubmit}>
+                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.login_handleChange} /> <br />
+                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.login_handleChange} /> <br />
                             <button onClick={this.btnLogin}>Login</button>
                         </form>
-                        User: {this.state.user}
                     </div>
+                    <div class="col text-start fw-bold">
+                        <form onSubmit={this.default_handleSubmit}>
+                            Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row test-start">
+                    <div class="col">User: {this.state.user}</div>
                 </div>
                 <div class="row">
                     <div class="col">&nbsp;</div>

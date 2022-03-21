@@ -434,11 +434,6 @@ $dbschema_type_list[]='DBEObject';
 
 
 class ObjectMgr extends DBMgr {
-	// function ObjectMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
-	// 	echo "STOCAZZO\n";
-	// 	$this->DBMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory,$dbeuser, $user_groups_list);
-	// 	echo "STOPPARDI\n";
-	// }
 	function canRead(&$obj) {
 		$ret = false;
 		$myuser = $this->getDBEUser();
@@ -914,7 +909,6 @@ class DBEEvent extends DBEObject {
 			self::$__mycolumns['all_day']=array('char(1)',"not null default '1'"); // Bool - An all day event?
 			
 			self::$__mycolumns['url']=array('varchar(255)',"default null"); // An Url
-// 	RIDONDANTE		self::$__mycolumns['private']=array('int',"default null"); // Bool - Is it private?
 			
 			self::$__mycolumns['alarm']=array('char(1)',"default '0'"); // Bool - Signal an alarm before?
 			self::$__mycolumns['alarm_minute']=array('int',"default 0"); // Num. time unit

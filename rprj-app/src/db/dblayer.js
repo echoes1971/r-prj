@@ -22,10 +22,10 @@
  * Class: ResultSet
  */
  function ResultSet() {
-	this.columnName = new Array();
-	this.columnType = new Array();
-	this.columnSize = new Array();
-	this.righe = new Array();
+	this.columnName = [];
+	this.columnType = [];
+	this.columnSize = [];
+	this.righe = [];
 	
 	this.getNumColumns = function() { return this.columnName.length; }
 	this.getNumRows = function() { return this.columnName.length>0 ? (this.righe.length / this.columnName.length) : 0; }
@@ -74,7 +74,7 @@ function DBEntity(dbename,tablename) {
 	this.dbename = dbename || "DBEntity";
 	this.tablename = tablename>'' ? tablename : '';
 	this.keys={}; // nome=>tipo
-	this._fks=new Array(); // Array of FKs
+	this._fks = []; // Array of FKs
 	this.dict={}; // Values
 	
 	this.getDBEName = function() { return this.dbename; }
@@ -97,10 +97,10 @@ function DBEntity(dbename,tablename) {
 	this.setValues = function(_dict) { this.dict=_dict; }
 	
 	this.getKeys = function() { return this.keys; }
-	this.getKeyNames = function() { var ret=Array(); for(var i in this.keys) ret.push(i); return ret; }
+	this.getKeyNames = function() { var ret=[]; for(var i in this.keys) ret.push(i); return ret; }
 	
 	this.getFK = function() { return this._fks; }
-	this.getFKForTable = function(tablename) { var ret=new Array(); for(var i=0; i<this._fks.length; i++) { if(this._fks[i].tabella_riferita==tablename) ret.push(this._fks[i]); } return ret; }
+	this.getFKForTable = function(tablename) { var ret = []; for(var i=0; i<this._fks.length; i++) { if(this._fks[i].tabella_riferita==tablename) ret.push(this._fks[i]); } return ret; }
 	this.readFKFrom = function(dbe) {
 		var fks = this.getFKForTable( dbe.getTableName() );
 		for(var i=0; i<fks.length; i++) {
@@ -184,6 +184,8 @@ function JSONDBConnection(connectionString,verbose) {
 		var default_callback = (e) => {
 			console.log("JSONDBConnection._sendRequest.default_callback: start.");
 			console.log(xhr);
+			console.log(xhr.getAllResponseHeaders());
+			console.log(xhr.getResponseHeader('Set-Cookie'))
 			try {
 				const jsonObj = JSON.parse(xhr.responseText)
 				jsonObj[0] = atob(jsonObj[0])
@@ -208,9 +210,22 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		xhr.addEventListener('load', (default_callback).bind(xhr));
 		xhr.addEventListener('error', (error_cb).bind(xhr));
-		xhr.open('POST', this.connectionString)
-		var mydata = { method: method, params: params}
-		xhr.send(JSON.stringify(mydata))
+		xhr.open('POST', this.connectionString);
+
+		// **** Cross-site: start.
+		// This to persist cookies in Cross-Site calls
+		// On the client:
+		// - xhr.withCredentials = true;
+		// On the server side:
+		// - Access-Control-Allow-Origin: http://localhost:3000
+		// - Access-Control-Allow-Credentials: true
+		// 
+		// header('Access-Control-Allow-Origin: *');
+		xhr.withCredentials = true;
+		// **** Cross-site: end.
+
+		var mydata = { method: method, params: params};
+		xhr.send(JSON.stringify(mydata));
 		if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
 	}
 
@@ -279,26 +294,27 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		this._sendRequest('login', [user,pwd], my_callback.bind(self));
 	};
-	this.getLoggedUser = function(on_my_callback) {
-		var myobj = this;
-		var xmethod = 'getLoggedUser';
-		var params = []; //[user,pwd];
-// 		var callback = function(ret) { myobj._rs_user=myobj.obj2resultset(ret); };
-		var callback = function(ret) {
-			myobj._rs_user=myobj.obj2resultset(ret);
-			myobj._dbe_user = new DBEntity("DBEUser","users");
-			myobj._dbe_user.fromRS(myobj._rs_user,0);
-		};
-		var callErr = function(ret) { myobj._rs_user=null; myobj._dbe_user=null; alert('getLoggedUser Error: '+ret); };
-		var callFinal = function() { if(on_my_callback!=null) on_my_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-		// 	callback(ret);
-		// 	callFinal();
-		// 	return myobj._dbe_user;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+	this.getLoggedUser = function(a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			try {
+				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				self._rs_user=self.obj2resultset(jsonObj[1]);
+				console.log("self._rs_user: " + self._rs_user);
+				if(self._rs_user) {
+					self._dbe_user = new DBEntity("DBEUser","users");
+					self._dbe_user.fromRS(self._rs_user,0);
+					console.log("self._dbe_user: " + self._dbe_user.to_string());
+				} else {
+					self._dbe_user = null;
+					console.log("self._dbe_user: " + self._dbe_user);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj)
+		}
+		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
 	};
 	
 	this.execute = function(tablename,sql_string,on_execute_callback) {
@@ -397,7 +413,7 @@ function JSONDBConnection(connectionString,verbose) {
 // 		var tablename=dbe.tablename;
 		var myobj = this;
 		myobj.rs=null;
-		myobj.dbelist=new Array();
+		myobj.dbelist = [];
 		var xmethod = 'select';
 		var params = [ tablename,searchString ];
 		var callback = function(ret) {
@@ -428,7 +444,7 @@ function JSONDBConnection(connectionString,verbose) {
 		var tablename=dbe.tablename;
 		var myobj = this;
 		myobj.rs=null;
-		myobj.dbelist=new Array();
+		myobj.dbelist = [];
 		var xmethod = 'search';
 		var params = [ new Array( dbe.dbename, dbe.getValues() ), uselike, caseSensitive, orderBy ];
 		var callback = function(ret) {
