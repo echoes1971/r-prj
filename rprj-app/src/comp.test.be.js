@@ -7,6 +7,7 @@ class TestBE extends React.Component {
         super(props);
         this.prova = props.prova
         this.state = {
+            endpoint: props.endpoint,
             connected: "--",
             date: new Date(),
             user: "--",
@@ -16,9 +17,11 @@ class TestBE extends React.Component {
             server_response_1: '--'
         }
 
-        this.be = new BackEndProxy();
+        this.be = new BackEndProxy(this.state.endpoint);
 
         // Bindings
+        this.endpoint_handleChange = this.endpoint_handleChange.bind(this);
+
         this.default_server_callback = this.default_server_callback.bind(this);
         this.on_ping_callback = this.on_ping_callback.bind(this);
 
@@ -59,6 +62,13 @@ class TestBE extends React.Component {
 
     tick_ping() {
         this.be.ping(this.on_ping_callback);
+    }
+
+    endpoint_handleChange(event) {
+        // if(!confirm('Change Datasource?')) return;
+
+        this.be = new BackEndProxy(event.target.value);
+        this.setState({endpoint: event.target.value});
     }
 
     ping_handleSubmit(event) {
@@ -102,7 +112,7 @@ class TestBE extends React.Component {
         // console.log(jsonObj)
         // console.log(this.be.isConnected())
         this.setState({
-            connected: this.be.isConnected() ? "True" : "False"
+            connected: this.be.isConnected() ? "Online" : "Offline"
         })
         // console.log("TestBE.on_ping_callback: end.");
     }
@@ -132,8 +142,15 @@ class TestBE extends React.Component {
                     <div class="col"><h2>TestBE</h2></div>
                 </div>
                 <div class="row">
-                    <div class="col-1 text-end fw-bold">Connected:</div>
-                    <div class="col-1 text-start">{this.state.connected}</div>
+                    <div class="col-2 text-start fw-bold">
+                        <select name="endpoint" value={this.state.endpoint} onChange={this.endpoint_handleChange}>
+                            <option value="http://localhost:8080/jsonserver.php">Local</option>
+                            <option value="https://www.roccoangeloni.it/rproject/jsonserver.php">RRA</option>
+                            <option value="https://echocloud.doesntexist.com/jsonserver.php">Echo Cloud</option>
+                            <option value="https://www.africa-film.com/jsonserver.php">Africa Film</option>
+                        </select>
+                        &nbsp;{this.state.connected}
+                    </div>
                     <div class="col text-middle">{this.prova}</div>
                     <div class="col-2 text-end">{this.state.date.toLocaleTimeString()}</div>
                 </div>

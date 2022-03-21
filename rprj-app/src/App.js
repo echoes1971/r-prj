@@ -52,7 +52,7 @@ class App extends Component {
           <hr/>
           {this.state.value}
           <hr/>
-          <TestBE prova="Cippa Lippa" ref={this.myRef} />
+          <TestBE endpoint="http://localhost:8080/jsonserver.php" prova="Cippa Lippa" ref={this.myRef} />
         </div>
       </div>
     );

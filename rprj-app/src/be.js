@@ -2,10 +2,10 @@
 import { JSONDBConnection } from './db/dblayer'
 
 class BackEndProxy {
-    constructor() {
-        this.endpoint = 'http://localhost:8080/jsonserver.php'
+    constructor(endpoint = 'http://localhost:8080/jsonserver.php') {
+        this.endpoint = endpoint
 
-        this.con = new JSONDBConnection('http://localhost:8080/jsonserver.php', true);
+        this.con = new JSONDBConnection(endpoint, true);
     }
 
 
