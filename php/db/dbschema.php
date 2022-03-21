@@ -765,6 +765,11 @@ class ObjectMgr extends DBMgr {
 		return $__utente;
 	}
 	// 2012.04.30: end.
+
+	function logout() {
+		$this->setDBEUser(null);
+		return null;
+	}
 }
 
 /** *********************************** RRA Framework: end. *********************************** */

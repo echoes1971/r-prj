@@ -316,6 +316,28 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
 	};
+	this.logout = function(a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			try {
+				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				// self._rs_user=self.obj2resultset(jsonObj[1]);
+				// console.log("self._rs_user: " + self._rs_user);
+				// if(self._rs_user) {
+				// 	self._dbe_user = new DBEntity("DBEUser","users");
+				// 	self._dbe_user.fromRS(self._rs_user,0);
+				// 	console.log("self._dbe_user: " + self._dbe_user.to_string());
+				// } else {
+				// 	self._dbe_user = null;
+				// 	console.log("self._dbe_user: " + self._dbe_user);
+				// }
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj);
+		}
+		this._sendRequest('logout', [], my_callback.bind(self));
+	};
 	
 	this.execute = function(tablename,sql_string,on_execute_callback) {
 		var myobj = this;

@@ -28,11 +28,14 @@ class BackEndProxy {
     getDBEUserFromConnection() {
         return this.con._dbe_user;
     }
+    logout(a_callback) {
+        this.con.logout(a_callback);
+    }
 
     getLoggedUser(a_callback) {
         this.con.getLoggedUser(a_callback);
     }
-    
+
 }
 
 export { BackEndProxy };

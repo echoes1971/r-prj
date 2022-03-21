@@ -284,6 +284,13 @@ function getLoggedUser() {
 	$dbmgr->setVerbose(false);
 	return $__utente!==null ? array( _dbeToJson($__utente) ) : array();
 }
+function logout() {
+	global $dbmgr;
+	$dbmgr->logout();
+	$__utente = $dbmgr->getDBEUser();
+	$_SESSION['utente'] = $__utente;
+	return array( _dbeToJson($__utente) );
+}
 
 function GetRandomUploadDestinationDirectory() {
 	$messaggi = "OK";

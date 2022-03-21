@@ -34,9 +34,9 @@ class TestBE extends React.Component {
         this.btnPingServer = this.btnPingServer.bind(this);
 
         this.btnLogin = this.btnLogin.bind(this);
-
         this.on_fetchuser_callback = this.on_fetchuser_callback.bind(this);
         this.btnLoggedUser = this.btnLoggedUser.bind(this);
+        this.btnLogout = this.btnLogout.bind(this);
     }
 
     componentDidMount() {
@@ -153,6 +153,10 @@ class TestBE extends React.Component {
         this.be.getLoggedUser(this.on_fetchuser_callback);
     }
 
+    btnLogout() {
+        this.be.logout(this.default_server_callback);
+    }
+
     render() {
         return (
             <div class="component">
@@ -191,6 +195,11 @@ class TestBE extends React.Component {
                     <div class="col text-start fw-bold">
                         <form onSubmit={this.default_handleSubmit}>
                             Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
+                        </form>
+                    </div>
+                    <div class="col text-start fw-bold">
+                        <form onSubmit={this.default_handleSubmit}>
+                            <button onClick={this.btnLogout}>Logout</button>
                         </form>
                     </div>
                 </div>
