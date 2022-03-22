@@ -43,6 +43,10 @@ class BackEndProxy {
     select(dbename,tablename,sql_string,a_callback) {
         this.con.Select(dbename,tablename,sql_string,a_callback);
     }
+
+    search(dbe, uselike, caseSensitive, orderBy, a_callback) {
+        this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
+    }
 }
 
 export { BackEndProxy };
