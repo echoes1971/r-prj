@@ -62,7 +62,7 @@ function _isAuthorized() {
 	global $xmlrpc_require_login;
 	if($xmlrpc_require_login===false)
 		return true;
-	if($xmlrpc_require_login===true && array_key_exists('utente',$_SESSION) && $_SESSION['utente']->getTypeName()>'')
+	if($xmlrpc_require_login===true && array_key_exists('utente',$_SESSION) && $_SESSION['utente']!==null && $_SESSION['utente']->getTypeName()>'')
 		return true;
 	return false;
 }
