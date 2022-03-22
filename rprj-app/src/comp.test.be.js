@@ -245,6 +245,41 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
                 <div class="row">
+                    <div class="col text-start align-top">
+                        <form onSubmit={this.default_handleSubmit}>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-1 fw-bold text-end">DBE</div>
+                                    <div class="col text-start">
+                                        <input id="tablename" name="tablename" value={this.state.dbename} onChange={this.default_handleChange} />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 fw-bold text-end">Table</div>
+                                    <div class="col text-start">
+                                        <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 fw-bold text-end">SQL</div>
+                                    <div class="col text-start">
+                                        <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col text-start">
+                                        <button onClick={this.btnExecute}>Select as Array</button>
+                                        <button onClick={this.btnSelect}>Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">&nbsp;</div>
+                </div>
+                <div class="row">
                     <div class="col">
                         <div class="component border rounded">
                             <div class="row">
@@ -256,24 +291,6 @@ class TestBE extends React.Component {
                                 <div class="col text-start">{this.state.server_response_1}</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col text-start fw-bold align-top">
-                        <form onSubmit={this.default_handleSubmit}>
-                            DBE: <input id="tablename" name="tablename" value={this.state.dbename} onChange={this.default_handleChange} /> 
-                            &nbsp;
-                            Table: <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} /> 
-                            &nbsp;
-                            Sql: <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
-                            &nbsp;
-                            <button onClick={this.btnExecute}>Select as Array</button>
-                            &nbsp;
-                            <button onClick={this.btnSelect}>Select</button>
-                        </form>
                     </div>
                 </div>
                 <div class="row">
