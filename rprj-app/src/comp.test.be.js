@@ -2,6 +2,53 @@ import React from 'react';
 
 import { BackEndProxy } from './be';
 
+
+class ServerResponse extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div class="component border rounded">
+                <div class="row">
+                    <div class="col-1">Message:</div>
+                    <div class="col text-start"><pre>{this.props.server_response_0}</pre></div>
+                </div>
+                <div class="row">
+                    <div class="col-1">Response:</div>
+                    <div class="col text-start">{this.props.server_response_1}</div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class Ping extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.btnPingServer = this.btnPingServer.bind(this);
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+    }
+
+    btnPingServer() {
+        this.props.onPingServer();
+    }
+
+    render () {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <button onClick={this.btnPingServer}>PING</button>
+            </form>
+        );
+    }
+}
+
 class TestBE extends React.Component {
     constructor(props) {
         super(props);
@@ -216,9 +263,7 @@ class TestBE extends React.Component {
                 </div>
                 <div class="row">
                     <div class="col text-start fw-bold">
-                        <form onSubmit={this.default_handleSubmit}>
-                            <button onClick={this.btnPingServer}>PING</button>
-                        </form>
+                        <Ping onPingServer={this.btnPingServer} />
                     </div>
                     <div class="col text-start fw-bold">
                         <form onSubmit={this.default_handleSubmit}>
@@ -281,16 +326,7 @@ class TestBE extends React.Component {
                 </div>
                 <div class="row">
                     <div class="col">
-                        <div class="component border rounded">
-                            <div class="row">
-                                <div class="col-1">Message:</div>
-                                <div class="col text-start"><pre>{this.state.server_response_0}</pre></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-1">Response:</div>
-                                <div class="col text-start">{this.state.server_response_1}</div>
-                            </div>
-                        </div>
+                        <ServerResponse server_response_0={this.state.server_response_0} server_response_1={this.state.server_response_1} />
                     </div>
                 </div>
                 <div class="row">
