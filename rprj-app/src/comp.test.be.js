@@ -15,6 +15,7 @@ class TestBE extends React.Component {
             pwd: '',
             server_response_0: '--',
             server_response_1: '--',
+            dbename: 'DBEFolder',
             tablename: 'folders',
             sqlstring: 'select *\n  from rprj_folders'
         }
@@ -25,10 +26,9 @@ class TestBE extends React.Component {
         this.endpoint_handleChange = this.endpoint_handleChange.bind(this);
 
         this.default_server_callback = this.default_server_callback.bind(this);
-
+        this.default_handleChange = this.default_handleChange.bind(this);
         this.default_handleSubmit = this.default_handleSubmit.bind(this);
 
-        this.login_handleChange = this.login_handleChange.bind(this);
         this.on_login_callback = this.on_login_callback.bind(this);
         this.btnLogin = this.btnLogin.bind(this);
 
@@ -40,9 +40,11 @@ class TestBE extends React.Component {
         this.btnLoggedUser = this.btnLoggedUser.bind(this);
         this.btnLogout = this.btnLogout.bind(this);
 
-        this.execute_handleChange = this.execute_handleChange.bind(this);
         this.on_execute_callback = this.on_execute_callback.bind(this);
         this.btnExecute = this.btnExecute.bind(this);
+
+        this.on_select_callback = this.on_select_callback.bind(this);
+        this.btnSelect = this.btnSelect.bind(this);
     }
 
     componentDidMount() {
@@ -55,7 +57,7 @@ class TestBE extends React.Component {
         this.pingID = setInterval(
             // () => this.be.ping(this.on_ping_callback),
             () => this.tick_ping(),
-            15 * 1000                   // Better 60 seconds?
+            60 * 1000                   // Better 60 seconds?
         );
     }
 
@@ -74,23 +76,14 @@ class TestBE extends React.Component {
         this.be.ping(this.on_ping_callback);
     }
 
-    endpoint_handleChange(event) {
-        // if(!confirm('Change Datasource?')) return;
-
-        this.be = new BackEndProxy(event.target.value);
-        this.setState({endpoint: event.target.value});
-    }
-
     default_handleSubmit(event) {
         event.preventDefault();
     }
-
-    login_handleChange(event) {
+    default_handleChange(event) {
         const tmp = {}
         tmp[event.target.name] = event.target.value
         this.setState(tmp);
     }
-    
     default_server_callback(jsonObj) {
         // console.log("TestBE.on_btn_ping_callback: start.");
         // console.log(jsonObj)
@@ -100,6 +93,11 @@ class TestBE extends React.Component {
             server_response_1: "" + jsonObj[1]
         })
         // console.log("TestBE.on_btn_ping_callback: end.");
+    }
+
+    endpoint_handleChange(event) {
+        this.be = new BackEndProxy(event.target.value);
+        this.setState({endpoint: event.target.value});
     }
 
     on_login_callback(jsonObj) {
@@ -128,22 +126,14 @@ class TestBE extends React.Component {
     }
 
     on_ping_callback(jsonObj) {
-        // console.log("TestBE.on_ping_callback: start.");
-        // console.log(jsonObj)
-        // console.log(this.be.isConnected())
         this.setState({
             connected: this.be.isConnected() ? "Online" : "Offline"
         })
-        // console.log("TestBE.on_ping_callback: end.");
     }
     on_btn_ping_callback(jsonObj) {
-        // console.log("TestBE.on_btn_ping_callback: start.");
-        // console.log(jsonObj)
-        // console.log(this.be.isConnected())
         this.setState({
             server_response_0: jsonObj[0],
             server_response_1: jsonObj[1] })
-        // console.log("TestBE.on_btn_ping_callback: end.");
     }
     btnPingServer() {
         this.be.ping(this.on_btn_ping_callback);
@@ -163,25 +153,15 @@ class TestBE extends React.Component {
         this.be.logout(this.default_server_callback);
     }
 
-    execute_handleChange(event) {
-        const tmp = {}
-        tmp[event.target.name] = event.target.value
-        this.setState(tmp);
-    
-    }
-    on_execute_callback(jsonObj, dbelist) {
+    on_execute_callback(jsonObj, dictlist) {
         console.log("TestBE.on_execute_callback: start.");
-        // console.log(jsonObj)
-        // console.log(this.be.isConnected())
         var tmp = [];
-        for(var i=0; i<dbelist.length; i++) {
-            tmp.push(dbelist[i].to_string());
+        for(var i=0; dictlist!==null && i<dictlist.length; i++) {
+            tmp.push(JSON.stringify(dictlist[i]));
         }
-        const tmpUser = this.be.getDBEUserFromConnection();
         this.setState({
             server_response_0: jsonObj[0],
-            server_response_1: tmp.join("\r\n"), //JSON.stringify(jsonObj[1]),
-            user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
+            server_response_1: tmp.join("\n")
         })
         console.log("TestBE.on_execute_callback: end.");
     }
@@ -189,6 +169,27 @@ class TestBE extends React.Component {
         var tablename = this.state.tablename;
         var sqlstring = this.state.sqlstring;
         this.be.execute(tablename,sqlstring,this.on_execute_callback);
+    }
+
+    on_select_callback(jsonObj, dbelist) {
+        console.log("TestBE.on_select_callback: start.");
+        // console.log(jsonObj)
+        // console.log(this.be.isConnected())
+        var tmp = [];
+        for(var i=0; dbelist!==null && i<dbelist.length; i++) {
+            tmp.push(dbelist[i].to_string());
+        }
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: tmp.join("\r\n")
+        })
+        console.log("TestBE.on_select_callback: end.");
+    }
+    btnSelect() {
+        var dbename = this.state.dbename;
+        var tablename = this.state.tablename;
+        var sqlstring = this.state.sqlstring;
+        this.be.select(dbename,tablename,sqlstring,this.on_select_callback);
     }
 
     render() {
@@ -221,8 +222,8 @@ class TestBE extends React.Component {
                     </div>
                     <div class="col text-start fw-bold">
                         <form onSubmit={this.default_handleSubmit}>
-                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.login_handleChange} /> <br />
-                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.login_handleChange} /> <br />
+                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
+                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
                             <button onClick={this.btnLogin}>Login</button>
                         </form>
                     </div>
@@ -263,11 +264,15 @@ class TestBE extends React.Component {
                 <div class="row">
                     <div class="col text-start fw-bold align-top">
                         <form onSubmit={this.default_handleSubmit}>
-                            Table: <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.execute_handleChange} /> 
+                            DBE: <input id="tablename" name="tablename" value={this.state.dbename} onChange={this.default_handleChange} /> 
                             &nbsp;
-                            Sql: <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.execute_handleChange} />
+                            Table: <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} /> 
+                            &nbsp;
+                            Sql: <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
                             &nbsp;
                             <button onClick={this.btnExecute}>Select as Array</button>
+                            &nbsp;
+                            <button onClick={this.btnSelect}>Select</button>
                         </form>
                     </div>
                 </div>

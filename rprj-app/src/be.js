@@ -40,6 +40,9 @@ class BackEndProxy {
         this.con.execute(tablename,sql_string,a_callback);
     }
 
+    select(dbename,tablename,sql_string,a_callback) {
+        this.con.Select(dbename,tablename,sql_string,a_callback);
+    }
 }
 
 export { BackEndProxy };
