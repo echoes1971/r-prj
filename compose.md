@@ -61,6 +61,9 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v --remove-
 docker volume prune
 docker image prune
 
+# rprj_db
+
+docker exec -it r-rpj_rprj-db_1 mysql -pmysecret rproject
 
 
 # Debugging rprj_web
