@@ -83,6 +83,8 @@ function DBEntity(dbename,tablename) {
 	this.fromRS = function(rs,row) {
 		var typenameIndex = rs.getColumnIndex('_typename');
 		if(typenameIndex>0) this.dbename=rs.getValue(row,typenameIndex);
+		var tablenameIndex = rs.getColumnIndex('_tablename');
+		if(tablenameIndex>0) this.dbename=rs.getValue(row,tablenameIndex);
 		for(var col=0; col<rs.getNumColumns(); col++) {
 			var colName = rs.getColumnName(col);
 			if(colName[0]=='_') continue;
@@ -453,7 +455,6 @@ function JSONDBConnection(connectionString,verbose) {
 			for(var i=0; myRS!==null && i<myRS.getNumRows(); i++) {
 				try {
 					var mydbe = new DBEntity(dbename, tablename);
-					// var mydbe = new DBEntity(myRS.getValue(i,0), tablename);
 					mydbe.fromRS(myRS,i);
 					console.log("mydbe: " + mydbe.to_string());
 					dbelist.push(mydbe);
@@ -484,7 +485,6 @@ function JSONDBConnection(connectionString,verbose) {
 			for(var i=0; myRS!==null && i<myRS.getNumRows(); i++) {
 				try {
 					var mydbe = new DBEntity(dbename, tablename);
-					// var mydbe = new DBEntity(myRS.getValue(i,0), tablename);
 					mydbe.fromRS(myRS,i);
 					console.log("mydbe: " + mydbe.to_string());
 					dbelist.push(mydbe);
