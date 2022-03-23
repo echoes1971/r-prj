@@ -52,6 +52,9 @@ class BackEndProxy {
     getAllFormClassnames(a_callback) {
         this.con.getAllFormClassnames(a_callback);
     }
+    getFormInstance(aclassname,a_callback) {
+        this.con.getFormInstance(aclassname,a_callback);
+    }
 
 
 }

@@ -540,6 +540,20 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		this._sendRequest('getAllFormClassnames', [], my_callback.bind(self));
 	} 
+	this.getFormInstance = function(aclassname, a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
+			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			var form = jsonObj[1];
+			console.log(jsonObj[1])
+			console.log(form)
+			// jsonObj[1] = dbelist;
+			a_callback(jsonObj, form)
+			console.log("JSONDBConnection.getFormInstance.my_callback: end.");
+		}
+		this._sendRequest('getFormInstance', aclassname, my_callback.bind(self));
+	} 
 }
 
 /**

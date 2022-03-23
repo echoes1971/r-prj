@@ -439,9 +439,82 @@ function Download($uuid,$view_thumb) {
 
 function getAllFormClassnames() {
 	global $formulator;
-
 	$ret = $formulator->getAllClassnames();
+	return $ret;
+}
+function _ffield2dict($field) {
+	return array(
+		'name' => $field->aNomeCampo,
+		'title' => $field->_title,
+		'description' => $field->_description,
+		'size' => $field->_size,
+		'value' => $field->aValore,
+		'cssClass' => $field->aClasseCss,
+		'isArray' => $field->isArray,
+		/**
+		 * Tipo di dato: s=stringa, n=numero, d=data
+		 * Default=stringa
+		 */
+		'type' => $field->tipo,
+		);
+}
+function _form2dictionary($form) {
+	$fields = [];
+	foreach($form->getFieldNames() as $fieldname) {
+		$f = $form->getField($fieldname);
+		$fields []= _ffield2dict($f);
+	}
+	$groups = [];
+	foreach($form->getGroupNames() as $n) {
+		$g = $form->getGroup($n);
+		$_n = $n==='' ? '_' : $n;
+		$groups[$_n] = $g; //_ffield2dict($f);
+	}
+	return array(
+		'detailIcon' => $form->getDetailIcon(),
+		'detailTitle' => $form->getDetailTitle(),
+		'detailColumnNames' => $form->getDetailColumnNames(),
+		'detailReadOnlyColumnNames' => $form->getDetailReadOnlyColumnNames(),
 
+		'viewColumnNames' => $form->getViewColumnNames(),
+
+		'filterForm' => get_class($form->getFilterForm()),
+		'filterFields' => $form->getFilterFields(),
+		'filterReadOnlyColumnNames' => $form->getFilterReadOnlyColumnNames(),
+
+		'listTitle' => $form->getListTitle(),
+		'listColumnNames' => $form->getListColumnNames(),
+		'listEditableColumnNames' => $form->getListEditableColumnNames(),
+
+		'decodeGroupNames' => $form->getDecodeGroupNames(),
+		'pagePrefix' => $form->getPagePrefix(),
+		'dbe' => get_class($form->getDBE()),
+		'codice' => $form->getCodice(),
+		'shortDescription' => $form->getShortDescription(),
+		'actions' => $form->getActions(),
+		'listActions' => $form->getListActions(),
+		'action' => $form->getAction(),
+		'method' => $form->getMethod(),
+		'name' => $form->getName(),
+		'enctype' => $form->getEnctype(),
+
+		'fieldNames' => $form->getFieldNames(),
+		'fields' => $fields,
+
+		'groupNames' => $form->getGroupNames(),
+		'groups' => $groups
+
+		// readValuesFromArray
+	);
+}
+function getFormInstance($aClassname) {
+	global $formulator;
+	$form = $formulator->getInstance($aClassname);
+	return _form2dictionary($form);
+}
+function getFormInstanceByDBEName($aClassname) {
+	global $formulator;
+	$ret = $formulator->getInstanceByDBEName($aClassname);
 	return $ret;
 }
 

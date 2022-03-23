@@ -1,4 +1,5 @@
 import React from 'react';
+// See: https://react-select.com/home
 import Select from 'react-select';
 
 import { BackEndProxy } from './be';
@@ -12,14 +13,14 @@ class ServerResponse extends React.Component {
 
     render() {
         return (
-            <div class="component border rounded">
+            <div class={"component "+this.props.class}>
                 <div class="row">
                     <div class="col-1">Message:</div>
                     <div class="col text-start"><pre>{this.props.server_response_0}</pre></div>
                 </div>
                 <div class="row">
                     <div class="col-1">Response:</div>
-                    <div class="col text-start">{this.props.server_response_1}</div>
+                    <div class="col text-start"><pre>{this.props.server_response_1}</pre></div>
                 </div>
             </div>
         );
@@ -162,9 +163,16 @@ class FormExplorer extends React.Component {
         this.default_handleChange = this.default_handleChange.bind(this);
         this.default_handleSubmit = this.default_handleSubmit.bind(this);
 
+        this.classnames_callback = this.classnames_callback.bind(this);
         this.btnClassNames = this.btnClassNames.bind(this);
 
         this.select_handleChange = this.select_handleChange.bind(this);
+
+        this.forminstance_callback = this.forminstance_callback.bind(this);
+    }
+
+    componentDidMount() {
+        this.be.getAllFormClassnames(this.classnames_callback);
     }
 
     default_handleSubmit(event) {
@@ -191,34 +199,77 @@ class FormExplorer extends React.Component {
         })
     }
 
+    forminstance_callback(jsonObj,form) {
+        var s = [];
+        for(const property in form) {
+            if(property=='fields' || property=='groups') continue;
+            s.push(property +": "+JSON.stringify(form[property]));
+        }
+        s.push('groups:')
+        for(const p in form.groups) {
+            s.push("  "+p)
+        }
+        s.push('fields:')
+        for(const p in form.fields) {
+            s.push("  "+p+": "+JSON.stringify(form.fields[p]))
+        }
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: "" + s.join("\n")
+        })
+    }
     select_handleChange(selectedOption) {
         this.setState({selectedClassname: selectedOption});
 
         // TODO add actions here based on the selected form
+        this.be.getFormInstance(selectedOption,this.forminstance_callback);
     }
 
+    classnames_callback(jsonObj,formlist) {
+        if(formlist) {
+            var myoptions = [];
+            for(var i=0; i<formlist.length; i++) {
+                myoptions.push({value: formlist[i], label: formlist[i]})
+            }
+            this.setState({
+                selectedClassname: null,
+                classnames: myoptions
+            })
+        } else {
+            this.setState({
+                server_response_0: jsonObj[0],
+                server_response_1: "" + jsonObj[1]
+            })
+        }
+    }
     btnClassNames() {
-        this.be.getAllFormClassnames(this.default_callback);
+        this.be.getAllFormClassnames(this.classnames_callback);
     }
 
     render() {
         return (
-            <div class="component">
+            <div class={"component "+this.props.class}>
                 <div class="row">
                     <div class="col text-middle">Form Explorer</div>
                 </div>
                 <div class="row border rounded">
                     <div class="col">
                         <Select value={this.state.selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
+                    </div>
+
+                    <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
                             <button onClick={this.btnClassNames}>Class Names</button>
                         </form>
                     </div>
+
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <ServerResponse server_response_0={this.state.server_response_0} server_response_1={this.state.server_response_1} />
+                        <ServerResponse class="border rounded"
+                            server_response_0={this.state.server_response_0}
+                            server_response_1={this.state.server_response_1} />
                     </div>
                 </div>
 
@@ -534,7 +585,9 @@ class TestBE extends React.Component {
                 </div>
                 <div class="row">
                     <div class="col">
-                        <ServerResponse server_response_0={this.state.server_response_0} server_response_1={this.state.server_response_1} />
+                        <ServerResponse class="border rounded"
+                            server_response_0={this.state.server_response_0}
+                            server_response_1={this.state.server_response_1} />
                     </div>
                 </div>
                 <div class="row">
