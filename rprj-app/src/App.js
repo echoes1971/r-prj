@@ -15,7 +15,10 @@ class App extends Component {
     super()
 
     // See: https://it.reactjs.org/
-    this.state = { value: 'Ciao, mondo!' };
+    this.state = {
+      endpoint: "http://localhost:8080/jsonserver.php",
+      value: 'Ciao, mondo!'
+    };
   }
 
   componentDidMount() {
@@ -26,7 +29,7 @@ class App extends Component {
       <div className="App">
         <RNav/>
         <div class="container">
-          <TestBE endpoint="http://localhost:8080/jsonserver.php" ref={this.myRef} />
+          <TestBE endpoint={this.state.endpoint} ref={this.myRef} />
         </div>
       </div>
     );

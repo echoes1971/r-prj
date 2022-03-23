@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { BackEndProxy } from './be';
+import { DBEntity } from './db/dblayer';
 
 
 class ServerResponse extends React.Component {
@@ -49,6 +50,94 @@ class Ping extends React.Component {
     }
 }
 
+function default_handleSubmit(event) {
+    event.preventDefault();
+}
+
+class SearchForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.prefix = "SearchForm" + "_";
+
+        this.state = {
+            dbename: props.dbename,
+            tablename: props.tablename,
+            fieldname: props.fieldname,
+            fieldvalue: props.fieldvalue,
+            uselike: true,
+            caseSensitive: false,
+            orderBy: props.fieldname
+        }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.btnSearch = this.btnSearch.bind(this);
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name.replace(this.prefix,"");
+
+        this.setState({[name]: value});
+
+        // Propagate upward if needed
+        this.props.onChange(event);
+    }
+
+    btnSearch() {
+        this.props.onSearch(this.state.dbename,this.state.tablename,this.state.fieldname,this.state.fieldvalue,this.state.uselike,this.state.caseSensitive,this.state.orderBy);
+    }
+
+    render() {
+        return (
+            <form onSubmit={default_handleSubmit}>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-1 fw-bold text-end">DBE</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "dbename"} name={this.prefix + "dbename"} value={this.state.dbename} onChange={this.handleChange} />
+                        </div>
+                        <div class="col-1 fw-bold text-end">Table</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "tablename"} name={this.prefix + "tablename"} value={this.state.tablename} onChange={this.handleChange} />
+                        </div>
+                        <div class="col-1 fw-bold text-end">Field</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "fieldname"} name={this.prefix + "fieldname"} value={this.state.fieldname} onChange={this.handleChange} />
+                        </div>
+                        <div class="col-1 fw-bold text-end">Order by</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "orderBy"} name={this.prefix + "orderBy"} value={this.state.orderBy} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 fw-bold text-end">Use like</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "uselike"} name={this.prefix + "uselike"} type="checkbox" checked={this.state.uselike} onChange={this.handleChange} />
+                        </div>
+                        <div class="col-2 fw-bold text-end">Case sensitive</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "caseSensitive"} name={this.prefix + "caseSensitive"} type="checkbox" checked={this.state.caseSensitive} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1 fw-bold text-end">Value</div>
+                        <div class="col text-start">
+                            <input id={this.prefix + "fieldvalue"} name={this.prefix + "fieldvalue"} value={this.state.fieldvalue} onChange={this.handleChange} />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button onClick={this.btnSearch}>Search</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        );
+    }
+}
+
 class TestBE extends React.Component {
     constructor(props) {
         super(props);
@@ -92,6 +181,9 @@ class TestBE extends React.Component {
 
         this.on_select_callback = this.on_select_callback.bind(this);
         this.btnSelect = this.btnSelect.bind(this);
+
+        this.onSearchChange = this.onSearchChange.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     componentDidMount() {
@@ -127,9 +219,11 @@ class TestBE extends React.Component {
         event.preventDefault();
     }
     default_handleChange(event) {
-        const tmp = {}
-        tmp[event.target.name] = event.target.value
-        this.setState(tmp);
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({[name]: value});
     }
     default_server_callback(jsonObj) {
         // console.log("TestBE.on_btn_ping_callback: start.");
@@ -144,6 +238,7 @@ class TestBE extends React.Component {
 
     endpoint_handleChange(event) {
         this.be = new BackEndProxy(event.target.value);
+        this.be.ping(this.on_ping_callback);
         this.setState({endpoint: event.target.value});
     }
 
@@ -177,6 +272,7 @@ class TestBE extends React.Component {
             connected: this.be.isConnected() ? "Online" : "Offline"
         })
     }
+    
     on_btn_ping_callback(jsonObj) {
         this.setState({
             server_response_0: jsonObj[0],
@@ -239,6 +335,20 @@ class TestBE extends React.Component {
         this.be.select(dbename,tablename,sqlstring,this.on_select_callback);
     }
 
+
+    onSearchChange(event) {
+        console.log(event);
+    }
+    onSearch(dbename,tablename,fieldname,fieldvalue,uselike,caseSensitive,orderBy) {
+        console.log("onSearch("+dbename+","+tablename+","+fieldname+","+fieldvalue+","+uselike+","+caseSensitive+","+orderBy+")");
+        var search = new DBEntity(dbename,tablename);
+        search.setValue(fieldname,fieldvalue);
+        console.log("search="+search.to_string());
+
+        this.be.search(search, uselike, caseSensitive, orderBy, this.on_select_callback);
+    }
+
+
     render() {
         return (
             <div class="component">
@@ -296,7 +406,7 @@ class TestBE extends React.Component {
                                 <div class="row">
                                     <div class="col-1 fw-bold text-end">DBE</div>
                                     <div class="col text-start">
-                                        <input id="tablename" name="tablename" value={this.state.dbename} onChange={this.default_handleChange} />
+                                        <input id="dbename" name="dbename" value={this.state.dbename} onChange={this.default_handleChange} />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -319,6 +429,14 @@ class TestBE extends React.Component {
                                 </div>
                             </div>
                         </form>
+                    </div>
+
+                    <div class="col text-start align-top">
+                        <SearchForm
+                            dbename="DBEFolder" tablename="folders"
+                            fieldname="name" fieldvalue="ome"
+                            onChange={this.onSearchChange} onSearch={this.onSearch}
+                         />
                     </div>
                 </div>
                 <div class="row">

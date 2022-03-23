@@ -74,6 +74,7 @@ function _dbeToJson(&$dbe) {
 	$tmpArray = array();
   $tmpArray["_typeName"] = $dbe->getTypeName();
   $tmpArray["_typename"] = $dbe->getTypeName();
+  $tmpArray["_tablename"] = $dbe->getTableName();
   $dict = $dbe->getValuesDictionary();
   $chiavi = array_keys($dict);
   foreach( array_keys($dict) as $k ) {
