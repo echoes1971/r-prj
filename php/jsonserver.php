@@ -53,6 +53,13 @@ if ($dbmgr===null || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 }
 $dbmgr->setVerbose(false);
 
+$formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
+if($formulator===null || get_class($formulator)=='__PHP_Incomplete_Class') {
+	$formulator = new MyFormFactory;
+	$_SESSION['formulator'] = $formulator;
+}
+
+
 define("MY_DEST_DIR",$GLOBALS[ 'root_directory' ]."/".$GLOBALS[ 'files_directory' ]);
 
 require_once('JSON.php');
@@ -428,6 +435,17 @@ function Download($uuid,$view_thumb) {
 	
 	return $ret;
 }
+
+
+function getAllFormClassnames() {
+	global $formulator;
+
+	$ret = $formulator->getAllClassnames();
+
+	return $ret;
+}
+
+
 
 $json_response = array();
 

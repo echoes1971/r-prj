@@ -47,6 +47,13 @@ class BackEndProxy {
     search(dbe, uselike, caseSensitive, orderBy, a_callback) {
         this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
     }
+
+
+    getAllFormClassnames(a_callback) {
+        this.con.getAllFormClassnames(a_callback);
+    }
+
+
 }
 
 export { BackEndProxy };

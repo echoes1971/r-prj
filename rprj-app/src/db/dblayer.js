@@ -521,6 +521,25 @@ function JSONDBConnection(connectionString,verbose) {
 	virtual string getFormSchema(string language="python");
 	virtual string getDBSchema(string language="python");
 	*/
+
+
+	this.getAllFormClassnames = function(a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.getAllFormClassnames.my_callback: start.");
+			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			var formlist = [];
+			console.log( jsonObj[1] )
+			for(var i=0; i<jsonObj[1].length; i++) {
+				formlist.push(jsonObj[1][i]);
+			}
+			console.log(formlist)
+			// jsonObj[1] = dbelist;
+			a_callback(jsonObj, formlist)
+			console.log("JSONDBConnection.getAllFormClassnames.my_callback: end.");
+		}
+		this._sendRequest('getAllFormClassnames', [], my_callback.bind(self));
+	} 
 }
 
 /**
