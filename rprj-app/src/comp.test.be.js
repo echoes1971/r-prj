@@ -161,6 +161,7 @@ class FForm extends React.Component {
     }
 
     forminstance_callback(jsonObj,form) {
+        console.log("FForm.forminstance_callback: start.")
         // var s = [];
         // for(const property in form) {
         //     if(property=='fields' || property=='groups') continue;
@@ -174,10 +175,12 @@ class FForm extends React.Component {
         // for(const p in form.fields) {
         //     s.push("  "+p+": "+JSON.stringify(form.fields[p]))
         // }
+        console.log("FForm.forminstance_callback: form.detailTitle="+form.detailTitle)
         this.setState({
             detailIcon: form.detailIcon,
             detailTitle: form.detailTitle
         })
+        console.log("FForm.forminstance_callback: end.")
     }
 
     render() {
@@ -263,6 +266,7 @@ class FormExplorer extends React.Component {
             s.push("  "+p+": "+JSON.stringify(form.fields[p]))
         }
         this.setState({
+            selectedClassname: form._classname,
             server_response_0: jsonObj[0],
             server_response_1: "" + s.join("\n")
         })
