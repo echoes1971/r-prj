@@ -140,6 +140,55 @@ class SearchForm extends React.Component {
     }
 }
 
+class FForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            endpoint: props.endpoint,
+            formname: props.formname,
+            detailIcon: "icons/user.png",
+            detailTitle: "User"
+        }
+
+        this.be = new BackEndProxy(this.state.endpoint);
+
+        this.forminstance_callback = this.forminstance_callback.bind(this);
+    }
+
+    componentDidMount() {
+        this.be.getFormInstance(this.state.formname,this.forminstance_callback);
+    }
+
+    forminstance_callback(jsonObj,form) {
+        // var s = [];
+        // for(const property in form) {
+        //     if(property=='fields' || property=='groups') continue;
+        //     s.push(property +": "+JSON.stringify(form[property]));
+        // }
+        // s.push('groups:')
+        // for(const p in form.groups) {
+        //     s.push("  "+p)
+        // }
+        // s.push('fields:')
+        // for(const p in form.fields) {
+        //     s.push("  "+p+": "+JSON.stringify(form.fields[p]))
+        // }
+        this.setState({
+            detailIcon: form.detailIcon,
+            detailTitle: form.detailTitle
+        })
+    }
+
+    render() {
+        return (
+            <form>
+                SUNCHI {this.state.detailTitle}
+            </form>
+        );
+    }
+}
+
 /*
  * This to develop backend functions to retrieve all the forms in form schema
  * and use this to dinamically create forms on react
@@ -232,7 +281,7 @@ class FormExplorer extends React.Component {
                 myoptions.push({value: formlist[i], label: formlist[i]})
             }
             this.setState({
-                selectedClassname: null,
+                // selectedClassname: null,
                 classnames: myoptions
             })
         } else {
@@ -254,7 +303,9 @@ class FormExplorer extends React.Component {
                 </div>
                 <div class="row border rounded">
                     <div class="col">
-                        <Select value={this.state.selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
+                        <form onSubmit={this.default_handleSubmit}>
+                            <Select value={this.state.selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
+                        </form>
                     </div>
 
                     <div class="col">
@@ -263,6 +314,13 @@ class FormExplorer extends React.Component {
                         </form>
                     </div>
 
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <FForm endpoint={this.state.endpoint} 
+                            formname={this.state.selectedClassname} />
+                    </div>
                 </div>
 
                 <div class="row">

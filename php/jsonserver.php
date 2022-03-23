@@ -444,6 +444,7 @@ function getAllFormClassnames() {
 }
 function _ffield2dict($field) {
 	return array(
+		'_classname' => get_class($field),
 		'name' => $field->aNomeCampo,
 		'title' => $field->_title,
 		'description' => $field->_description,
