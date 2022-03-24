@@ -17,7 +17,15 @@ class FForm extends React.Component {
 
         this.be = new BackEndProxy(this.state.endpoint);
 
+        this.form = null;
+        this.groups = [];
+
         this.forminstance_callback = this.forminstance_callback.bind(this);
+
+
+        this.renderGroups = this.renderGroups.bind(this);
+        this.renderGroup = this.renderGroup.bind(this);
+        this.renderField = this.renderField.bind(this);
     }
 
     componentDidMount() {
@@ -49,17 +57,51 @@ class FForm extends React.Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log(nextProps)
-    //     console.log(nextState)
-    //     console.log(this.props)
-    //     console.log(this.state)
-    //     return nextProps.formname!=this.state.formname;
-    // }
+    getViewColumnNames() { return this.form.viewColumnNames; }
+
+    renderField(f) {
+        return (
+            <div class="row">
+                <div class="col-1 text-end">{f}</div><div class="col text-start"><input value={f}/></div>
+            </div>
+        );        
+    }
+    renderGroup(g) {
+        const decodeGroupNames = this.form.decodeGroupNames
+        const g1 = g.length>0 ? g : "_"
+        const groupName = decodeGroupNames[g]
+        const group = this.form.groups[g]
+        console.log("FForm.forminstance_callback: group="+JSON.stringify(group))
+        const rows = "--"
+        return (
+            <div class="component">
+                <div class="row"><div class="col fw-bold text-middle">{groupName}</div></div>
+                {group.map(this.renderField)}
+            </div>
+        );
+    }
+    renderGroups() {
+        if(this.form===null) {
+            return ("--");
+        }
+        var ret = "vaffa";
+        const groups = this.form.groups!==null ? this.form.groups : [];
+        console.log("FForm.forminstance_callback: groups="+JSON.stringify(groups))
+        // for(const g in this.form.groups) {
+        //     const g1 = g.length>0 ? g : "_";
+        //     ret += this.renderGroup(g1);
+        // }
+        return (
+            <div class="container">
+                {Object.keys(groups).map(this.renderGroup)}
+            </div>
+        );
+    }
 
     forminstance_callback(jsonObj,form) {
         console.log("FForm.forminstance_callback: start.")
         console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        this.form = form;
         // var s = [];
         // for(const property in form) {
         //     if(property=='fields' || property=='groups') continue;
@@ -74,18 +116,24 @@ class FForm extends React.Component {
         //     s.push("  "+p+": "+JSON.stringify(form.fields[p]))
         // }
         console.log("FForm.forminstance_callback: form.detailTitle="+form.detailTitle)
+        const detailTitle = form.detailTitle
         this.setState({
-            detailIcon: form.detailIcon,
-            detailTitle: form.detailTitle
+        //     detailIcon: form.detailIcon,
+            detailTitle: detailTitle
         })
         console.log("FForm.forminstance_callback: end.")
     }
 
     render() {
-        console.log("SUNCHI" + this.state.formname)
+        console.log("FForm.forminstance_callback: this.state.formname=" + this.state.formname)
+        const detailTitle = this.state.detailTitle;
+        const f = this.renderGroups();
         return (
             <form>
-                SUNCHI {this.state.detailTitle}
+                <div class="container border rounded">
+                    <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
+                    <div class="row">{f}</div>
+                </div>
             </form>
         );
     }

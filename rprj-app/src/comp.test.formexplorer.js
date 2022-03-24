@@ -70,7 +70,7 @@ class FormExplorer extends React.Component {
         console.log("FormExplorer.forminstance_callback: form="+JSON.stringify(form));
         var s = [];
         for(const property in form) {
-            if(property==='fields' || property==='groups') continue;
+            // if(property==='fields' || property==='groups') continue;
             s.push(property +": "+JSON.stringify(form[property]));
         }
         s.push('groups:')
@@ -94,7 +94,7 @@ class FormExplorer extends React.Component {
     select_handleChange(selectedOption) {
         // RRA: if you enable this here, and then you setState in the callback, it will complain (and block) that the component to update has been unmounted
         // this.setState({selectedClassname: selectedOption.value});
-        console.log("FormExplorer.select_handleChange: selectedOption="+JSON.stringify(selectedOption));
+        // console.log("FormExplorer.select_handleChange: selectedOption="+JSON.stringify(selectedOption));
         this.be.getFormInstance(selectedOption.value,this.forminstance_callback);
     }
 

@@ -53,7 +53,7 @@ class BackEndProxy {
         this.con.getAllFormClassnames(a_callback);
     }
     getFormInstance(aclassname,a_callback) {
-        if(aclassname===null || aclassname.length==0) return;
+        if(aclassname===null || aclassname===undefined || aclassname.length==0) return;
         this.con.getFormInstance(aclassname,a_callback);
     }
 
