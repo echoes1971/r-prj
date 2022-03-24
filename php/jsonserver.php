@@ -472,6 +472,7 @@ function _form2dictionary($form) {
 		$groups[$_n] = $g; //_ffield2dict($f);
 	}
 	return array(
+		'_classname' => get_class($form),
 		'detailIcon' => $form->getDetailIcon(),
 		'detailTitle' => $form->getDetailTitle(),
 		'detailColumnNames' => $form->getDetailColumnNames(),
@@ -479,7 +480,7 @@ function _form2dictionary($form) {
 
 		'viewColumnNames' => $form->getViewColumnNames(),
 
-		'filterForm' => get_class($form->getFilterForm()),
+		'filterForm' => $form->getFilterForm()!==null ? get_class($form->getFilterForm()) : null,
 		'filterFields' => $form->getFilterFields(),
 		'filterReadOnlyColumnNames' => $form->getFilterReadOnlyColumnNames(),
 

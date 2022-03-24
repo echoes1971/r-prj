@@ -1,31 +1,10 @@
 import React from 'react';
-// See: https://react-select.com/home
-import Select from 'react-select';
 
 import { BackEndProxy } from './be';
 import { DBEntity } from './db/dblayer';
+import { FormExplorer } from './comp.test.formexplorer';
+import { ServerResponse } from './comp.test.serverresponse';
 
-
-class ServerResponse extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div class={"component "+this.props.class}>
-                <div class="row">
-                    <div class="col-1">Message:</div>
-                    <div class="col text-start"><pre>{this.props.server_response_0}</pre></div>
-                </div>
-                <div class="row">
-                    <div class="col-1">Response:</div>
-                    <div class="col text-start"><pre>{this.props.server_response_1}</pre></div>
-                </div>
-            </div>
-        );
-    }
-}
 
 class Ping extends React.Component {
     constructor(props) {
@@ -144,6 +123,8 @@ class FForm extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(props);
+        
         this.state = {
             endpoint: props.endpoint,
             formname: props.formname,
@@ -159,9 +140,38 @@ class FForm extends React.Component {
     componentDidMount() {
         this.be.getFormInstance(this.state.formname,this.forminstance_callback);
     }
+    componentWillUnmount() {
+        console.log("FForm.componentWillUnmount: start.");
+        console.log("FForm.componentWillUnmount: end.");
+    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
+        var update = false;
+        if(this.props.endpoint !== prevProps.endpoint) {
+            this.setState({endpoint: this.props.endpoint})
+            update = true;
+        }
+        if(this.props.formname !== prevProps.formname) {
+            this.setState({formname: this.props.formname})
+            update = true;
+        }
+
+        if(update) {
+            this.be.getFormInstance(this.state.formname,this.forminstance_callback);
+        }
+    }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log(nextProps)
+    //     console.log(nextState)
+    //     console.log(this.props)
+    //     console.log(this.state)
+    //     return nextProps.formname!=this.state.formname;
+    // }
 
     forminstance_callback(jsonObj,form) {
         console.log("FForm.forminstance_callback: start.")
+        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         // var s = [];
         // for(const property in form) {
         //     if(property=='fields' || property=='groups') continue;
@@ -184,6 +194,7 @@ class FForm extends React.Component {
     }
 
     render() {
+        console.log("SUNCHI" + this.state.formname)
         return (
             <form>
                 SUNCHI {this.state.detailTitle}
@@ -192,153 +203,6 @@ class FForm extends React.Component {
     }
 }
 
-/*
- * This to develop backend functions to retrieve all the forms in form schema
- * and use this to dinamically create forms on react
- */
-class FormExplorer extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            endpoint: props.endpoint,
-            server_response_0: "",
-            server_response_1: "",
-            selectedClassname: null,
-            classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
-        }
-
-        this.be = new BackEndProxy(this.state.endpoint);
-
-        // Bindings
-        this.default_callback = this.default_callback.bind(this);
-        this.default_handleChange = this.default_handleChange.bind(this);
-        this.default_handleSubmit = this.default_handleSubmit.bind(this);
-
-        this.classnames_callback = this.classnames_callback.bind(this);
-        this.btnClassNames = this.btnClassNames.bind(this);
-
-        this.select_handleChange = this.select_handleChange.bind(this);
-
-        this.forminstance_callback = this.forminstance_callback.bind(this);
-    }
-
-    componentDidMount() {
-        this.be.getAllFormClassnames(this.classnames_callback);
-    }
-
-    default_handleSubmit(event) {
-        event.preventDefault();
-    }
-    default_handleChange(event) {
-        const target = event.target;
-        console.log("target.type: "+target.type)
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({[name]: value});
-    }
-    default_callback(jsonObj,formlist) {
-        var myoptions = [];
-        for(var i=0; i<formlist.length; i++) {
-            myoptions.push({value: formlist[i], label: formlist[i]})
-        }
-        this.setState({
-            server_response_0: jsonObj[0],
-            server_response_1: "" + jsonObj[1],
-            selectedClassname: null,
-            classnames: myoptions
-        })
-    }
-
-    forminstance_callback(jsonObj,form) {
-        var s = [];
-        for(const property in form) {
-            if(property=='fields' || property=='groups') continue;
-            s.push(property +": "+JSON.stringify(form[property]));
-        }
-        s.push('groups:')
-        for(const p in form.groups) {
-            s.push("  "+p)
-        }
-        s.push('fields:')
-        for(const p in form.fields) {
-            s.push("  "+p+": "+JSON.stringify(form.fields[p]))
-        }
-        this.setState({
-            selectedClassname: form._classname,
-            server_response_0: jsonObj[0],
-            server_response_1: "" + s.join("\n")
-        })
-    }
-    select_handleChange(selectedOption) {
-        this.setState({selectedClassname: selectedOption});
-
-        // TODO add actions here based on the selected form
-        this.be.getFormInstance(selectedOption,this.forminstance_callback);
-    }
-
-    classnames_callback(jsonObj,formlist) {
-        if(formlist) {
-            var myoptions = [];
-            for(var i=0; i<formlist.length; i++) {
-                myoptions.push({value: formlist[i], label: formlist[i]})
-            }
-            this.setState({
-                // selectedClassname: null,
-                classnames: myoptions
-            })
-        } else {
-            this.setState({
-                server_response_0: jsonObj[0],
-                server_response_1: "" + jsonObj[1]
-            })
-        }
-    }
-    btnClassNames() {
-        this.be.getAllFormClassnames(this.classnames_callback);
-    }
-
-    render() {
-        return (
-            <div class={"component "+this.props.class}>
-                <div class="row">
-                    <div class="col text-middle">Form Explorer</div>
-                </div>
-                <div class="row border rounded">
-                    <div class="col">
-                        <form onSubmit={this.default_handleSubmit}>
-                            <Select value={this.state.selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
-                        </form>
-                    </div>
-
-                    <div class="col">
-                        <form onSubmit={this.default_handleSubmit}>
-                            <button onClick={this.btnClassNames}>Class Names</button>
-                        </form>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <FForm endpoint={this.state.endpoint} 
-                            formname={this.state.selectedClassname} />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <ServerResponse class="border rounded"
-                            server_response_0={this.state.server_response_0}
-                            server_response_1={this.state.server_response_1} />
-                    </div>
-                </div>
-
-            </div>
-        );
-    }
-}
 
 
 class TestBE extends React.Component {

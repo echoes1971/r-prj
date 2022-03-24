@@ -544,9 +544,14 @@ function JSONDBConnection(connectionString,verbose) {
 		var self = this
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
-			console.log("jsonObj: " + JSON.stringify(jsonObj));
 			var form = jsonObj[1];
-			console.log(jsonObj[1])
+			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			try{
+				console.log("jsonObj: " + JSON.stringify(jsonObj));
+				form = jsonObj[1];
+			} catch(e) {
+				form = null;
+			}
 			console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
