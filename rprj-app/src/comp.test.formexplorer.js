@@ -125,9 +125,12 @@ class FormExplorer extends React.Component {
         return (
             <div class={"component "+this.props.class}>
                 <div class="row">
-                    <div class="col text-middle">Form Explorer</div>
+                    <div class="col text-middle fw-bold">Form Explorer</div>
                 </div>
-                <div class="row border rounded">
+
+                <div class="row"><div class="col">&nbsp;</div></div>
+
+                <div class="row">
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
                             <Select formname={selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
@@ -139,8 +142,9 @@ class FormExplorer extends React.Component {
                             <button onClick={this.btnClassNames}>Class Names</button>
                         </form>
                     </div>
-
                 </div>
+
+                <div class="row"><div class="col">&nbsp;</div></div>
 
                 <div class="row">
                     <div class="col">

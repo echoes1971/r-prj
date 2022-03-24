@@ -22,10 +22,13 @@ class FForm extends React.Component {
 
         this.forminstance_callback = this.forminstance_callback.bind(this);
 
+        this.default_handleSubmit = this.default_handleSubmit.bind(this);
+        this.default_handleChange = this.default_handleChange.bind(this);
 
         this.renderGroups = this.renderGroups.bind(this);
         this.renderGroup = this.renderGroup.bind(this);
         this.renderField = this.renderField.bind(this);
+        this._getField = this._getField.bind(this);
     }
 
     componentDidMount() {
@@ -59,12 +62,76 @@ class FForm extends React.Component {
 
     getViewColumnNames() { return this.form.viewColumnNames; }
 
+    default_handleSubmit(event) {
+        event.preventDefault();
+    }
+    default_handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({[name]: value});
+    }
+
+    _getField(f) {
+        const form = this.form;
+        var ret = null;
+        for(const p in form.fields) {
+            // console.log("FForm.renderField: p="+JSON.stringify(p))
+            if(form.fields[p].name==f) {
+                ret = form.fields[p];
+                break;
+            }
+        }
+        return ret;
+
+    }
+    // FField
+    //  FNumber
+    //      FPercent
+    //  FString
+    //      FLanguage
+    //      FUuid
+    //      FPassword
+    //      FPermissions
+    //  FFileField
+    //  FList
+    //      FChildSort
+    //  FCheckBox
+    //  FTextArea
+    //      FHtml
+    //  FDateTime
+    //      FDateTimeReadOnly
+    //  FKField
+    //      FKObjectField
     renderField(f) {
+        const field = this._getField(f);
+        const fieldtype = field._classname=="FPassword" ? "password" : "text"; // n=number s=string d=datetime
+        if(field._classname=='FTextArea') {
+            return (
+                <div class="row">
+                    <div class="col-1 text-end">{field.title}</div>
+                    <div class="col text-start">
+                        <textarea id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
+                            value={this.state[field.name]} size={field.size}
+                            onChange={this.default_handleChange} />
+                    </div>
+                </div>
+            );
+        }
+        // if(field===null) return f;
+        // console.log("FForm.renderField: field="+JSON.stringify(field))
+        const size = field.size ? ` size=\"{$field.size}\" ` : ""
         return (
             <div class="row">
-                <div class="col-1 text-end">{f}</div><div class="col text-start"><input value={f}/></div>
+                <div class="col-1 text-end">{field.title} {field._classname}</div>
+                <div class="col text-start">
+                    <input id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
+                        value={this.state[field.name]} size={field.size}
+                        onChange={this.default_handleChange} />
+                </div>
             </div>
-        );        
+        );
     }
     renderGroup(g) {
         const decodeGroupNames = this.form.decodeGroupNames
@@ -84,7 +151,6 @@ class FForm extends React.Component {
         if(this.form===null) {
             return ("--");
         }
-        var ret = "vaffa";
         const groups = this.form.groups!==null ? this.form.groups : [];
         console.log("FForm.forminstance_callback: groups="+JSON.stringify(groups))
         // for(const g in this.form.groups) {
@@ -129,7 +195,7 @@ class FForm extends React.Component {
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
         return (
-            <form>
+            <form onSubmit={this.default_handleSubmit}>
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
                     <div class="row">{f}</div>
