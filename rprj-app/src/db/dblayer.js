@@ -226,6 +226,7 @@ function JSONDBConnection(connectionString,verbose) {
 		// **** Cross-site: end.
 
 		var mydata = { method: method, params: params};
+		console.log("JSONDBConnection._sendRequest: mydata="+JSON.stringify(mydata));
 		xhr.send(JSON.stringify(mydata));
 		if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
 	}
@@ -545,7 +546,6 @@ function JSONDBConnection(connectionString,verbose) {
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
 			var form = jsonObj[1];
-			console.log("jsonObj: " + JSON.stringify(jsonObj));
 			try{
 				console.log("jsonObj: " + JSON.stringify(jsonObj));
 				form = jsonObj[1];
@@ -557,8 +557,8 @@ function JSONDBConnection(connectionString,verbose) {
 			a_callback(jsonObj, form)
 			console.log("JSONDBConnection.getFormInstance.my_callback: end.");
 		}
-		this._sendRequest('getFormInstance', aclassname, my_callback.bind(self));
-	} 
+		this._sendRequest('getFormInstance', [aclassname], my_callback.bind(self));
+	}
 }
 
 /**

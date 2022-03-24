@@ -68,8 +68,14 @@ docker exec -it r-rpj_rprj-db_1 mysql -pmysecret rproject
 
 # Debugging rprj_web
 
+docker-compose logs -f rprj-web
+
+
 docker build -f Dockerfile_web -t test_img_web .
 docker run -it test_img_web ls
 docker run -it --entrypoint sh test_img_web
 docker run -it --entrypoint bash test_img_web
+
+
+docker exec -it r-prj_rprj-web_1 /bin/bash
 
