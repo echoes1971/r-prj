@@ -153,6 +153,8 @@ class FormExplorer extends React.Component {
                     </div>
                 </div>
 
+                <div class="row"><div class="col">&nbsp;</div></div>
+
                 <div class="row">
                     <div class="col">
                         <ServerResponse class="border rounded"

@@ -443,7 +443,7 @@ function getAllFormClassnames() {
 	return $ret;
 }
 function _ffield2dict($field) {
-	return array(
+	$ret = array(
 		'_classname' => get_class($field),
 		'name' => $field->aNomeCampo,
 		'title' => $field->_title,
@@ -458,6 +458,12 @@ function _ffield2dict($field) {
 		 */
 		'type' => $field->tipo,
 		);
+	if(get_class($field)==='FTextArea') {
+		$ret["width"] = $field->width;
+		$ret["height"] = $field->height;
+		$ret["basicFormatting"] = $field->basicFormatting;
+	}
+	return $ret;
 }
 function _form2dictionary($form) {
 	$fields = [];

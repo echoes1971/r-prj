@@ -25,6 +25,7 @@ class FForm extends React.Component {
         this.default_handleSubmit = this.default_handleSubmit.bind(this);
         this.default_handleChange = this.default_handleChange.bind(this);
 
+        // this.render = this.render.bind(this);
         this.renderGroups = this.renderGroups.bind(this);
         this.renderGroup = this.renderGroup.bind(this);
         this.renderField = this.renderField.bind(this);
@@ -78,7 +79,7 @@ class FForm extends React.Component {
         var ret = null;
         for(const p in form.fields) {
             // console.log("FForm.renderField: p="+JSON.stringify(p))
-            if(form.fields[p].name==f) {
+            if(form.fields[p].name===f) {
                 ret = form.fields[p];
                 break;
             }
@@ -104,34 +105,48 @@ class FForm extends React.Component {
     //      FDateTimeReadOnly
     //  FKField
     //      FKObjectField
-    renderField(f) {
-        const field = this._getField(f);
-        const fieldtype = field._classname=="FPassword" ? "password" : "text"; // n=number s=string d=datetime
-        if(field._classname=='FTextArea') {
-            return (
-                <div class="row">
-                    <div class="col-1 text-end">{field.title}</div>
-                    <div class="col text-start">
-                        <textarea id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
-                            value={this.state[field.name]} size={field.size}
-                            onChange={this.default_handleChange} />
-                    </div>
-                </div>
-            );
-        }
-        // if(field===null) return f;
-        // console.log("FForm.renderField: field="+JSON.stringify(field))
-        const size = field.size ? ` size=\"{$field.size}\" ` : ""
+    renderFField(field, class_unknown=false) {
+        const fieldtype = field._classname==="FPassword" ? "password"
+                    : field.type==="n" ? "number"
+                    : "text"; // n=number s=string d=datetime
         return (
             <div class="row">
-                <div class="col-1 text-end">{field.title} {field._classname}</div>
+                <div class="col-1 text-end">{field.title}</div>
                 <div class="col text-start">
-                    <input id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
+                    {   class_unknown ?
+                        <p>{field._classname}</p>
+                        :
+                        <input id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
                         value={this.state[field.name]} size={field.size}
+                        onChange={this.default_handleChange} />
+                    }
+                </div>
+            </div>
+        );
+    }
+    renderFTextArea(field) {
+        return (
+            <div class="row">
+                <div class="col-1 text-end">{field.title}</div>
+                <div class="col text-start">
+                    <textarea id={field.name} name={field.name} placeholder={field.title}
+                        value={this.state[field.name]} size={field.size}
+                        width={field.width} height={field.height}
                         onChange={this.default_handleChange} />
                 </div>
             </div>
         );
+    }
+    renderField(f) {
+        const field = this._getField(f);
+        // console.log("FForm.renderField: field._classname="+field._classname)
+        if(field._classname==='FTextArea') {
+            return this.renderFTextArea(field)
+        }
+        if(["FNumber", "FString", "FPassword"].indexOf(field._classname)>=0) {
+            return this.renderFField(field);
+        }
+        return this.renderFField(field, true);
     }
     renderGroup(g) {
         const decodeGroupNames = this.form.decodeGroupNames
@@ -139,7 +154,6 @@ class FForm extends React.Component {
         const groupName = decodeGroupNames[g]
         const group = this.form.groups[g]
         console.log("FForm.forminstance_callback: group="+JSON.stringify(group))
-        const rows = "--"
         return (
             <div class="component">
                 <div class="row"><div class="col fw-bold text-middle">{groupName}</div></div>
@@ -195,7 +209,7 @@ class FForm extends React.Component {
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
         return (
-            <form onSubmit={this.default_handleSubmit}>
+            <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
                     <div class="row">{f}</div>

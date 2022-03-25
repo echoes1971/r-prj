@@ -356,89 +356,114 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
                 <div class="row">
-                    <div class="col text-start fw-bold">
-                        <Ping onPingServer={this.btnPingServer} />
-                    </div>
-                    <div class="col text-start fw-bold">
-                        <form onSubmit={this.default_handleSubmit}>
-                            Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
-                            Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
-                            <button onClick={this.btnLogin}>Login</button>
-                        </form>
-                    </div>
-                    <div class="col text-start fw-bold">
-                        <form onSubmit={this.default_handleSubmit}>
-                            Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
-                        </form>
-                    </div>
-                    <div class="col text-start fw-bold">
-                        <form onSubmit={this.default_handleSubmit}>
-                            <button onClick={this.btnLogout}>Logout</button>
-                        </form>
+                    <div class="col">
+                        <div class="btn-group" role="group" aria-label="Test Modules">
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#test_formexplorer" aria-expanded="false" aria-controls="test_formexplorer">Form</button>
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#test_dblayer" aria-expanded="false" aria-controls="test_dblayer">DB Layer</button>
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="test_formexplorer test_dblayer">All</button>
+                        </div>
                     </div>
                 </div>
-                <div class="row test-start">
-                    <div class="col">User: {this.state.user}</div>
-                </div>
-                <div class="row">
-                    <div class="col">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col text-start align-top">
-                        <form onSubmit={this.default_handleSubmit}>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-1 fw-bold text-end">DBE</div>
-                                    <div class="col text-start">
-                                        <input id="dbename" name="dbename" value={this.state.dbename} onChange={this.default_handleChange} />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-1 fw-bold text-end">Table</div>
-                                    <div class="col text-start">
-                                        <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-1 fw-bold text-end">SQL</div>
-                                    <div class="col text-start">
-                                        <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col text-start">
-                                        <button onClick={this.btnExecute}>Select as Array</button>
-                                        <button onClick={this.btnSelect}>Select</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
 
-                    <div class="col text-start align-top">
-                        <SearchForm
-                            dbename="DBEFolder" tablename="folders"
-                            fieldname="name" fieldvalue="ome"
-                            onChange={this.onSearchChange} onSearch={this.onSearch}
-                         />
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col">&nbsp;</div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <ServerResponse class="border rounded"
-                            server_response_0={this.state.server_response_0}
-                            server_response_1={this.state.server_response_1} />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col">
+
+                <div class="row collapse multi-collapse show" id="test_formexplorer">
+                    <div class="col card card-body">
                         <FormExplorer endpoint={this.state.endpoint} />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">&nbsp;</div>
+                </div>
+
+                <div class="row collapse multi-collapse" id="test_dblayer">
+                    <div class="component card card-body">
+                        <div class="row">
+                            <div class="col text-middle fw-bold">DBLayer</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-start fw-bold">
+                                <Ping onPingServer={this.btnPingServer} />
+                            </div>
+                            <div class="col text-start fw-bold">
+                                <form onSubmit={this.default_handleSubmit}>
+                                    Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
+                                    Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
+                                    <button onClick={this.btnLogin}>Login</button>
+                                </form>
+                            </div>
+                            <div class="col text-start fw-bold">
+                                <form onSubmit={this.default_handleSubmit}>
+                                    Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
+                                </form>
+                            </div>
+                            <div class="col text-start fw-bold">
+                                <form onSubmit={this.default_handleSubmit}>
+                                    <button onClick={this.btnLogout}>Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row test-start">
+                            <div class="col">User: {this.state.user}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-start align-top">
+                                <form onSubmit={this.default_handleSubmit}>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-1 fw-bold text-end">DBE</div>
+                                            <div class="col text-start">
+                                                <input id="dbename" name="dbename" value={this.state.dbename} onChange={this.default_handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-1 fw-bold text-end">Table</div>
+                                            <div class="col text-start">
+                                                <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-1 fw-bold text-end">SQL</div>
+                                            <div class="col text-start">
+                                                <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-start">
+                                                <button onClick={this.btnExecute}>Select as Array</button>
+                                                <button onClick={this.btnSelect}>Select</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col text-start align-top">
+                                <SearchForm
+                                    dbename="DBEFolder" tablename="folders"
+                                    fieldname="name" fieldvalue="ome"
+                                    onChange={this.onSearchChange} onSearch={this.onSearch}
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <ServerResponse class="border rounded"
+                                    server_response_0={this.state.server_response_0}
+                                    server_response_1={this.state.server_response_1} />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
