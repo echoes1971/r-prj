@@ -212,7 +212,9 @@ class FForm extends React.Component {
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
+                    <div class="row"><div class="row">&nbsp;</div></div>
                     <div class="row">{f}</div>
+                    <div class="row"><div class="row">&nbsp;</div></div>
                 </div>
             </form>
         );
