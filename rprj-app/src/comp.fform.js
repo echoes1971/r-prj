@@ -105,20 +105,26 @@ class FForm extends React.Component {
     //      FDateTimeReadOnly
     //  FKField
     //      FKObjectField
-    renderFField(field, class_unknown=false) {
+    renderFField(field, is_readonly=false, class_unknown=false) {
         const fieldtype = field._classname==="FPassword" ? "password"
                     : field.type==="n" ? "number"
+                    : field.type==='d' ? 'datetime-local'
                     : "text"; // n=number s=string d=datetime
+        const fieldclass = (
+                (field.cssClass>'' ? field.cssClass : '') + ' '
+                + (is_readonly ? 'form-control-plaintext' : '')
+            ).trim();
         return (
             <div class="row">
                 <div class="col-1 text-end">{field.title}</div>
-                <div class="col text-start">
+                <div class="col text-start">{is_readonly}
                     {   class_unknown ?
                         <p>{field._classname}</p>
                         :
-                        <input id={field.name} name={field.name} type={fieldtype} placeholder={field.title}
-                        value={this.state[field.name]} size={field.size}
-                        onChange={this.default_handleChange} />
+                        <input id={field.name} name={field.name} type={fieldtype}
+                                class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                                value={this.state[field.name]} size={field.size}
+                            onChange={this.default_handleChange} />
                     }
                 </div>
             </div>
@@ -143,10 +149,13 @@ class FForm extends React.Component {
         if(field._classname==='FTextArea') {
             return this.renderFTextArea(field)
         }
-        if(["FNumber", "FString", "FPassword"].indexOf(field._classname)>=0) {
+        if(["FDateTime","FNumber", "FString", "FPassword"].indexOf(field._classname)>=0) {
             return this.renderFField(field);
         }
-        return this.renderFField(field, true);
+        if(["FDateTimeReadOnly"].indexOf(field._classname)>=0) {
+            return this.renderFField(field,true);
+        }
+        return this.renderFField(field, false, true);
     }
     renderGroup(g) {
         const decodeGroupNames = this.form.decodeGroupNames
