@@ -18,6 +18,7 @@ class FormExplorer extends React.Component {
             endpoint: props.endpoint,
             server_response_0: "",
             server_response_1: "",
+            debug_form: "",
             selectedClassname: null,
             classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
         }
@@ -35,6 +36,8 @@ class FormExplorer extends React.Component {
         this.select_handleChange = this.select_handleChange.bind(this);
 
         this.forminstance_callback = this.forminstance_callback.bind(this);
+
+        this.onSave = this.onSave.bind(this);
     }
 
     componentDidMount() {
@@ -119,6 +122,10 @@ class FormExplorer extends React.Component {
         this.be.getAllFormClassnames(this.classnames_callback);
     }
 
+    onSave(values) {
+        this.setState({debug_form: JSON.stringify(values)})
+    }
+
     render() {
         const selectedClassname = this.state.selectedClassname;
         // console.log("FormExplorer.render: selectedClassname="+selectedClassname);
@@ -149,7 +156,23 @@ class FormExplorer extends React.Component {
                 <div class="row">
                     <div class="col">
                         <FForm endpoint={this.state.endpoint} 
-                            formname={selectedClassname} />
+                            formname={selectedClassname}
+                            onSave={this.onSave} />
+                    </div>
+                </div>
+
+                <div class="row"><div class="col">&nbsp;</div></div>
+
+                <div class={"component "+this.props.class}>
+                    <div class="row">
+                        <div class="col">
+                            <div class="component border rounded">
+                                <div class="row">
+                                    <div class="col-1 fw-bold">Debug Form</div>
+                                    <div class="col text-start"><pre>{this.state.debug_form}</pre></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

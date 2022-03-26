@@ -458,7 +458,24 @@ function _ffield2dict($field) {
 		 */
 		'type' => $field->tipo,
 		);
-	if(get_class($field)==='FTextArea') {
+	if(get_class($field)==='FCheckBox') {
+		$ret["valueslist"] = $field->listaValori;
+		$ret["multiselect"] = $field->multiselezione;
+		$ret["separator_string"] = $field->stringa_separatrice;
+	}
+	if(get_class($field)==='FDateTime' || get_class($field)==='FDateTimeReadOnly') {
+		$ret["show_date"] = $field->aVisualizzaData;
+		$ret["show_time"] = $field->aVisualizzaOra;
+	}
+	if(get_class($field)==='FFileField') {
+		$ret["dest_directory"] = $field->dest_directory;
+	}
+	if(get_class($field)==='FList') {
+		$ret["valueslist"] = $field->listaValori;
+		$ret["height"] = $field->altezza;
+		$ret["multiselect"] = $field->multiselezione;
+	}
+	if(get_class($field)==='FTextArea' || get_class($field)==='FHtml') {
 		$ret["width"] = $field->width;
 		$ret["height"] = $field->height;
 		$ret["basicFormatting"] = $field->basicFormatting;

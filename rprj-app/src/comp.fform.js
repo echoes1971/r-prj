@@ -1,4 +1,6 @@
 import React from 'react';
+// See: https://react-select.com/home
+import Select from 'react-select';
 
 import { BackEndProxy } from './be';
 
@@ -15,6 +17,8 @@ class FForm extends React.Component {
             detailTitle: "User"
         }
 
+        this.field_prefix = "field_"
+
         this.be = new BackEndProxy(this.state.endpoint);
 
         this.form = null;
@@ -30,6 +34,9 @@ class FForm extends React.Component {
         this.renderGroup = this.renderGroup.bind(this);
         this.renderField = this.renderField.bind(this);
         this._getField = this._getField.bind(this);
+        this.renderActions = this.renderActions.bind(this);
+
+        this.btnSave = this.btnSave.bind(this);
     }
 
     componentDidMount() {
@@ -60,6 +67,19 @@ class FForm extends React.Component {
             this.be.getFormInstance(this.props.formname,this.forminstance_callback);
         }
     }
+
+    btnSave() {
+        const values = {};
+        for(const k in this.state) {
+            console.log("FForm.btnSave: k="+k)
+            if(k.indexOf(this.field_prefix)<0) continue;
+            const k1 = k.replace(this.field_prefix,"");
+            values[k1] = this.state[k]
+        }
+        console.log("FForm.btnSave: values="+JSON.stringify(values))
+        this.props.onSave(values)
+    }
+
 
     getViewColumnNames() { return this.form.viewColumnNames; }
 
@@ -106,9 +126,14 @@ class FForm extends React.Component {
     //  FKField
     //      FKObjectField
     renderFField(field, is_readonly=false, class_unknown=false) {
+        const fieldname = this.field_prefix + field.name
         const fieldtype = field._classname==="FPassword" ? "password"
                     : field.type==="n" ? "number"
-                    : field.type==='d' ? 'datetime-local'
+                    : field.type==='d' ? 
+                        ( field.show_date && field.show_time ? 'datetime-local'
+                            : field.show_date ? 'date'
+                            : 'time'
+                        )
                     : "text"; // n=number s=string d=datetime
         const fieldclass = (
                 (field.cssClass>'' ? field.cssClass : '') + ' '
@@ -116,44 +141,79 @@ class FForm extends React.Component {
             ).trim();
         return (
             <div class="row">
-                <div class="col-1 text-end">{field.title}</div>
-                <div class="col text-start">{is_readonly}
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                <div class="col text-start">
                     {   class_unknown ?
                         <p>{field._classname}</p>
                         :
-                        <input id={field.name} name={field.name} type={fieldtype}
+                        <input id={fieldname} name={fieldname} type={fieldtype}
                                 class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                                value={this.state[field.name]} size={field.size}
+                                value={this.state[fieldname]} size={field.size}
                             onChange={this.default_handleChange} />
                     }
                 </div>
             </div>
         );
     }
-    renderFTextArea(field) {
+    renderFTextArea(field, is_readonly=false) {
+        const fieldname = this.field_prefix + field.name
+        const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' '
+            + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim();
         return (
             <div class="row">
-                <div class="col-1 text-end">{field.title}</div>
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
                 <div class="col text-start">
-                    <textarea id={field.name} name={field.name} placeholder={field.title}
-                        value={this.state[field.name]} size={field.size}
+                    <textarea id={fieldname} name={fieldname}
+                        class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                        value={this.state[fieldname]} size={field.size}
                         width={field.width} height={field.height}
                         onChange={this.default_handleChange} />
                 </div>
             </div>
         );
     }
-    renderField(f) {
+    renderFList(field, is_readonly=false) {
+        const fieldname = this.field_prefix + field.name
+        const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' '
+            + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim();
+        const listvalues = field.valueslist;
+        return (
+            <div class="row">
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                <div class="col text-start">
+                    <select id={fieldname} name={fieldname}
+                        class={fieldclass} readOnly={is_readonly}
+                        value={this.state[fieldname]} onChange={this.default_handleChange} >
+                        {Object.keys(listvalues).map((k) => {
+                            return (<option value={k}>{listvalues[k]}</option>);
+                        }
+                        )}
+                    </select>
+                </div>
+            </div>
+        );
+    }
+    renderField(f, is_readonly=false) {
         const field = this._getField(f);
         // console.log("FForm.renderField: field._classname="+field._classname)
-        if(field._classname==='FTextArea') {
-            return this.renderFTextArea(field)
-        }
-        if(["FDateTime","FNumber", "FString", "FPassword"].indexOf(field._classname)>=0) {
-            return this.renderFField(field);
+        if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
+            return this.renderFField(field,is_readonly);
         }
         if(["FDateTimeReadOnly"].indexOf(field._classname)>=0) {
             return this.renderFField(field,true);
+        }
+        if(["FList"].indexOf(field._classname)>=0) {
+            return this.renderFList(field,is_readonly);
+        }
+        if(field._classname==='"FPassword"') {
+            return this.renderFField(field, false, false);
+        }
+        if(field._classname==='FTextArea') {
+            return this.renderFTextArea(field,is_readonly)
         }
         return this.renderFField(field, false, true);
     }
@@ -162,11 +222,14 @@ class FForm extends React.Component {
         const g1 = g.length>0 ? g : "_"
         const groupName = decodeGroupNames[g]
         const group = this.form.groups[g]
-        console.log("FForm.forminstance_callback: group="+JSON.stringify(group))
+        const is_readonly = false; // TODO
+        // console.log("FForm.renderGroup: group="+JSON.stringify(group))
         return (
             <div class="component">
                 <div class="row"><div class="col fw-bold text-middle">{groupName}</div></div>
-                {group.map(this.renderField)}
+                {group.map((fieldname) => {
+                    return this.renderField(fieldname, is_readonly)
+                })}
             </div>
         );
     }
@@ -175,21 +238,44 @@ class FForm extends React.Component {
             return ("--");
         }
         const groups = this.form.groups!==null ? this.form.groups : [];
-        console.log("FForm.forminstance_callback: groups="+JSON.stringify(groups))
-        // for(const g in this.form.groups) {
-        //     const g1 = g.length>0 ? g : "_";
-        //     ret += this.renderGroup(g1);
-        // }
+        // console.log("FForm.renderGroups: groups="+JSON.stringify(groups))
         return (
             <div class="container">
                 {Object.keys(groups).map(this.renderGroup)}
             </div>
         );
     }
+    renderActions() {
+        if(this.form===null) {
+            return ("--");
+        }
+        const actions = this.form.actions;
+        return (
+            <div class="btn-toolbar" role="toolbar" aria-label="Actions">
+                <div class="btn-group mr-2" role="group">
+                    <button class="btn btn-secondary" type="button" >Delete</button>
+                    {Object.keys(actions).map((k) => {
+                        // {"label":"Reload","page":"obj_reload_do.php","icon":"icons/reload.png","desc":"Reload"}
+                        return (
+                            <button class="btn btn-secondary" type="button" title={actions[k].desc}>{actions[k].label || actions[k][0]}</button>
+                        );
+
+                    })}
+                    <button class="btn btn-secondary" type="button"
+                        onClick={this.btnSave} >Save</button>
+                </div>
+                &nbsp;
+                <div class="btn-group mr-2" role="group">
+                    <button class="btn btn-secondary" type="button" >View</button>
+                    <button class="btn btn-secondary" type="button" >Close</button>
+                </div>
+            </div>
+        );
+    }
 
     forminstance_callback(jsonObj,form) {
-        console.log("FForm.forminstance_callback: start.")
-        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        // console.log("FForm.forminstance_callback: start.")
+        // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         this.form = form;
         // var s = [];
         // for(const property in form) {
@@ -204,23 +290,24 @@ class FForm extends React.Component {
         // for(const p in form.fields) {
         //     s.push("  "+p+": "+JSON.stringify(form.fields[p]))
         // }
-        console.log("FForm.forminstance_callback: form.detailTitle="+form.detailTitle)
         const detailTitle = form.detailTitle
         this.setState({
         //     detailIcon: form.detailIcon,
             detailTitle: detailTitle
         })
-        console.log("FForm.forminstance_callback: end.")
+        // console.log("FForm.forminstance_callback: end.")
     }
 
     render() {
-        console.log("FForm.forminstance_callback: this.state.formname=" + this.state.formname)
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
+        const actions = this.renderActions();
         return (
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
+                    <div class="row"><div class="row">&nbsp;</div></div>
+                    <div class="row">{actions}</div>
                     <div class="row"><div class="row">&nbsp;</div></div>
                     <div class="row">{f}</div>
                     <div class="row"><div class="row">&nbsp;</div></div>
