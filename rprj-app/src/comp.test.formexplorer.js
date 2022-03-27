@@ -1,5 +1,5 @@
 import React from 'react';
-// See: https://react-select.com/home
+// See: https://react-select.com/home and https://github.com/JedWatson/react-select
 import Select from 'react-select';
 
 import { BackEndProxy } from './be';
@@ -19,7 +19,7 @@ class FormExplorer extends React.Component {
             server_response_0: "",
             server_response_1: "",
             debug_form: "",
-            selectedClassname: null,
+            selectedClassname: "FUser", //null,
             classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
         }
 
@@ -128,6 +128,7 @@ class FormExplorer extends React.Component {
 
     render() {
         const selectedClassname = this.state.selectedClassname;
+        const selectedOption = {value: selectedClassname, label: selectedClassname}
         // console.log("FormExplorer.render: selectedClassname="+selectedClassname);
         return (
             <div class={"component "+this.props.class}>
@@ -140,7 +141,9 @@ class FormExplorer extends React.Component {
                 <div class="row">
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <Select formname={selectedClassname} onChange={this.select_handleChange} options={this.state.classnames} />
+                            <Select
+                                formname={selectedClassname} defaultValue={selectedOption}
+                                onChange={this.select_handleChange} options={this.state.classnames} />
                         </form>
                     </div>
 

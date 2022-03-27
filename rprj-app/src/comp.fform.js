@@ -1,6 +1,4 @@
 import React from 'react';
-// See: https://react-select.com/home
-import Select from 'react-select';
 
 import { BackEndProxy } from './be';
 
@@ -28,6 +26,7 @@ class FForm extends React.Component {
 
         this.default_handleSubmit = this.default_handleSubmit.bind(this);
         this.default_handleChange = this.default_handleChange.bind(this);
+        this.password_handleChange = this.password_handleChange.bind(this);
 
         // this.render = this.render.bind(this);
         this.renderGroups = this.renderGroups.bind(this);
@@ -83,6 +82,13 @@ class FForm extends React.Component {
 
     getViewColumnNames() { return this.form.viewColumnNames; }
 
+    password_handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({[name]: value});
+    }
     default_handleSubmit(event) {
         event.preventDefault();
     }
@@ -155,25 +161,6 @@ class FForm extends React.Component {
             </div>
         );
     }
-    renderFTextArea(field, is_readonly=false) {
-        const fieldname = this.field_prefix + field.name
-        const fieldclass = (
-            (field.cssClass>'' ? field.cssClass : '') + ' '
-            + (is_readonly ? 'form-control-plaintext' : '')
-        ).trim();
-        return (
-            <div class="row">
-                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start">
-                    <textarea id={fieldname} name={fieldname}
-                        class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                        value={this.state[fieldname]} size={field.size}
-                        width={field.width} height={field.height}
-                        onChange={this.default_handleChange} />
-                </div>
-            </div>
-        );
-    }
     renderFList(field, is_readonly=false) {
         const fieldname = this.field_prefix + field.name
         const fieldclass = (
@@ -197,6 +184,66 @@ class FForm extends React.Component {
             </div>
         );
     }
+    password_handleChange(event) {
+        const target = event.target;
+        const value1 = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        const fieldname = name.indexOf('pwd1_')>=0 ? name.replace('pwd1_','') : name.replace('pwd2_','');
+        const fieldname1 = "pwd1_" + fieldname
+        const fieldname2 = "pwd2_" + fieldname
+        const prefix_fieldname = this.field_prefix + fieldname
+
+        const value2 = name.indexOf('pwd1_')>=0 ? this.state[fieldname2] : this.state[fieldname1];
+        const value = value1===value2 ? value1 : this.state[prefix_fieldname]
+
+        this.setState({[prefix_fieldname]: value, [name]: value1});
+    }
+    renderFPassword(field, is_readonly=false) {
+        const fieldname1 = "pwd1_" + field.name
+        const fieldname2 = "pwd2_" + field.name
+        const fieldclass = (
+                (field.cssClass>'' ? field.cssClass : '') + ' '
+                + (is_readonly ? 'form-control-plaintext' : '') + ' '
+                + (this.state[fieldname1] !== this.state[fieldname2] ? 'bg-danger'
+                    : this.state[fieldname1]===undefined || this.state[fieldname1]===null ? ''
+                        : 'bg-success' )
+            ).trim();
+        return (
+            <div class="row">
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                <div class="col text-start">
+                    <input id={fieldname1} name={fieldname1} type="password"
+                            class={fieldclass} readOnly={is_readonly} placeholder="Enter password"
+                            value={this.state[fieldname1]}
+                        onChange={this.password_handleChange} />
+                    <input id={fieldname2} name={fieldname2} type="password"
+                            class={fieldclass} readOnly={is_readonly} placeholder="Re-Enter password"
+                            value={this.state[fieldname2]}
+                        onChange={this.password_handleChange} />
+                </div>
+            </div>
+        );
+    }
+    renderFTextArea(field, is_readonly=false) {
+        const fieldname = this.field_prefix + field.name
+        const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' '
+            + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim();
+        return (
+            <div class="row">
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                <div class="col text-start">
+                    <textarea id={fieldname} name={fieldname}
+                        class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                        value={this.state[fieldname]} size={field.size}
+                        width={field.width} height={field.height}
+                        onChange={this.default_handleChange} />
+                </div>
+            </div>
+        );
+    }
     renderField(f, is_readonly=false) {
         const field = this._getField(f);
         // console.log("FForm.renderField: field._classname="+field._classname)
@@ -209,8 +256,8 @@ class FForm extends React.Component {
         if(["FList"].indexOf(field._classname)>=0) {
             return this.renderFList(field,is_readonly);
         }
-        if(field._classname==='"FPassword"') {
-            return this.renderFField(field, false, false);
+        if(field._classname==='FPassword') {
+            return this.renderFPassword(field, false);
         }
         if(field._classname==='FTextArea') {
             return this.renderFTextArea(field,is_readonly)
