@@ -1196,6 +1196,7 @@ class FKObjectField extends FKField {
 	}
 	
 	function render_view(&$dbmgr=null, $showlink=false) {
+		if($dbmgr==null) return ''; // 20220327
 		$tmp=$this->_searchObject($dbmgr);
 		$mydbe=$tmp[0]; $mydestform=$tmp[1]; $nomeclasse=$tmp[2];
 		if($mydbe==null) return '';
