@@ -909,9 +909,9 @@ class FTodo extends FObject {
 	function getShortDescription($dbmgr=null) {
 		$ret='';
 		$father = & $this->getField('father_id');
-		$father_string = is_a($father,'FKField') ? $father->render_view($dbmgr) : $father->render_view();
+		$father_string = !($dbmgr===null) && is_a($father,'FKField') ? $father->render_view($dbmgr) : $father->render_view();
 		$stato = & $this->getField('stato');
-		$stato_string = is_a($stato,'FKField') ? $stato->render_view($dbmgr) : $stato->render_view();
+		$stato_string = $dbmgr!==null && is_a($stato,'FKField') ? $stato->render_view($dbmgr) : $stato->render_view();
 		$ret .= $stato_string>""?"$stato_string - " : '';
 		$ret .= $this->getValue('name');
 		$ret .= $father_string>""?" ($father_string)" : '';
