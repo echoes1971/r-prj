@@ -122,16 +122,16 @@ class FForm extends React.Component {
     //      FUuid
     //      FPassword
     //      FPermissions
-    //  FFileField
+    //  FFileField - TODO
     //  FList
     //      FChildSort
-    //  FCheckBox
+    //  FCheckBox - TODO
     //  FTextArea
-    //      FHtml
+    //      FHtml - TODO
     //  FDateTime
     //      FDateTimeReadOnly
-    //  FKField
-    //      FKObjectField
+    //  FKField - TODO
+    //      FKObjectField - TODO
     renderFField(field, is_readonly=false, class_unknown=false) {
         const fieldname = this.field_prefix + field.name
         const fieldtype = field._classname==="FPassword" ? "password"
@@ -275,7 +275,7 @@ class FForm extends React.Component {
         this.setState({[name]: value, [state_fieldname]:permissions});
     }
     renderFPermissions(field, is_readonly=false) {
-        const fieldname = field.name; //this.field_prefix + field.name
+        const fieldname = field.name;
         const fieldclass = (
                 (field.cssClass>'' ? field.cssClass : '') + ' '
                 + (is_readonly ? 'form-control-plaintext' : '')
