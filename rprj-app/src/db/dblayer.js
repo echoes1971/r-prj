@@ -552,6 +552,7 @@ function JSONDBConnection(connectionString,verbose) {
 			} catch(e) {
 				form = null;
 			}
+			if(form.length==0) form=null;
 			console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
