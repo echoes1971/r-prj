@@ -225,6 +225,25 @@ class FForm extends React.Component {
             </div>
         );
     }
+    renderFPercent(field, is_readonly=false) {
+        const fieldname = this.field_prefix + field.name
+        const fieldtype = "number";
+        const fieldclass = (
+                (field.cssClass>'' ? field.cssClass : '') + ' '
+                + (is_readonly ? 'form-control-plaintext' : '')
+            ).trim();
+        return (
+            <div class="row">
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                <div class="col text-start">
+                    <input id={fieldname} name={fieldname} type={fieldtype}
+                            class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                            value={this.state[fieldname]} size={field.size}
+                        onChange={this.default_handleChange} /> %
+                </div>
+            </div>
+        );
+    }
     renderFTextArea(field, is_readonly=false) {
         const fieldname = this.field_prefix + field.name
         const fieldclass = (
@@ -259,6 +278,9 @@ class FForm extends React.Component {
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, false);
         }
+        if(field._classname==='FPercent') {
+            return this.renderFPercent(field, false);
+        }
         if(field._classname==='FTextArea') {
             return this.renderFTextArea(field,is_readonly)
         }
@@ -270,12 +292,17 @@ class FForm extends React.Component {
         const groupName = decodeGroupNames[g]
         const group = this.form.groups[g]
         const is_readonly = false; // TODO
+
+        const visibleFields = this.form.detailColumnNames;
+        const readonlyFields = this.form.detailReadOnlyColumnNames;
+
         // console.log("FForm.renderGroup: group="+JSON.stringify(group))
         return (
             <div class="component">
-                <div class="row"><div class="col fw-bold text-middle">{groupName}</div></div>
+                <div class="row"><div class="col fw-bold text-middle bg-light">{groupName}</div></div>
                 {group.map((fieldname) => {
-                    return this.renderField(fieldname, is_readonly)
+                    if(visibleFields.indexOf(fieldname)<0) return;
+                    return this.renderField(fieldname, is_readonly || readonlyFields.indexOf(fieldname)>=0);
                 })}
             </div>
         );
@@ -299,22 +326,22 @@ class FForm extends React.Component {
         const actions = this.form.actions;
         return (
             <div class="btn-toolbar" role="toolbar" aria-label="Actions">
-                <div class="btn-group mr-2" role="group">
-                    <button class="btn btn-secondary" type="button" >Delete</button>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-secondary btn-xs" type="button" >Delete</button>
                     {Object.keys(actions).map((k) => {
                         // {"label":"Reload","page":"obj_reload_do.php","icon":"icons/reload.png","desc":"Reload"}
                         return (
-                            <button class="btn btn-secondary" type="button" title={actions[k].desc}>{actions[k].label || actions[k][0]}</button>
+                            <button class="btn btn-secondary btn-xs" type="button" title={actions[k].desc}>{actions[k].label || actions[k][0]}</button>
                         );
 
                     })}
-                    <button class="btn btn-secondary" type="button"
+                    <button class="btn btn-secondary btn-xs" type="button"
                         onClick={this.btnSave} >Save</button>
                 </div>
                 &nbsp;
-                <div class="btn-group mr-2" role="group">
-                    <button class="btn btn-secondary" type="button" >View</button>
-                    <button class="btn btn-secondary" type="button" >Close</button>
+                <div class="btn-group-sm" role="group">
+                    <button class="btn btn-secondary btn-sm" type="button" >View</button>
+                    <button class="btn btn-secondary btn-sm" type="button" >Close</button>
                 </div>
             </div>
         );
@@ -322,8 +349,12 @@ class FForm extends React.Component {
 
     forminstance_callback(jsonObj,form) {
         // console.log("FForm.forminstance_callback: start.")
-        // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         this.form = form;
+        if(form===null) {
+            this.props.onError(jsonObj);
+            return;
+        }
         // var s = [];
         // for(const property in form) {
         //     if(property=='fields' || property=='groups') continue;
@@ -357,6 +388,8 @@ class FForm extends React.Component {
                     <div class="row">{actions}</div>
                     <div class="row"><div class="row">&nbsp;</div></div>
                     <div class="row">{f}</div>
+                    <div class="row"><div class="row">&nbsp;</div></div>
+                    <div class="row">TODO: detail forms</div>
                     <div class="row"><div class="row">&nbsp;</div></div>
                 </div>
             </form>
