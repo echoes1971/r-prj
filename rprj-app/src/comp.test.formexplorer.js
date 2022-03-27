@@ -19,7 +19,7 @@ class FormExplorer extends React.Component {
             server_response_0: "",
             server_response_1: "",
             debug_form: "",
-            selectedClassname: "FUser", //null,
+            selectedClassname: "FTodo", //null,
             classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
         }
 
@@ -38,6 +38,7 @@ class FormExplorer extends React.Component {
         this.forminstance_callback = this.forminstance_callback.bind(this);
 
         this.onSave = this.onSave.bind(this);
+        this.onError = this.onError.bind(this);
     }
 
     componentDidMount() {
@@ -125,6 +126,12 @@ class FormExplorer extends React.Component {
     onSave(values) {
         this.setState({debug_form: JSON.stringify(values)})
     }
+    onError(jsonObj) {
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: JSON.stringify(jsonObj[1])
+        })
+    }
 
     render() {
         const selectedClassname = this.state.selectedClassname;
@@ -160,7 +167,8 @@ class FormExplorer extends React.Component {
                     <div class="col">
                         <FForm endpoint={this.state.endpoint} 
                             formname={selectedClassname}
-                            onSave={this.onSave} />
+                            onSave={this.onSave}
+                            onError={this.onError} />
                     </div>
                 </div>
 
