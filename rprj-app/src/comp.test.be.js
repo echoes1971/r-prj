@@ -190,9 +190,7 @@ class TestBE extends React.Component {
     }
 
     tick_time() {
-        this.setState({
-            date: new Date()
-        })
+        this.setState({ date: new Date() })
     }
 
     tick_ping() {

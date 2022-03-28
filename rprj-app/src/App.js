@@ -21,12 +21,6 @@ class App extends Component {
       user_fullname: ''
     };
 
-    this.be = new BackEndProxy(this.state.endpoint);
-
-    // Init stuff
-    this.be.ping();
-    this.be.getLoggedUser();
-
     this.default_callback = this.default_callback.bind(this);
 
     this.on_login_callback = this.on_login_callback.bind(this);
@@ -37,39 +31,50 @@ class App extends Component {
 
     this.on_fetchuser_callback = this.on_fetchuser_callback.bind(this);
     this.fetchLoggedUser = this.fetchLoggedUser.bind(this);
+
   }
 
   componentDidMount() {
+    console.log("App.componentDidMount: start.");
+
+    this.be = new BackEndProxy(this.state.endpoint);
+
+
     this.fetchLoggedUser();
-    this.pingID = setInterval(
+    // this.be.getLoggedUser(this.on_fetchuser_callback);
+
+    this.pingUser = setInterval(
         // () => this.be.ping(this.on_ping_callback),
-        () => this.fetchLoggedUser(),
-        20 * 1000                   // Better 60 seconds?
+        () => this.fetchLoggedUser,
+        10 * 1000                   // Better 60 seconds?
     );
-}
+    console.log("App.componentDidMount: end.");
+  }
+  componentWillUnmount() {
+    clearInterval(this.pingUser);
+  }
 
   default_callback(jsonObj) {
-    // console.log("App.on_btn_ping_callback: start.");
     // console.log(jsonObj)
-    // console.log(this.be.isConnected())
-    // console.log("App.on_btn_ping_callback: end.");
   }
 
   on_fetchuser_callback(jsonObj) {
+    console.log("App.on_fetchuser_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
-    this.setState({
-        user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
-    })
+    this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
+    console.log("App.on_fetchuser_callback: end.");
   }
   fetchLoggedUser() {
+    console.log("App.fetchLoggedUser: start.");
     this.be.getLoggedUser(this.on_fetchuser_callback);
+    console.log("App.fetchLoggedUser: end.");
   }
 
   on_login_callback(jsonObj) {
+    console.log("App.on_login_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
-    this.setState({
-        user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
-    })
+    this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
+    console.log("App.on_login_callback: end.");
   }
   onLogin(usr,pwd) {
     this.be.login(usr,pwd,this.on_login_callback);

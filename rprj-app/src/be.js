@@ -64,16 +64,16 @@ class BackEndProxy {
         this.con.getAllFormClassnames(a_callback);
     }
     getFormInstance(aclassname,a_callback) {
-        if(aclassname===null || aclassname===undefined || aclassname.length==0) return;
+        if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
         this.con.getFormInstance(aclassname,a_callback);
     }
 
 
     // ******************** DBConnection
 
-    getLoggedUser() {
-        return this.dbmgr.getLoggedUser(this.do_nothing_callback);
-    }
+    // getLoggedUser() {
+    //     return this.dbmgr.getLoggedUser(this.do_nothing_callback);
+    // }
 }
 
 export { BackEndProxy };

@@ -8,8 +8,8 @@ class RNav extends React.Component {
         // console.log(props);
         
         this.state = {
-            usr: ''
-            ,pwd: ''
+             p_usr: ''
+            ,p_pwd: ''
             ,user_fullname: props.user_fullname
         }
 
@@ -49,8 +49,8 @@ class RNav extends React.Component {
         event.preventDefault();
     }
     btnLogin() {
-        const usr = this.state.usr;
-        const pwd = this.state.pwd;
+        const usr = this.state.p_usr;
+        const pwd = this.state.p_pwd;
         this.props.onLogin(usr,pwd);
     }
     logout_handleSubmit(event) {
@@ -95,9 +95,9 @@ class RNav extends React.Component {
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLoginDropdown">
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
-                                    <label class="d-none d-lg-block" for="usr">Username</label> <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
+                                    <label class="d-none d-lg-block" for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
                                     <br />
-                                    <label class="d-none d-lg-block" for="usr">Password</label> <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
+                                    <label class="d-none d-lg-block" for="p_pwd">Password</label> <input id="p_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
                                     <button class="btn btn-secondary" onClick={this.btnLogin}>Login</button>
                                 </form>
                             </li>

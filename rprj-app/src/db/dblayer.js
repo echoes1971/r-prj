@@ -33,7 +33,7 @@
 	this.getValue = function(row,col) { return this.righe[ row * this.columnName.length + col ]; }
 	this.isNull = function(row,col) { return this.righe[ row * this.columnName.length + col ]==null; }
 	this.getColumnName = function(col) { return this.columnName[col]; }
-	this.getColumnIndex = function(columnName) { var ret=-1; for(var i=0; ret<0 && i<this.columnName.length; i++) { if(this.columnName[i]==columnName) ret=i; } return ret; }
+	this.getColumnIndex = function(columnName) { var ret=-1; for(var i=0; ret<0 && i<this.columnName.length; i++) { if(this.columnName[i]===columnName) ret=i; } return ret; }
 	this.getColumnType = function(col) { return this.columnType[col]; }
 	/*virtual string getValue(int row, string* columnName);
 	virtual int getLength(int row, int column);
@@ -87,7 +87,7 @@ function DBEntity(dbename,tablename) {
 		if(tablenameIndex>0) this.dbename=rs.getValue(row,tablenameIndex);
 		for(var col=0; col<rs.getNumColumns(); col++) {
 			var colName = rs.getColumnName(col);
-			if(colName[0]=='_') continue;
+			if(colName[0]==='_') continue;
 			this.dict[colName]=rs.getValue(row,col);
 		}
 	};
@@ -101,7 +101,7 @@ function DBEntity(dbename,tablename) {
 	this.getKeyNames = function() { var ret=[]; for(var i in this.keys) ret.push(i); return ret; }
 	
 	this.getFK = function() { return this._fks; }
-	this.getFKForTable = function(tablename) { var ret = []; for(var i=0; i<this._fks.length; i++) { if(this._fks[i].tabella_riferita==tablename) ret.push(this._fks[i]); } return ret; }
+	this.getFKForTable = function(tablename) { var ret = []; for(var i=0; i<this._fks.length; i++) { if(this._fks[i].tabella_riferita===tablename) ret.push(this._fks[i]); } return ret; }
 	this.readFKFrom = function(dbe) {
 		var fks = this.getFKForTable( dbe.getTableName() );
 		for(var i=0; i<fks.length; i++) {
@@ -122,7 +122,7 @@ function DBEntity(dbename,tablename) {
 		var fks = this.getFK();
 		if(tabella_riferita.length>0) fks = this.getFKForTable(tabella_riferita);
 		var found=false;
-		for(var i=0; !found && i<fks.length; i++) { found = ( fks[i].colonna_fk == field_name ); }
+		for(var i=0; !found && i<fks.length; i++) { found = ( fks[i].colonna_fk === field_name ); }
 		return found;
 	}
 	this.cleanKeyFields = function() {
@@ -184,18 +184,18 @@ function JSONDBConnection(connectionString,verbose) {
 		var xhr = new XMLHttpRequest()
 		var default_callback = (e) => {
 			console.log("JSONDBConnection._sendRequest.default_callback: start.");
-			console.log(xhr);
-			console.log(xhr.getAllResponseHeaders());
+			// console.log(xhr);
+			// console.log(xhr.getAllResponseHeaders());
 			// console.log(xhr.getResponseHeader('Set-Cookie'))
 			try {
 				const jsonObj = JSON.parse(xhr.responseText)
 				jsonObj[0] = atob(jsonObj[0])
-				console.log(jsonObj)
-				console.log('== Msg =======================================')
-				console.log(jsonObj[0])
-				console.log('== BODY ======================================')
-				console.log(jsonObj[1])
-				console.log('==============================================')
+				// console.log(jsonObj)
+				// console.log('== Msg =======================================')
+				// console.log(jsonObj[0])
+				// console.log('== BODY ======================================')
+				// console.log(jsonObj[1])
+				// console.log('==============================================')
 				if(req_callback) req_callback(jsonObj)
 			} catch(e) {
 				if(req_callback) req_callback([e + "\n===============================\n\n" + xhr.responseText, []])
@@ -234,7 +234,7 @@ function JSONDBConnection(connectionString,verbose) {
 	this.ping = function(a_callback=null) {
 		var self = this
 		var my_connect_callback = (jsonObj) => {
-			self.connected = jsonObj[1]=='pong'
+			self.connected = jsonObj[1]==='pong'
 			a_callback(jsonObj)
 		}
 		this._sendRequest('ping', [], my_connect_callback.bind(self));
@@ -242,7 +242,7 @@ function JSONDBConnection(connectionString,verbose) {
 	this.connect = function(a_callback) {
 		var self = this
 		var my_connect_callback = (jsonObj) => {
-			self.connected = jsonObj[1]=='pong'
+			self.connected = jsonObj[1]==='pong'
 			a_callback(jsonObj)
 		}
 		this.ping(my_connect_callback.bind(self));
@@ -252,49 +252,53 @@ function JSONDBConnection(connectionString,verbose) {
 	this.reconnect = function() { this.disconnect(); this.connect(); };
 	
 	this.obj2resultset = function(obj) {
-		console.log("JSONDBConnection.obj2resultset: start.");
+		// console.log("JSONDBConnection.obj2resultset: start.");
 		if(obj.length<1 || obj[0].length<1) return null;
-		console.log("JSONDBConnection.obj2resultset: obj=" + JSON.stringify(obj));
-		console.log("JSONDBConnection.obj2resultset: obj[0]=" + JSON.stringify(obj[0]));
+		// console.log("JSONDBConnection.obj2resultset: obj=" + JSON.stringify(obj));
+		// console.log("JSONDBConnection.obj2resultset: obj[0]=" + JSON.stringify(obj[0]));
 		var rs = new ResultSet();
 		// Nomi e tipi
 		var header = Object.keys(obj[0]);
-		console.log("JSONDBConnection.obj2resultset: header=" + JSON.stringify(header));
+		// console.log("JSONDBConnection.obj2resultset: header=" + JSON.stringify(header));
 		for(var i in header) {
 			rs.columnName.push(header[i]);
 			rs.columnType.push(typeof(obj[0][header[i]]));
 		}
-		console.log("JSONDBConnection.obj2resultset: rs.columnName=" + JSON.stringify(rs.columnName));
-		console.log("JSONDBConnection.obj2resultset: rs.columnType=" + JSON.stringify(rs.columnType));
+		// console.log("JSONDBConnection.obj2resultset: rs.columnName=" + JSON.stringify(rs.columnName));
+		// console.log("JSONDBConnection.obj2resultset: rs.columnType=" + JSON.stringify(rs.columnType));
 		// Righe
 		for(var r=0; r<obj.length; r++) {
 			for(var col=0; col<rs.columnName.length; col++) { rs.righe.push( obj[r][rs.columnName[col]] ); }
 		}
-		console.log("JSONDBConnection.obj2resultset: end.");
+		// console.log("JSONDBConnection.obj2resultset: end.");
 		return rs;
 	}
 	
 	this.login = function(user, pwd, a_callback) {
+		console.log("JSONDBConnection.login: start.");
 		var self = this
 		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.login.my_callback: start.");
 			try {
-				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
 				self._rs_user=self.obj2resultset(jsonObj[1]);
-				console.log("self._rs_user: " + self._rs_user);
+				// console.log("self._rs_user: " + self._rs_user);
 				if(self._rs_user) {
 					self._dbe_user = new DBEntity("DBEUser","users");
 					self._dbe_user.fromRS(self._rs_user,0);
-					console.log("self._dbe_user: " + self._dbe_user.to_string());
+					// console.log("self._dbe_user: " + self._dbe_user.to_string());
 				} else {
 					self._dbe_user = null;
-					console.log("self._dbe_user: " + self._dbe_user);
+					// console.log("self._dbe_user: " + self._dbe_user);
 				}
 			} catch(e) {
 				console.log(e);
 			}
 			a_callback(jsonObj)
+			console.log("JSONDBConnection.login.my_callback: end.");
 		}
 		this._sendRequest('login', [user,pwd], my_callback.bind(self));
+		console.log("JSONDBConnection.login: end.");
 	};
 	this.getLoggedUser = function(a_callback) {
 		if(this._dbe_user!==undefined && this._dbe_user!==null) {
@@ -303,23 +307,25 @@ function JSONDBConnection(connectionString,verbose) {
 		var self = this
 		var my_callback = (jsonObj) => {
 			try {
-				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
 				self._rs_user=self.obj2resultset(jsonObj[1]);
-				console.log("self._rs_user: " + self._rs_user);
+				// console.log("self._rs_user: " + self._rs_user);
 				if(self._rs_user) {
 					self._dbe_user = new DBEntity("DBEUser","users");
 					self._dbe_user.fromRS(self._rs_user,0);
-					console.log("self._dbe_user: " + self._dbe_user.to_string());
+					// console.log("self._dbe_user: " + self._dbe_user.to_string());
 				} else {
 					self._dbe_user = null;
-					console.log("self._dbe_user: " + self._dbe_user);
+					// console.log("self._dbe_user: " + self._dbe_user);
 				}
 			} catch(e) {
 				console.log(e);
 			}
 			a_callback(jsonObj);
 		}
-		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
+		my_callback = my_callback.bind(self);
+		this._sendRequest('getLoggedUser', [], my_callback);
+		// this._sendRequest('getLoggedUser', [], my_callback.bind(self));
 	};
 	this.logout = function(a_callback) {
 		var self = this
@@ -349,7 +355,7 @@ function JSONDBConnection(connectionString,verbose) {
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.execute.my_callback: start.");
 			console.log("jsonObj: " + JSON.stringify(jsonObj));
-			var dictlist = [];
+			// var dictlist = [];
 			console.log( jsonObj[1] )
 			var myRS = self.obj2resultset(jsonObj[1]);
 			console.log("myRS: " + JSON.stringify(myRS));
@@ -451,7 +457,7 @@ function JSONDBConnection(connectionString,verbose) {
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.select.my_callback: start.");
 			console.log("jsonObj: " + JSON.stringify(jsonObj));
-			var dbelist = [];
+			// var dbelist = [];
 			console.log( jsonObj[1] )
 			var myRS = self.obj2resultset(jsonObj[1]);
 			console.log("myRS: " + JSON.stringify(myRS));
@@ -550,12 +556,12 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
 			var form = jsonObj[1];
 			try{
-				console.log("jsonObj: " + JSON.stringify(jsonObj));
+				console.log("JSONDBConnection.getFormInstance.my_callback: jsonObj=" + JSON.stringify(jsonObj));
 				form = jsonObj[1];
 			} catch(e) {
 				form = null;
 			}
-			if(form.length==0) form=null;
+			if(form.length===0) form=null;
 			console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
