@@ -44,7 +44,9 @@ class BackEndProxy {
     }
 
     getLoggedUser(a_callback) {
+        console.log("BackEndProxy.getLoggedUser: start.");
         this.con.getLoggedUser(a_callback);
+        console.log("BackEndProxy.getLoggedUser: end.");
     }
 
     execute(tablename,sql_string,a_callback) {

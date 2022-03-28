@@ -45,7 +45,7 @@ class App extends Component {
 
     this.pingUser = setInterval(
         // () => this.be.ping(this.on_ping_callback),
-        () => this.fetchLoggedUser,
+        () => { this.fetchLoggedUser() },
         10 * 1000                   // Better 60 seconds?
     );
     console.log("App.componentDidMount: end.");
@@ -66,6 +66,7 @@ class App extends Component {
   }
   fetchLoggedUser() {
     console.log("App.fetchLoggedUser: start.");
+    console.log("App.fetchLoggedUser: be="+JSON.stringify(this.be));
     this.be.getLoggedUser(this.on_fetchuser_callback);
     console.log("App.fetchLoggedUser: end.");
   }

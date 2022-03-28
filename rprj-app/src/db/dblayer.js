@@ -301,11 +301,13 @@ function JSONDBConnection(connectionString,verbose) {
 		console.log("JSONDBConnection.login: end.");
 	};
 	this.getLoggedUser = function(a_callback) {
+		console.log("JSONDBConnection.getLoggedUser: start.");
 		if(this._dbe_user!==undefined && this._dbe_user!==null) {
 			return this._dbe_user;
 		}
 		var self = this
 		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.getLoggedUser.my_callback: start.");
 			try {
 				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
 				self._rs_user=self.obj2resultset(jsonObj[1]);
@@ -322,10 +324,12 @@ function JSONDBConnection(connectionString,verbose) {
 				console.log(e);
 			}
 			a_callback(jsonObj);
+			console.log("JSONDBConnection.getLoggedUser.my_callback: end.");
 		}
-		my_callback = my_callback.bind(self);
-		this._sendRequest('getLoggedUser', [], my_callback);
-		// this._sendRequest('getLoggedUser', [], my_callback.bind(self));
+		// my_callback = my_callback.bind(self);
+		// this._sendRequest('getLoggedUser', [], my_callback);
+		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
+		console.log("JSONDBConnection.getLoggedUser: end.");
 	};
 	this.logout = function(a_callback) {
 		var self = this
