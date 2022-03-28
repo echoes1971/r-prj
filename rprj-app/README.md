@@ -3,8 +3,9 @@
 npm install axios --save
 
 
-
-
+Emojis:
+- https://unicode.org/emoji/charts/full-emoji-list.html
+- https://www.quackit.com/character_sets/emoji/emoji_v3.0/unicode_emoji_v3.0_characters_all.cfm
 
 # Getting Started with Create React App
 

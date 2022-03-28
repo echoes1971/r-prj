@@ -297,6 +297,9 @@ function JSONDBConnection(connectionString,verbose) {
 		this._sendRequest('login', [user,pwd], my_callback.bind(self));
 	};
 	this.getLoggedUser = function(a_callback) {
+		if(this._dbe_user!==undefined && this._dbe_user!==null) {
+			return this._dbe_user;
+		}
 		var self = this
 		var my_callback = (jsonObj) => {
 			try {
@@ -314,7 +317,7 @@ function JSONDBConnection(connectionString,verbose) {
 			} catch(e) {
 				console.log(e);
 			}
-			a_callback(jsonObj)
+			a_callback(jsonObj);
 		}
 		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
 	};
@@ -577,6 +580,10 @@ function DBMgr(_connection, verbose) {
 	this.setSynchronous = function(b) { this.con.synchronous=b; };
 	this.isSynchronous = function() { return this.con.synchronous; };
 	
+	this.default_callback = function(x) {
+		console.log("DBMgr.default_callback: x="+JSON.stringify(x));
+	}
+
 	this.connect = function(on_connect_callback) {
 // 		var test_cb = function() { alert("SUN CHI"); };
 		this.con.connect(); //test_cb);
@@ -592,8 +599,9 @@ function DBMgr(_connection, verbose) {
 		return this.con._dbe_user;
 	};
 	this.getLoggedUser = function(on_my_callback) {
-		if(this.con._dbe_user==null) this.con.getLoggedUser();
+		if(this.con._dbe_user===null) this.con.getLoggedUser(this.default_callback);
 		if(on_my_callback!=null) on_my_callback();
+		console.log("DBMgr.getLoggedUser: this.con._dbe_user="+JSON.stringify(this.con._dbe_user))
 		return this.con._dbe_user;
 	};
 	

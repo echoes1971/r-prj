@@ -1,14 +1,25 @@
 // Client
-import { JSONDBConnection } from './db/dblayer'
+import { DBMgr, JSONDBConnection } from './db/dblayer'
 
+/**
+ * Back End Proxy
+ * 
+ * This class is a frontend for the UI for all the calls in the Backend.
+ * 
+ */
 class BackEndProxy {
     constructor(endpoint = 'http://localhost:8080/jsonserver.php') {
         this.endpoint = endpoint
 
         this.con = new JSONDBConnection(endpoint, true);
+        this.dbmgr = new DBMgr(this.con);
     }
 
+    do_nothing_callback() {
+        // console.log("SUNCHI");
+    }
 
+    // ******************** DBConnection
 
     ping(on_ping_callback = null) {
         this.con.ping(on_ping_callback);
@@ -58,6 +69,11 @@ class BackEndProxy {
     }
 
 
+    // ******************** DBConnection
+
+    getLoggedUser() {
+        return this.dbmgr.getLoggedUser(this.do_nothing_callback);
+    }
 }
 
 export { BackEndProxy };
