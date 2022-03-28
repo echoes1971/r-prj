@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FPermissions } from './comp.fpermissions';
+import { FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 
 class FForm extends React.Component {
@@ -335,7 +335,7 @@ class FForm extends React.Component {
         return (
             <div class="btn-toolbar" role="toolbar" aria-label="Actions">
                 <div class="btn-group btn-group-sm" role="group">
-                    <button class="btn btn-secondary btn-xs" type="button" >Delete</button>
+                    <button class="btn btn-secondary btn-sm" type="button" >Delete</button>
                     {Object.keys(actions).map((k) => {
                         // {"label":"Reload","page":"obj_reload_do.php","icon":"icons/reload.png","desc":"Reload"}
                         return (
@@ -347,7 +347,7 @@ class FForm extends React.Component {
                         onClick={this.btnSave} >Save</button>
                 </div>
                 &nbsp;
-                <div class="btn-group-sm" role="group">
+                <div class="btn-group btn-group-sm" role="group">
                     <button class="btn btn-secondary btn-sm" type="button" >View</button>
                     <button class="btn btn-secondary btn-sm" type="button" >Close</button>
                 </div>
