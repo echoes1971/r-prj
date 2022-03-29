@@ -8,7 +8,8 @@ class RNav extends React.Component {
         // console.log(props);
         
         this.state = {
-             p_usr: ''
+             dark_theme: props.dark_theme
+            ,p_usr: ''
             ,p_pwd: ''
             ,user_fullname: props.user_fullname
         }
@@ -30,6 +31,9 @@ class RNav extends React.Component {
         // console.log("FForm.componentDidUpdate: prevState="+JSON.stringify(prevState))
         // console.log("FForm.componentDidUpdate: props="+JSON.stringify(this.props))
         // console.log("FForm.componentDidUpdate: state="+JSON.stringify(this.state))
+        if(this.props.dark_theme !== prevProps.dark_theme) {
+            this.setState({dark_theme: this.props.dark_theme})
+        }
         if(this.props.user_fullname !== prevProps.user_fullname) {
             this.setState({user_fullname: this.props.user_fullname})
         }
@@ -60,7 +64,8 @@ class RNav extends React.Component {
         this.props.onLogout();
     }
 
-    renderProfile(user_fullname) {
+    renderProfile(user_fullname, dark_theme) {
+        const dropdown_menu_class = "dropdown-menu dropdown-menu-end" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
         if(user_fullname) {
             return (
                 <div class="nav-item dropdown dropdown-menu-right">
@@ -71,10 +76,10 @@ class RNav extends React.Component {
                             {user_fullname}
                             </a>
 
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarProfileDropdown">
+                            <ul class={dropdown_menu_class} aria-labelledby="navbarProfileDropdown">
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
-                                        <button class="btn btn-secondary" onClick={this.btnLogout}>Logout</button>
+                                        <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>
                                     </form>
                                 </li>
                             </ul>
@@ -92,7 +97,7 @@ class RNav extends React.Component {
                         <a class="nav-link dropdown-toggle" href="#" id="navbarLoginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarLoginDropdown">
+                        <ul class={dropdown_menu_class} aria-labelledby="navbarLoginDropdown">
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
                                     <label class="d-none d-lg-block" for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
@@ -111,8 +116,11 @@ class RNav extends React.Component {
 
     render() {
         //  &#129489;
+        const current_theme = this.state.dark_theme ? 'dark' : 'light';
+        const nav_class = "navbar sticky-top navbar-expand-lg navbar-"+current_theme+" bg-"+current_theme
+        const dropdown_menu_class = "dropdown-menu" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
         return (
-            <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+            <nav class={nav_class}>
                 <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>
 
                 <div class="container-fluid">
@@ -131,7 +139,7 @@ class RNav extends React.Component {
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <ul class={dropdown_menu_class} aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="#">Action</a></li>
                                     <li><a class="dropdown-item" href="#">Another action</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -157,7 +165,7 @@ class RNav extends React.Component {
                     {this.state.user_fullname ? ( <span>&#129333;</span> ) : ( <span>&#128100;</span> ) }
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navbarProfileContent">
-                    { this.renderProfile(this.state.user_fullname ) }
+                    { this.renderProfile(this.state.user_fullname,this.state.dark_theme) }
                     </div>
                 </div>
             </nav>

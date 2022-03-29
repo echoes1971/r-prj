@@ -17,7 +17,7 @@ class App extends Component {
     // See: https://it.reactjs.org/
     this.state = {
       endpoint: "http://localhost:8080/jsonserver.php",
-
+      dark_theme: true,
       user_fullname: ''
     };
 
@@ -91,7 +91,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <RNav user_fullname={this.state.user_fullname}
+        <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
           onLogin={this.onLogin} onLogout={this.onLogout} />
         <div class="container">
           <TestBE endpoint={this.state.endpoint} ref={this.myRef} />
