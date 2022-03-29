@@ -1,6 +1,4 @@
 import React from 'react';
-// See: https://react-select.com/home and https://github.com/JedWatson/react-select
-import Select from 'react-select';
 
 import { BackEndProxy } from './be';
 import { FForm } from './comp.fform';
@@ -95,11 +93,17 @@ class FormExplorer extends React.Component {
         })
         console.log("FormExplorer.forminstance_callback: end.");
     }
-    select_handleChange(selectedOption) {
+    select_handleChange(event) {
+        const target = event.target;
+        console.log("target.type: "+target.type)
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({[name]: value});
         // RRA: if you enable this here, and then you setState in the callback, it will complain (and block) that the component to update has been unmounted
         // this.setState({selectedClassname: selectedOption.value});
         // console.log("FormExplorer.select_handleChange: selectedOption="+JSON.stringify(selectedOption));
-        this.be.getFormInstance(selectedOption.value,this.forminstance_callback);
+        this.be.getFormInstance(value,this.forminstance_callback);
     }
 
     classnames_callback(jsonObj,formlist) {
@@ -148,15 +152,19 @@ class FormExplorer extends React.Component {
                 <div class="row">
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <Select
-                                formname={selectedClassname} defaultValue={selectedOption}
-                                onChange={this.select_handleChange} options={this.state.classnames} />
+                            <select value={selectedClassname} onChange={this.select_handleChange} >
+                                {Object.keys(this.state.classnames).map((x) => {
+                                    return (<option value={this.state.classnames[x].value}>{this.state.classnames[x].label}</option>);
+                                }
+                                )}
+                            </select>
+
                         </form>
                     </div>
 
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <button onClick={this.btnClassNames}>Class Names</button>
+                            <button class="btn btn-secondary" onClick={this.btnClassNames}>Class Names</button>
                         </form>
                     </div>
                 </div>
