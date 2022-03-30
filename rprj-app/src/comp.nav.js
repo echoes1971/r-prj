@@ -65,8 +65,8 @@ class RNav extends React.Component {
     }
 
     renderProfile(user_fullname, dark_theme) {
-        const dropdown_menu_class = "nav-item dropdown dropdown-menu-right" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
-        const dropdown_menu_class_2 = "dropdown-menu dropdown-menu-end" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
+        const dropdown_menu_class = "nav-item dropdown dropdown-menu-right" + (dark_theme ? ' dropdown-menu-dark' : '')
+        const dropdown_menu_class_2 = "dropdown-menu dropdown-menu-end" + (dark_theme ? ' dropdown-menu-dark' : '')
         if(user_fullname) {
             return (
                 <div class={dropdown_menu_class}>
@@ -102,12 +102,12 @@ class RNav extends React.Component {
         return (
             <div class="nav-item dropdown dropdown-menu-right">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item  dropdown">
 
+                    <li class="nav-item  dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarLoginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </a>
-                        <ul class={dropdown_menu_class} aria-labelledby="navbarLoginDropdown">
+                        <ul class={dropdown_menu_class_2} aria-labelledby="navbarLoginDropdown">
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
                                     <label class="d-none d-lg-block" for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
