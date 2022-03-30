@@ -65,18 +65,20 @@ class RNav extends React.Component {
     }
 
     renderProfile(user_fullname, dark_theme) {
-        const dropdown_menu_class = "dropdown-menu dropdown-menu-end" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
+        const dropdown_menu_class = "nav-item dropdown dropdown-menu-right" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
+        const dropdown_menu_class_2 = "dropdown-menu dropdown-menu-end" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
         if(user_fullname) {
             return (
-                <div class="nav-item dropdown dropdown-menu-right">
+                <div class={dropdown_menu_class}>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item  dropdown">
+                        {/* Visible ONLY on LG screens */}
+                        <li class="nav-item dropdown d-md-none d-lg-block">
 
                             <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {user_fullname}
                             </a>
 
-                            <ul class={dropdown_menu_class} aria-labelledby="navbarProfileDropdown">
+                            <ul class={dropdown_menu_class_2} aria-labelledby="navbarProfileDropdown">
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>
@@ -85,6 +87,14 @@ class RNav extends React.Component {
                             </ul>
 
                         </li>
+
+                        {/* Visible ONLY on SM and MD screens */}
+                        <li class="dropdown-item d-md-block d-lg-none">
+                            <form onSubmit={this.default_handleSubmit} >
+                                <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>
+                            </form>
+                        </li>
+
                     </ul>
                 </div>
             );
