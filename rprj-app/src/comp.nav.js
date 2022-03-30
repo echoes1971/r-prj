@@ -143,6 +143,8 @@ class RNav extends React.Component {
             <nav class={nav_class}>
                 <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>
 
+                {/* <span>{window.location.pathname}</span> */}
+
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>&#128295;

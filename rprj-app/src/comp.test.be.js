@@ -128,6 +128,7 @@ class TestBE extends React.Component {
         this.prova = props.prova
         this.state = {
             endpoint: props.endpoint,
+            dark_theme: props.dark_theme,
             connected: "--",
             date: new Date(),
             user: "--",
@@ -368,7 +369,7 @@ class TestBE extends React.Component {
                 </div>
 
                 <div class="row collapse multi-collapse show" id="test_formexplorer">
-                    <div class="col card card-body">
+                    <div class={"col card card-body" + (this.state.dark_theme ? " card-dark" : "")}>
                         <FormExplorer endpoint={this.state.endpoint} />
                     </div>
                 </div>

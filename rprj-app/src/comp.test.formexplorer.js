@@ -158,7 +158,6 @@ class FormExplorer extends React.Component {
                                 }
                                 )}
                             </select>
-
                         </form>
                     </div>
 
@@ -173,10 +172,8 @@ class FormExplorer extends React.Component {
 
                 <div class="row">
                     <div class="col">
-                        <FForm endpoint={this.state.endpoint} 
-                            formname={selectedClassname}
-                            onSave={this.onSave}
-                            onError={this.onError} />
+                        <FForm endpoint={this.state.endpoint} formname={selectedClassname}
+                            onSave={this.onSave} onError={this.onError} />
                     </div>
                 </div>
 

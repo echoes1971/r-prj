@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.scss';
+
+import { app_cfg } from './app.cgf';
 
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
@@ -16,9 +18,9 @@ class App extends Component {
 
     // See: https://it.reactjs.org/
     this.state = {
-      endpoint: "http://localhost:8080/jsonserver.php",
-      dark_theme: true,
-      user_fullname: ''
+      endpoint: app_cfg.endpoint // "http://localhost:8080/jsonserver.php",
+      ,dark_theme: app_cfg.dark_theme
+      ,user_fullname: ''
     };
 
     this.default_callback = this.default_callback.bind(this);
@@ -90,11 +92,11 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App App-dark">
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
           onLogin={this.onLogin} onLogout={this.onLogout} />
         <div class="container">
-          <TestBE endpoint={this.state.endpoint} ref={this.myRef} />
+          <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} />
         </div>
       </div>
     );

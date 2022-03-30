@@ -1,9 +1,10 @@
+@import 'colors';
 
 // Customizing bootstrap
 // See: https://blog.hubspot.com/website/how-to-override-bootstrap-css
 // See: C:\Users\rocco\Projects\r-prj\rprj-app\node_modules\bootstrap\scss\_variables.scss
 
-// @import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 // $primary:       $blue !default;
 // $secondary:     $gray-600 !default;
@@ -25,16 +26,23 @@
 //   "dark":       $dark
 // );
 
-$rprj-bg: #112233; //#17202a; // #223344;
-// $rprj-bg: #610752;
-$rprj-color: #f5f5f5;
+// $rprj-bg-dark: #112233; //#17202a; // #223344;
+// $rprj-color-dark: #f5f5f5;
 
-$body-bg:                   $rprj-bg;
-$body-color:                $rprj-color;
-// $body-text-align:           null !default;
+$body-bg:     $white !default;
+$body-color:  $gray-900 !default;
 
-$card-color:                        null !default;
-$card-bg:                           rgba(#fff, .1) !default;
+$card-color:  null !default;
+$card-bg:     $white !default;
+
+.App-dark {
+    $body-bg:     $rprj-bg-dark;
+    $body-color:  $rprj-color-dark;
+}
+.card-dark {
+    color:            null;
+    background-color: rgba(#fff, .1);
+}
 
 // $theme-colors: (
 //     "mycustomcolor": #0074d9,
