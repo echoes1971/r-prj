@@ -72,7 +72,7 @@ class RNav extends React.Component {
                 <div class={dropdown_menu_class}>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {/* Visible ONLY on LG screens */}
-                        <li class="nav-item dropdown d-md-none d-lg-block">
+                        <li class="nav-item dropdown d-none d-lg-block">
 
                             <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {user_fullname}
@@ -100,10 +100,11 @@ class RNav extends React.Component {
             );
         }
         return (
-            <div class="nav-item dropdown dropdown-menu-right">
+            <div class={dropdown_menu_class}>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li class="nav-item  dropdown">
+                    {/* Visible ONLY on LG screens */}
+                    <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarLoginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </a>
@@ -117,7 +118,16 @@ class RNav extends React.Component {
                                 </form>
                             </li>
                         </ul>
+                    </li>
 
+                    {/* Visible ONLY on SM and MD screens */}
+                    <li class="dropdown-item d-md-block d-lg-none">
+                        <form onSubmit={this.default_handleSubmit} >
+                            <label for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
+                            <br />
+                            <label for="p_pwd">Password</label> <input id="p_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
+                            <button class="btn btn-secondary" onClick={this.btnLogin}>Login</button>
+                        </form>
                     </li>
                 </ul>
             </div>
