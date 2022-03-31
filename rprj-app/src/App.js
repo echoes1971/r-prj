@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-// import logo from './logo.svg';
 import './App.scss';
 
+import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
@@ -38,8 +38,18 @@ class App extends Component {
   componentDidMount() {
     console.log("App.componentDidMount: start.");
 
-    this.be = new BackEndProxy(this.state.endpoint);
+    // Local Storage
+    this.ls = new RLocalStorage("App");
+    const ls_endpoint = this.ls.getValue("endpoint");
+    if(ls_endpoint!==null && ls_endpoint!==this.state.endpoint) {
+      this.setState({endpoint: ls_endpoint});
+    }
+    const ls_dark_theme = this.ls.getValue("dark_theme");
+    if(ls_dark_theme!==null && ls_dark_theme!==this.state.dark_theme) {
+      this.setState({dark_theme: ls_dark_theme});
+    }
 
+    this.be = new BackEndProxy(this.state.endpoint);
 
     this.fetchLoggedUser();
     // this.be.getLoggedUser(this.on_fetchuser_callback);
@@ -47,7 +57,7 @@ class App extends Component {
     this.pingUser = setInterval(
         // () => this.be.ping(this.on_ping_callback),
         () => { this.fetchLoggedUser() },
-        10 * 1000                   // Better 60 seconds?
+        30 * 1000                   // Better 60 seconds?
     );
     console.log("App.componentDidMount: end.");
   }
@@ -90,6 +100,7 @@ class App extends Component {
   }
 
   onTheme(dark_theme) {
+    this.ls.setValue("dark_theme", dark_theme);
     this.setState({dark_theme: dark_theme})
   }
 
