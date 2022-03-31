@@ -143,6 +143,12 @@ class TestBE extends React.Component {
 
         this.be = new BackEndProxy(this.state.endpoint);
 
+        this.endpoints = [ ["http://localhost:8080/jsonserver.php","Local"],
+                ["https://www.roccoangeloni.it/rproject/jsonserver.php","RRA"],
+                ["https://echocloud.doesntexist.com/jsonserver.php","Echo Cloud"],
+                ["https://www.africa-film.com/jsonserver.php","Africa Film"]
+            ];
+
         // Bindings
         this.endpoint_handleChange = this.endpoint_handleChange.bind(this);
 
@@ -337,6 +343,7 @@ class TestBE extends React.Component {
 
 
     render() {
+        const endpoints = this.endpoints;
         const dark_theme = this.state.dark_theme;
         console.log("TestBE.render: dark_theme="+dark_theme);
         return (
@@ -346,12 +353,11 @@ class TestBE extends React.Component {
                 </div>
                 <div class="row">
                     <div class="col-2 text-start fw-bold">
-                        <select name="endpoint" value={this.state.endpoint} onChange={this.endpoint_handleChange}>
-                            <option value="http://localhost:8080/jsonserver.php">Local</option>
-                            <option value="https://www.roccoangeloni.it/rproject/jsonserver.php">RRA</option>
-                            <option value="https://echocloud.doesntexist.com/jsonserver.php">Echo Cloud</option>
-                            <option value="https://www.africa-film.com/jsonserver.php">Africa Film</option>
-                        </select>
+                        <select name="endpoint" value={this.state.endpoint} onChange={this.endpoint_handleChange}>{
+                            endpoints.map((k) => {
+                                return (<option value={k[0]}>{k[1]}</option>);
+                            })
+                        }</select>
                         &nbsp;{this.state.connected}
                     </div>
                     <div class="col text-middle">{this.prova}</div>
