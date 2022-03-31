@@ -7,9 +7,11 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { app_cfg } from './app.cgf';
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App endpoint={app_cfg.endpoint} dark_theme={app_cfg.dark_theme} />
   </React.StrictMode>,
   document.getElementById('root')
 );

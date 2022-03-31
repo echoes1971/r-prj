@@ -184,10 +184,14 @@ class TestBE extends React.Component {
             60 * 1000                   // Better 60 seconds?
         );
     }
-
     componentWillUnmount() {
         clearInterval(this.timerID);
         clearInterval(this.pingID);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if(this.props.dark_theme !== prevProps.dark_theme) {
+            this.setState({dark_theme: this.props.dark_theme})
+        }
     }
 
     tick_time() {
@@ -333,6 +337,8 @@ class TestBE extends React.Component {
 
 
     render() {
+        const dark_theme = this.state.dark_theme;
+        console.log("TestBE.render: dark_theme="+dark_theme);
         return (
             <div class="component">
                 <div class="row">
@@ -369,7 +375,7 @@ class TestBE extends React.Component {
                 </div>
 
                 <div class="row collapse multi-collapse show" id="test_formexplorer">
-                    <div class={"col card card-body" + (this.state.dark_theme ? " card-dark" : "")}>
+                    <div class={"col card card-body" + (dark_theme ? " card-dark" : "")}>
                         <FormExplorer endpoint={this.state.endpoint} />
                     </div>
                 </div>
@@ -378,7 +384,7 @@ class TestBE extends React.Component {
                 </div>
 
                 <div class="row collapse multi-collapse" id="test_dblayer">
-                    <div class="component card card-body">
+                    <div class={"component card card-body" + (this.state.dark_theme ? " card-dark" : "")}>
                         <div class="row">
                             <div class="col text-middle fw-bold">DBLayer</div>
                         </div>

@@ -24,6 +24,8 @@ class RNav extends React.Component {
 
         this.btnLogin = this.btnLogin.bind(this);
         this.btnLogout = this.btnLogout.bind(this);
+
+        this.theme_handleChange = this.theme_handleChange.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -64,6 +66,22 @@ class RNav extends React.Component {
         this.props.onLogout();
     }
 
+    theme_handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        // this.setState({[name]: value});
+        this.props.onTheme(value);
+
+        // event.preventDefault();
+        // event.stopPropagation();
+    }
+    stopPropagation(e) {
+        // e.preventDefault();
+        // e.stopPropagation();
+    }
+
     renderProfile(user_fullname, dark_theme) {
         const dropdown_menu_class = "nav-item dropdown dropdown-menu-right" + (dark_theme ? ' dropdown-menu-dark' : '')
         const dropdown_menu_class_2 = "dropdown-menu dropdown-menu-end" + (dark_theme ? ' dropdown-menu-dark' : '')
@@ -79,6 +97,19 @@ class RNav extends React.Component {
                             </a>
 
                             <ul class={dropdown_menu_class_2} aria-labelledby="navbarProfileDropdown">
+
+                                <li class="dropdown-item">
+                                    <form onSubmit={this.default_handleSubmit} >
+                                        <div class="form-check form-switch">
+                                            <label class="form-check-label" for="dark_theme04">Dark Theme</label>
+                                            <input class="form-check-input" type="checkbox" id="dark_theme04" name="dark_theme"
+                                                onClick={this.stop_propagation} onChange={this.theme_handleChange}
+                                                checked={this.state.dark_theme} />
+                                        </div>
+                                    </form>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>
@@ -89,6 +120,16 @@ class RNav extends React.Component {
                         </li>
 
                         {/* Visible ONLY on SM and MD screens */}
+                        <li class="dropdown-item d-md-block d-lg-none">
+                            <form onSubmit={this.default_handleSubmit} >
+                                <div class="form-check form-switch">
+                                <label class="form-check-label" for="dark_theme03">Dark Theme</label>
+                                <input class="form-check-input" type="checkbox" id="dark_theme03" name="dark_theme"
+                                        onChange={this.theme_handleChange} checked={this.state.dark_theme} />
+                                </div>
+                            </form>
+                        </li>
+                        <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
                         <li class="dropdown-item d-md-block d-lg-none">
                             <form onSubmit={this.default_handleSubmit} >
                                 <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>
@@ -111,9 +152,20 @@ class RNav extends React.Component {
                         <ul class={dropdown_menu_class_2} aria-labelledby="navbarLoginDropdown">
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
-                                    <label class="d-none d-lg-block" for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
+                                    <div class="form-check form-switch">
+                                    <label class="form-check-label" for="dark_theme00">Dark Theme</label>
+                                        <input class="form-check-input" type="checkbox" id="dark_theme00" name="dark_theme"
+                                               onClick={this.stop_propagation} onChange={this.theme_handleChange}
+                                               checked={this.state.dark_theme} />
+                                    </div>
+                                </form>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li class="dropdown-item">
+                                <form onSubmit={this.default_handleSubmit} >
+                                    <label class="d-none d-lg-block" for="p1_usr">Username</label> <input id="p1_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
                                     <br />
-                                    <label class="d-none d-lg-block" for="p_pwd">Password</label> <input id="p_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
+                                    <label class="d-none d-lg-block" for="p1_pwd">Password</label> <input id="p1_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
                                     <button class="btn btn-secondary" onClick={this.btnLogin}>Login</button>
                                 </form>
                             </li>
@@ -123,9 +175,20 @@ class RNav extends React.Component {
                     {/* Visible ONLY on SM and MD screens */}
                     <li class="dropdown-item d-md-block d-lg-none">
                         <form onSubmit={this.default_handleSubmit} >
-                            <label for="p_usr">Username</label> <input id="p_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
+                            <div class="form-check form-switch">
+                            <label class="form-check-label" for="dark_theme01">Dark Theme</label>
+                            <input class="form-check-input" type="checkbox" id="dark_theme01" name="dark_theme"
+                                    onClick={this.stop_propagation} onChange={this.theme_handleChange}
+                                    checked={this.state.dark_theme} />
+                            </div>
+                        </form>
+                    </li>
+                    <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
+                    <li class="dropdown-item d-md-block d-lg-none">
+                        <form onSubmit={this.default_handleSubmit} >
+                            <label for="p2_usr">Username</label> <input id="p2_usr" name="p_usr" value={this.state.usr} onChange={this.default_handleChange} placeholder="Username"/>
                             <br />
-                            <label for="p_pwd">Password</label> <input id="p_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
+                            <label for="p2_pwd">Password</label> <input id="p2_pwd" name="p_pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} placeholder="Password" /> <br />
                             <button class="btn btn-secondary" onClick={this.btnLogin}>Login</button>
                         </form>
                     </li>

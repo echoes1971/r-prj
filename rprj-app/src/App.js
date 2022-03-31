@@ -3,8 +3,6 @@ import React, { Component } from 'react'
 // import logo from './logo.svg';
 import './App.scss';
 
-import { app_cfg } from './app.cgf';
-
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
@@ -13,13 +11,13 @@ class App extends Component {
 
   be = null
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     // See: https://it.reactjs.org/
     this.state = {
-      endpoint: app_cfg.endpoint // "http://localhost:8080/jsonserver.php",
-      ,dark_theme: app_cfg.dark_theme
+      endpoint: props.endpoint // "http://localhost:8080/jsonserver.php",
+      ,dark_theme: props.dark_theme
       ,user_fullname: ''
     };
 
@@ -34,6 +32,7 @@ class App extends Component {
     this.on_fetchuser_callback = this.on_fetchuser_callback.bind(this);
     this.fetchLoggedUser = this.fetchLoggedUser.bind(this);
 
+    this.onTheme = this.onTheme.bind(this);
   }
 
   componentDidMount() {
@@ -90,11 +89,15 @@ class App extends Component {
     this.be.logout(this.on_logout_callback);
   }
 
+  onTheme(dark_theme) {
+    this.setState({dark_theme: dark_theme})
+  }
+
   render() {
     return (
-      <div className="App App-dark">
+      <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
-          onLogin={this.onLogin} onLogout={this.onLogout} />
+          onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container">
           <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} />
         </div>
