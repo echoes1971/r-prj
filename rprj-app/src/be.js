@@ -57,8 +57,19 @@ class BackEndProxy {
         this.con.Select(dbename,tablename,sql_string,a_callback);
     }
 
-    search(dbe, uselike, caseSensitive, orderBy, a_callback) {
-        this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
+    // search(dbe, uselike, caseSensitive, orderBy, a_callback) {
+    //     this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
+    // }
+
+    objectById(oid, ignore_deleted, a_callback) {
+        console.log("BackEndProxy.objectById: start.");
+        this.con.objectById(oid, ignore_deleted, a_callback);
+        console.log("BackEndProxy.objectById: end.");
+    }
+    fullObjectById(oid, ignore_deleted, a_callback) {
+        console.log("BackEndProxy.fullObjectById: start.");
+        this.con.objectById(oid, ignore_deleted, a_callback);
+        console.log("BackEndProxy.fullObjectById: end.");
     }
 
 
@@ -76,6 +87,12 @@ class BackEndProxy {
     // getLoggedUser() {
     //     return this.dbmgr.getLoggedUser(this.do_nothing_callback);
     // }
+
+    search(dbe, uselike, caseSensitive, orderBy, a_callback) {
+        // this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
+        this.dbmgr.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
+    }
+
 }
 
 export { BackEndProxy };

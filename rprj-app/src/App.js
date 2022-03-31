@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import './App.scss';
 
+import { app_cfg } from './app.cgf';
 import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
@@ -105,12 +106,14 @@ class App extends Component {
   }
 
   render() {
+    const endpoints = app_cfg.endpoints;
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
-        <div class="container">
-          <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} />
+        <div class="container-fluid p-3">
+          <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
+            endpoints={endpoints} />
         </div>
       </div>
     );

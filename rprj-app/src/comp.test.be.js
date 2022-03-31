@@ -75,35 +75,41 @@ class SearchForm extends React.Component {
             <form onSubmit={default_handleSubmit}>
                 <div class="container">
                     <div class="row">
-                        <div class="col-1 fw-bold text-end">DBE</div>
+                        <div class="col-2 fw-bold text-end">DBE</div>
                         <div class="col text-start">
                             <input id={this.prefix + "dbename"} name={this.prefix + "dbename"} value={this.state.dbename} onChange={this.handleChange} />
                         </div>
-                        <div class="col-1 fw-bold text-end">Table</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 fw-bold text-end">Table</div>
                         <div class="col text-start">
                             <input id={this.prefix + "tablename"} name={this.prefix + "tablename"} value={this.state.tablename} onChange={this.handleChange} />
                         </div>
-                        <div class="col-1 fw-bold text-end">Field</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 fw-bold text-end">Field</div>
                         <div class="col text-start">
                             <input id={this.prefix + "fieldname"} name={this.prefix + "fieldname"} value={this.state.fieldname} onChange={this.handleChange} />
                         </div>
-                        <div class="col-1 fw-bold text-end">Order by</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 fw-bold text-end">Order by</div>
                         <div class="col text-start">
                             <input id={this.prefix + "orderBy"} name={this.prefix + "orderBy"} value={this.state.orderBy} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">Use like</div>
+                        <div class="col fw-bold text-end">Use like</div>
                         <div class="col text-start">
                             <input id={this.prefix + "uselike"} name={this.prefix + "uselike"} type="checkbox" checked={this.state.uselike} onChange={this.handleChange} />
                         </div>
-                        <div class="col-2 fw-bold text-end">Case sensitive</div>
+                        <div class="col fw-bold text-end">Case sensitive</div>
                         <div class="col text-start">
                             <input id={this.prefix + "caseSensitive"} name={this.prefix + "caseSensitive"} type="checkbox" checked={this.state.caseSensitive} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-1 fw-bold text-end">Value</div>
+                        <div class="col-2 fw-bold text-end">Value</div>
                         <div class="col text-start">
                             <input id={this.prefix + "fieldvalue"} name={this.prefix + "fieldvalue"} value={this.state.fieldvalue} onChange={this.handleChange} />
                         </div>
@@ -139,15 +145,19 @@ class TestBE extends React.Component {
             dbename: 'DBEFolder',
             tablename: 'folders',
             sqlstring: 'select *\n  from rprj_folders'
+            ,dbeid: '-10'
+            ,dbe_name: ''
+            ,ignore_deleted: false
         }
 
         this.be = new BackEndProxy(this.state.endpoint);
 
-        this.endpoints = [ ["http://localhost:8080/jsonserver.php","Local"],
-                ["https://www.roccoangeloni.it/rproject/jsonserver.php","RRA"],
-                ["https://echocloud.doesntexist.com/jsonserver.php","Echo Cloud"],
-                ["https://www.africa-film.com/jsonserver.php","Africa Film"]
-            ];
+        this.endpoints = props.endpoints;
+        // this.endpoints = [ ["http://localhost:8080/jsonserver.php","Local"],
+        //         ["https://www.roccoangeloni.it/rproject/jsonserver.php","RRA"],
+        //         ["https://echocloud.doesntexist.com/jsonserver.php","Echo Cloud"],
+        //         ["https://www.africa-film.com/jsonserver.php","Africa Film"]
+        //     ];
 
         // Bindings
         this.endpoint_handleChange = this.endpoint_handleChange.bind(this);
@@ -173,8 +183,14 @@ class TestBE extends React.Component {
         this.on_select_callback = this.on_select_callback.bind(this);
         this.btnSelect = this.btnSelect.bind(this);
 
+        this.onSearch_callback = this.onSearch_callback.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearch = this.onSearch.bind(this);
+
+        this.onObjByID_callback = this.onObjByID_callback.bind(this);
+        this.btnObjByID = this.btnObjByID.bind(this);
+        this.onFullObjByID_callback = this.onFullObjByID_callback.bind(this);
+        this.btnFullObjByID = this.btnFullObjByID.bind(this);
     }
 
     componentDidMount() {
@@ -329,6 +345,20 @@ class TestBE extends React.Component {
     }
 
 
+    onSearch_callback(server_messages, dbelist) {
+        console.log("TestBE.onSearch_callback: start.");
+        // console.log(jsonObj)
+        // console.log(this.be.isConnected())
+        var tmp = [];
+        for(var i=0; dbelist!==null && i<dbelist.length; i++) {
+            tmp.push(dbelist[i].to_string());
+        }
+        this.setState({
+            server_response_0: server_messages,
+            server_response_1: tmp.join("\r\n")
+        })
+        console.log("TestBE.onSearch_callback: end.");
+    }
     onSearchChange(event) {
         console.log(event);
     }
@@ -341,6 +371,28 @@ class TestBE extends React.Component {
         this.be.search(search, uselike, caseSensitive, orderBy, this.on_select_callback);
     }
 
+    onObjByID_callback(jsonObj,myobj) {
+        console.log("TestBE.onObjByID_callback: start.");
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: myobj.to_string() // JSON.stringify(jsonObj[1])
+        })
+        console.log("TestBE.onObjByID_callback: end.");
+    }
+    btnObjByID() {
+        this.be.objectById(this.state.dbeid, this.state.ignore_deleted, this.onObjByID_callback)
+    }
+    onFullObjByID_callback(jsonObj,myobj) {
+        console.log("TestBE.onFullObjByID_callback: start.");
+        this.setState({
+            server_response_0: jsonObj[0],
+            server_response_1: myobj.to_string() // JSON.stringify(jsonObj[1])
+        })
+        console.log("TestBE.onFullObjByID_callback: end.");
+    }
+    btnFullObjByID() {
+        this.be.fullObjectById(this.state.dbeid, this.state.ignore_deleted, this.onFullObjByID_callback)
+    }
 
     render() {
         const endpoints = this.endpoints;
@@ -380,7 +432,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse show" id="test_formexplorer">
+                <div class="row collapse multi-collapse " id="test_formexplorer">
                     <div class={"col card card-body" + (dark_theme ? " card-dark" : "")}>
                         <FormExplorer endpoint={this.state.endpoint} />
                     </div>
@@ -389,7 +441,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse" id="test_dblayer">
+                <div class="row collapse multi-collapse show" id="test_dblayer">
                     <div class={"component card card-body" + (this.state.dark_theme ? " card-dark" : "")}>
                         <div class="row">
                             <div class="col text-middle fw-bold">DBLayer</div>
@@ -397,7 +449,7 @@ class TestBE extends React.Component {
                         <div class="row">
                             <div class="col">&nbsp;</div>
                         </div>
-                        <div class="row">
+                        <div class="row border rounded p-2 m-2">
                             <div class="col text-start fw-bold">
                                 <Ping onPingServer={this.btnPingServer} />
                             </div>
@@ -419,30 +471,74 @@ class TestBE extends React.Component {
                                 </form>
                             </div>
                         </div>
-                        <div class="row test-start">
+                        <div class="row test-start border rounded p-2 m-2">
                             <div class="col">User: {this.state.user}</div>
                         </div>
                         <div class="row">
                             <div class="col">&nbsp;</div>
                         </div>
-                        <div class="row">
-                            <div class="col text-start align-top">
+                        <div class="row border rounded p-2 m-2">
+                            <div class="col text-start align-top border rounded p-2 m-2">
                                 <form onSubmit={this.default_handleSubmit}>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-1 fw-bold text-end">DBE</div>
+                                            <div class="col-3 fw-bold text-end">ID</div>
+                                            <div class="col text-start">
+                                                <input id="dbeid" name="dbeid" value={this.state.dbeid} onChange={this.default_handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3 fw-bold text-end">Name</div>
+                                            <div class="col text-start">
+                                                <input id="dbe_name" name="dbe_name" value={this.state.dbe_name} onChange={this.default_handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col fw-bold text-end">Ignore Deleted</div>
+                                            <div class="col text-start">
+                                                <input id="ignore_deleted" name="ignore_deleted" type="checkbox" checked={this.state.ignore_deleted} onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-start">&nbsp;
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <button onClick={this.btnObjByID}>Obj. by ID</button>
+                                                <button onClick={this.btnFullObjByID}>Full Obj. by ID</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <div class="col text-start align-top border rounded p-2 m-2">
+                                <SearchForm
+                                    dbename="DBEFolder" tablename="folders"
+                                    fieldname="name" fieldvalue="ome"
+                                    onChange={this.onSearchChange} onSearch={this.onSearch}
+                                />
+                            </div>
+
+                            <div class="col text-start align-top border rounded p-2 m-2">
+                                <form onSubmit={this.default_handleSubmit}>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-2 fw-bold text-end">DBE</div>
                                             <div class="col text-start">
                                                 <input id="dbename" name="dbename" value={this.state.dbename} onChange={this.default_handleChange} />
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-1 fw-bold text-end">Table</div>
+                                            <div class="col-2 fw-bold text-end">Table</div>
                                             <div class="col text-start">
                                                 <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} />
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-1 fw-bold text-end">SQL</div>
+                                            <div class="col-2 fw-bold text-end">SQL</div>
                                             <div class="col text-start">
                                                 <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
                                             </div>
@@ -457,20 +553,13 @@ class TestBE extends React.Component {
                                 </form>
                             </div>
 
-                            <div class="col text-start align-top">
-                                <SearchForm
-                                    dbename="DBEFolder" tablename="folders"
-                                    fieldname="name" fieldvalue="ome"
-                                    onChange={this.onSearchChange} onSearch={this.onSearch}
-                                />
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col">&nbsp;</div>
                         </div>
-                        <div class="row">
+                        <div class="row border rounded p-2 m-2">
                             <div class="col">
-                                <ServerResponse class="border rounded"
+                                <ServerResponse 
                                     server_response_0={this.state.server_response_0}
                                     server_response_1={this.state.server_response_1} />
                             </div>

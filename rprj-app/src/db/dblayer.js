@@ -513,6 +513,58 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		this._sendRequest('search', [ new Array( dbe.dbename, dbe.getValues() ), uselike, caseSensitive, orderBy ], my_callback.bind(self).bind(dbename).bind(tablename));
 	}
+
+	//myrs: {"columnName":["_typeName","_typename","_tablename","classname","id","owner","group_id","permissions","creator","creation_date","last_modify","last_modify_date","deleted_date","father_id","name","description"],"columnType":["string","string","string","string","string","string","string","string","string","string","string","string","string","string","string","string"],"columnSize":[],"righe":["DBEObject","DBEObject","objects","DBEFolder","-10","-1","-6","rwxrw-r--","-1","2022-03-15 20:13:45","-1","2022-03-15 20:13:45","0000-00-00 00:00:00","0","Home",""]}
+	this.objectById = function(oid, ignore_deleted, a_callback) {
+		console.log("JSONDBConnection.objectById: start.");
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.objectById.my_callback: start.");
+			var myobj = null;
+			try {
+				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				var myrs=self.obj2resultset(jsonObj[1]);
+				console.log("myrs: " + JSON.stringify(myrs));
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+					console.log("myobj: " + myobj.to_string());
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.objectById.my_callback: end.");
+		}
+		// my_callback = my_callback.bind(self);
+		// this._sendRequest('getLoggedUser', [], my_callback);
+		this._sendRequest('objectById', [oid,ignore_deleted], my_callback.bind(self));
+		console.log("JSONDBConnection.objectById: end.");
+	};
+	this.fullObjectById = function(oid, ignore_deleted, a_callback) {
+		console.log("JSONDBConnection.fullObjectById: start.");
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.fullObjectById.my_callback: start.");
+			var myobj = null;
+			try {
+				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
+				var myrs=self.obj2resultset(jsonObj[1]);
+				// console.log("myrs: " + JSON.stringify(myrs));
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+					// console.log("myobj: " + myobj.to_string());
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.fullObjectById.my_callback: end.");
+		}
+		this._sendRequest('fullObjectById', [oid,ignore_deleted], my_callback.bind(self));
+		console.log("JSONDBConnection.fullObjectById: end.");
+	};
 	// **************** Proxy Connections: end. *********************
 	
 	/* TODO ?
@@ -643,10 +695,17 @@ function DBMgr(_connection, verbose) {
 		if(on_my_callback!=null) on_my_callback();
 		return this.con.dbelist;
 	}
-	this.Search = function( dbe, uselike, caseSensitive, orderBy, on_my_callback) {
-		this.con.Search(dbe,uselike,caseSensitive,orderBy);
-		if(on_my_callback!=null) on_my_callback();
-		return this.con.dbelist;
+	this.Search = function(dbe, uselike, caseSensitive, orderBy, a_callback) {
+		var self = this
+		var my_callback = (jsonObj, dbelist) => {
+			console.log("DBMgr.Search.my_callback: start.");
+			const server_messages = jsonObj[0];
+			a_callback(server_messages,dbelist);
+			console.log("DBMgr.Search.my_callback: end.");
+		}
+		this.con.Search(dbe,uselike,caseSensitive,orderBy, my_callback);
+		// if(on_my_callback!=null) on_my_callback();
+		// return this.con.dbelist;
 	}
 	// **************** Proxy Connections: end. *********************
 	
