@@ -357,7 +357,7 @@ class FForm extends React.Component {
 
     forminstance_callback(jsonObj,form) {
         // console.log("FForm.forminstance_callback: start.")
-        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         this.form = form;
         if(form===null) {
             this.props.onError(jsonObj);
