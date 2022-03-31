@@ -336,7 +336,7 @@ class TestBE extends React.Component {
         return (
             <div class="component">
                 <div class="row">
-                    <div class="col"><h2>TestBE</h2></div>
+                    <div class="col text-center"><h2>TestBE</h2></div>
                 </div>
                 <div class="row">
                     <div class="col-2 text-start fw-bold">
