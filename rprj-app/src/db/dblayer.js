@@ -560,7 +560,8 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
 			var form = jsonObj[1];
 			try{
-				console.log("JSONDBConnection.getFormInstance.my_callback: jsonObj=" + JSON.stringify(jsonObj));
+				const stringed = JSON.stringify(jsonObj);
+				// console.log("JSONDBConnection.getFormInstance.my_callback: jsonObj=" + stringed);
 				form = jsonObj[1];
 			} catch(e) {
 				form = null;
