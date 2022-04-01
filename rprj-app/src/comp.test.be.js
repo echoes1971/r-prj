@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import { DBEntity } from './db/dblayer';
 import { FormExplorer } from './comp.test.formexplorer';
@@ -55,11 +56,19 @@ class SearchForm extends React.Component {
         this.btnSearch = this.btnSearch.bind(this);
     }
 
+    componentDidMount() {
+        // Local Storage
+        this.ls = new RLocalStorage("TestBE.SearchForm");
+        const mystate = this.ls.getMyState();
+        this.setState(mystate);
+    }
+
     handleChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name.replace(this.prefix,"");
 
+        this.ls.setValue(name,value);
         this.setState({[name]: value});
 
         // Propagate upward if needed
@@ -194,6 +203,12 @@ class TestBE extends React.Component {
     }
 
     componentDidMount() {
+        // Local Storage
+        this.ls = new RLocalStorage("TestBE");
+        const mystate = this.ls.getMyState();
+        this.setState(mystate);
+
+
         // this.timerID = setInterval(
         //     () => this.tick_time(),
         //     1000
@@ -232,6 +247,7 @@ class TestBE extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+        this.ls.setValue(name,value);
         this.setState({[name]: value});
     }
     default_server_callback(jsonObj) {
