@@ -4,13 +4,8 @@ class FPermissions extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log(props);
-        
         this.state = {
-            endpoint: props.endpoint,
-            formname: props.formname,
-            detailIcon: "icons/user.png",
-            detailTitle: "User"
+            [props.name]: props.value
         }
 
         this.name = props.name;
@@ -56,7 +51,7 @@ class FPermissions extends React.Component {
         });
     }
 
-    render(field, is_readonly=false) {
+    render() {
         const fieldname = this.name;
         // const fieldclass = (
         //         (this.cssClass>'' ? this.cssClass : '') + ' '

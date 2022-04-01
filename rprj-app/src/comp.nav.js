@@ -69,7 +69,7 @@ class RNav extends React.Component {
     theme_handleChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+        // const name = target.name;
 
         // this.setState({[name]: value});
         this.props.onTheme(value);
@@ -97,7 +97,6 @@ class RNav extends React.Component {
                             </a>
 
                             <ul class={dropdown_menu_class_2} aria-labelledby="navbarProfileDropdown">
-
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <div class="form-check form-switch">
@@ -109,7 +108,6 @@ class RNav extends React.Component {
                                     </form>
                                 </li>
                                 <li><hr class="dropdown-divider" /></li>
-
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <a class="nav-link" href="#" onClick={this.btnLogout}>Logout</a>

@@ -265,7 +265,7 @@ class FForm extends React.Component {
         );
     }
     renderField(f, is_readonly=false) {
-        const field = this._getField(f);
+        var field = this._getField(f);
         // console.log("FForm.renderField: field._classname="+field._classname)
         if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
             return this.renderFField(field,is_readonly);
@@ -283,8 +283,9 @@ class FForm extends React.Component {
             return this.renderFPercent(field, is_readonly);
         }
         if(field._classname==='FPermissions') {
+            field.value = "rw-r-x-w-" // Just for test
             return (
-                <FPermissions name={field.name} title={field.title} cssClass={this.cssClass}
+                <FPermissions name={field.name} value={field.value} title={field.title} cssClass={this.cssClass}
                     is_readonly={is_readonly} field_prefix={this.field_prefix}
                     onChange={this.default_handleChange} />
             );
@@ -296,7 +297,6 @@ class FForm extends React.Component {
     }
     renderGroup(g) {
         const decodeGroupNames = this.form.decodeGroupNames
-        const g1 = g.length>0 ? g : "_"
         const groupName = decodeGroupNames[g]
         const group = this.form.groups[g]
         const is_readonly = false; // TODO

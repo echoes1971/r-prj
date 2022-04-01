@@ -139,7 +139,6 @@ class FormExplorer extends React.Component {
 
     render() {
         const selectedClassname = this.state.selectedClassname;
-        const selectedOption = {value: selectedClassname, label: selectedClassname}
         // console.log("FormExplorer.render: selectedClassname="+selectedClassname);
         return (
             <div class={"component "+this.props.class}>
