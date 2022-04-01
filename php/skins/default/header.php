@@ -39,6 +39,7 @@ if($dbmgr->getDBEUser()!==null) {
 ?><style type="text/css">
 
 </style>
+<link rel="icon" href="<?php echo getSkinFile("favicon.ico"); ?>" />
 <link href="<?php echo getSkinFile("style.css"); ?>" rel="stylesheet" type="text/css" />
 <link href="<?php echo getSkinFile("widgets.css"); ?>" rel="stylesheet" type="text/css" />
 <?php
