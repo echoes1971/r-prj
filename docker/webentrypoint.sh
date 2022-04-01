@@ -29,6 +29,7 @@ echo "$MYSQL_PASSWORD"
 echo "$RPRJ_SKIN"
 echo "$RPRJ_ROOT_OBJ"
 echo "$RPRJ_ADMIN_PASS"
+echo "$RPRJ_DB_SCHEMA"
 echo "==============="
 
 # Write configuration
@@ -38,6 +39,7 @@ sed -i "s/__site_title_2__/$SITE_TITLE_2/g" /var/www/html/config_local.php
 sed -i s/rprj-db-server/$MYSQL_APP/g /var/www/html/config_local.php
 sed -i s/rprj-db-db/$MYSQL_DB/g /var/www/html/config_local.php
 sed -i s/rprj-db-pwd/$MYSQL_PASSWORD/g /var/www/html/config_local.php
+sed -i s/rprj-db-schema/$RPRJ_DB_SCHEMA/g /var/www/html/config_local.php
 sed -i "s/skin = 'default'/skin = '$RPRJ_SKIN'/g" /var/www/html/config_local.php
 sed -i s/-10/$RPRJ_ROOT_OBJ/g /var/www/html/config_local.php
 # sed -i s/setVerbose\(false\)/setVerbose\(true\)/g /var/www/html/mng/db_update_do.php
