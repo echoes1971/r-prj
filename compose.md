@@ -63,12 +63,14 @@ docker image prune
 
 # rprj_db
 
-docker exec -it r-rpj_rprj-db_1 mysql -pmysecret rproject
+docker exec -it r-rprj_rprj-db_1 mysql -pmysecret rproject
 
 
 # Debugging rprj_web
 
 docker-compose logs -f rprj-web
+
+docker exec -it r-prj_rprj-web_1 bash
 
 
 docker build -f Dockerfile_web -t test_img_web .
