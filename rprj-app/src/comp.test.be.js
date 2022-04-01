@@ -375,7 +375,7 @@ class TestBE extends React.Component {
         console.log("TestBE.onObjByID_callback: start.");
         this.setState({
             server_response_0: jsonObj[0],
-            server_response_1: myobj.to_string() // JSON.stringify(jsonObj[1])
+            server_response_1: myobj!==null ? myobj.to_string() : '--' // JSON.stringify(jsonObj[1])
         })
         console.log("TestBE.onObjByID_callback: end.");
     }
@@ -386,7 +386,7 @@ class TestBE extends React.Component {
         console.log("TestBE.onFullObjByID_callback: start.");
         this.setState({
             server_response_0: jsonObj[0],
-            server_response_1: myobj.to_string() // JSON.stringify(jsonObj[1])
+            server_response_1: myobj!==null ? myobj.to_string() : '--' // JSON.stringify(jsonObj[1])
         })
         console.log("TestBE.onFullObjByID_callback: end.");
     }
