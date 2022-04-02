@@ -261,12 +261,12 @@ function objectById($myid,$ignore_deleted) {
 	
 	$dbmgr->setVerbose(false);
 	$dbe = null;
-	if(_isAuthorized()) {
+	// if(_isAuthorized()) {
 		$dbe = $dbmgr->objectById($myid,$ignore_deleted);
 		if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
-	} else {
-		echo "json_server.objectById: Authentication required!\n";
-	}
+	// } else {
+	// 	echo "json_server.objectById: Authentication required!\n";
+	// }
 	$dbmgr->setVerbose(false);
 	
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
@@ -277,12 +277,12 @@ function fullObjectById($myid,$ignore_deleted) {
 	
 	$dbmgr->setVerbose(false);
 	$dbe = null;
-	if(_isAuthorized()) {
+	// if(_isAuthorized()) {
 		$dbe = $dbmgr->fullObjectById($myid,$ignore_deleted);
 		if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
-	} else {
-		echo "json_server.fullObjectById: Authentication required!\n";
-	}
+	// } else {
+	// 	echo "json_server.fullObjectById: Authentication required!\n";
+	// }
 	$dbmgr->setVerbose(false);
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
@@ -293,15 +293,15 @@ function objectByName($myid,$ignore_deleted) {
 	
 	$dbmgr->setVerbose(false);
 	$retArray = array();
-	if(_isAuthorized()) {
+	// if(_isAuthorized()) {
 		$tmp = $dbmgr->objectByName($myid,$ignore_deleted);
 		foreach($tmp as $_dbe) {
 			$_dbe->setValue('_typename',get_class($_dbe));
 			$retArray[]=_dbeToJson($_dbe);
 		}
-	} else {
-		echo "json_server.objectByName: Authentication required!\n";
-	}
+	// } else {
+	// 	echo "json_server.objectByName: Authentication required!\n";
+	// }
 	$dbmgr->setVerbose(false);
 	
 	return $retArray;
@@ -312,17 +312,16 @@ function fullObjectByName($myid,$ignore_deleted) {
 	
 	$dbmgr->setVerbose(false);
 	$retArray = array();
-	if(_isAuthorized()) {
+	// if(_isAuthorized()) {
 		$tmp = $dbmgr->fullObjectByName($myid,$ignore_deleted);
 		foreach($tmp as $_dbe) {
 			$_dbe->setValue('_typename',get_class($_dbe));
 			$retArray[]=_dbeToJson($_dbe);
 		}
-	} else {
-		echo "json_server.fullObjectByName: Authentication required!\n";
-	}
+	// } else {
+	// 	echo "json_server.fullObjectByName: Authentication required!\n";
+	// }
 	$dbmgr->setVerbose(false);
-
 	return $retArray;
 }
 // ************* ObjectMgr: end.
@@ -549,6 +548,12 @@ $json_response = array();
 
 $mymethod = $json_request->method=='echo' ? '_echo' : $json_request->method;
 // echo "mymethod: $mymethod\n";
+
+// $_tmp = $dbmgr->getDBEUser();
+// if($_tmp!==null) {
+// 	$_tmp->setValue('pwd','****');
+// 	echo "json_server: current user=".($_tmp!==null ? $_tmp->to_string() : "--")."\n";
+// }
 
 $myparams = array();
 if($json_request!==null) {
