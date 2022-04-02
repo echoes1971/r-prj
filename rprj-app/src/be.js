@@ -62,14 +62,16 @@ class BackEndProxy {
     // }
 
     objectById(oid, ignore_deleted, a_callback) {
-        console.log("BackEndProxy.objectById: start.");
         this.con.objectById(oid, ignore_deleted, a_callback);
-        console.log("BackEndProxy.objectById: end.");
     }
     fullObjectById(oid, ignore_deleted, a_callback) {
-        console.log("BackEndProxy.fullObjectById: start.");
         this.con.fullObjectById(oid, ignore_deleted, a_callback);
-        console.log("BackEndProxy.fullObjectById: end.");
+    }
+    objectByName(name, ignore_deleted, a_callback) {
+        this.con.objectByName(name, ignore_deleted, a_callback);
+    }
+    fullObjectByName(name, ignore_deleted, a_callback) {
+        this.con.fullObjectByName(name, ignore_deleted, a_callback);
     }
 
 

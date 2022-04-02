@@ -198,8 +198,10 @@ class TestBE extends React.Component {
 
         this.onObjByID_callback = this.onObjByID_callback.bind(this);
         this.btnObjByID = this.btnObjByID.bind(this);
+        this.btnObjByName = this.btnObjByName.bind(this);
         this.onFullObjByID_callback = this.onFullObjByID_callback.bind(this);
         this.btnFullObjByID = this.btnFullObjByID.bind(this);
+        this.btnFullObjByName = this.btnFullObjByName.bind(this);
     }
 
     componentDidMount() {
@@ -268,16 +270,12 @@ class TestBE extends React.Component {
     }
 
     on_login_callback(jsonObj) {
-        // console.log("TestBE.on_btn_ping_callback: start.");
-        // console.log(jsonObj)
-        // console.log(this.be.isConnected())
         const tmpUser = this.be.getDBEUserFromConnection();
         this.setState({
             server_response_0: jsonObj[0],
             server_response_1: JSON.stringify(jsonObj[1]),
             user: tmpUser ? tmpUser.getValue('fullname') + " " + tmpUser.to_string() : ''
         })
-        // console.log("TestBE.on_btn_ping_callback: end.");
     }
     on_fetchuser_callback(jsonObj) {
         console.log("TestBE.on_fetchuser_callback: start.");
@@ -398,6 +396,9 @@ class TestBE extends React.Component {
     btnObjByID() {
         this.be.objectById(this.state.dbeid, this.state.ignore_deleted, this.onObjByID_callback)
     }
+    btnObjByName() {
+        this.be.objectByName(this.state.dbe_name, this.state.ignore_deleted, this.onObjByID_callback)
+    }
     onFullObjByID_callback(jsonObj,myobj) {
         console.log("TestBE.onFullObjByID_callback: start.");
         this.setState({
@@ -408,6 +409,9 @@ class TestBE extends React.Component {
     }
     btnFullObjByID() {
         this.be.fullObjectById(this.state.dbeid, this.state.ignore_deleted, this.onFullObjByID_callback)
+    }
+    btnFullObjByName() {
+        this.be.fullObjectByName(this.state.dbe_name, this.state.ignore_deleted, this.onFullObjByID_callback)
     }
 
     render() {
@@ -523,6 +527,12 @@ class TestBE extends React.Component {
                                             <div class="col text-center">
                                                 <button onClick={this.btnObjByID}>Obj. by ID</button>
                                                 <button onClick={this.btnFullObjByID}>Full Obj. by ID</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <button onClick={this.btnObjByName}>Obj. by Name</button>
+                                                <button onClick={this.btnFullObjByName}>Full Obj. by Name</button>
                                             </div>
                                         </div>
                                     </div>
