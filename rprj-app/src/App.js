@@ -71,23 +71,23 @@ class App extends Component {
   }
 
   on_fetchuser_callback(jsonObj) {
-    console.log("App.on_fetchuser_callback: start.");
+    // console.log("App.on_fetchuser_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
     this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
-    console.log("App.on_fetchuser_callback: end.");
+    // console.log("App.on_fetchuser_callback: end.");
   }
   fetchLoggedUser() {
-    console.log("App.fetchLoggedUser: start.");
-    console.log("App.fetchLoggedUser: be="+JSON.stringify(this.be));
+    // console.log("App.fetchLoggedUser: start.");
+    // console.log("App.fetchLoggedUser: be="+JSON.stringify(this.be));
     this.be.getLoggedUser(this.on_fetchuser_callback);
-    console.log("App.fetchLoggedUser: end.");
+    // console.log("App.fetchLoggedUser: end.");
   }
 
   on_login_callback(jsonObj) {
-    console.log("App.on_login_callback: start.");
+    // console.log("App.on_login_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
     this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
-    console.log("App.on_login_callback: end.");
+    // console.log("App.on_login_callback: end.");
   }
   onLogin(usr,pwd) {
     this.be.login(usr,pwd,this.on_login_callback);

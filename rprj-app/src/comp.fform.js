@@ -20,6 +20,7 @@ class FForm extends React.Component {
 
         this.be = new BackEndProxy(this.state.endpoint);
 
+        this.obj = props.obj || {};
         this.form = null;
         this.groups = [];
 
@@ -66,6 +67,17 @@ class FForm extends React.Component {
         if(update) {
             this.be.getFormInstance(this.props.formname,this.forminstance_callback);
         }
+    }
+
+    obj2state() {
+        const values = {};
+        for(const k in this.obj) {
+            console.log("FForm.obj2state: k="+k)
+            const k1 = this.field_prefix + k
+            values[k1] = this.obj[k]
+        }
+        console.log("FForm.obj2state: values="+JSON.stringify(values));
+        this.setState(values);
     }
 
     btnSave() {
@@ -267,6 +279,8 @@ class FForm extends React.Component {
     renderField(f, is_readonly=false) {
         var field = this._getField(f);
         // console.log("FForm.renderField: field._classname="+field._classname)
+        const field_name = this.field_prefix + field.name;
+        field.value = this.state[field_name];
         if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
             return this.renderFField(field,is_readonly);
         }
@@ -357,25 +371,13 @@ class FForm extends React.Component {
 
     forminstance_callback(jsonObj,form) {
         // console.log("FForm.forminstance_callback: start.")
-        // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         this.form = form;
         if(form===null) {
             this.props.onError(jsonObj);
             return;
         }
-        // var s = [];
-        // for(const property in form) {
-        //     if(property=='fields' || property=='groups') continue;
-        //     s.push(property +": "+JSON.stringify(form[property]));
-        // }
-        // s.push('groups:')
-        // for(const p in form.groups) {
-        //     s.push("  "+p)
-        // }
-        // s.push('fields:')
-        // for(const p in form.fields) {
-        //     s.push("  "+p+": "+JSON.stringify(form.fields[p]))
-        // }
+        this.obj2state();
         const detailTitle = form.detailTitle
         this.setState({
         //     detailIcon: form.detailIcon,

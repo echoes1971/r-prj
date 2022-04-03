@@ -75,6 +75,19 @@ class BackEndProxy {
     }
 
 
+    getFormNameByDBEName(dbeName) {
+        return this.dbe2formMapping[dbeName];
+    }
+    getDBE2FormMapping(a_callback) {
+		var self = this
+		var my_callback = (jsonObj, dbe2formMapping) => {
+			console.log("BackEndProxy.getDBE2FormMapping.my_callback: start.");
+			self.dbe2formMapping = dbe2formMapping;
+			a_callback(jsonObj, dbe2formMapping);
+			console.log("BackEndProxy.getDBE2FormMapping.my_callback: end.");
+		}
+        this.con.getDBE2FormMapping(my_callback.bind(self));
+    }
     getAllFormClassnames(a_callback) {
         this.con.getAllFormClassnames(a_callback);
     }

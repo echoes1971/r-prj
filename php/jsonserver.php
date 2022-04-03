@@ -436,6 +436,11 @@ function Download($uuid,$view_thumb) {
 }
 
 
+function getDBE2FormMapping() {
+	global $formulator;
+	$ret = $formulator->getDBE2FormMapping();
+	return $ret;
+}
 function getAllFormClassnames() {
 	global $formulator;
 	$ret = $formulator->getAllClassnames();

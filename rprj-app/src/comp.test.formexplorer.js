@@ -4,6 +4,7 @@ import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import { FForm } from './comp.fform';
 import { ServerResponse } from './comp.test.serverresponse';
+import { DBEntity } from './db/dblayer';
 
 /*
  * This to develop backend functions to retrieve all the forms in form schema
@@ -20,11 +21,14 @@ class FormExplorer extends React.Component {
             debug_form: "",
             selectedClassname: "FGroup", //null,
             obj_id: null,
+            myobj: null,
             classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
         }
 
         this.be = new BackEndProxy(this.state.endpoint);
 
+        this.myobj = new DBEntity("DBEObject","objects");
+        
         // Bindings
         this.default_callback = this.default_callback.bind(this);
         this.default_handleChange = this.default_handleChange.bind(this);
@@ -43,6 +47,9 @@ class FormExplorer extends React.Component {
         this.onLoadForm_callback = this.onLoadForm_callback.bind(this);
         this.onLoad_callback = this.onLoad_callback.bind(this);
         this.btnLoad = this.btnLoad.bind(this);
+
+        this.dbe2form_cb = this.dbe2form_cb.bind(this);
+        this.btnDBE2Form = this.btnDBE2Form.bind(this);
     }
 
     componentDidMount() {
@@ -51,6 +58,7 @@ class FormExplorer extends React.Component {
         const mystate = this.ls.getMyState();
         this.setState(mystate);
 
+        this.be.getDBE2FormMapping(this.dbe2form_cb);
         this.be.getAllFormClassnames(this.classnames_callback);
     }
 
@@ -119,6 +127,24 @@ class FormExplorer extends React.Component {
         this.be.getFormInstance(value,this.forminstance_callback);
     }
 
+    dbe2form_cb(jsonObj, dbe2formMapping) {
+        if(dbe2formMapping) {
+            this.dbe2formMapping = dbe2formMapping;
+            this.setState({
+                server_response_0: jsonObj[0],
+                server_response_1: JSON.stringify(jsonObj[1])
+            })
+        } else {
+            this.setState({
+                server_response_0: jsonObj[0],
+                server_response_1: JSON.stringify(jsonObj[1])
+            })
+        }
+    }
+    btnDBE2Form() {
+        this.be.getDBE2FormMapping(this.dbe2form_cb);
+    }
+
     classnames_callback(jsonObj,formlist) {
         if(formlist) {
             var myoptions = [];
@@ -128,6 +154,8 @@ class FormExplorer extends React.Component {
             this.setState({
                 // selectedClassname: null,
                 classnames: myoptions
+                // ,server_response_0: jsonObj[0]
+                // ,server_response_1: "" + jsonObj[1]
             })
         } else {
             this.setState({
@@ -143,6 +171,14 @@ class FormExplorer extends React.Component {
     onLoadForm_callback(jsonObj,form) {
         console.log("FormExplorer.onLoadForm_callback: start.");
         console.log("FormExplorer.onLoadForm_callback: form="+JSON.stringify(form));
+        if(form===null) {
+            this.setState({
+                 server_response_0: jsonObj[0]
+                ,server_response_1: JSON.stringify(jsonObj[1])
+            })
+            console.log("FormExplorer.onLoadForm_callback: end.");
+            return
+        }
         var s = [];
         for(const property in form) {
             // if(property==='fields' || property==='groups') continue;
@@ -171,7 +207,13 @@ class FormExplorer extends React.Component {
         if(myobj!==null) {
             this.myobj = myobj
             const dbename = myobj.getDBEName()
-            this.be.getFormInstanceByDBEName(dbename, this.onLoadForm_callback)
+            const formName = this.be.getFormNameByDBEName(dbename);
+            this.setState({
+                selectedClassname: formName,
+                myobj: myobj
+            })
+            console.log("FormExplorer.onLoad_callback: myobj="+myobj.to_string());
+            // this.be.getFormInstanceByDBEName(dbename, this.onLoadForm_callback)
         }
         this.setState({
             // server_response_0: jsonObj[0],
@@ -199,7 +241,8 @@ class FormExplorer extends React.Component {
 
     render() {
         const selectedClassname = this.state.selectedClassname;
-        // console.log("FormExplorer.render: selectedClassname="+selectedClassname);
+        const obj = this.myobj!==null && this.myobj!==undefined ? this.myobj.getValues() : {};
+        console.log("FormExplorer.render: obj="+JSON.stringify(obj));
         return (
             <div class={"component "+this.props.class}>
                 <div class="row">
@@ -232,13 +275,20 @@ class FormExplorer extends React.Component {
                             <button class="btn btn-secondary" onClick={this.btnClassNames}>Class Names</button>
                         </form>
                     </div>
-                </div>
 
+                    <div class="col">
+                        <form onSubmit={this.default_handleSubmit}>
+                            <button class="btn btn-secondary" onClick={this.btnDBE2Form}>DBE 2 Form</button>
+                        </form>
+                    </div>
+                </div>
+                
                 <div class="row"><div class="col">&nbsp;</div></div>
 
                 <div class="row">
                     <div class="col">
                         <FForm endpoint={this.state.endpoint} formname={selectedClassname}
+                            obj={this.state.myobj}
                             onSave={this.onSave} onError={this.onError} />
                     </div>
                 </div>

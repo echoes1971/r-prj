@@ -554,6 +554,9 @@ class FormFactory {
 		return $ret;
 	}
 	
+	function getDBE2FormMapping() {
+		return $this->dbename2type;
+	}
 	function getFormNameByDBEName($aDBEName) {
 		$ret = null;
 		if(array_key_exists($aDBEName,$this->dbename2type)) {

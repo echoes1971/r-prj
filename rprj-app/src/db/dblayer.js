@@ -622,6 +622,17 @@ function JSONDBConnection(connectionString,verbose) {
 	*/
 
 
+	this.getDBE2FormMapping = function(a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: start.");
+			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			const dbe2formMapping = jsonObj[1];
+			a_callback(jsonObj, dbe2formMapping);
+			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: end.");
+		}
+		this._sendRequest('getDBE2FormMapping', [], my_callback.bind(self));
+	}
 	this.getAllFormClassnames = function(a_callback) {
 		var self = this
 		var my_callback = (jsonObj) => {
