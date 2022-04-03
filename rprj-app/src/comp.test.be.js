@@ -84,25 +84,25 @@ class SearchForm extends React.Component {
             <form onSubmit={default_handleSubmit}>
                 <div class="container">
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">DBE</div>
+                        <div class="col fw-bold text-end">DBE</div>
                         <div class="col text-start">
                             <input id={this.prefix + "dbename"} name={this.prefix + "dbename"} value={this.state.dbename} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">Table</div>
+                        <div class="col fw-bold text-end">Table</div>
                         <div class="col text-start">
                             <input id={this.prefix + "tablename"} name={this.prefix + "tablename"} value={this.state.tablename} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">Field</div>
+                        <div class="col fw-bold text-end">Field</div>
                         <div class="col text-start">
                             <input id={this.prefix + "fieldname"} name={this.prefix + "fieldname"} value={this.state.fieldname} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">Order by</div>
+                        <div class="col fw-bold text-end">Order by</div>
                         <div class="col text-start">
                             <input id={this.prefix + "orderBy"} name={this.prefix + "orderBy"} value={this.state.orderBy} onChange={this.handleChange} />
                         </div>
@@ -118,7 +118,7 @@ class SearchForm extends React.Component {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 fw-bold text-end">Value</div>
+                        <div class="col fw-bold text-end">Value</div>
                         <div class="col text-start">
                             <input id={this.prefix + "fieldvalue"} name={this.prefix + "fieldvalue"} value={this.state.fieldvalue} onChange={this.handleChange} />
                         </div>
@@ -473,26 +473,35 @@ class TestBE extends React.Component {
                             <div class="col text-start fw-bold">
                                 <Ping onPingServer={this.btnPingServer} />
                             </div>
-                            <div class="col text-start fw-bold">
-                                <form onSubmit={this.default_handleSubmit}>
-                                    Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
-                                    Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
-                                    <button onClick={this.btnLogin}>Login</button>
-                                </form>
+
+                            <div class="col border rounded p-2 m-2">
+                                <div class="component fw-bold">
+                                    <div class="row">
+                                        <div class="col text-start">
+                                            <form onSubmit={this.default_handleSubmit}>
+                                                Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
+                                                Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
+                                                <button onClick={this.btnLogin}>Login</button>
+                                            </form>
+                                        </div>
+                                        <div class="col text-center">
+                                            <form onSubmit={this.default_handleSubmit}>
+                                                Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
+                                            </form>
+                                        </div>
+                                        <div class="col text-center">
+                                            <form onSubmit={this.default_handleSubmit}>
+                                                <button onClick={this.btnLogout}>Logout</button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="row test-start border rounded p-2 m-2">
+                                        <div class="col">User: {this.state.user}</div>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="col text-start fw-bold">
-                                <form onSubmit={this.default_handleSubmit}>
-                                    Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
-                                </form>
-                            </div>
-                            <div class="col text-start fw-bold">
-                                <form onSubmit={this.default_handleSubmit}>
-                                    <button onClick={this.btnLogout}>Logout</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row test-start border rounded p-2 m-2">
-                            <div class="col">User: {this.state.user}</div>
                         </div>
                         <div class="row">
                             <div class="col">&nbsp;</div>
@@ -552,19 +561,19 @@ class TestBE extends React.Component {
                                 <form onSubmit={this.default_handleSubmit}>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-2 fw-bold text-end">DBE</div>
+                                            <div class="col fw-bold text-end">DBE</div>
                                             <div class="col text-start">
                                                 <input id="dbename" name="dbename" value={this.state.dbename} onChange={this.default_handleChange} />
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-2 fw-bold text-end">Table</div>
+                                            <div class="col fw-bold text-end">Table</div>
                                             <div class="col text-start">
                                                 <input id="tablename" name="tablename" value={this.state.tablename} onChange={this.default_handleChange} />
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-2 fw-bold text-end">SQL</div>
+                                            <div class="col fw-bold text-end">SQL</div>
                                             <div class="col text-start">
                                                 <textarea id="sqlstring" name="sqlstring" value={this.state.sqlstring} onChange={this.default_handleChange} />
                                             </div>
