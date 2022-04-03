@@ -26,7 +26,7 @@ class Ping extends React.Component {
     render () {
         return (
             <form onSubmit={this.handleSubmit}>
-                <button onClick={this.btnPingServer}>PING</button>
+                <button class="btn btn-secondary" onClick={this.btnPingServer}>PING</button>
             </form>
         );
     }
@@ -125,7 +125,7 @@ class SearchForm extends React.Component {
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button onClick={this.btnSearch}>Search</button>
+                            <button class="btn btn-secondary" onClick={this.btnSearch}>Search</button>
                         </div>
                     </div>
                 </div>
@@ -481,17 +481,17 @@ class TestBE extends React.Component {
                                             <form onSubmit={this.default_handleSubmit}>
                                                 Username: <input id="usr" name="usr" value={this.state.usr} onChange={this.default_handleChange} /> <br />
                                                 Password: <input id="pwd" name="pwd" type="password" value={this.state.pwd} onChange={this.default_handleChange} /> <br />
-                                                <button onClick={this.btnLogin}>Login</button>
+                                                <button class="btn btn-secondary" onClick={this.btnLogin}>Login</button>
                                             </form>
                                         </div>
                                         <div class="col text-center">
                                             <form onSubmit={this.default_handleSubmit}>
-                                                Get Logged User <button onClick={this.btnLoggedUser}>Fetch</button>
+                                                Get Logged User <button class="btn btn-secondary" onClick={this.btnLoggedUser}>Fetch</button>
                                             </form>
                                         </div>
                                         <div class="col text-center">
                                             <form onSubmit={this.default_handleSubmit}>
-                                                <button onClick={this.btnLogout}>Logout</button>
+                                                <button class="btn btn-secondary" onClick={this.btnLogout}>Logout</button>
                                             </form>
                                         </div>
                                     </div>
@@ -534,14 +534,14 @@ class TestBE extends React.Component {
                                         </div>
                                         <div class="row">
                                             <div class="col text-center">
-                                                <button onClick={this.btnObjByID}>Obj. by ID</button>
-                                                <button onClick={this.btnFullObjByID}>Full Obj. by ID</button>
+                                                <button class="btn btn-secondary" onClick={this.btnObjByID}>Obj. by ID</button>
+                                                <button class="btn btn-secondary" onClick={this.btnFullObjByID}>Full Obj. by ID</button>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col text-center">
-                                                <button onClick={this.btnObjByName}>Obj. by Name</button>
-                                                <button onClick={this.btnFullObjByName}>Full Obj. by Name</button>
+                                                <button class="btn btn-secondary" onClick={this.btnObjByName}>Obj. by Name</button>
+                                                <button class="btn btn-secondary" onClick={this.btnFullObjByName}>Full Obj. by Name</button>
                                             </div>
                                         </div>
                                     </div>
@@ -580,8 +580,8 @@ class TestBE extends React.Component {
                                         </div>
                                         <div class="row">
                                             <div class="col text-start">
-                                                <button onClick={this.btnExecute}>Select as Array</button>
-                                                <button onClick={this.btnSelect}>Select</button>
+                                                <button class="btn btn-secondary" onClick={this.btnExecute}>Select as Array</button>
+                                                <button class="btn btn-secondary" onClick={this.btnSelect}>Select</button>
                                             </div>
                                         </div>
                                     </div>
