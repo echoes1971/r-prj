@@ -82,6 +82,10 @@ class BackEndProxy {
         if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
         this.con.getFormInstance(aclassname,a_callback);
     }
+    getFormInstanceByDBEName(aclassname,a_callback) {
+        if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
+        this.con.getFormInstanceByDBEName(aclassname,a_callback);
+    }
 
 
     // ******************** DBConnection

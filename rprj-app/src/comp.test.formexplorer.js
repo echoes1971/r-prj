@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import { FForm } from './comp.fform';
 import { ServerResponse } from './comp.test.serverresponse';
@@ -17,7 +18,8 @@ class FormExplorer extends React.Component {
             server_response_0: "",
             server_response_1: "",
             debug_form: "",
-            selectedClassname: "FTodo", //null,
+            selectedClassname: "FGroup", //null,
+            obj_id: null,
             classnames: [{value: "cippa", label: "Cippa"},{value:"lippa", label:"Lippa"}]
         }
 
@@ -37,9 +39,18 @@ class FormExplorer extends React.Component {
 
         this.onSave = this.onSave.bind(this);
         this.onError = this.onError.bind(this);
+
+        this.onLoadForm_callback = this.onLoadForm_callback.bind(this);
+        this.onLoad_callback = this.onLoad_callback.bind(this);
+        this.btnLoad = this.btnLoad.bind(this);
     }
 
     componentDidMount() {
+        // Local Storage
+        this.ls = new RLocalStorage("FormExplorer");
+        const mystate = this.ls.getMyState();
+        this.setState(mystate);
+
         this.be.getAllFormClassnames(this.classnames_callback);
     }
 
@@ -48,10 +59,11 @@ class FormExplorer extends React.Component {
     }
     default_handleChange(event) {
         const target = event.target;
-        console.log("target.type: "+target.type)
+        // console.log("target.type: "+target.type)
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+        this.ls.setValue(name,value);
         this.setState({[name]: value});
     }
     default_callback(jsonObj,formlist) {
@@ -99,6 +111,7 @@ class FormExplorer extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+        this.ls.setValue(name,value);
         this.setState({[name]: value});
         // RRA: if you enable this here, and then you setState in the callback, it will complain (and block) that the component to update has been unmounted
         // this.setState({selectedClassname: selectedOption.value});
@@ -125,6 +138,53 @@ class FormExplorer extends React.Component {
     }
     btnClassNames() {
         this.be.getAllFormClassnames(this.classnames_callback);
+    }
+
+    onLoadForm_callback(jsonObj,form) {
+        console.log("FormExplorer.onLoadForm_callback: start.");
+        console.log("FormExplorer.onLoadForm_callback: form="+JSON.stringify(form));
+        var s = [];
+        for(const property in form) {
+            // if(property==='fields' || property==='groups') continue;
+            s.push(property +": "+JSON.stringify(form[property]));
+        }
+        s.push('groups:')
+        for(const p in form.groups) {
+            s.push("  "+p)
+        }
+        s.push('fields:')
+        for(const p in form.fields) {
+            s.push("  "+p+": "+JSON.stringify(form.fields[p]))
+        }
+        const classname = form._classname;
+        // console.log("FormExplorer.onLoadForm_callback: form._classname="+form._classname);
+        // console.log("FormExplorer.onLoadForm_callback: classname="+classname);
+        this.setState({
+            selectedClassname: classname
+            ,server_response_0: jsonObj[0]
+            ,server_response_1: "" + s.join("\n")
+        })
+        console.log("FormExplorer.onLoadForm_callback: end.");
+    }
+    onLoad_callback(jsonObj,myobj) {
+        console.log("FormExplorer.onLoad_callback: start.");
+        if(myobj!==null) {
+            this.myobj = myobj
+            const dbename = myobj.getDBEName()
+            this.be.getFormInstanceByDBEName(dbename, this.onLoadForm_callback)
+        }
+        this.setState({
+            // server_response_0: jsonObj[0],
+            server_response_0: JSON.stringify(jsonObj[0]),
+            // server_response_1: myobj!==null ? JSON.stringify(myobj.getValues()) : '--' // JSON.stringify(jsonObj[1])
+            server_response_1: myobj!==null ? myobj.to_string() : '--' // JSON.stringify(jsonObj[1])
+        })
+        console.log("FormExplorer.onLoad_callback: end.");
+    }
+    btnLoad() {
+        const obj_id = this.state.obj_id
+        const ignore_deleted = false
+        this.be.fullObjectById(obj_id, ignore_deleted, this.onLoad_callback)
     }
 
     onSave(values) {
@@ -157,6 +217,13 @@ class FormExplorer extends React.Component {
                                 }
                                 )}
                             </select>
+                        </form>
+                    </div>
+
+                    <div class="col">
+                        <form onSubmit={this.default_handleSubmit}>
+                            <label for="obj_id" /><input id="obj_id" name="obj_id" value={this.state.obj_id} onChange={this.default_handleChange} />
+                            <button class="btn btn-secondary" onClick={this.btnLoad}>Load</button>
                         </form>
                     </div>
 

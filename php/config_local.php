@@ -7,7 +7,7 @@ $db_server = "rprj-db";
 $db_user = "root";
 $db_pwd = "cippa";
 $db_db = "rproject";
-$db_schema = "rprj";
+$db_schema = "rra";
 
 $skin = 'default';
 

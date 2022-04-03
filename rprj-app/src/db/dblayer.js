@@ -84,7 +84,7 @@ function DBEntity(dbename,tablename) {
 		var typenameIndex = rs.getColumnIndex('_typename');
 		if(typenameIndex>0) this.dbename=rs.getValue(row,typenameIndex);
 		var tablenameIndex = rs.getColumnIndex('_tablename');
-		if(tablenameIndex>0) this.dbename=rs.getValue(row,tablenameIndex);
+		if(tablenameIndex>0) this.tablename=rs.getValue(row,tablenameIndex);
 		for(var col=0; col<rs.getNumColumns(); col++) {
 			var colName = rs.getColumnName(col);
 			if(colName[0]==='_') continue;
@@ -523,7 +523,7 @@ function JSONDBConnection(connectionString,verbose) {
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
 				if(myrs) {
-					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
 					myobj.fromRS(myrs,0);
 				}
 			} catch(e) {
@@ -544,7 +544,7 @@ function JSONDBConnection(connectionString,verbose) {
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
 				if(myrs) {
-					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
 					myobj.fromRS(myrs,0);
 				}
 			} catch(e) {
@@ -565,7 +565,7 @@ function JSONDBConnection(connectionString,verbose) {
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
 				if(myrs) {
-					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
 					myobj.fromRS(myrs,0);
 				}
 			} catch(e) {
@@ -586,7 +586,7 @@ function JSONDBConnection(connectionString,verbose) {
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
 				if(myrs) {
-					myobj = new DBEntity(jsonObj[1][0].classname,jsonObj[1][0]._tablename);
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
 					myobj.fromRS(myrs,0);
 				}
 			} catch(e) {
@@ -658,6 +658,26 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.getFormInstance.my_callback: end.");
 		}
 		this._sendRequest('getFormInstance', [aclassname], my_callback.bind(self));
+	}
+	this.getFormInstanceByDBEName = function(aclassname, a_callback) {
+		var self = this
+		var my_callback = (jsonObj) => {
+			console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: start.");
+			var form = jsonObj[1];
+			try{
+				const stringed = JSON.stringify(jsonObj);
+				// console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: jsonObj=" + stringed);
+				form = jsonObj[1];
+			} catch(e) {
+				form = null;
+			}
+			if(form.length===0) form=null;
+			console.log(form)
+			// jsonObj[1] = dbelist;
+			a_callback(jsonObj, form)
+			console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: end.");
+		}
+		this._sendRequest('getFormInstanceByDBEName', [aclassname], my_callback.bind(self));
 	}
 }
 
