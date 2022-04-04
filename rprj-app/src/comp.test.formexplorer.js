@@ -16,6 +16,7 @@ class FormExplorer extends React.Component {
 
         this.state = {
             endpoint: props.endpoint,
+            dark_theme: props.dark_theme,
             server_response_0: "",
             server_response_1: "",
             debug_form: "",
@@ -27,7 +28,8 @@ class FormExplorer extends React.Component {
 
         this.be = new BackEndProxy(this.state.endpoint);
 
-        this.myobj = new DBEntity("DBEObject","objects");
+        // this.myobj = new DBEntity("DBEObject","objects");
+        this.dbe2formMapping = {}
         
         // Bindings
         this.default_callback = this.default_callback.bind(this);
@@ -53,13 +55,32 @@ class FormExplorer extends React.Component {
     }
 
     componentDidMount() {
+        console.log("FormExplorer.componentDidMount: start.");
         // Local Storage
         this.ls = new RLocalStorage("FormExplorer");
         const mystate = this.ls.getMyState();
+        const myobj = mystate["myobj"]
+        if(myobj && myobj.dbename>'' && myobj.tablename>'') {
+            mystate["myobj"] = new DBEntity(mystate["myobj"].dbename, mystate["myobj"].tablename);
+            mystate["myobj"].setValues(myobj);
+        }
+        console.log("FormExplorer.componentDidMount: ls="+this.ls.toString());
+        console.log("FormExplorer.componentDidMount: mystate="+JSON.stringify(mystate));
         this.setState(mystate);
 
         this.be.getDBE2FormMapping(this.dbe2form_cb);
         this.be.getAllFormClassnames(this.classnames_callback);
+        console.log("FormExplorer.componentDidMount: end.");
+    }
+    componentWillUnmount() {
+        console.log("FormExplorer.componentWillUnmount: start.");
+        this.ls.saveMyState(this.state);
+        console.log("FormExplorer.componentWillUnmount: end.");
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if(this.props.dark_theme !== prevProps.dark_theme) {
+            this.setState({dark_theme: this.props.dark_theme})
+        }
     }
 
     default_handleSubmit(event) {
@@ -82,7 +103,7 @@ class FormExplorer extends React.Component {
         this.setState({
             server_response_0: jsonObj[0],
             server_response_1: "" + jsonObj[1],
-            selectedClassname: null,
+            // selectedClassname: null,
             classnames: myoptions
         })
     }
@@ -119,12 +140,19 @@ class FormExplorer extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+
+        console.log("FormExplorer.select_handleChange: "+name+"="+value);
         this.ls.setValue(name,value);
         this.setState({[name]: value});
         // RRA: if you enable this here, and then you setState in the callback, it will complain (and block) that the component to update has been unmounted
         // this.setState({selectedClassname: selectedOption.value});
         // console.log("FormExplorer.select_handleChange: selectedOption="+JSON.stringify(selectedOption));
-        this.be.getFormInstance(value,this.forminstance_callback);
+
+        if(name==='dbename') {
+            const selectedClassname = this.be.getFormNameByDBEName(value);
+            this.setState({selectedClassname: selectedClassname})
+        }
+        // this.be.getFormInstance(value,this.forminstance_callback);
     }
 
     dbe2form_cb(jsonObj, dbe2formMapping) {
@@ -193,7 +221,7 @@ class FormExplorer extends React.Component {
             s.push("  "+p+": "+JSON.stringify(form.fields[p]))
         }
         const classname = form._classname;
-        // console.log("FormExplorer.onLoadForm_callback: form._classname="+form._classname);
+        console.log("FormExplorer.onLoadForm_callback: form._classname="+form._classname);
         // console.log("FormExplorer.onLoadForm_callback: classname="+classname);
         this.setState({
             selectedClassname: classname
@@ -205,22 +233,28 @@ class FormExplorer extends React.Component {
     onLoad_callback(jsonObj,myobj) {
         console.log("FormExplorer.onLoad_callback: start.");
         if(myobj!==null) {
-            this.myobj = myobj
+            // this.myobj = myobj
             const dbename = myobj.getDBEName()
             const formName = this.be.getFormNameByDBEName(dbename);
+            this.ls.setValue("selectedClassname",formName);
+            this.ls.setValue("myobj",myobj);
             this.setState({
+                debug_form: myobj!==null ? myobj.to_string() : "--",
                 selectedClassname: formName,
-                myobj: myobj
+                myobj: myobj,
+                server_response_0: jsonObj[0],
+                server_response_1: myobj.to_string()
             })
             console.log("FormExplorer.onLoad_callback: myobj="+myobj.to_string());
             // this.be.getFormInstanceByDBEName(dbename, this.onLoadForm_callback)
+        } else {
+            this.setState({
+                // server_response_0: jsonObj[0],
+                server_response_0: JSON.stringify(jsonObj[0]),
+                // server_response_1: myobj!==null ? JSON.stringify(myobj.getValues()) : '--' // JSON.stringify(jsonObj[1])
+                server_response_1: myobj!==null ? myobj.to_string() : '--' // JSON.stringify(jsonObj[1])
+            })    
         }
-        this.setState({
-            // server_response_0: jsonObj[0],
-            server_response_0: JSON.stringify(jsonObj[0]),
-            // server_response_1: myobj!==null ? JSON.stringify(myobj.getValues()) : '--' // JSON.stringify(jsonObj[1])
-            server_response_1: myobj!==null ? myobj.to_string() : '--' // JSON.stringify(jsonObj[1])
-        })
         console.log("FormExplorer.onLoad_callback: end.");
     }
     btnLoad() {
@@ -241,8 +275,16 @@ class FormExplorer extends React.Component {
 
     render() {
         const selectedClassname = this.state.selectedClassname;
-        const obj = this.myobj!==null && this.myobj!==undefined ? this.myobj.getValues() : {};
+        console.log("FormExplorer.render: selectedClassname="+selectedClassname);
+        console.log("FormExplorer.render: this.state.dark_theme="+this.state.dark_theme);
+        // console.log("FormExplorer.render: this.state.myobj="+JSON.stringify(this.state.myobj));
+        if(this.state.myobj!==null && this.state.myobj!==undefined) {
+            console.log("FormExplorer.render: this.state.myobj="+this.state.myobj.to_string());
+        }
+        const obj = this.state.myobj!==null && this.state.myobj!==undefined ? this.state.myobj.getValues() : {};
         console.log("FormExplorer.render: obj="+JSON.stringify(obj));
+        const dbeNames = this.dbe2formMapping ? Object.keys(this.dbe2formMapping) : []
+        console.log("FormExplorer.render: dbeNames="+JSON.stringify(dbeNames));
         return (
             <div class={"component "+this.props.class}>
                 <div class="row">
@@ -254,7 +296,13 @@ class FormExplorer extends React.Component {
                 <div class="row">
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <select value={selectedClassname} onChange={this.select_handleChange} >
+                            <select name="dbename" value={this.state.dbename} onChange={this.select_handleChange} >
+                                {dbeNames.map((x) => {
+                                    return (<option value={x}>{x}</option>);
+                                }
+                                )}
+                            </select>
+                            <select name="selectedClassname" value={selectedClassname} onChange={this.select_handleChange} >
                                 {Object.keys(this.state.classnames).map((x) => {
                                     return (<option value={this.state.classnames[x].value}>{this.state.classnames[x].label}</option>);
                                 }
@@ -287,8 +335,9 @@ class FormExplorer extends React.Component {
 
                 <div class="row">
                     <div class="col">
-                        <FForm endpoint={this.state.endpoint} formname={selectedClassname}
-                            obj={this.state.myobj}
+                        <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
+                            formname={selectedClassname} dbename={this.state.dbename}
+                            obj={obj}
                             onSave={this.onSave} onError={this.onError} />
                     </div>
                 </div>

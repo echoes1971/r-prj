@@ -11,16 +11,19 @@ class FForm extends React.Component {
         
         this.state = {
             endpoint: props.endpoint,
-            formname: props.formname,
+            dark_theme: props.dark_theme,
             detailIcon: "icons/user.png",
-            detailTitle: "User"
+            detailTitle: "User",
+            formname: props.formname,
+            dbename: props.dbename,
+            obj_id: props.obj_id,
+            obj: props.obj || {}
         }
 
         this.field_prefix = "field_"
 
         this.be = new BackEndProxy(this.state.endpoint);
 
-        this.obj = props.obj || {};
         this.form = null;
         this.groups = [];
 
@@ -41,7 +44,9 @@ class FForm extends React.Component {
     }
 
     componentDidMount() {
-        this.be.getFormInstance(this.state.formname,this.forminstance_callback);
+        // console.log("FForm.componentDidMount: start.")
+        // this.be.getFormInstance(this.state.formname,this.forminstance_callback);
+        // console.log("FForm.componentDidMount: end.")
     }
     componentWillUnmount() {
         console.log("FForm.componentWillUnmount: start.");
@@ -50,31 +55,70 @@ class FForm extends React.Component {
     // componentDidUpdate(prevProps, prevState, snapshot) {
     componentDidUpdate(prevProps, prevState) {
         // console.log("FForm.componentDidUpdate: prevProps="+JSON.stringify(prevProps))
-        // console.log("FForm.componentDidUpdate: prevState="+JSON.stringify(prevState))
         // console.log("FForm.componentDidUpdate: props="+JSON.stringify(this.props))
+        // console.log("FForm.componentDidUpdate: prevState="+JSON.stringify(prevState))
         // console.log("FForm.componentDidUpdate: state="+JSON.stringify(this.state))
         var update = false;
+        const changes = {};
         if(this.props.endpoint !== prevProps.endpoint) {
-            this.setState({endpoint: this.props.endpoint})
+            // this.setState({endpoint: this.props.endpoint})
+            changes["endpoint"] = this.props.endpoint;
             this.be = new BackEndProxy(this.props.endpoint);
             update = true;
         }
+        if(JSON.stringify(this.props.obj) != JSON.stringify(prevProps.obj)) {
+            const obj = this.props.obj
+            console.log("FForm.componentDidUpdate: obj changed="+JSON.stringify(obj))
+            console.log("FForm.componentDidUpdate: obj changed="+(typeof obj))
+            this.obj2state(obj);
+            this.setState({obj: obj})
+            // changes["obj"] = this.props.obj;
+        }
+        if(this.props.dark_theme !== prevProps.dark_theme) {
+            this.setState({dark_theme: this.props.dark_theme})
+            // changes["dark_theme"] = this.props.dark_theme;
+        }
         if(this.props.formname !== prevProps.formname) {
             this.setState({formname: this.props.formname})
+            // changes["formname"] = this.props.formname;
             update = true;
         }
+        // this.setState(changes);
 
         if(update) {
             this.be.getFormInstance(this.props.formname,this.forminstance_callback);
         }
     }
 
-    obj2state() {
+    forminstance_callback(jsonObj,form) {
+        console.log("FForm.forminstance_callback: start.")
+        // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
+        this.form = form;
+        if(form===null) {
+            this.props.onError(jsonObj);
+            return;
+        }
+        this.obj2state();
+        const detailTitle = form.detailTitle
+        this.setState({
+        //     detailIcon: form.detailIcon,
+            detailTitle: detailTitle
+        })
+        console.log("FForm.forminstance_callback: end.")
+    }
+
+    obj2state(an_obj=null) {
         const values = {};
-        for(const k in this.obj) {
+        var myobj = an_obj===null ? this.state.obj : an_obj;
+        if('dict' in myobj) {
+            myobj = myobj.dict
+        }
+
+        console.log("FForm.obj2state: myobj="+JSON.stringify(myobj));
+        for(const k in myobj) { //.getValues()) {
             console.log("FForm.obj2state: k="+k)
             const k1 = this.field_prefix + k
-            values[k1] = this.obj[k]
+            values[k1] = myobj[k]
         }
         console.log("FForm.obj2state: values="+JSON.stringify(values));
         this.setState(values);
@@ -158,6 +202,10 @@ class FForm extends React.Component {
                 (field.cssClass>'' ? field.cssClass : '') + ' '
                 + (is_readonly ? 'form-control-plaintext' : '')
             ).trim();
+        // if(field.type=='d') {
+        //     console.log("FForm.renderFField: state="+JSON.stringify(this.state));
+        //     console.log("FForm.renderFField: "+fieldname+"="+this.state[fieldname]);
+        // }
         return (
             <div class="row">
                 <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
@@ -167,7 +215,7 @@ class FForm extends React.Component {
                         :
                         <input id={fieldname} name={fieldname} type={fieldtype}
                                 class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                                value={this.state[fieldname]} size={field.size}
+                                value={this.state[fieldname] ? this.state[fieldname].replace(" ","T") : this.state[fieldname]} size={field.size}
                             onChange={this.default_handleChange} />
                     }
                 </div>
@@ -280,7 +328,10 @@ class FForm extends React.Component {
         var field = this._getField(f);
         // console.log("FForm.renderField: field._classname="+field._classname)
         const field_name = this.field_prefix + field.name;
-        field.value = this.state[field_name];
+        field["value"] = this.state[field_name];
+        if(field["value"]) {
+            console.log("FForm.renderField: field="+JSON.stringify(field));
+        }
         if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
             return this.renderFField(field,is_readonly);
         }
@@ -297,9 +348,9 @@ class FForm extends React.Component {
             return this.renderFPercent(field, is_readonly);
         }
         if(field._classname==='FPermissions') {
-            field.value = "rw-r-x-w-" // Just for test
             return (
-                <FPermissions name={field.name} value={field.value} title={field.title} cssClass={this.cssClass}
+                <FPermissions name={field.name} value={this.state[field_name]}
+                    title={field.title} cssClass={this.cssClass}
                     is_readonly={is_readonly} field_prefix={this.field_prefix}
                     onChange={this.default_handleChange} />
             );
@@ -318,10 +369,10 @@ class FForm extends React.Component {
         const visibleFields = this.form.detailColumnNames;
         const readonlyFields = this.form.detailReadOnlyColumnNames;
 
-        // console.log("FForm.renderGroup: group="+JSON.stringify(group))
+        console.log("FForm.renderGroup: this.state.dark_theme="+this.state.dark_theme)
         return (
             <div class="component">
-                <div class="row"><div class="col fw-bold text-middle bg-light">{groupName}</div></div>
+                <div class="row"><div class={"col fw-bold text-middle rounded" + (this.state.dark_theme ? " bg-dark" : " bg-light")}>{groupName}</div></div>
                 {group.map((fieldname) => {
                     if(visibleFields.indexOf(fieldname)<0) return ('');
                     return this.renderField(fieldname, is_readonly || readonlyFields.indexOf(fieldname)>=0);
@@ -369,27 +420,13 @@ class FForm extends React.Component {
         );
     }
 
-    forminstance_callback(jsonObj,form) {
-        // console.log("FForm.forminstance_callback: start.")
-        console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
-        this.form = form;
-        if(form===null) {
-            this.props.onError(jsonObj);
-            return;
-        }
-        this.obj2state();
-        const detailTitle = form.detailTitle
-        this.setState({
-        //     detailIcon: form.detailIcon,
-            detailTitle: detailTitle
-        })
-        // console.log("FForm.forminstance_callback: end.")
-    }
-
     render() {
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
         const actions = this.renderActions();
+        console.log("FForm.render: formname="+this.state.formname)
+        console.log("FForm.render: dark_theme="+this.state.dark_theme)
+        console.log("FForm.render: obj="+JSON.stringify(this.state.obj))
         return (
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
