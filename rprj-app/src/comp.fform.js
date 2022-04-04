@@ -372,7 +372,7 @@ class FForm extends React.Component {
         console.log("FForm.renderGroup: this.state.dark_theme="+this.state.dark_theme)
         return (
             <div class="component">
-                <div class="row"><div class={"col fw-bold text-middle rounded" + (this.state.dark_theme ? " bg-dark" : " bg-light")}>{groupName}</div></div>
+                <div class="row"><div class={"col fw-bold text-middle m-2 rounded" + (this.state.dark_theme ? " bg-dark" : " bg-light")}>{groupName}</div></div>
                 {group.map((fieldname) => {
                     if(visibleFields.indexOf(fieldname)<0) return ('');
                     return this.renderField(fieldname, is_readonly || readonlyFields.indexOf(fieldname)>=0);
