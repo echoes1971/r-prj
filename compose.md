@@ -72,6 +72,10 @@ docker-compose logs -f rprj-web
 
 docker exec -it r-prj_rprj-web_1 bash
 
+# r-rpj_app
+
+docker exec -it r-rpj_rprj-app_1 bash
+
 
 docker build -f Dockerfile_web -t test_img_web .
 docker run -it test_img_web ls
