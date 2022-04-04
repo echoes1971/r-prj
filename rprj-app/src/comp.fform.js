@@ -114,6 +114,14 @@ class FForm extends React.Component {
             myobj = myobj.dict
         }
 
+        // Clean all fields
+        for(const k in this.state) {
+            if(k.indexOf(this.field_prefix)<0) continue;
+            // values[k] = null;
+            delete this.state[k]
+        }
+
+        // Store new values
         console.log("FForm.obj2state: myobj="+JSON.stringify(myobj));
         for(const k in myobj) { //.getValues()) {
             console.log("FForm.obj2state: k="+k)
