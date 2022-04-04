@@ -180,7 +180,7 @@ function JSONDBConnection(connectionString,verbose) {
 	this.isVerbose = function() { return this.verbose; };
 	
 	this._sendRequest = function(method, params, req_callback) {
-		if(this.verbose) { console.log("JSONDBConnection._sendRequest: start."); }
+		// if(this.verbose) { console.log("JSONDBConnection._sendRequest: start."); }
 		var xhr = new XMLHttpRequest()
 		var default_callback = (e) => {
 			console.log("JSONDBConnection._sendRequest.default_callback: start.");
@@ -228,7 +228,7 @@ function JSONDBConnection(connectionString,verbose) {
 		var mydata = { method: method, params: params};
 		console.log("JSONDBConnection._sendRequest: mydata="+JSON.stringify(mydata));
 		xhr.send(JSON.stringify(mydata));
-		if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
+		// if(this.verbose) { console.log("JSONDBConnection._sendRequest: end."); }
 	}
 
 	this.ping = function(a_callback=null) {
@@ -301,7 +301,7 @@ function JSONDBConnection(connectionString,verbose) {
 		console.log("JSONDBConnection.login: end.");
 	};
 	this.getLoggedUser = function(a_callback) {
-		console.log("JSONDBConnection.getLoggedUser: start.");
+		// console.log("JSONDBConnection.getLoggedUser: start.");
 		if(this._dbe_user!==undefined && this._dbe_user!==null) {
 			return this._dbe_user;
 		}
@@ -329,7 +329,7 @@ function JSONDBConnection(connectionString,verbose) {
 		// my_callback = my_callback.bind(self);
 		// this._sendRequest('getLoggedUser', [], my_callback);
 		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
-		console.log("JSONDBConnection.getLoggedUser: end.");
+		// console.log("JSONDBConnection.getLoggedUser: end.");
 	};
 	this.logout = function(a_callback) {
 		var self = this
@@ -626,7 +626,7 @@ function JSONDBConnection(connectionString,verbose) {
 		var self = this
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: start.");
-			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			// console.log("jsonObj: " + JSON.stringify(jsonObj));
 			const dbe2formMapping = jsonObj[1];
 			a_callback(jsonObj, dbe2formMapping);
 			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: end.");
@@ -637,13 +637,13 @@ function JSONDBConnection(connectionString,verbose) {
 		var self = this
 		var my_callback = (jsonObj) => {
 			console.log("JSONDBConnection.getAllFormClassnames.my_callback: start.");
-			console.log("jsonObj: " + JSON.stringify(jsonObj));
+			// console.log("jsonObj: " + JSON.stringify(jsonObj));
 			var formlist = [];
-			console.log( jsonObj[1] )
+			// console.log( jsonObj[1] )
 			for(var i=0; i<jsonObj[1].length; i++) {
 				formlist.push(jsonObj[1][i]);
 			}
-			console.log(formlist)
+			// console.log(formlist)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, formlist)
 			console.log("JSONDBConnection.getAllFormClassnames.my_callback: end.");
@@ -663,7 +663,7 @@ function JSONDBConnection(connectionString,verbose) {
 				form = null;
 			}
 			if(form.length===0) form=null;
-			console.log(form)
+			// console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
 			console.log("JSONDBConnection.getFormInstance.my_callback: end.");
@@ -683,7 +683,7 @@ function JSONDBConnection(connectionString,verbose) {
 				form = null;
 			}
 			if(form.length===0) form=null;
-			console.log(form)
+			// console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
 			console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: end.");
