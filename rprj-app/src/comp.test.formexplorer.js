@@ -236,11 +236,13 @@ class FormExplorer extends React.Component {
             // this.myobj = myobj
             const dbename = myobj.getDBEName()
             const formName = this.be.getFormNameByDBEName(dbename);
+            this.ls.setValue("dbename",dbename);
             this.ls.setValue("selectedClassname",formName);
             this.ls.setValue("myobj",myobj);
             this.setState({
                 debug_form: myobj!==null ? myobj.to_string() : "--",
                 selectedClassname: formName,
+                dbename: dbename,
                 myobj: myobj,
                 server_response_0: jsonObj[0],
                 server_response_1: myobj.to_string()
