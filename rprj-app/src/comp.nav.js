@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { RLocalStorage } from './comp.ls';
 
 class RNav extends React.Component {
     constructor(props) {
@@ -14,6 +15,8 @@ class RNav extends React.Component {
             ,user_fullname: props.user_fullname
         }
 
+        this.ls = new RLocalStorage("RNav");
+
         // this.be = new BackEndProxy(this.state.endpoint);
         this.renderProfile = this.renderProfile.bind(this);
 
@@ -26,6 +29,7 @@ class RNav extends React.Component {
         this.btnLogout = this.btnLogout.bind(this);
 
         this.theme_handleChange = this.theme_handleChange.bind(this);
+        this.clean_ls_handleChange = this.clean_ls_handleChange.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -39,6 +43,10 @@ class RNav extends React.Component {
         if(this.props.user_fullname !== prevProps.user_fullname) {
             this.setState({user_fullname: this.props.user_fullname})
         }
+    }
+
+    clean_ls_handleChange() {
+        this.ls.cleanAll();
     }
 
     default_handleSubmit(event) {
@@ -107,6 +115,11 @@ class RNav extends React.Component {
                                         </div>
                                     </form>
                                 </li>
+                                <li class="dropdown-item">
+                                    <form onSubmit={this.default_handleSubmit} >
+                                        <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
+                                    </form>
+                                </li>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
@@ -125,6 +138,11 @@ class RNav extends React.Component {
                                 <input class="form-check-input" type="checkbox" id="dark_theme03" name="dark_theme"
                                         onChange={this.theme_handleChange} checked={this.state.dark_theme} />
                                 </div>
+                            </form>
+                        </li>
+                        <li class="dropdown-item d-md-block d-lg-none">
+                            <form onSubmit={this.default_handleSubmit} >
+                                <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                             </form>
                         </li>
                         <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
@@ -158,6 +176,11 @@ class RNav extends React.Component {
                                     </div>
                                 </form>
                             </li>
+                            <li class="dropdown-item">
+                                <form onSubmit={this.default_handleSubmit} >
+                                    <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
+                                </form>
+                            </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
@@ -179,6 +202,11 @@ class RNav extends React.Component {
                                     onClick={this.stop_propagation} onChange={this.theme_handleChange}
                                     checked={this.state.dark_theme} />
                             </div>
+                        </form>
+                    </li>
+                    <li class="dropdown-item d-md-block d-lg-none">
+                        <form onSubmit={this.default_handleSubmit} >
+                            <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                         </form>
                     </li>
                     <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
