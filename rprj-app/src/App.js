@@ -41,14 +41,9 @@ class App extends Component {
 
     // Local Storage
     this.ls = new RLocalStorage("App");
-    const ls_endpoint = this.ls.getValue("endpoint");
-    if(ls_endpoint!==null && ls_endpoint!==this.state.endpoint) {
-      this.setState({endpoint: ls_endpoint});
-    }
-    const ls_dark_theme = this.ls.getValue("dark_theme");
-    if(ls_dark_theme!==null && ls_dark_theme!==this.state.dark_theme) {
-      this.setState({dark_theme: ls_dark_theme});
-    }
+    const mystate = this.ls.getMyState();
+    console.log("App.constructor: mystate="+JSON.stringify(mystate));
+    this.setState(mystate);
 
     this.be = new BackEndProxy(this.state.endpoint);
 
@@ -107,6 +102,8 @@ class App extends Component {
 
   render() {
     const endpoints = app_cfg.endpoints;
+    const dark_theme = this.state.dark_theme;
+    console.log("App.render: dark_theme="+dark_theme);
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
