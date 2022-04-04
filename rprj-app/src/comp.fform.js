@@ -199,23 +199,22 @@ class FForm extends React.Component {
                         )
                     : "text"; // n=number s=string d=datetime
         const fieldclass = (
-                (field.cssClass>'' ? field.cssClass : '') + ' '
-                + (is_readonly ? 'form-control-plaintext' : '')
+                (field.cssClass>'' ? field.cssClass : '') + ' ' +
+                (is_readonly ?
+                    'form-control-plaintext' + (this.state.dark_theme ? ' form-control-plaintext-dark' : '')
+                    : '')
             ).trim();
-        // if(field.type=='d') {
-        //     console.log("FForm.renderFField: state="+JSON.stringify(this.state));
-        //     console.log("FForm.renderFField: "+fieldname+"="+this.state[fieldname]);
-        // }
         return (
             <div class="row">
                 <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start">
+                <div class="col text-start align-top">
                     {   class_unknown ?
                         <p>{field._classname}</p>
                         :
-                        <input id={fieldname} name={fieldname} type={fieldtype}
+                        <input id={fieldname} name={fieldname} type={fieldtype} size={field.size}
                                 class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                                value={this.state[fieldname] ? this.state[fieldname].replace(" ","T") : this.state[fieldname]} size={field.size}
+                                value={this.state[fieldname] && field.type==='d' ?
+                                        this.state[fieldname].replace(" ","T") : this.state[fieldname] }
                             onChange={this.default_handleChange} />
                     }
                 </div>
