@@ -550,7 +550,13 @@ function getFormInstanceByDBEName($aClassname) {
 	$ret = $formulator->getInstanceByDBEName($aClassname);
 	return $ret;
 }
-
+function getRootObj() {
+	global $root_obj_id;
+	// echo "root_obj_id: $root_obj_id\n";
+	$ret = fullObjectById($root_obj_id,false);
+	// echo "ret: ".json_encode($ret)."\n";
+	return $ret;
+}
 
 
 $json_response = array();

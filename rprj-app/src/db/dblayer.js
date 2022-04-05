@@ -621,6 +621,27 @@ function JSONDBConnection(connectionString,verbose) {
 	virtual string getDBSchema(string language="python");
 	*/
 
+	this.getRootObj = function(a_callback) {
+		console.log("JSONDBConnection.getRootObj: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getRootObj.my_cb: start.");
+			var myobj = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.getRootObj.my_cb: end.");
+		}
+		this._sendRequest('getRootObj', [], my_cb.bind(self));
+		console.log("JSONDBConnection.getRootObj: end.");
+	};
 
 	this.getDBE2FormMapping = function(a_callback) {
 		var self = this

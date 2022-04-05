@@ -219,7 +219,8 @@ class FForm extends React.Component {
                     {   class_unknown ?
                         <p>{field._classname}</p>
                         :
-                        <input id={fieldname} name={fieldname} type={fieldtype} size={field.size}
+                        <input id={fieldname} name={fieldname} type={fieldtype}
+                                // size={field.size}
                                 class={fieldclass} readOnly={is_readonly} placeholder={field.title}
                                 value={this.state[fieldname] && field.type==='d' ?
                                         this.state[fieldname].replace(" ","T") : this.state[fieldname] }

@@ -100,6 +100,9 @@ class BackEndProxy {
         this.con.getFormInstanceByDBEName(aclassname,a_callback);
     }
 
+    getRootObj(a_callback) {
+        this.con.getRootObj(a_callback);
+    }
 
     // ******************** DBConnection
 

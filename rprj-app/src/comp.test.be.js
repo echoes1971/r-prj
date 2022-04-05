@@ -202,6 +202,7 @@ class TestBE extends React.Component {
         this.onFullObjByID_callback = this.onFullObjByID_callback.bind(this);
         this.btnFullObjByID = this.btnFullObjByID.bind(this);
         this.btnFullObjByName = this.btnFullObjByName.bind(this);
+        this.btnRootObject = this.btnRootObject.bind(this);
     }
 
     componentDidMount() {
@@ -414,6 +415,10 @@ class TestBE extends React.Component {
         this.be.fullObjectByName(this.state.dbe_name, this.state.ignore_deleted, this.onFullObjByID_callback)
     }
 
+    btnRootObject() {
+        this.be.getRootObj(this.onObjByID_callback)
+    }
+
     render() {
         const endpoints = this.endpoints;
         const dark_theme = this.state.dark_theme;
@@ -452,7 +457,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse show" id="test_formexplorer">
+                <div class="row collapse multi-collapse" id="test_formexplorer">
                     <div class={"col card card-body" + (dark_theme ? " card-dark" : "")}>
                         <FormExplorer endpoint={this.state.endpoint} dark_theme={dark_theme} />
                     </div>
@@ -461,7 +466,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse" id="test_dblayer">
+                <div class="row collapse multi-collapse show" id="test_dblayer">
                     <div class={"component card card-body" + (dark_theme ? " card-dark" : "")}>
                         <div class="row">
                             <div class="col text-middle fw-bold">DBLayer</div>
@@ -470,8 +475,9 @@ class TestBE extends React.Component {
                             <div class="col">&nbsp;</div>
                         </div>
                         <div class="row border rounded p-2 m-2">
-                            <div class="col text-start fw-bold">
+                            <div class="col-2 text-start fw-bold">
                                 <Ping onPingServer={this.btnPingServer} />
+                                <button class="btn btn-secondary m-2" onClick={this.btnRootObject}>Root Object</button>
                             </div>
 
                             <div class="col border rounded p-2 m-2">
