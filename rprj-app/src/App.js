@@ -141,7 +141,7 @@ class App extends Component {
           this.renderTest()
             :
             (
-              <span>Lippa</span>
+              <span><img src="logo512_2.png" /><img src="logo192_2.png" /></span>
             )
           }
           

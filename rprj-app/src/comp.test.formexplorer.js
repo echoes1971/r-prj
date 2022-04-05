@@ -393,7 +393,7 @@ class FormExplorer extends React.Component {
                         <div class="col">
                             <div class="component border rounded">
                                 <div class="row">
-                                    <div class="col-1 fw-bold">Debug Form</div>
+                                    <div class="col-1 fw-bold d-none d-lg-block">Debug Form</div>
                                     <div class="col text-start"><pre>{this.state.debug_form}</pre></div>
                                 </div>
                             </div>

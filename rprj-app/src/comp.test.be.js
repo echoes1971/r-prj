@@ -477,7 +477,9 @@ class TestBE extends React.Component {
                         <div class="row border rounded p-2 m-2">
                             <div class="col-2 text-start fw-bold">
                                 <Ping onPingServer={this.btnPingServer} />
-                                <button class="btn btn-secondary m-2" onClick={this.btnRootObject}>Root Object</button>
+                                <form onSubmit={this.default_handleSubmit}>
+                                    <button class="btn btn-secondary m-2" onClick={this.btnRootObject}>Root Object</button>
+                                </form>
                             </div>
 
                             <div class="col border rounded p-2 m-2">
@@ -517,13 +519,13 @@ class TestBE extends React.Component {
                                 <form onSubmit={this.default_handleSubmit}>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-3 fw-bold text-end">ID</div>
+                                            <div class="col fw-bold text-end">ID</div>
                                             <div class="col text-start">
                                                 <input id="dbeid" name="dbeid" value={this.state.dbeid} onChange={this.default_handleChange} />
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-3 fw-bold text-end">Name</div>
+                                            <div class="col fw-bold text-end">Name</div>
                                             <div class="col text-start">
                                                 <input id="dbe_name" name="dbe_name" value={this.state.dbe_name} onChange={this.default_handleChange} />
                                             </div>

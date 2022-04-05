@@ -100,7 +100,7 @@ class RNav extends React.Component {
                         {/* Visible ONLY on LG screens */}
                         <li class="nav-item dropdown d-none d-lg-block">
 
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle rounded" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {user_fullname}
                             </a>
 
