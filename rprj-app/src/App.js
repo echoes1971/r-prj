@@ -45,6 +45,12 @@ class App extends Component {
     console.log("App.constructor: mystate="+JSON.stringify(mystate));
     this.setState(mystate);
 
+    if("dark_theme" in mystate) {
+      this._addDarkThemeToBody(mystate["dark_theme"]);
+    } else {
+      this._addDarkThemeToBody(this.state.dark_theme);
+    }
+
     this.be = new BackEndProxy(this.state.endpoint);
 
     this.fetchLoggedUser();
@@ -95,9 +101,17 @@ class App extends Component {
     this.be.logout(this.on_logout_callback);
   }
 
+  _addDarkThemeToBody(dark_theme) {
+    if(dark_theme) {
+      document.body.classList.add('App-dark');
+    } else {
+      document.body.classList.remove('App-dark');
+    }
+  }
   onTheme(dark_theme) {
     this.ls.setValue("dark_theme", dark_theme);
-    this.setState({dark_theme: dark_theme})
+    this.setState({dark_theme: dark_theme});
+    this._addDarkThemeToBody(dark_theme);
   }
 
   parsePath() {
