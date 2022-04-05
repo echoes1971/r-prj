@@ -48,10 +48,12 @@ class FormExplorer extends React.Component {
 
         this.onLoadForm_callback = this.onLoadForm_callback.bind(this);
         this.onLoad_callback = this.onLoad_callback.bind(this);
-        this.btnLoad = this.btnLoad.bind(this);
+        this.btnLoadObject = this.btnLoadObject.bind(this);
 
         this.dbe2form_cb = this.dbe2form_cb.bind(this);
         this.btnDBE2Form = this.btnDBE2Form.bind(this);
+
+        this.btnLoadDBE = this.btnLoadDBE.bind(this);
     }
 
     componentDidMount() {
@@ -259,10 +261,47 @@ class FormExplorer extends React.Component {
         }
         console.log("FormExplorer.onLoad_callback: end.");
     }
-    btnLoad() {
+    btnLoadObject() {
         const obj_id = this.state.obj_id
         const ignore_deleted = false
         this.be.fullObjectById(obj_id, ignore_deleted, this.onLoad_callback)
+    }
+
+    btnLoadDBE() {
+        const obj_id = this.state.obj_id
+        if(!(obj_id.length>0)) return;
+        const dbename = this.state.dbename
+        const search = new DBEntity(dbename)
+        search.setValue('id',obj_id)
+
+		var self = this
+		var my_cb = (server_messages, dbelist) => {
+			console.log("TestBE.btnLoadDBE.my_cb: start.");
+            this.setState({server_response_0: server_messages, server_response_1: JSON.stringify(dbelist)})
+            const myobj = dbelist!==null && dbelist.length==1 ? dbelist[0] : null
+            if(myobj===null) {
+                console.log("TestBE.btnLoadDBE.my_cb: end.")
+                return
+            }
+            const dbename = myobj.getDBEName()
+            const formName = this.be.getFormNameByDBEName(dbename);
+            this.ls.setValue("dbename",dbename);
+            this.ls.setValue("selectedClassname",formName);
+            this.ls.setValue("myobj",myobj);
+            this.setState({
+                selectedClassname: formName,
+                dbename: dbename,
+                myobj: myobj
+                ,debug_form: myobj.to_string()
+                ,server_response_0: server_messages
+                ,server_response_1: JSON.stringify(dbelist)
+            })
+            console.log("TestBE.btnLoadDBE.my_cb: end.");
+		}
+        my_cb = my_cb.bind(self)
+
+        // search(dbe, uselike, caseSensitive, orderBy, a_callback)
+        this.be.search(search,false,false,'id',my_cb)
     }
 
     onSave(values) {
@@ -316,7 +355,10 @@ class FormExplorer extends React.Component {
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
                             <label for="obj_id" /><input id="obj_id" name="obj_id" value={this.state.obj_id} onChange={this.default_handleChange} />
-                            <button class="btn btn-secondary" onClick={this.btnLoad}>Load</button>
+                            <div class="btn-group m-1" role="group" aria-label="Test Modules">
+                                <button class="btn btn-secondary" onClick={this.btnLoadDBE}>Load DBE</button>
+                                <button class="btn btn-secondary" onClick={this.btnLoadObject}>Load Object</button>
+                            </div>
                         </form>
                     </div>
 
