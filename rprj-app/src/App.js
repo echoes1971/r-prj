@@ -100,17 +100,37 @@ class App extends Component {
     this.setState({dark_theme: dark_theme})
   }
 
+  parsePath() {
+    console.log("App.parsePath: root_path="+app_cfg.root_path);
+    console.log("App.parsePath: window.location.pathname="+window.location.pathname);
+    const mypath = window.location.pathname.substring(app_cfg.root_path.length)
+    console.log("App.parsePath: mypath="+mypath);
+    return mypath.split("/");
+  }
+  renderTest() {
+    return (
+      <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
+    );
+  }
   render() {
     const endpoints = app_cfg.endpoints;
     const dark_theme = this.state.dark_theme;
     console.log("App.render: dark_theme="+dark_theme);
+    const mypath = this.parsePath()
+    console.log("App.render: mypath="+JSON.stringify(mypath));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
-        <div class="container-fluid p-3">
-          <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
-            endpoints={endpoints} />
+        <div class="container-fluid p-3">{
+          mypath[0]=="test" ?
+          this.renderTest()
+            :
+            (
+              <span>Lippa</span>
+            )
+          }
+          
         </div>
       </div>
     );
