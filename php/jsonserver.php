@@ -185,10 +185,14 @@ function search($dbe,$uselike,$caseSensitive,$orderby,$ignore_deleted = true,$fu
 	
 	// 2011.04.27: start.
 	// 2011.04.27: opened for public objects
-	if(true || _isAuthorized()) {
+	// 2022.04.05: start.
+	// 2022.04.05: closed for DBEUser, DBEGroup and DBELog
+	if(!in_array($dbe->getTypeName(),["DBEUser","DBEGroup","DBELog"]) || _isAuthorized()) {
+//	if(true || _isAuthorized()) {
+	// 2022.04.05: end.
 //	if(_isAuthorized()) {
 	// 2011.04.27: end.
-		$dbmgr->setVerbose(false);
+		$dbmgr->setVerbose(true);
 		$listadbe = $dbmgr->search($dbe,$uselike,$caseSensitive,$orderby,$ignore_deleted,$full_object);
 		$dbmgr->setVerbose(false);
 	} else {
