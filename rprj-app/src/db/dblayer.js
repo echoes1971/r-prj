@@ -85,6 +85,11 @@ function DBEntity(dbename,tablename) {
 		if(typenameIndex>0) this.dbename=rs.getValue(row,typenameIndex);
 		var tablenameIndex = rs.getColumnIndex('_tablename');
 		if(tablenameIndex>0) this.tablename=rs.getValue(row,tablenameIndex);
+		var keysIndex = rs.getColumnIndex('_keys');
+		if(keysIndex>0) this.keys=rs.getValue(row,keysIndex);
+		// [{"colonna_fk":"owner","tabella_riferita":"users","colonna_riferita":"id"},....]
+		var fkIndex = rs.getColumnIndex('_fk');
+		if(fkIndex>0) this._fks=rs.getValue(row,fkIndex);
 		for(var col=0; col<rs.getNumColumns(); col++) {
 			var colName = rs.getColumnName(col);
 			if(colName[0]==='_') continue;
@@ -643,6 +648,28 @@ function JSONDBConnection(connectionString,verbose) {
 		console.log("JSONDBConnection.getRootObj: end.");
 	};
 
+	this.getDBEInstance = function(aclassname, a_callback) {
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getDBEInstance.my_cb: start.");
+			console.log("JSONDBConnection.getDBEInstance.my_cb: jsonObj[1]="+JSON.stringify(jsonObj[1]));
+			var mydbe = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					console.log("JSONDBConnection.getDBEInstance.my_cb: myrs="+myrs.to_string());
+					mydbe = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					mydbe.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, mydbe);
+			console.log("JSONDBConnection.getDBEInstance.my_cb: end.");
+		}
+		this._sendRequest('getDBEInstance', [aclassname], my_cb.bind(self));
+	}
+
 	this.getDBE2FormMapping = function(a_callback) {
 		var self = this
 		var my_callback = (jsonObj) => {
@@ -775,22 +802,22 @@ function DBMgr(_connection, verbose) {
 		if(on_my_callback!=null) on_my_callback();
 		return this.con.dbe;
 	}
-	this.Select = function(dbename,tablename,searchString, on_my_callback) {
-		this.con.Select(dbename,tablename,searchString);
-		if(on_my_callback!=null) on_my_callback();
-		return this.con.dbelist;
-	}
-	this.Search = function(dbe, uselike, caseSensitive, orderBy, a_callback) {
-		var self = this
-		var my_callback = (jsonObj, dbelist) => {
-			console.log("DBMgr.Search.my_callback: start.");
+	this.Select = function(dbename,tablename,searchString, a_callback) {
+		// var self = this
+		var my_cb = (jsonObj, dbelist) => {
+			// console.log("DBMgr.Select.my_cb: start.");
 			const server_messages = jsonObj[0];
 			a_callback(server_messages,dbelist);
-			console.log("DBMgr.Search.my_callback: end.");
+			// console.log("DBMgr.Select.my_cb: end.");
 		}
-		this.con.Search(dbe,uselike,caseSensitive,orderBy, my_callback);
-		// if(on_my_callback!=null) on_my_callback();
-		// return this.con.dbelist;
+		this.con.Select(dbename,tablename,searchString, my_cb);
+	}
+	this.Search = function(dbe, uselike, caseSensitive, orderBy, a_callback) {
+		var my_cb = (jsonObj, dbelist) => {
+			const server_messages = jsonObj[0];
+			a_callback(server_messages,dbelist);
+		}
+		this.con.Search(dbe,uselike,caseSensitive,orderBy, my_cb);
 	}
 	// **************** Proxy Connections: end. *********************
 	
