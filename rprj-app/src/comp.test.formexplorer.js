@@ -42,7 +42,8 @@ class FormExplorer extends React.Component {
         this.select_handleChange = this.select_handleChange.bind(this);
 
         this.forminstance_callback = this.forminstance_callback.bind(this);
-        this.btnLoadFForm = this.btnLoadFForm.bind(this);
+        this.btnDebugFForm = this.btnDebugFForm.bind(this);
+        this.btnDebugDBE = this.btnDebugDBE.bind(this);
 
         this.onSave = this.onSave.bind(this);
         this.onError = this.onError.bind(this);
@@ -137,10 +138,14 @@ class FormExplorer extends React.Component {
                 ,server_response_1: "" + s.join("\n")
             })
         } else {
+            this.ls.removeValue("obj_id")
+            this.ls.removeValue("myobj")
             this.setState({
                 selectedClassname: classname
                 ,debug_form: "" + s.join("\n")
-            })
+                ,obj_id: null
+                ,myobj: null
+                })
         }
         console.log("FormExplorer.forminstance_callback: end.");
     }
@@ -164,9 +169,13 @@ class FormExplorer extends React.Component {
         }
         // this.be.getFormInstance(value,this.forminstance_callback);
     }
-    btnLoadFForm() {
-        const formname = this.state.selectedClassname;
-        this.be.getFormInstance(formname,this.forminstance_callback);
+    btnDebugFForm() {
+        const classname = this.state.selectedClassname;
+        this.be.getFormInstance(classname,this.forminstance_callback);
+    }
+    btnDebugDBE() {
+        const classname = this.state.dbename;
+        this.be.getDBEInstance(classname,this.forminstance_callback);
     }
 
     dbe2form_cb(jsonObj, dbe2formMapping) {
@@ -362,7 +371,8 @@ class FormExplorer extends React.Component {
                                 )}
                             </select>
                             <div class="btn-group m-1" role="group" aria-label="Test Modules">
-                                <button class="btn btn-secondary" onClick={this.btnLoadFForm}>Load FForm</button>
+                                <button class="btn btn-secondary" onClick={this.btnDebugDBE}>Debug DBE</button>
+                                <button class="btn btn-secondary" onClick={this.btnDebugFForm}>Debug FForm</button>
                             </div>
                         </form>
                     </div>
