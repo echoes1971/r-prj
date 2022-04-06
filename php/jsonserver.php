@@ -82,12 +82,14 @@ function _dbeToJson(&$dbe) {
   $tmpArray["_typeName"] = $dbe->getTypeName();
   $tmpArray["_typename"] = $dbe->getTypeName();
   $tmpArray["_tablename"] = $dbe->getTableName();
+  $tmpArray["_keys"] = $dbe->getKeys();
+  $tmpArray["_fk"] = $dbe->getFK();
   $dict = $dbe->getValuesDictionary();
   $chiavi = array_keys($dict);
-  foreach( array_keys($dict) as $k ) {
+  foreach(array_keys($dict) as $k ) {
 	$v = $dict[$k];
 	if ($v===null) continue;
-	if( is_string($v) && $v!='0000-00-00 00:00:00' ) {
+	if(is_string($v) && $v!='0000-00-00 00:00:00' ) {
 		$_strencoding = mb_detect_encoding($v);
 // 		echo "_dbeToJson: encoding=$_strencoding,".substr($v,0,40)."\n";
 		if($_strencoding=='ASCII' || $_strencoding=='UTF-8')
@@ -108,7 +110,7 @@ function _JsonToDbe(&$dbejson) {
     $aClassname = $dbejson[0];
 
 	$struttura = $dbejson[1];
-	foreach( $struttura as $k=>$obj ) {
+	foreach($struttura as $k=>$obj ) {
 		$valori[$k] = $obj;
 	}
     $ret = $myfactory->getInstance( $aClassname,
@@ -439,7 +441,16 @@ function Download($uuid,$view_thumb) {
 	return $ret;
 }
 
+function getDBEInstance($aclassname) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+	$dbe = $dbmgr->getInstance($aclassname);
+	if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
+	$dbmgr->setVerbose(false);
 
+	return $dbe==null ? array() : array(_dbeToJson($dbe));
+}
 function getDBE2FormMapping() {
 	global $formulator;
 	$ret = $formulator->getDBE2FormMapping();
@@ -535,8 +546,9 @@ function _form2dictionary($form) {
 		'fields' => $fields,
 
 		'groupNames' => $form->getGroupNames(),
-		'groups' => $groups
+		'groups' => $groups,
 
+		'detailForms' => is_a($form,"FMasterDetail") ? $form->getDetailForms() : []
 		// readValuesFromArray
 	);
 }
