@@ -101,7 +101,7 @@ class FForm extends React.Component {
         this.obj2state();
         const detailTitle = form.detailTitle
         this.setState({
-        //     detailIcon: form.detailIcon,
+            detailIcon: form.detailIcon,
             detailTitle: detailTitle
         })
         console.log("FForm.forminstance_callback: end.")
@@ -428,7 +428,63 @@ class FForm extends React.Component {
         );
     }
 
+    icon2emoji(detail_icon) {
+        var ret = ('');
+        switch(detail_icon) {
+            case 'icons/user.png':
+                ret = (<span>&#128100;</span>)
+                break
+            case 'icons/group_16x16.gif':
+                ret = (<span>&#128101;</span>)
+                break
+            case 'icons/text-x-log.png':
+                // ret = (<span>&#128195;</span>)
+                ret = (<span>&#128220;</span>)
+                break
+            case 'icons/company_16x16.gif':
+                ret = (<span>&#127981;</span>)
+                break
+            case 'icons/people.png':
+                ret = (<span>&#129333;</span>)
+                break
+            case 'icons/event_16x16.png':
+                ret = (<span>&#128198;</span>)
+                break
+            case 'icons/file_16x16.gif':
+                ret = (<span>&#128196;</span>)
+                break
+            case 'icons/folder_16x16.gif':
+                ret = (<span>&#128193;</span>)
+                break
+            case 'icons/link_16x16.gif':
+                ret = (<span>&#128279;</span>)
+                break
+            case 'icons/note_16x16.gif':
+                ret = (<span>&#128466;</span>)
+                break
+            case 'icons/page_16x16.gif':
+                ret = (<span>&#128195;</span>)
+                break
+            case 'icons/news.png':
+                ret = (<span>&#128240;</span>)
+                break
+            case 'icons/project_16x16.gif':
+                ret = (<span>&#127959;</span>) // 128200
+                break
+            case 'icons/timetrack_16x16.gif':
+                ret = (<span>&#9201;</span>)
+                break
+            case 'icons/task_16x16.gif':
+                ret = (<span>&#9745;</span>)
+                break
+            default:
+                ret = (<span>&#9881;</span>)
+                break
+        }
+        return ret
+    }
     render() {
+        const detailIcon = this.state.detailIcon;
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
         const actions = this.renderActions();
@@ -438,7 +494,7 @@ class FForm extends React.Component {
         return (
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
-                    <div class="row text-center border-bottom"><div class="col fw-bold">{detailTitle}</div></div>
+                    <div class="row text-center border-bottom"><div class="col fw-bold">{this.icon2emoji(detailIcon)} {detailTitle}</div></div>
                     <div class="row"><div class="row">&nbsp;</div></div>
                     <div class="row">{actions}</div>
                     <div class="row"><div class="row">&nbsp;</div></div>
