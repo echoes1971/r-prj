@@ -1,6 +1,7 @@
 // Client
 import { DBMgr, JSONDBConnection } from './db/dblayer'
 
+
 /**
  * Back End Proxy
  * 
@@ -53,9 +54,9 @@ class BackEndProxy {
         this.con.execute(tablename,sql_string,a_callback);
     }
 
-    select(dbename,tablename,sql_string,a_callback) {
-        this.con.Select(dbename,tablename,sql_string,a_callback);
-    }
+    // select(dbename,tablename,sql_string,a_callback) {
+    //     this.con.Select(dbename,tablename,sql_string,a_callback);
+    // }
 
     // search(dbe, uselike, caseSensitive, orderBy, a_callback) {
     //     this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
@@ -75,6 +76,10 @@ class BackEndProxy {
     }
 
 
+    getDBEInstance(aclassname, a_callback) {
+        if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
+        this.con.getDBEInstance(aclassname,a_callback);
+    }
     getFormNameByDBEName(dbeName) {
         return this.dbe2formMapping[dbeName];
     }
@@ -109,6 +114,10 @@ class BackEndProxy {
     // getLoggedUser() {
     //     return this.dbmgr.getLoggedUser(this.do_nothing_callback);
     // }
+
+    select(dbename,tablename,sql_string,a_callback) {
+        this.dbmgr.Select(dbename,tablename,sql_string,a_callback);
+    }
 
     search(dbe, uselike, caseSensitive, orderBy, a_callback) {
         // this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
