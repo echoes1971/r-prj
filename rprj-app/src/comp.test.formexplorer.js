@@ -42,6 +42,7 @@ class FormExplorer extends React.Component {
         this.select_handleChange = this.select_handleChange.bind(this);
 
         this.forminstance_callback = this.forminstance_callback.bind(this);
+        this.btnLoadFForm = this.btnLoadFForm.bind(this);
 
         this.onSave = this.onSave.bind(this);
         this.onError = this.onError.bind(this);
@@ -129,11 +130,18 @@ class FormExplorer extends React.Component {
         const classname = form._classname;
         // console.log("FormExplorer.forminstance_callback: form._classname="+form._classname);
         // console.log("FormExplorer.forminstance_callback: classname="+classname);
-        this.setState({
-            selectedClassname: classname
-            ,server_response_0: jsonObj[0]
-            ,server_response_1: "" + s.join("\n")
-        })
+        if(jsonObj[0]>'') {
+            this.setState({
+                selectedClassname: classname
+                ,server_response_0: jsonObj[0]
+                ,server_response_1: "" + s.join("\n")
+            })
+        } else {
+            this.setState({
+                selectedClassname: classname
+                ,debug_form: "" + s.join("\n")
+            })
+        }
         console.log("FormExplorer.forminstance_callback: end.");
     }
     select_handleChange(event) {
@@ -155,6 +163,10 @@ class FormExplorer extends React.Component {
             this.setState({selectedClassname: selectedClassname})
         }
         // this.be.getFormInstance(value,this.forminstance_callback);
+    }
+    btnLoadFForm() {
+        const formname = this.state.selectedClassname;
+        this.be.getFormInstance(formname,this.forminstance_callback);
     }
 
     dbe2form_cb(jsonObj, dbe2formMapping) {
@@ -349,6 +361,9 @@ class FormExplorer extends React.Component {
                                 }
                                 )}
                             </select>
+                            <div class="btn-group m-1" role="group" aria-label="Test Modules">
+                                <button class="btn btn-secondary" onClick={this.btnLoadFForm}>Load FForm</button>
+                            </div>
                         </form>
                     </div>
 
@@ -393,7 +408,7 @@ class FormExplorer extends React.Component {
                         <div class="col">
                             <div class="component border rounded">
                                 <div class="row">
-                                    <div class="col-1 fw-bold d-none d-lg-block">Debug Form</div>
+                                    <div class="col fw-bold d-none d-lg-block">Debug Form</div>
                                     <div class="col text-start"><pre>{this.state.debug_form}</pre></div>
                                 </div>
                             </div>
