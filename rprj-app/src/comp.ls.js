@@ -20,6 +20,11 @@ class RLocalStorage {
         localStorage.setItem(k1,JSON.stringify(v));
     }
 
+    removeValue(k) {
+        const k1 = this.myid + '.' + k;
+        localStorage.removeItem(k1);
+    }
+
     /*
         Returns all keys for this.myid
     */
