@@ -223,7 +223,8 @@ class FForm extends React.Component {
                                 // size={field.size}
                                 class={fieldclass} readOnly={is_readonly} placeholder={field.title}
                                 value={this.state[fieldname] && field.type==='d' ?
-                                        this.state[fieldname].replace(" ","T") : this.state[fieldname] }
+                                            ( fieldtype=='time' ? this.state[fieldname].split(" ")[1] : this.state[fieldname].replace(" ","T") )
+                                        : this.state[fieldname] }
                             onChange={this.default_handleChange} />
                     }
                 </div>
