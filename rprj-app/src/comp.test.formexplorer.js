@@ -118,6 +118,10 @@ class FormExplorer extends React.Component {
         var s = [];
         for(const property in form) {
             // if(property==='fields' || property==='groups') continue;
+            if(typeof(form[property])==='function') {
+                s.push(property +"()");
+                continue
+            }
             s.push(property +": "+JSON.stringify(form[property]));
         }
         s.push('groups:')
@@ -299,7 +303,7 @@ class FormExplorer extends React.Component {
 		var my_cb = (server_messages, dbelist) => {
 			console.log("TestBE.btnLoadDBE.my_cb: start.");
             this.setState({server_response_0: server_messages, server_response_1: JSON.stringify(dbelist)})
-            const myobj = dbelist!==null && dbelist.length==1 ? dbelist[0] : null
+            const myobj = dbelist!==null && dbelist.length===1 ? dbelist[0] : null
             if(myobj===null) {
                 console.log("TestBE.btnLoadDBE.my_cb: end.")
                 return
