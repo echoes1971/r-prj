@@ -203,6 +203,7 @@ class TestBE extends React.Component {
         this.btnFullObjByID = this.btnFullObjByID.bind(this);
         this.btnFullObjByName = this.btnFullObjByName.bind(this);
         this.btnRootObject = this.btnRootObject.bind(this);
+        this.btnGetChilds = this.btnGetChilds.bind(this);
     }
 
     componentDidMount() {
@@ -419,6 +420,14 @@ class TestBE extends React.Component {
         this.be.getRootObj(this.onObjByID_callback)
     }
 
+    btnGetChilds() {
+        if(this.be.root_obj===null) {
+            this.setState({server_response_0: "ATTENTION: Click on 'Root Object' first!!!",server_response_1:'--'})
+            return
+        }
+        this.be.getChilds(this.be.root_obj,true,this.on_select_callback);
+    }
+
     render() {
         const endpoints = this.endpoints;
         const dark_theme = this.state.dark_theme;
@@ -478,7 +487,10 @@ class TestBE extends React.Component {
                             <div class="col-2 text-start fw-bold">
                                 <Ping onPingServer={this.btnPingServer} />
                                 <form onSubmit={this.default_handleSubmit}>
-                                    <button class="btn btn-secondary m-2" onClick={this.btnRootObject}>Root Object</button>
+                                    <div class="btn-group-vertical m-2">
+                                        <button class="btn btn-secondary" onClick={this.btnRootObject}>Root Object</button>
+                                        <button class="btn btn-secondary" onClick={this.btnGetChilds}>Get Childs</button>
+                                    </div>
                                 </form>
                             </div>
 

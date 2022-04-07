@@ -569,6 +569,76 @@ function getRootObj() {
 	// echo "ret: ".json_encode($ret)."\n";
 	return $ret;
 }
+function getChilds($current_obj,$without_index_page=true) {
+	global $dbmgr;
+	global $formulator;
+
+	$my_obj_id = $current_obj->getValue('id');
+	$form = $formulator->getInstanceByDBEName($current_obj->getTypeName());
+	// Childs
+	$search = new DBEObject();
+	$search->setValue('father_id',$my_obj_id);
+	$_menu_list_tmp = $dbmgr->search($search,$uselike=0);
+	$_menu_list=array();
+	$_menu_list_ids=array();
+	foreach($_menu_list_tmp as $_item) {
+		if($without_index_page && $_item->getValue('name')=='index') continue;
+		if(in_array($_item->getValue('id'),$_menu_list_ids)) continue;
+		$_menu_list_ids[]=$_item->getValue('id');
+		$_menu_list[]=$_item;
+	}
+	// Linked Childs
+	for($i=0; $i<$form->getDetailFormsCount(); $i++) {
+		$childForm = $form->getDetail($i);
+		$childDbe = $childForm->getDBE();
+		$childDbe->readFKFrom($current_obj);
+		$tmp = $dbmgr->search($childDbe,$uselike=0);
+		foreach($tmp as $_linked_child) {
+			if($without_index_page && $_linked_child->getValue('name')=='index') continue;
+			if($_linked_child===null) continue;
+			if(in_array($_linked_child->getValue('id'),$_menu_list_ids)) continue;
+			$_menu_list_ids[]=$_linked_child->getValue('id');
+			$_menu_list[]=$_linked_child;
+		}
+	}
+	// Sorting folder items...
+	$menu_list=array();
+	$menu_list_ids=array();
+	if($current_obj->getValue('childs_sort_order')>'') {
+		$childs_sort_order=preg_split("/,/",$current_obj->getValue('childs_sort_order'));
+		foreach($childs_sort_order as $_oid) {
+			for($_i=0; $_i<count($_menu_list); $_i++) {
+				if($_menu_list[$_i]->getValue('id')!=$_oid) continue;
+				$menu_list[]=$_menu_list[$_i];
+				$menu_list_ids[]=$_menu_list[$_i]->getValue('id');
+				array_splice($_menu_list, $_i,1);
+				break;
+			}
+		}
+		foreach($_menu_list as $_item) if(!in_array($_item->getValue('id'),$menu_list_ids)) $menu_list[]=$_item;
+	} else {
+		$menu_list=$_menu_list;
+	}
+	
+    $retArray=array();
+    foreach($menu_list as $mydbe ) {
+        $retArray[]=$mydbe->getValuesDictionary();
+    }
+	return $retArray;
+	// return $menu_list;
+}
+
+// **** DEBUG: start.
+if(false) {
+	$my_root = $dbmgr->fullObjectById($root_obj_id,false);
+	echo "root:" . $my_root->to_string() . "\n";
+	// echo "root:" . $json->encodeUnsafe($my_root) . "\n";
+	$childs = getChilds($my_root);
+	foreach($childs as $c) {
+		echo "- " . $c->to_string() . "\n";
+	}
+}
+// **** DEBUG: end.
 
 
 $json_response = array();

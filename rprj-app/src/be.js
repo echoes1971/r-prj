@@ -14,6 +14,8 @@ class BackEndProxy {
 
         this.con = new JSONDBConnection(endpoint, true);
         this.dbmgr = new DBMgr(this.con);
+        this.dbe2formMapping = {}
+        this.root_obj = null
     }
 
     do_nothing_callback() {
@@ -85,13 +87,13 @@ class BackEndProxy {
     }
     getDBE2FormMapping(a_callback) {
 		var self = this
-		var my_callback = (jsonObj, dbe2formMapping) => {
-			console.log("BackEndProxy.getDBE2FormMapping.my_callback: start.");
+		var my_cb = (jsonObj, dbe2formMapping) => {
+			console.log("BackEndProxy.getDBE2FormMapping.my_cb: start.");
 			self.dbe2formMapping = dbe2formMapping;
 			a_callback(jsonObj, dbe2formMapping);
-			console.log("BackEndProxy.getDBE2FormMapping.my_callback: end.");
+			console.log("BackEndProxy.getDBE2FormMapping.my_cb: end.");
 		}
-        this.con.getDBE2FormMapping(my_callback.bind(self));
+        this.con.getDBE2FormMapping(my_cb.bind(self));
     }
     getAllFormClassnames(a_callback) {
         this.con.getAllFormClassnames(a_callback);
@@ -106,7 +108,21 @@ class BackEndProxy {
     }
 
     getRootObj(a_callback) {
-        this.con.getRootObj(a_callback);
+        if(this.root_obj!==null) {
+            a_callback(['',''], this.root_obj);
+            return
+        }
+		var self = this
+		var my_cb = (jsonObj, myobj) => {
+			console.log("BackEndProxy.getRootObj.my_cb: start.");
+			self.root_obj = myobj;
+			a_callback(jsonObj, myobj);
+			console.log("BackEndProxy.getRootObj.my_cb: end.");
+		}
+        this.con.getRootObj(my_cb);
+    }
+    getChilds(dbe, without_index_page, a_callback) {
+        this.con.getChilds(dbe, without_index_page, a_callback)
     }
 
     // ******************** DBConnection
