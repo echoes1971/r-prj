@@ -604,7 +604,6 @@ class FUuid extends FString {
 }
 class FPassword extends FString {
 	var $old_pwd;
-
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		if(array_key_exists($prefix.'new_'.$this->aNomeCampo,$aArray)
 			&& array_key_exists($prefix.'new2_'.$this->aNomeCampo,$aArray)
@@ -705,7 +704,6 @@ class FFileField extends FField {
 	function render(&$dbmgr=null) {
 		return $this->render_view(). '&nbsp;' . campoGenerico($tipoCampo='file', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 	}
-
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		parent::readValueFromArray($aArray,$prefix);
 // 		echo "root_directory: " . $GLOBALS['root_directory'] . "<br>\n";
