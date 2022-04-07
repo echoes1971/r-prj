@@ -34,7 +34,7 @@ $dbschema_type_list=array();
 class DBEDBVersion extends DBEntity {
 	var $_typeName="DBEDBVersion";
 	public static $_mycolumns = array(
-                'model_name'=> array('varchar(100)','not null'),
+                'model_name'=> array('varchar(255)','not null'),
 				'version'=>array('int','not null'),
 			);
 	function DBEDBVersion($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
@@ -175,7 +175,7 @@ class DBEGroup extends DBEntity {
 	 */
 	function _after_insert(&$dbmgr) {
 		$dbe = new DBEUserGroup();
-		$dbe->setValue('group_id', $this->getValue('id'));
+		$dbe->setValue('group_id',$this->getValue('id'));
 		$dbe->setValue('user_id', $dbmgr->getDBEUser()->getValue('id'));
 		$dbmgr->insert($dbe);
 		$dbmgr->addGroup($this->getValue('id'));
@@ -660,7 +660,6 @@ class ObjectMgr extends DBMgr {
 		// 2012.03.05: end.
 		// FIXME ottimizzare
 		foreach($tmp as $_obj) {
-			$cerca = null;
 			eval("\$cerca=new ".$_obj->getValue('classname')."();");
 			$cerca->setValue('id',$_obj->getValue('id'));
 			$lista = $this->search($cerca,$uselike=0);

@@ -523,7 +523,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         if(mysqli_num_rows($result) > 0) {
             $colonna=1;
-            while ($row = mysqli_fetch_assoc($result)) {
+            while($row = mysqli_fetch_assoc($result)) {
                 if($colonna==$num_column) {
                     $ret=$row["Field"];
                     break;
@@ -736,7 +736,6 @@ class DBMgr {
         $this->dbeuser = $dbeuser;
         $this->user_groups_list = $user_groups_list;
     }
-
     
     function setConnection($_conn) { $this->conn = $_conn; }
     function getConnection() { return $this->conn; }
