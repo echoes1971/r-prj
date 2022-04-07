@@ -622,7 +622,7 @@ function getChilds($current_obj,$without_index_page=true) {
 	
     $retArray=array();
     foreach($menu_list as $mydbe ) {
-        $retArray[]=$mydbe->getValuesDictionary();
+        $retArray[]=_dbeToJson($mydbe); //->getValuesDictionary();
     }
 	return $retArray;
 	// return $menu_list;
