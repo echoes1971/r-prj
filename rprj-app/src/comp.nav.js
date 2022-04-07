@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { RLocalStorage } from './comp.ls';
+import { DBOLink } from './comp.ui.elements';
 
 class RNav extends React.Component {
     constructor(props) {
@@ -13,6 +14,8 @@ class RNav extends React.Component {
             ,p_usr: ''
             ,p_pwd: ''
             ,user_fullname: props.user_fullname
+            ,root_obj: props.root_obj
+            ,top_menu: props.top_menu
         }
 
         this.ls = new RLocalStorage("RNav");
@@ -42,6 +45,12 @@ class RNav extends React.Component {
         }
         if(this.props.user_fullname !== prevProps.user_fullname) {
             this.setState({user_fullname: this.props.user_fullname})
+        }
+        if(JSON.stringify(this.props.root_obj) !== JSON.stringify(prevProps.root_obj)) {
+            this.setState({root_obj: this.props.root_obj})
+        }
+        if(JSON.stringify(this.props.top_menu) !== JSON.stringify(prevProps.top_menu)) {
+            this.setState({top_menu: this.props.top_menu})
         }
     }
 
@@ -228,6 +237,8 @@ class RNav extends React.Component {
         const current_theme = this.state.dark_theme ? 'dark' : 'light';
         const nav_class = "navbar sticky-top navbar-expand-lg navbar-"+current_theme+" bg-"+current_theme
         const dropdown_menu_class = "dropdown-menu" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
+        const root_obj = this.state.root_obj;
+        const top_menu = this.state.top_menu;
         return (
             <nav class={nav_class}>
                 <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>
@@ -239,12 +250,18 @@ class RNav extends React.Component {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                {/* <a class="nav-link active" aria-current="page" href="#">Home</a> */}
+                                <DBOLink class="nav-link active" aria-current="page" dbo={root_obj} />
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                            <li class="nav-item dropdown">
+                            {top_menu.map((k) => {
+                                // return (<li class="nav-item">{k}</li>)
+                                if(k===null || ['DBEFolder','DBELink','DBEPeople'].find(k.getTypeName())<0) {
+                                    return ({k})
+                                } else {
+                                    return (<li class="nav-item"><DBOLink class="nav-link" dbo={k} /></li>)
+                                }
+                            })}
+                            {/* <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown
                                 </a>
@@ -254,10 +271,7 @@ class RNav extends React.Component {
                                     <li><hr class="dropdown-divider" /></li>
                                     <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled">Disabled</a>
-                            </li>
+                            </li> */}
 
                             <li class="nav-item">
                                 <form class="d-flex">

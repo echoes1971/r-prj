@@ -20,6 +20,8 @@ class App extends Component {
       endpoint: props.endpoint // "http://localhost:8080/jsonserver.php",
       ,dark_theme: props.dark_theme
       ,user_fullname: ''
+      ,root_obj: null
+      ,top_menu: []
     };
 
     this.default_callback = this.default_callback.bind(this);
@@ -34,6 +36,9 @@ class App extends Component {
     this.fetchLoggedUser = this.fetchLoggedUser.bind(this);
 
     this.onTheme = this.onTheme.bind(this);
+
+    this.rootobj_cb = this.rootobj_cb.bind(this);
+    this.topmenu_cb = this.topmenu_cb.bind(this);
   }
 
   componentDidMount() {
@@ -55,6 +60,7 @@ class App extends Component {
 
     this.fetchLoggedUser();
     // this.be.getLoggedUser(this.on_fetchuser_callback);
+    this.be.getRootObj(this.rootobj_cb);
 
     this.pingUser = setInterval(
         // () => this.be.ping(this.on_ping_callback),
@@ -69,6 +75,16 @@ class App extends Component {
 
   default_callback(jsonObj) {
     // console.log(jsonObj)
+  }
+
+  rootobj_cb(jsonObj, myobj) {
+    this.tmp_root_obj = myobj;
+    // this.setState({root_obj: myobj})
+    this.be.getChilds(myobj,true,this.topmenu_cb);
+  }
+  topmenu_cb(jsonObj, dbelist) {
+    const top_menu = dbelist
+    this.setState({top_menu: top_menu})
   }
 
   on_fetchuser_callback(jsonObj) {
@@ -135,13 +151,17 @@ class App extends Component {
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
+          root_obj={this.state.root_obj} top_menu={this.state.top_menu}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container-fluid p-3">{
           mypath[0]=="test" ?
           this.renderTest()
             :
             (
-              <span><img src="logo512_2.png" /><img src="logo192_2.png" /></span>
+              <span>
+              <div class="text-center"><img src="logo16_2.png" /><img src="logo32_2.png" /><img src="logo64_2.png" /><img src="logo128_2.png" /><img src="logo256_2.png" /><img src="logo512_2.png" /></div>
+              <div class="text-center"><img src="logo512_2.png" /><img src="logo256_2.png" /><img src="logo128_2.png" /><img src="logo64_2.png" /><img src="logo32_2.png" /><img src="logo16_2.png" /></div>
+              </span>
             )
           }
           
