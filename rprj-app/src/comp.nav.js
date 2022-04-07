@@ -47,9 +47,12 @@ class RNav extends React.Component {
             this.setState({user_fullname: this.props.user_fullname})
         }
         if(JSON.stringify(this.props.root_obj) !== JSON.stringify(prevProps.root_obj)) {
-            this.setState({root_obj: this.props.root_obj})
+            const _root_obj = this.props.root_obj
+            this.setState({root_obj: _root_obj})
         }
         if(JSON.stringify(this.props.top_menu) !== JSON.stringify(prevProps.top_menu)) {
+            const _top_menu = this.props.top_menu
+            console.log("RNav.componentDidUpdate: _top_menu="+_top_menu)
             this.setState({top_menu: this.props.top_menu})
         }
     }
@@ -237,8 +240,10 @@ class RNav extends React.Component {
         const current_theme = this.state.dark_theme ? 'dark' : 'light';
         const nav_class = "navbar sticky-top navbar-expand-lg navbar-"+current_theme+" bg-"+current_theme
         const dropdown_menu_class = "dropdown-menu" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
+        const allowed_types = ['DBEFolder','DBELink','DBEPeople'];
         const root_obj = this.state.root_obj;
         const top_menu = this.state.top_menu;
+        console.log("RNav.render: top_menu="+top_menu)
         return (
             <nav class={nav_class}>
                 <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>
@@ -255,11 +260,16 @@ class RNav extends React.Component {
                             </li>
                             {top_menu.map((k) => {
                                 // return (<li class="nav-item">{k}</li>)
-                                if(k===null || ['DBEFolder','DBELink','DBEPeople'].find(k.getTypeName())<0) {
-                                    return ({k})
-                                } else {
-                                    return (<li class="nav-item"><DBOLink class="nav-link" dbo={k} /></li>)
-                                }
+                                // try {
+                                    if(k===null || allowed_types.indexOf(k.getDBEName())<0) {
+                                        return ('')
+                                    } else {
+                                        return (<li class="nav-item"><DBOLink class="nav-link" dbo={k} /></li>)
+                                    }
+                                // } catch(e) {
+                                //     console.log(e)
+                                //     return (<li class="nav-item">SUNCHI {k.dbename} {k.to_string()}</li>)
+                                // }
                             })}
                             {/* <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

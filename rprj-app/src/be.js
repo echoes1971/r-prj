@@ -108,19 +108,19 @@ class BackEndProxy {
     }
 
     getRootObj(a_callback) {
-        // if(this.root_obj!==null) {
-        //     a_callback(['',''], this.root_obj);
-        //     return
-        // }
-		// var self = this
-		// var my_cb = (jsonObj, myobj) => {
-		// 	console.log("BackEndProxy.getRootObj.my_cb: start.");
-		// 	self.root_obj = myobj;
-		// 	a_callback(jsonObj, myobj);
-		// 	console.log("BackEndProxy.getRootObj.my_cb: end.");
-		// }
-        // this.con.getRootObj(my_cb);
-        this.con.getRootObj(a_callback);
+        if(this.root_obj!==null) {
+            a_callback(['',''], this.root_obj);
+            return
+        }
+		var self = this
+		var my_cb = (jsonObj, myobj) => {
+			console.log("BackEndProxy.getRootObj.my_cb: start.");
+			self.root_obj = myobj;
+			a_callback(jsonObj, myobj);
+			console.log("BackEndProxy.getRootObj.my_cb: end.");
+		}
+        this.con.getRootObj(my_cb);
+        // this.con.getRootObj(a_callback);
     }
     getChilds(dbe, without_index_page, a_callback) {
         this.con.getChilds(dbe, without_index_page, a_callback)
