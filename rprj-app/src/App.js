@@ -47,7 +47,7 @@ class App extends Component {
     // Local Storage
     this.ls = new RLocalStorage("App");
     const mystate = this.ls.getMyState();
-    console.log("App.constructor: mystate="+JSON.stringify(mystate));
+    // console.log("App.constructor: mystate="+JSON.stringify(mystate));
     this.setState(mystate);
 
     if("dark_theme" in mystate) {
@@ -79,12 +79,16 @@ class App extends Component {
 
   rootobj_cb(jsonObj, myobj) {
     this.tmp_root_obj = myobj;
+    // console.log("App.rootobj_cb: myobj="+(myobj ? myobj.to_string() : '--'))
     // this.setState({root_obj: myobj})
     this.be.getChilds(myobj,true,this.topmenu_cb);
   }
   topmenu_cb(jsonObj, dbelist) {
     const top_menu = dbelist
-    this.setState({top_menu: top_menu})
+    // console.log("App.rootobj_cb: top_menu="+JSON.stringify(top_menu));
+    const root_obj = this.tmp_root_obj
+    // console.log("App.rootobj_cb: root_obj="+JSON.stringify(root_obj));
+    this.setState({root_obj: root_obj, top_menu: top_menu})
   }
 
   on_fetchuser_callback(jsonObj) {
@@ -131,10 +135,10 @@ class App extends Component {
   }
 
   parsePath() {
-    console.log("App.parsePath: root_path="+app_cfg.root_path);
-    console.log("App.parsePath: window.location.pathname="+window.location.pathname);
+    // console.log("App.parsePath: root_path="+app_cfg.root_path);
+    // console.log("App.parsePath: window.location.pathname="+window.location.pathname);
     const mypath = window.location.pathname.substring(app_cfg.root_path.length)
-    console.log("App.parsePath: mypath="+mypath);
+    // console.log("App.parsePath: mypath="+mypath);
     return mypath.split("/");
   }
   renderTest() {
@@ -145,9 +149,11 @@ class App extends Component {
   render() {
     const endpoints = app_cfg.endpoints;
     const dark_theme = this.state.dark_theme;
-    console.log("App.render: dark_theme="+dark_theme);
+    // console.log("App.render: dark_theme="+dark_theme);
     const mypath = this.parsePath()
-    console.log("App.render: mypath="+JSON.stringify(mypath));
+    // console.log("App.render: mypath="+JSON.stringify(mypath));
+    const root_obj = this.state.root_obj
+    // console.log("App.render: root_obj="+(root_obj ? root_obj.to_string() : 'null'));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
@@ -159,8 +165,8 @@ class App extends Component {
             :
             (
               <span>
-              <div class="text-center"><img src="logo16_2.png" /><img src="logo32_2.png" /><img src="logo64_2.png" /><img src="logo128_2.png" /><img src="logo256_2.png" /><img src="logo512_2.png" /></div>
-              <div class="text-center"><img src="logo512_2.png" /><img src="logo256_2.png" /><img src="logo128_2.png" /><img src="logo64_2.png" /><img src="logo32_2.png" /><img src="logo16_2.png" /></div>
+              <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo512_2.png"} /></div>
+              <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo16_2.png"} /></div>
               </span>
             )
           }
