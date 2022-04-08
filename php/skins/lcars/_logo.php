@@ -1,1 +1,1 @@
-<div class="lcars-title left horizontal"><?php echo $_SESSION['site_title']; ?></div>
+<div class="lcars-title left horizontal lcars-anakiwa-bg"><b><?php echo $_SESSION['site_title']; ?></b></div>

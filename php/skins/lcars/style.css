@@ -465,9 +465,9 @@ input.search {
 }
 
 #top_menu, #top_menu a:link, #top_menu a:active, #top_menu a:visited, #top_menu a:hover {
-  margin-top: 0px;
+  /* margin-top: 0px;
   color: #421;
-  font-weight: bold;
+  font-weight: bold; */
 }
 
 

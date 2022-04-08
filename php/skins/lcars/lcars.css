@@ -645,21 +645,27 @@ h6 {
   padding-right: 0.166666666666667rem;
   padding-bottom: 0.166666666666667rem;
   display: inline-block;
-  font-size: 150%;
+  /* font-size: 150%; */
+  font-size: 170%;
   height: 100%;
 }
 .lcars-bar .lcars-title.right {
   float: right;
-  margin-right: 0.833333333333335rem;
+  margin-right: 0.6rem;
+  /* margin-right: 0.833333333333335rem; */
 }
 .lcars-bar .lcars-title.left {
   float: left;
-  margin-left: 0.833333333333335rem;
+  margin-left: 0.6rem;
+  /* margin-left: 0.833333333333335rem; */
 }
 
 .lcars-bar .lcars-title.horizontal {
   border-right: 0.3rem solid #000;
   border-left: 0.3rem solid #000;
+  padding-bottom: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .lcars-element {
