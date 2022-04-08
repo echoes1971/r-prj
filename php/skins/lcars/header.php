@@ -52,6 +52,7 @@ foreach($plugins_enabled as $plugin_name) {
 	echo "<link rel=\"stylesheet\" href=\"".getPluginSkinFolder($plugin_name)."$plugin_name.css\" type=\"text/css\" />\n";
 }
 ?>
+<link href="<?php echo getSkinFile("lcars.css"); ?>" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo ROOT_FOLDER; ?>js/3rdparties/prototype.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_FOLDER; ?>js/3rdparties/scriptaculous.js"></script>
 <script type="text/javascript">
@@ -77,7 +78,9 @@ if ( $messaggio>'' ) {
 echo $popupIframe->render();
 
 do_hook('header_before');
-echo "<div id=\"header\">";
+echo "<div id=\"header\" class=\"lcars-row header\">";
+?><div class="lcars-elbow left-bottom lcars-tan-bg"></div><?php
+?><div class="lcars-bar horizontal"><?php
 do_hook('divheader_before');
 
 require_once(getSkinFile("_logo.php"));
@@ -131,6 +134,8 @@ if($dbmgr->isConnected()) {
 }
 
 do_hook('divheader_after');
+echo   "</div>";
+?><div class="lcars-bar horizontal right-end decorated"></div><?php
 echo "</div>";
 do_hook('header_after');
 ?>

@@ -355,13 +355,15 @@ input.search {
   top: 0px;
   left: 0px;
   right: 0px;
+
+  width: calc(100% - 1rem);
   
   text-align: center;
   height: 60px;
 
   border: 0px solid #ff8800;
 
-  background-color: #f84;
+  /* background-color: #f84; */
 
   border-radius-topleft:60px;-moz-border-radius-topleft:60px;-webkit-border-top-left-radius:60px;
   border-radius-topright:20px;-moz-border-radius-topright:20px;-webkit-border-top-right-radius:20px;
@@ -375,7 +377,7 @@ input.search {
   
   width: 140px;
   
-  background-color: #f84;
+  /* background-color: #f84; */
   margin:0px;
   border: 0px solid #008800;
   padding:0px;
@@ -444,18 +446,22 @@ input.search {
 #footer {
   position: absolute;
   bottom: 0px;
-  left: 0px;
+  /* left: 0px; */
   right: 0px;
-  
-  height: 20px;
-  text-align: center;
+
+  width: calc(100% - 1rem);
+  left: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  /* height: 20px; */
+  /* text-align: center; */
 
   border: 0px solid #008800;
 
-  background-color: #f84;
+  /* background-color: #f84; */
   /*   CSS3 */
-  border-radius-bottomleft:20px;-moz-border-radius-bottomleft:20px;-webkit-border-bottom-left-radius:20px;
-  border-radius-bottomright:20px;-moz-border-radius-bottomright:20px;-webkit-border-bottom-right-radius:20px;
+  /* border-radius-bottomleft:20px;-moz-border-radius-bottomleft:20px;-webkit-border-bottom-left-radius:20px; */
+  /* border-radius-bottomright:20px;-moz-border-radius-bottomright:20px;-webkit-border-bottom-right-radius:20px; */
 }
 
 #top_menu, #top_menu a:link, #top_menu a:active, #top_menu a:visited, #top_menu a:hover {

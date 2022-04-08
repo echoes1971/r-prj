@@ -1,2 +1,1 @@
-<h1 class="kheader"><?php echo $_SESSION['site_title']; ?></h1>
-<!-- h3>ICT Consulting services</h3 -->
+<div class="lcars-title left horizontal"><?php echo $_SESSION['site_title']; ?></div>

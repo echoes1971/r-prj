@@ -160,11 +160,11 @@ class RNav extends React.Component {
                                 </div>
                             </form>
                         </li>
-                        <li class="dropdown-item d-md-block d-lg-none">
+                        {/* <li class="dropdown-item d-md-block d-lg-none">
                             <form onSubmit={this.default_handleSubmit} >
                                 <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                             </form>
-                        </li>
+                        </li> */}
                         <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
                         <li class="dropdown-item d-md-block d-lg-none">
                             <form onSubmit={this.default_handleSubmit} >
@@ -224,11 +224,11 @@ class RNav extends React.Component {
                             </div>
                         </form>
                     </li>
-                    <li class="dropdown-item d-md-block d-lg-none">
+                    {/* <li class="dropdown-item d-md-block d-lg-none">
                         <form onSubmit={this.default_handleSubmit} >
                             <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                         </form>
-                    </li>
+                    </li> */}
                     <li class="d-md-block d-lg-none"><hr class="dropdown-divider" /></li>
                     <li class="dropdown-item d-md-block d-lg-none">
                         <form onSubmit={this.default_handleSubmit} >
@@ -244,7 +244,6 @@ class RNav extends React.Component {
     }
 
     render() {
-        //  &#129489;
         const current_theme = this.state.dark_theme ? 'dark' : 'light';
         const nav_class = "navbar sticky-top navbar-expand-lg navbar-"+current_theme+" bg-"+current_theme
         const dropdown_menu_class = "dropdown-menu" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
@@ -263,7 +262,6 @@ class RNav extends React.Component {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                {/* <a class="nav-link active" aria-current="page" href="#">Home</a> */}
                                 <DBOLink class="nav-link active" aria-current="page" dbo={root_obj} />
                             </li>
                             {top_menu.map((k) => {
@@ -306,24 +304,6 @@ class RNav extends React.Component {
                                     </li>
                                     : ''
                             }
-                            {/* <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                                </a>
-                                <ul class={dropdown_menu_class} aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><hr class="dropdown-divider" /></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </li> */}
-
-                            {/* <li class="nav-item">
-                                <form class="d-flex">
-                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                                    <button class="btn btn-outline-success" type="submit">Search</button>
-                                </form>
-                            </li> */}
                         </ul>
                     </div>
 
