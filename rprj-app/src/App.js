@@ -20,6 +20,8 @@ class App extends Component {
       endpoint: props.endpoint // "http://localhost:8080/jsonserver.php",
       ,dark_theme: props.dark_theme
       ,user_fullname: ''
+      ,user_groups: []
+      ,user_is_admin: false
       ,root_obj: null
       ,top_menu: []
     };
@@ -59,7 +61,6 @@ class App extends Component {
     this.be = new BackEndProxy(this.state.endpoint);
 
     this.fetchLoggedUser();
-    // this.be.getLoggedUser(this.on_fetchuser_callback);
     this.be.getRootObj(this.rootobj_cb);
 
     this.pingUser = setInterval(
@@ -94,7 +95,12 @@ class App extends Component {
   on_fetchuser_callback(jsonObj) {
     // console.log("App.on_fetchuser_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
-    this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
+    const user_groups = this.be.getUserGroupsList();
+    const user_is_admin = this.be.isAdmin();
+    this.setState({
+      user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
+      ,user_groups: user_groups, user_is_admin: user_is_admin
+    });
     // console.log("App.on_fetchuser_callback: end.");
   }
   fetchLoggedUser() {
@@ -107,7 +113,12 @@ class App extends Component {
   on_login_callback(jsonObj) {
     // console.log("App.on_login_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
-    this.setState({user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''});
+    const user_groups = this.be.getUserGroupsList();
+    const user_is_admin = this.be.isAdmin();
+    this.setState({
+      user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
+      ,user_groups: user_groups, user_is_admin: user_is_admin
+    });
     // console.log("App.on_login_callback: end.");
   }
   onLogin(usr,pwd) {
@@ -115,7 +126,7 @@ class App extends Component {
   }
 
   on_logout_callback(jsonObj) {
-    this.setState({user_fullname: ''})
+    this.setState({user_fullname: '', user_groups: [], user_is_admin: false})
   }
   onLogout() {
     this.be.logout(this.on_logout_callback);
@@ -156,7 +167,9 @@ class App extends Component {
     // console.log("App.render: root_obj="+(root_obj ? root_obj.to_string() : 'null'));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
-        <RNav dark_theme={this.state.dark_theme} user_fullname={this.state.user_fullname}
+        <RNav dark_theme={this.state.dark_theme}
+          user_fullname={this.state.user_fullname} user_is_admin={this.state.user_is_admin}
+          user_groups={this.state.user_groups}
           root_obj={this.state.root_obj} top_menu={this.state.top_menu}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container-fluid p-3">{

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { RLocalStorage } from './comp.ls';
-import { DBOLink } from './comp.ui.elements';
+import { DBOLink, RLink } from './comp.ui.elements';
 
 class RNav extends React.Component {
     constructor(props) {
@@ -14,6 +14,8 @@ class RNav extends React.Component {
             ,p_usr: ''
             ,p_pwd: ''
             ,user_fullname: props.user_fullname
+            ,user_is_admin: props.user_is_admin
+            ,user_groups: props.user_groups
             ,root_obj: props.root_obj
             ,top_menu: props.top_menu
         }
@@ -45,6 +47,12 @@ class RNav extends React.Component {
         }
         if(this.props.user_fullname !== prevProps.user_fullname) {
             this.setState({user_fullname: this.props.user_fullname})
+        }
+        if(this.props.user_is_admin !== prevProps.user_is_admin) {
+            this.setState({user_is_admin: this.props.user_is_admin})
+        }
+        if(this.props.user_groups !== prevProps.user_groups) {
+            this.setState({user_groups: this.props.user_groups})
         }
         if(JSON.stringify(this.props.root_obj) !== JSON.stringify(prevProps.root_obj)) {
             const _root_obj = this.props.root_obj
@@ -127,11 +135,11 @@ class RNav extends React.Component {
                                         </div>
                                     </form>
                                 </li>
-                                <li class="dropdown-item">
+                                {/* <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                                     </form>
-                                </li>
+                                </li> */}
                                 <li><hr class="dropdown-divider" /></li>
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
@@ -188,11 +196,11 @@ class RNav extends React.Component {
                                     </div>
                                 </form>
                             </li>
-                            <li class="dropdown-item">
+                            {/* <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
                                     <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
                                 </form>
-                            </li>
+                            </li> */}
                             <li><hr class="dropdown-divider" /></li>
                             <li class="dropdown-item">
                                 <form onSubmit={this.default_handleSubmit} >
@@ -250,7 +258,7 @@ class RNav extends React.Component {
 
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>&#128295;
+                        <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -259,18 +267,45 @@ class RNav extends React.Component {
                                 <DBOLink class="nav-link active" aria-current="page" dbo={root_obj} />
                             </li>
                             {top_menu.map((k) => {
-                                // return (<li class="nav-item">{k}</li>)
-                                // try {
-                                    if(k===null || allowed_types.indexOf(k.getDBEName())<0) {
-                                        return ('')
-                                    } else {
-                                        return (<li class="nav-item"><DBOLink class="nav-link" dbo={k} /></li>)
-                                    }
-                                // } catch(e) {
-                                //     console.log(e)
-                                //     return (<li class="nav-item">SUNCHI {k.dbename} {k.to_string()}</li>)
-                                // }
+                                if(k===null || allowed_types.indexOf(k.getDBEName())<0) {
+                                    return ('')
+                                } else {
+                                    return (<li class="nav-item"><DBOLink class="nav-link" dbo={k} /></li>)
+                                }
                             })}
+                            {
+                                this.state.user_fullname ? 
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage
+                                        </a>
+                                        <ul class={dropdown_menu_class} aria-labelledby="navbarDropdown">
+                                            <li><RLink class="dropdown-item" path="manage/" name="Manage" /></li>
+                                            { this.state.user_is_admin ?
+                                                <li><hr class="dropdown-divider" /></li>
+                                                : ''
+                                            }
+                                            {
+                                                this.state.user_is_admin ? 
+                                                <li><RLink class="dropdown-item" path="test/" name="Test" /></li>
+                                                : ''
+                                            }
+                                            {
+                                                this.state.user_is_admin ?
+                                                <li class="dropdown-item">
+                                                    <form onSubmit={this.default_handleSubmit} >
+                                                        <button class="btn btn-secondary" onClick={this.clean_ls_handleChange} >Clean LS</button>
+                                                    </form>
+                                                </li>
+                                                : ''
+                                            }
+                                            <li><hr class="dropdown-divider" /></li>
+                                            <li><a class="dropdown-item disabled" href="#">Something else here</a></li>
+                                        </ul>
+                                        
+                                    </li>
+                                    : ''
+                            }
                             {/* <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown
@@ -283,12 +318,12 @@ class RNav extends React.Component {
                                 </ul>
                             </li> */}
 
-                            <li class="nav-item">
+                            {/* <li class="nav-item">
                                 <form class="d-flex">
                                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                                     <button class="btn btn-outline-success" type="submit">Search</button>
                                 </form>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
 
@@ -298,6 +333,10 @@ class RNav extends React.Component {
                     {this.state.user_fullname ? ( <span>&#129333;</span> ) : ( <span>&#128100;</span> ) }
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navbarProfileContent">
+                        <form class="d-flex mx-2">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
                     { this.renderProfile(this.state.user_fullname,this.state.dark_theme) }
                     </div>
                 </div>

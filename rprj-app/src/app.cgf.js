@@ -10,6 +10,12 @@ const app_cfg = {
     // IT MUST ALWAYS END WITH /  !!!!!
     ,root_path: "/"
     ,dark_theme: false
-};
+    // Groups
+    ,GROUP_ADMIN: '-2'
+    ,GROUP_USERS: '-3'
+    ,GROUP_GUESTS: '-4'
+    ,GROUP_PROJECT: '-5'
+    ,GROUP_WEBMASTER: '-6'
+    };
 
 export { app_cfg }

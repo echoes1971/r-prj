@@ -280,10 +280,10 @@ function JSONDBConnection(connectionString,verbose) {
 	}
 	
 	this.login = function(user, pwd, a_callback) {
-		console.log("JSONDBConnection.login: start.");
+		// console.log("JSONDBConnection.login: start.");
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.login.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			// console.log("JSONDBConnection.login.my_cb: start.");
 			try {
 				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
 				self._rs_user=self.obj2resultset(jsonObj[1]);
@@ -291,19 +291,19 @@ function JSONDBConnection(connectionString,verbose) {
 				if(self._rs_user) {
 					self._dbe_user = new DBEntity("DBEUser","users");
 					self._dbe_user.fromRS(self._rs_user,0);
-					// console.log("self._dbe_user: " + self._dbe_user.to_string());
+					self._user_groups = jsonObj[1][1];
 				} else {
 					self._dbe_user = null;
-					// console.log("self._dbe_user: " + self._dbe_user);
+					self._user_groups = [];
 				}
 			} catch(e) {
 				console.log(e);
 			}
 			a_callback(jsonObj)
-			console.log("JSONDBConnection.login.my_callback: end.");
+			// console.log("JSONDBConnection.login.my_cb: end.");
 		}
-		this._sendRequest('login', [user,pwd], my_callback.bind(self));
-		console.log("JSONDBConnection.login: end.");
+		this._sendRequest('login', [user,pwd], my_cb.bind(self));
+		// console.log("JSONDBConnection.login: end.");
 	};
 	this.getLoggedUser = function(a_callback) {
 		// console.log("JSONDBConnection.getLoggedUser: start.");
@@ -311,63 +311,54 @@ function JSONDBConnection(connectionString,verbose) {
 			return this._dbe_user;
 		}
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.getLoggedUser.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			// console.log("JSONDBConnection.getLoggedUser.my_cb: start.");
 			try {
-				// console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
 				self._rs_user=self.obj2resultset(jsonObj[1]);
-				// console.log("self._rs_user: " + self._rs_user);
 				if(self._rs_user) {
 					self._dbe_user = new DBEntity("DBEUser","users");
 					self._dbe_user.fromRS(self._rs_user,0);
-					// console.log("self._dbe_user: " + self._dbe_user.to_string());
+					// console.log("JSONDBConnection.getLoggedUser.my_cb: jsonObj[1][1]=" + JSON.stringify(jsonObj[1][1]));
+					self._user_groups = jsonObj[1][1];
 				} else {
 					self._dbe_user = null;
-					// console.log("self._dbe_user: " + self._dbe_user);
+					self._user_groups = [];
 				}
 			} catch(e) {
 				console.log(e);
 			}
 			a_callback(jsonObj);
-			console.log("JSONDBConnection.getLoggedUser.my_callback: end.");
+			// console.log("JSONDBConnection.getLoggedUser.my_cb: end.");
 		}
-		// my_callback = my_callback.bind(self);
-		// this._sendRequest('getLoggedUser', [], my_callback);
-		this._sendRequest('getLoggedUser', [], my_callback.bind(self));
+		this._sendRequest('getLoggedUser', [], my_cb.bind(self));
 		// console.log("JSONDBConnection.getLoggedUser: end.");
 	};
+	this.getUserGroupsList = function() {
+		return this._user_groups;
+	}
 	this.logout = function(a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
+		var my_cb = (jsonObj) => {
 			try {
 				console.log("jsonObj[1]: " + JSON.stringify(jsonObj[1]));
-				// self._rs_user=self.obj2resultset(jsonObj[1]);
-				// console.log("self._rs_user: " + self._rs_user);
-				// if(self._rs_user) {
-				// 	self._dbe_user = new DBEntity("DBEUser","users");
-				// 	self._dbe_user.fromRS(self._rs_user,0);
-				// 	console.log("self._dbe_user: " + self._dbe_user.to_string());
-				// } else {
-				// 	self._dbe_user = null;
-				// 	console.log("self._dbe_user: " + self._dbe_user);
-				// }
+				self._dbe_user = null;
+				self._user_groups = [];
 			} catch(e) {
 				console.log(e);
 			}
 			a_callback(jsonObj);
 		}
-		this._sendRequest('logout', [], my_callback.bind(self));
+		this._sendRequest('logout', [], my_cb.bind(self));
 	};
 	
 	this.execute = function(tablename,sql_string,a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.execute.my_callback: start.");
-			console.log("jsonObj: " + JSON.stringify(jsonObj));
-			// var dictlist = [];
-			console.log( jsonObj[1] )
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.execute.my_cb: start.");
+			// console.log("jsonObj: " + JSON.stringify(jsonObj));
+			// console.log( jsonObj[1] )
 			var myRS = self.obj2resultset(jsonObj[1]);
-			console.log("myRS: " + JSON.stringify(myRS));
+			// console.log("myRS: " + JSON.stringify(myRS));
 			var dictlist = myRS!==null ? [] : null;
 			for(var i=0; myRS!==null && i<myRS.getNumRows(); i++) {
 				try {
@@ -382,9 +373,9 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log(dictlist)
 			jsonObj[1] = dictlist;
 			a_callback(jsonObj, dictlist)
-			console.log("JSONDBConnection.execute.my_callback: end.");
+			console.log("JSONDBConnection.execute.my_cb: end.");
 		}
-		this._sendRequest('selectAsArray', [tablename,sql_string], my_callback.bind(self).bind(tablename));
+		this._sendRequest('selectAsArray', [tablename,sql_string], my_cb.bind(self).bind(tablename));
 	};
 	
 	// **************** Proxy Connections: start. *********************
@@ -463,8 +454,8 @@ function JSONDBConnection(connectionString,verbose) {
 	}
 	this.Select = function(dbename,tablename,searchString, a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.select.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.select.my_cb: start.");
 			console.log("jsonObj: " + JSON.stringify(jsonObj));
 			// var dbelist = [];
 			console.log( jsonObj[1] )
@@ -484,17 +475,17 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log(dbelist)
 			jsonObj[1] = dbelist;
 			a_callback(jsonObj, dbelist)
-			console.log("JSONDBConnection.select.my_callback: end.");
+			console.log("JSONDBConnection.select.my_cb: end.");
 		}
-		this._sendRequest('select', [tablename,searchString], my_callback.bind(self).bind(dbename).bind(tablename));
+		this._sendRequest('select', [tablename,searchString], my_cb.bind(self).bind(dbename).bind(tablename));
 	}
 	this.Search = function(dbe, uselike, caseSensitive, orderBy, a_callback) {
 		// search($dbe,$uselike,$caseSensitive,$orderby,$ignore_deleted = true,$full_object = true)
 		var dbename=dbe.dbename;
 		var tablename=dbe.tablename;
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.select.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.select.my_cb: start.");
 			console.log("jsonObj: " + JSON.stringify(jsonObj));
 			var dbelist = [];
 			console.log( jsonObj[1] )
@@ -514,16 +505,16 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log(dbelist)
 			jsonObj[1] = dbelist;
 			a_callback(jsonObj, dbelist)
-			console.log("JSONDBConnection.select.my_callback: end.");
+			console.log("JSONDBConnection.select.my_cb: end.");
 		}
-		this._sendRequest('search', [ new Array( dbe.dbename, dbe.getValues() ), uselike, caseSensitive, orderBy ], my_callback.bind(self).bind(dbename).bind(tablename));
+		this._sendRequest('search', [ new Array( dbe.dbename, dbe.getValues() ), uselike, caseSensitive, orderBy ], my_cb.bind(self).bind(dbename).bind(tablename));
 	}
 
 	this.objectById = function(oid, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.objectById: start.");
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.objectById.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.objectById.my_cb: start.");
 			var myobj = null;
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
@@ -535,16 +526,16 @@ function JSONDBConnection(connectionString,verbose) {
 				console.log(e);
 			}
 			a_callback(jsonObj, myobj);
-			console.log("JSONDBConnection.objectById.my_callback: end.");
+			console.log("JSONDBConnection.objectById.my_cb: end.");
 		}
-		this._sendRequest('objectById', [oid,ignore_deleted], my_callback.bind(self));
+		this._sendRequest('objectById', [oid,ignore_deleted], my_cb.bind(self));
 		console.log("JSONDBConnection.objectById: end.");
 	};
 	this.fullObjectById = function(oid, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.fullObjectById: start.");
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.fullObjectById.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.fullObjectById.my_cb: start.");
 			var myobj = null;
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
@@ -556,16 +547,16 @@ function JSONDBConnection(connectionString,verbose) {
 				console.log(e);
 			}
 			a_callback(jsonObj, myobj);
-			console.log("JSONDBConnection.fullObjectById.my_callback: end.");
+			console.log("JSONDBConnection.fullObjectById.my_cb: end.");
 		}
-		this._sendRequest('fullObjectById', [oid,ignore_deleted], my_callback.bind(self));
+		this._sendRequest('fullObjectById', [oid,ignore_deleted], my_cb.bind(self));
 		console.log("JSONDBConnection.fullObjectById: end.");
 	};
 	this.objectByName = function(name, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.objectByName: start.");
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.objectByName.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.objectByName.my_cb: start.");
 			var myobj = null;
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
@@ -577,16 +568,16 @@ function JSONDBConnection(connectionString,verbose) {
 				console.log(e);
 			}
 			a_callback(jsonObj, myobj);
-			console.log("JSONDBConnection.objectByName.my_callback: end.");
+			console.log("JSONDBConnection.objectByName.my_cb: end.");
 		}
-		this._sendRequest('objectByName', [name,ignore_deleted], my_callback.bind(self));
+		this._sendRequest('objectByName', [name,ignore_deleted], my_cb.bind(self));
 		console.log("JSONDBConnection.objectByName: end.");
 	};
 	this.fullObjectByName = function(name, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.fullObjectByName: start.");
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.fullObjectByName.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.fullObjectByName.my_cb: start.");
 			var myobj = null;
 			try {
 				var myrs=self.obj2resultset(jsonObj[1]);
@@ -598,9 +589,9 @@ function JSONDBConnection(connectionString,verbose) {
 				console.log(e);
 			}
 			a_callback(jsonObj, myobj);
-			console.log("JSONDBConnection.fullObjectByName.my_callback: end.");
+			console.log("JSONDBConnection.fullObjectByName.my_cb: end.");
 		}
-		this._sendRequest('fullObjectByName', [name,ignore_deleted], my_callback.bind(self));
+		this._sendRequest('fullObjectByName', [name,ignore_deleted], my_cb.bind(self));
 		console.log("JSONDBConnection.fullObjectByName: end.");
 	};
 	// **************** Proxy Connections: end. *********************
@@ -705,19 +696,19 @@ function JSONDBConnection(connectionString,verbose) {
 
 	this.getDBE2FormMapping = function(a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getDBE2FormMapping.my_cb: start.");
 			// console.log("jsonObj: " + JSON.stringify(jsonObj));
 			const dbe2formMapping = jsonObj[1];
 			a_callback(jsonObj, dbe2formMapping);
-			console.log("JSONDBConnection.getDBE2FormMapping.my_callback: end.");
+			console.log("JSONDBConnection.getDBE2FormMapping.my_cb: end.");
 		}
-		this._sendRequest('getDBE2FormMapping', [], my_callback.bind(self));
+		this._sendRequest('getDBE2FormMapping', [], my_cb.bind(self));
 	}
 	this.getAllFormClassnames = function(a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.getAllFormClassnames.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getAllFormClassnames.my_cb: start.");
 			// console.log("jsonObj: " + JSON.stringify(jsonObj));
 			var formlist = [];
 			// console.log( jsonObj[1] )
@@ -727,18 +718,18 @@ function JSONDBConnection(connectionString,verbose) {
 			// console.log(formlist)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, formlist)
-			console.log("JSONDBConnection.getAllFormClassnames.my_callback: end.");
+			console.log("JSONDBConnection.getAllFormClassnames.my_cb: end.");
 		}
-		this._sendRequest('getAllFormClassnames', [], my_callback.bind(self));
+		this._sendRequest('getAllFormClassnames', [], my_cb.bind(self));
 	} 
 	this.getFormInstance = function(aclassname, a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.getFormInstance.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getFormInstance.my_cb: start.");
 			var form = jsonObj[1];
 			try{
 				const stringed = JSON.stringify(jsonObj);
-				// console.log("JSONDBConnection.getFormInstance.my_callback: jsonObj=" + stringed);
+				// console.log("JSONDBConnection.getFormInstance.my_cb: jsonObj=" + stringed);
 				form = jsonObj[1];
 			} catch(e) {
 				form = null;
@@ -747,18 +738,18 @@ function JSONDBConnection(connectionString,verbose) {
 			// console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
-			console.log("JSONDBConnection.getFormInstance.my_callback: end.");
+			console.log("JSONDBConnection.getFormInstance.my_cb: end.");
 		}
-		this._sendRequest('getFormInstance', [aclassname], my_callback.bind(self));
+		this._sendRequest('getFormInstance', [aclassname], my_cb.bind(self));
 	}
 	this.getFormInstanceByDBEName = function(aclassname, a_callback) {
 		var self = this
-		var my_callback = (jsonObj) => {
-			console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: start.");
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getFormInstanceByDBEName.my_cb: start.");
 			var form = jsonObj[1];
 			try{
 				const stringed = JSON.stringify(jsonObj);
-				// console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: jsonObj=" + stringed);
+				// console.log("JSONDBConnection.getFormInstanceByDBEName.my_cb: jsonObj=" + stringed);
 				form = jsonObj[1];
 			} catch(e) {
 				form = null;
@@ -767,9 +758,9 @@ function JSONDBConnection(connectionString,verbose) {
 			// console.log(form)
 			// jsonObj[1] = dbelist;
 			a_callback(jsonObj, form)
-			console.log("JSONDBConnection.getFormInstanceByDBEName.my_callback: end.");
+			console.log("JSONDBConnection.getFormInstanceByDBEName.my_cb: end.");
 		}
-		this._sendRequest('getFormInstanceByDBEName', [aclassname], my_callback.bind(self));
+		this._sendRequest('getFormInstanceByDBEName', [aclassname], my_cb.bind(self));
 	}
 }
 

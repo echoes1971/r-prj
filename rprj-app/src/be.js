@@ -1,6 +1,7 @@
 // Client
 import { DBMgr, JSONDBConnection } from './db/dblayer'
 
+import { app_cfg } from './app.cgf';
 
 /**
  * Back End Proxy
@@ -41,6 +42,18 @@ class BackEndProxy {
     }
     getDBEUserFromConnection() {
         return this.con._dbe_user;
+    }
+    getUserGroupsList() {
+        return this.con.getUserGroupsList();
+    }
+    isAdmin() {
+        const groups = this.getUserGroupsList();
+        const ret = groups===null ? false
+                : groups.indexOf(app_cfg.GROUP_ADMIN)>=0
+        // console.log("BackEndProxy.isAdmin: groups="+groups)
+        // console.log("BackEndProxy.isAdmin: ret="+ret)
+        // console.log("BackEndProxy.isAdmin: GROUP_ADMIN="+app_cfg.GROUP_ADMIN)
+        return ret
     }
     logout(a_callback) {
         this.con.logout(a_callback);

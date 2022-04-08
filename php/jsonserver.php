@@ -339,16 +339,18 @@ function login($user,$pwd) {
 	$dbmgr->login($user,$pwd);
 	$__utente = $dbmgr->getDBEUser();
 	$_SESSION['utente'] = $__utente;
-	return array( _dbeToJson($__utente) );
+	$user_groups = $dbmgr->getUserGroupsList();
+	return array( _dbeToJson($__utente), $user_groups );
 }
 function getLoggedUser() {
 	global $dbmgr;
 	$dbmgr->setVerbose(false);
 	$__utente=$dbmgr->getDBEUser();
+	$user_groups = $dbmgr->getUserGroupsList();
 	// Cleaning the pwd field :-) not good to show it back
 	if($__utente!==null) $__utente->setValue('pwd',null);
 	$dbmgr->setVerbose(false);
-	return $__utente!==null ? array( _dbeToJson($__utente) ) : array();
+	return $__utente!==null ? array( _dbeToJson($__utente), $user_groups ) : array();
 }
 function logout() {
 	global $dbmgr;
