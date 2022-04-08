@@ -647,11 +647,11 @@ h6 {
   display: inline-block;
   /* font-size: 150%; */
   font-size: 170%;
-  height: 100%;
+  /* height: 100%; */
 }
 .lcars-bar .lcars-title.right {
   float: right;
-  margin-right: 0.6rem;
+  /* margin-right: 0.6rem; */
   /* margin-right: 0.833333333333335rem; */
 }
 .lcars-bar .lcars-title.left {
@@ -661,11 +661,24 @@ h6 {
 }
 
 .lcars-bar .lcars-title.horizontal {
+  height: 100%;
   border-right: 0.3rem solid #000;
   border-left: 0.3rem solid #000;
   padding-bottom: 0;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+.lcars-bar .lcars-title.vertical {
+  width: 100%;
+  left: 0px;
+  right: 0px;
+  border-top: 0.3rem solid #000;
+  border-bottom: 0.3rem solid #000;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
 }
 
 .lcars-element {

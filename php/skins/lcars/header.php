@@ -76,7 +76,7 @@ if ( $messaggio>'' ) {
 }
 // popup iframe
 echo $popupIframe->render();
-
+?><div class="lcars-app-container"><?php
 do_hook('header_before');
 echo "<div id=\"header\" class=\"lcars-row header\">";
 ?><div class="lcars-elbow left-bottom lcars-tan-bg"></div><?php
@@ -84,43 +84,18 @@ echo "<div id=\"header\" class=\"lcars-row header\">";
 do_hook('divheader_before');
 
 require_once(getSkinFile("_logo.php"));
-/*
-?---><h1>:: R-Project ::</h1>
- <h3>:: Project and Time Tracking Management System ::</h3><?----php
- */
-if($dbmgr->isConnected()) {
-  echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
-}
-if($dbmgr->getDBEUser()!==null) {
-	echo "<a href=\"".ROOT_FOLDER."logout_do.php\">Logout</a>";
-	echo "</div>";
-	echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
-	echo $dbmgr->getDBEUser()->getValue('fullname');
-} elseif($dbmgr->isConnected()) {
-	echo "<a href=\"".ROOT_FOLDER."mng/login.php".( isset($current_obj_id) ? "?obj_id=$current_obj_id" : '' )."\">Login</a>";
-}
-if($dbmgr->isConnected()) {
- echo "</div>";
-}
-
-echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
-echo "<form name=\"\" action=\"".ROOT_FOLDER."main.php\">";
-echo "<input id=\"search_object\" name=\"search_object\" type=\"text\" class=\"lcars-black-color\" placeholder=\"Search...\" />";
-echo "</form>";
-echo "</div>";
 
 if($dbmgr->isConnected()) {
-//  echo "<div id=\"top_menu\">";
  do_hook('topmenu_before');
  if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
-   echo "<div class=\"lcars-title left horizontal lcars-tamarillo-bg\">";
+   echo "<div class=\"lcars-title horizontal lcars-tamarillo-bg\">";
    echo "<a class=\"lcars-white-color\" href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a>";
    echo "</div>";
  }
  if(array_key_exists('menu_top',$_SESSION) && is_array($_SESSION['menu_top'])) {
 	foreach($_SESSION['menu_top'] as $menu_item) {
 		if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
-		echo "<div class=\"lcars-title left horizontal lcars-tamarillo-bg\">";
+		echo "<div class=\"lcars-title horizontal lcars-tamarillo-bg\">";
 		if($menu_item->getTypeName()=='DBELink') {
 			$tmpform = new FLink(); $tmpform->setValues($menu_item->getValuesDictionary());
 			echo $tmpform->render_view($dbmgr);
@@ -131,15 +106,35 @@ if($dbmgr->isConnected()) {
 	}
  }
  if($dbmgr->getDBEUser()!==null) {
-	echo "<div class=\"lcars-title left horizontal lcars-tamarillo-bg\">";
+	echo "<div class=\"lcars-title horizontal lcars-tamarillo-bg\">";
 	echo "<a href=\"".ROOT_FOLDER."mng/gestione.php\">Manage</a>";
 	echo "</div>";
  }
  echo " ";
  do_hook('topmenu_after');
-//  echo "</div>";
 }
-
+if($dbmgr->isConnected()) {
+	echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
+  }
+  if($dbmgr->getDBEUser()!==null) {
+	  echo "<a href=\"".ROOT_FOLDER."logout_do.php\">Logout</a>";
+	  echo "</div>";
+	  echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
+	  echo $dbmgr->getDBEUser()->getValue('fullname');
+  } elseif($dbmgr->isConnected()) {
+	  echo "<a href=\"".ROOT_FOLDER."mng/login.php".( isset($current_obj_id) ? "?obj_id=$current_obj_id" : '' )."\">Login</a>";
+  }
+  if($dbmgr->isConnected()) {
+   echo "</div>";
+  }
+  
+  echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
+  echo "<form name=\"\" action=\"".ROOT_FOLDER."main.php\">";
+  echo "<input id=\"search_object\" name=\"search_object\" type=\"text\" class=\"lcars-black-color\" placeholder=\"Search...\" />";
+  echo "</form>";
+  echo "</div>";
+  
+  
 do_hook('divheader_after');
 echo   "</div>";
 ?><div class="lcars-bar horizontal right-end decorated"></div><?php

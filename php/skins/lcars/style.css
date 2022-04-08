@@ -396,10 +396,7 @@ input.search {
   left: 0px;
   right: 0px;
   margin:0px;
-  border: 0px solid #ff0000;
   padding:0px;
-
-  background-color: #f84;
 }
 #middle, #middle_noright {
   position: absolute;
@@ -465,9 +462,9 @@ input.search {
 }
 
 #top_menu, #top_menu a:link, #top_menu a:active, #top_menu a:visited, #top_menu a:hover {
-  /* margin-top: 0px;
+  margin-top: 0px;
   color: #421;
-  font-weight: bold; */
+  font-weight: bold;
 }
 
 

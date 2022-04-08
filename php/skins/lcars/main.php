@@ -20,22 +20,14 @@
 
 require_once(getSkinFile("header.php"));
 
-
-?><div id="middle_container"><?php
-
-?><div id="left"><?php
-// Middle Left
- //<table class="menu" valign="middle" align="center" width="100%">
- ?><table class="menu" align="center" width="100%"><?php
+?><div id="left-menu" class="lcars-column start-space lcars-u-1"><?php
+?><div class="lcars-bar lcars-u-1"><?php
 // Root Object (Home)
-  ?><tr><th class="menu"><?php
-	echo "<a href=\"main.php?obj_id=".$root_obj->getValue('id')."\">".$root_obj->getValue('name')."</a>";
-  ?></th></tr><?php
- ?></table><div id="left_content"><?php
- do_hook('divleft_before');
-//<table class="menu" valign="middle" align="center" width="100%">
-?><table class="menu" align="center" width="100%"><?php
+echo "<div class=\"lcars-title vertical lcars-rust-bg\">";
+echo "<a href=\"main.php?obj_id=".$root_obj->getValue('id')."\">".$root_obj->getValue('name')."</a>";
+echo "</div>";
 
+do_hook('divleft_before');
 // Items da visualizzare come contenuto
 $content_items = array();
 
@@ -70,24 +62,14 @@ function render_level(&$parent_list,$level=0,$indent="") {
 			} else if(is_a($menu_item,'DBEPage')) {
 				$content_items[]=$myform;
 				continue;
-/*			} else if(is_a($menu_item,"DBEFolder")) {
-// 				$content_items[]=$myform;
-// 				continue;
-			} else {
-				$content_items[]=$myform;
-				continue;*/
 			}
 		} else {
-/*			if(!is_a($menu_item,"DBEFolder") && !is_a($menu_item,"DBEPeople")) {
-				continue;
-			}*/
 			if(is_a($menu_item,'DBELink') && !$myform->isInternal()) {
-// 				$content_items[]=$myform;
-// 				continue;
 			}
 		}
 		if($menu_item->getValue('id')>'') {
-			echo "<tr><td class=\"menu\">$indent";
+			echo "<div class=\"lcars-title vertical lcars-rust-bg\">$indent";
+
 			if($myform->getDetailIcon()>"") {
 				echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
 			}
@@ -95,8 +77,7 @@ function render_level(&$parent_list,$level=0,$indent="") {
 				echo $myform->render_view($dbmgr);
 			} else
 				echo "<a href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
-	// 		echo $menu_item_view>'' ? $menu_item_view : "<a href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
-			echo "</td></tr>";
+			echo "</div>";
 		}
 		if( ($level+1)<count($parent_list)
 			&& $menu_item->getValue('id')==$parent_list[$level+1]->getValue('id')
@@ -109,10 +90,12 @@ render_level($parent_list,0,"");
 if(!is_a($current_obj,'DBEFolder')) {
 	//$content_items[]=$current_form;
 }
+?></div><?php
 
-?></table><?php
 do_hook('divleft_after');
 ?></div></div><?php
+
+?><div id="container"><?php
 
 // Middle
 ?><div id="<?php echo $dbmgr->hasGroup($GROUP_WEBMASTER) ? "middle" : "middle_noright"; ?>"><?php

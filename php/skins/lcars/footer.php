@@ -32,5 +32,6 @@ do_hook('footer_content_before');
 do_hook('footer_after');
 
 
-?></body>
+?></div>
+</body>
 </html>
