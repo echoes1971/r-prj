@@ -222,18 +222,21 @@ if($search_object>'') {
 	echo "</div>";
 
 	$content_items_count=count($content_items);
-	if($content_items_count>0) echo "<div class=\"content_list\">";
 	foreach($content_items as $content_item) {
+		echo "<div class=\"lcars-row\">";
+
+		echo "<div class=\"lcars-element left-rounded lcars-eggplant-bg  lcars-u-1-2\"></div>";
 		$_desc = $content_item->getValue('description');
-		echo "<div class=\"content_item\">";
-		echo "<h3 class=\"content_item\">";
+		echo "<div class=\"lcars-element lcars-black-bg lcars-u-1-2\">";
 		echo "<img src=\"".getSkinFile($content_item->getDetailIcon())."\" alt=\"\" />&nbsp;";
 		if( is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
 			echo $content_item->getValue('name');
 		} else {
 			echo "<a href=\"main.php?obj_id=".$content_item->getValue('id')."\">".$content_item->getValue('name')."</a>";
 		}
-		echo "</h3>";
+		echo "</div>";
+
+		echo "<div class=\"lcars-element lcars-lavender-purple-bg lcars-u-3-2\">";
 		if( is_a($content_item,'FFile') && $content_item->isImage() ) {
 			$__alt_link=$content_item->getValue('alt_link');
 			
@@ -260,10 +263,15 @@ if($search_object>'') {
 		if($_desc>'') {
 			echo "<p class=\"content_item\">".str_replace("\n","<br/>",$_desc)."</p>";
 		}
-		if($content_items_count>1) echo "<hr/>";
+
+		// if($content_items_count>1) echo "<hr/>";
 		echo "</div>";
+		echo "<div class=\"lcars-element right-rounded lcars-cosmic-bg lcars-u-1-2\"></div>";
+
+		echo "</div>";
+
+		echo "<div class=\"lcars-row\"><div class=\"lcars-element lcars-black-bg lcars-u-4-1\"></div></div>";
 	}
-	if($content_items_count>0) echo "</div>";
 	// echo join("<br/><hr/>",$content_items);
 // 2012.07.23: start.
 }
