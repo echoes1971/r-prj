@@ -68,24 +68,27 @@ function render_level(&$parent_list,$level=0,$indent="") {
 			}
 		}
 		if($menu_item->getValue('id')>'') {
+			$txt_align = "";
 			$fg_color = "";
 			$bg_color = "lcars-rust-bg";
 			if( is_a($myform,'FFolder') ) {
 				$fg_color = "lcars-white-color";
-				$bg_color = "lcars-dodger-blue-bg";
+				$bg_color = "lcars-dodger-blue-alt-bg";
 			} else if( is_a($myform,'FLink') ) {
 				$fg_color = "lcars-white-color";
-				$bg_color = "lcars-dodger-blue-alt-bg";
+				$bg_color = "lcars-dodger-blue-bg";
 			} else if( is_a($myform,'FNote') ) {
+				$txt_align = "txtright";
 				$fg_color = "lcars-black-color";
 				$bg_color = "lcars-neon-carrot-bg";
 			} else if( is_a($myform,'FPage') ) {
-				$fg_color = "lcars-atomic-tangerine-color";
-				$bg_color = "lcars-tamarillo-bg";
+				$txt_align = "txtright";
+				$fg_color = "lcars-black-color";
+				$bg_color = "lcars-red-damask-bg";
 			}
 
 			
-			echo "<div class=\"lcars-title vertical $fg_color $bg_color\">$indent";
+			echo "<div class=\"lcars-title vertical $txt_align $fg_color $bg_color\">$indent";
 
 			// if($myform->getDetailIcon()>"") {
 			// 	echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
@@ -116,13 +119,21 @@ do_hook('divleft_after');
 
 // Middle
 ?><div id="<?php echo $dbmgr->hasGroup($GROUP_WEBMASTER) ? "middle" : "middle_noright"; ?>"><?php
- ?><ul class="breadcrumb"><?php
+ ?><div class="lcars-row"><?php
+ ?><div class="lcars-bar horizontal lcars-cosmic-bg left-end decorated bottom"></div><?php
+ ?><div class="lcars-bar horizontal lcars-lilac-bg"><?php
 $breadcrumbs=array();
+$breadcrumb_fg="lcars-lilac-color";
+$breadcrumb_bg="lcars-black-bg";
 foreach($parent_list as $bread_crumb) {
-	$breadcrumbs[] = "<li class=\"breadcrumb\"><a  class=\"breadcrumb\" href=\"main.php?obj_id=".$bread_crumb->getValue('id')."\">".$bread_crumb->getValue('name')."</a></li>";
+	if(!is_a($bread_crumb,'DBEFolder')) continue;
+	$breadcrumbs[] = "<div class=\"lcars-title horizontal $breadcrumb_bg\"><a class=\"$breadcrumb_fg\" href=\"main.php?obj_id=".$bread_crumb->getValue('id')."\">".$bread_crumb->getValue('name')."</a></div>";
 }
-echo join("<li class=\"breadcrumb\"> &gt; </li>",$breadcrumbs);
- ?></ul><?php
+echo join("",$breadcrumbs);
+//echo join("<li class=\"breadcrumb\"> &gt; </li>",$breadcrumbs);
+ ?></div><?php
+ ?><div class="lcars-bar horizontal lcars-cosmic-bg right-end decorated bottom"></div><?php
+ ?></div><?php
   ?><div id="breadcrumb_after"><?php
   do_hook('breadcrumb_after');
   ?></div><?php
@@ -185,6 +196,17 @@ if($search_object>'') {
 	echo "</div>";
 } else {
 // 2012.07.23: end.
+	echo "<div class=\"content-header\">";
+	echo "<h1 class=\"content lcars-lilac-color\">".$current_form->getField('name')->render_view()."</h1>";
+	$_stardate_str = strtotime($current_form->getField('last_modify_date')->getValue());
+	// $_stardate = substr($_stardate_str,0,-3).".".substr($_stardate_str,-3);
+	$_stardate = strftime("%Y%m%d.%H%M",$_stardate_str);
+	$_stardate_date = $current_form->getField('last_modify_date')->render_view();
+	echo "<h2 class=\"content lcars-lilac-color\">Stardate $_stardate</h2>";
+	// echo "<h2 class=\"content lcars-lilac-color\">Stardate $_stardate • $_stardate_date</h2>";
+	echo "</div>";
+	$_content_body_fg = "lcars-lavender-purple-color";
+	echo "<div class=\"content-body $_content_body_fg\">";
 	if($index_page_form!==null) {
 		echo $index_page_form->getField('html')->render_view();
 	} elseif( is_a($current_form,'FPage') && !is_a($current_form,'FNews') ) {
@@ -197,6 +219,7 @@ if($search_object>'') {
 	} else {
 		echo $current_form->render_view($dbmgr);
 	}
+	echo "</div>";
 
 	$content_items_count=count($content_items);
 	if($content_items_count>0) echo "<div class=\"content_list\">";

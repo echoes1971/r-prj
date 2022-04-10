@@ -87,11 +87,11 @@ require_once(getSkinFile("_logo.php"));
 
 if($dbmgr->isConnected()) {
  do_hook('topmenu_before');
- if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
-   echo "<div class=\"lcars-title horizontal lcars-tamarillo-bg\">";
-   echo "<a class=\"lcars-white-color\" href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a>";
-   echo "</div>";
- }
+//  if(array_key_exists('root_obj',$_SESSION) && $_SESSION['root_obj']!==null) {
+//    echo "<div class=\"lcars-title horizontal lcars-tamarillo-bg\">";
+//    echo "<a class=\"lcars-white-color\" href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">".$_SESSION['root_obj']->getValue('name')."</a>";
+//    echo "</div>";
+//  }
  if(array_key_exists('menu_top',$_SESSION) && is_array($_SESSION['menu_top'])) {
 	foreach($_SESSION['menu_top'] as $menu_item) {
 		if($menu_item->getTypeName()!='DBEFolder' && $menu_item->getTypeName()!='DBELink' && $menu_item->getTypeName()!='DBEPeople') continue;
@@ -128,7 +128,7 @@ if($dbmgr->isConnected()) {
    echo "</div>";
   }
   
-  echo "<div class=\"lcars-title right horizontal lcars-rust-bg\">";
+  echo "<div class=\"lcars-title right horizontal\">";
   echo "<form name=\"\" action=\"".ROOT_FOLDER."main.php\">";
   echo "<input id=\"search_object\" name=\"search_object\" type=\"text\" class=\"lcars-black-color\" placeholder=\"Search...\" />";
   echo "</form>";

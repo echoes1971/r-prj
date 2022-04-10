@@ -22,8 +22,9 @@
 body {
   background-color: #000000;
   color: #884422;
-  font-family: Ubuntu,'Tahoma','Gill Sans',Verdana,sans-serif;
-  font-size: 10px;
+  font-family: 'Arial Narrow','Gill Sans',Verdana,sans-serif;
+  font-size: 0.7rem;
+  /* font-size: 10px; */
   font-weight: normal;
   margin: 0px;
   text-decoration: none;
@@ -91,8 +92,9 @@ h1,h2,h3 {
 }
 h1 {
   font-weight: bold;
-  font-size: 25px;
-  color: #884422;
+  font-size: 270%;
+  /* font-size: 25px; */
+  /* color: #884422; */
   /* CSS3 */
 }
 h3 {}
@@ -317,13 +319,13 @@ div.formView_value h1 {
 div.middle_content {
   overflow:auto;
   border:0px solid #fa6;
-  position:absolute;
+  /* position:absolute;
   top:44px;
   left:20px;
   right:20px;
-  bottom:20px;
+  bottom:20px; */
 
-  font-size: 12px;
+  /* font-size: 12px; */
 /*
   border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:40px;
 */
@@ -407,7 +409,11 @@ input.search {
   
   margin:0px;
   border: 0px solid #008800;
-  padding:20px;
+  /* padding:20px; */
+
+  /* padding-left: 7.5rem; */
+  padding-top: 5.5rem;
+  padding-bottom: 4.5rem;
 
   background-color: #000000;
 
@@ -441,7 +447,8 @@ input.search {
   border-radius-bottomright:40px;-moz-border-radius-bottomright:40px;-webkit-border-bottom-right-radius:40px;
 }
 #footer {
-  position: absolute;
+  /* position: absolute; */
+  position: fixed;
   bottom: 0px;
   /* left: 0px; */
   right: 0px;
@@ -548,5 +555,23 @@ input.search {
   background-color: #c42;
   border-radius-topleft:10px;-moz-border-radius-topleft:10px;-webkit-border-top-left-radius:10px;
   border-radius-bottomleft:10px;-moz-border-radius-bottomleft:10px;-webkit-border-bottom-left-radius:10px;
+}
+
+
+
+/* ********************************* Content classes ********************************* */
+
+div.content-header {
+  text-align: right;
+  margin: 0.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  margin-bottom: 1.0rem;
+}
+div.content-body {
+  font-size: 140%;
+}
+h1.content {
+  font-size: 500%;
 }
 
