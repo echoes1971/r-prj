@@ -446,6 +446,8 @@ input.search {
   /* left: 0px; */
   right: 0px;
 
+  z-index: 1;
+  background-color: #000;
   width: calc(100% - 1rem);
   left: 0.5rem;
   padding-bottom: 0.5rem;
@@ -453,7 +455,7 @@ input.search {
   /* height: 20px; */
   /* text-align: center; */
 
-  border: 0px solid #008800;
+  /* border: 0px solid #008800; */
 
   /* background-color: #f84; */
   /*   CSS3 */

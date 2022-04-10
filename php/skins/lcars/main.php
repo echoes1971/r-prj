@@ -68,15 +68,32 @@ function render_level(&$parent_list,$level=0,$indent="") {
 			}
 		}
 		if($menu_item->getValue('id')>'') {
-			echo "<div class=\"lcars-title vertical lcars-rust-bg\">$indent";
-
-			if($myform->getDetailIcon()>"") {
-				echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
+			$fg_color = "";
+			$bg_color = "lcars-rust-bg";
+			if( is_a($myform,'FFolder') ) {
+				$fg_color = "lcars-white-color";
+				$bg_color = "lcars-dodger-blue-bg";
+			} else if( is_a($myform,'FLink') ) {
+				$fg_color = "lcars-white-color";
+				$bg_color = "lcars-dodger-blue-alt-bg";
+			} else if( is_a($myform,'FNote') ) {
+				$fg_color = "lcars-black-color";
+				$bg_color = "lcars-neon-carrot-bg";
+			} else if( is_a($myform,'FPage') ) {
+				$fg_color = "lcars-atomic-tangerine-color";
+				$bg_color = "lcars-tamarillo-bg";
 			}
+
+			
+			echo "<div class=\"lcars-title vertical $fg_color $bg_color\">$indent";
+
+			// if($myform->getDetailIcon()>"") {
+			// 	echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
+			// }
 			if( is_a($myform,'FLink') ) {
 				echo $myform->render_view($dbmgr);
 			} else
-				echo "<a href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
+				echo "<a class=\"$fg_color\" href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
 			echo "</div>";
 		}
 		if( ($level+1)<count($parent_list)
