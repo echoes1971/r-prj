@@ -12,12 +12,14 @@ class FForm extends React.Component {
         this.state = {
             endpoint: props.endpoint,
             dark_theme: props.dark_theme,
+            readonly: props.readonly || false,
             detailIcon: "icons/user.png",
             detailTitle: "User",
             formname: props.formname,
             dbename: props.dbename,
             obj_id: props.obj_id,
-            obj: props.obj || {}
+            obj: props.obj || {},
+            children: props.children || []
         }
 
         this.field_prefix = "field_"
@@ -74,9 +76,23 @@ class FForm extends React.Component {
             this.setState({obj: obj})
             // changes["obj"] = this.props.obj;
         }
+        if(JSON.stringify(this.props.children) != JSON.stringify(prevProps.children)) {
+            const children = this.props.children
+            console.log("FForm.componentDidUpdate: children changed="+JSON.stringify(children))
+            console.log("FForm.componentDidUpdate: children changed="+(typeof children))
+            // this.obj2state(obj);
+            this.setState({children: children})
+            // changes["obj"] = this.props.obj;
+        }
         if(this.props.dark_theme !== prevProps.dark_theme) {
             this.setState({dark_theme: this.props.dark_theme})
             // changes["dark_theme"] = this.props.dark_theme;
+        }
+        if(this.props.readonly !== prevProps.readonly) {
+            this.setState({readonly: this.props.readonly})
+        }
+        if(this.props.dbename !== prevProps.dbename) {
+            this.setState({dbename: this.props.dbename})
         }
         if(this.props.formname !== prevProps.formname) {
             this.setState({formname: this.props.formname})
@@ -373,7 +389,8 @@ class FForm extends React.Component {
         const decodeGroupNames = this.form.decodeGroupNames
         const groupName = decodeGroupNames[g]
         const group = this.form.groups[g]
-        const is_readonly = false; // TODO
+        // console.log("FForm.renderGroup: this.state.readonly="+this.state.readonly+" "+typeof(this.state.readonly))
+        const is_readonly = this.state.readonly;
 
         const visibleFields = this.form.detailColumnNames;
         const readonlyFields = this.form.detailReadOnlyColumnNames;

@@ -3,10 +3,12 @@ import React, { Component } from 'react'
 import './App.scss';
 
 import { app_cfg } from './app.cgf';
+import { FForm } from './comp.fform';
 import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
+import { DBEntity } from './db/dblayer';
 
 class App extends Component {
 
@@ -24,7 +26,14 @@ class App extends Component {
       ,user_is_admin: false
       ,root_obj: null
       ,top_menu: []
+
+      ,formname: 'FObject'
+      ,dbename: 'DBEObject'
+      ,current_obj: null
+      ,children: []
     };
+
+    this.dbe2formMapping = {};
 
     this.default_callback = this.default_callback.bind(this);
 
@@ -41,6 +50,11 @@ class App extends Component {
 
     this.rootobj_cb = this.rootobj_cb.bind(this);
     this.topmenu_cb = this.topmenu_cb.bind(this);
+
+    this.dbe2form_cb = this.dbe2form_cb.bind(this);
+
+    this.currentobj_cb = this.currentobj_cb.bind(this);
+    this.children_cb = this.children_cb.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +77,25 @@ class App extends Component {
     this.fetchLoggedUser();
     this.be.getRootObj(this.rootobj_cb);
 
+    this.be.getDBE2FormMapping(this.dbe2form_cb);
+
+    const args = this.parsePath();
+    switch(args[0]) {
+      case 'e':
+      case 'o':
+        // Fetch the current object and its children
+        this.be.fullObjectById(args[1],false,this.currentobj_cb);
+        const parent = new DBEntity('DBEObject','objects');
+        parent.setValue('id',args[1]);
+        this.be.getChilds(parent,false,this.children_cb);
+      case 's':
+        // execute the search
+      case 'management':
+        // no idea yet
+      default:
+        break;
+    }
+
     this.pingUser = setInterval(
         // () => this.be.ping(this.on_ping_callback),
         () => { this.fetchLoggedUser() },
@@ -77,6 +110,29 @@ class App extends Component {
   default_callback(jsonObj) {
     // console.log(jsonObj)
   }
+
+  dbe2form_cb(jsonObj, dbe2formMapping) {
+    if(dbe2formMapping) {
+      this.dbe2formMapping = dbe2formMapping;
+    }
+  }
+
+  currentobj_cb(jsonObj, myobj) {
+    const current_obj = myobj
+    const dbename = current_obj.getDBEName()
+    console.log("App.currentobj_cb: dbename="+dbename)
+    const formname = this.be.getFormNameByDBEName(dbename);
+    console.log("App.currentobj_cb: formname="+formname)
+    this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
+    console.log("App.currentobj_cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
+  }
+  children_cb(jsonObj, dbelist) {
+    // console.log("App.children_cb: dbelist="+JSON.stringify(dbelist));
+    const children = dbelist
+    console.log("App.children_cb: children="+JSON.stringify(children));
+    this.setState({children: children})
+  }
+
 
   rootobj_cb(jsonObj, myobj) {
     this.tmp_root_obj = myobj;
@@ -152,10 +208,44 @@ class App extends Component {
     // console.log("App.parsePath: mypath="+mypath);
     return mypath.split("/");
   }
-  renderTest() {
-    return (
-      <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
-    );
+  _render(args) {
+    switch(args[0]) {
+      case 'test':
+        return (
+          <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
+        );
+        break
+      case 'o':
+        // Display the current object
+        return (
+          <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
+            formname={this.state.formname} dbename={this.state.dbename}
+            obj={this.state.current_obj} children={this.state.children}
+            readonly={true}
+            onSave={this.onSave} onError={this.onError} />
+          )
+      case 'e':
+        // Edit the current object
+        // TODO: check a user is logged in and has right to edit the object
+        return (
+          <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
+            formname={this.state.formname} dbename={this.state.dbename}
+            obj={this.state.current_obj} children={this.state.children}
+            readonly={false}
+            onSave={this.onSave} onError={this.onError} />
+          )
+      case 'manage':
+        // Admin-like page of the site, for objects administered by the current user
+      case 's':
+        // Display search results
+      default:
+        return (
+          <span>
+            <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo512_2.png"} /></div>
+            <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo16_2.png"} /></div>
+          </span>)
+        break
+    }
   }
   render() {
     const endpoints = app_cfg.endpoints;
@@ -172,19 +262,7 @@ class App extends Component {
           user_groups={this.state.user_groups}
           root_obj={this.state.root_obj} top_menu={this.state.top_menu}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
-        <div class="container-fluid p-3">{
-          mypath[0]=="test" ?
-          this.renderTest()
-            :
-            (
-              <span>
-              <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo512_2.png"} /></div>
-              <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo16_2.png"} /></div>
-              </span>
-            )
-          }
-          
-        </div>
+        <div class="container-fluid p-3">{ this._render(mypath) }</div>
       </div>
     );
   }

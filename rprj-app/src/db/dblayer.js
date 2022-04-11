@@ -188,7 +188,7 @@ function JSONDBConnection(connectionString,verbose) {
 		// if(this.verbose) { console.log("JSONDBConnection._sendRequest: start."); }
 		var xhr = new XMLHttpRequest()
 		var default_callback = (e) => {
-			console.log("JSONDBConnection._sendRequest.default_callback: start.");
+			// console.log("JSONDBConnection._sendRequest.default_callback: start.");
 			// console.log(xhr);
 			// console.log(xhr.getAllResponseHeaders());
 			// console.log(xhr.getResponseHeader('Set-Cookie'))
@@ -205,7 +205,7 @@ function JSONDBConnection(connectionString,verbose) {
 			} catch(e) {
 				if(req_callback) req_callback([e + "\n===============================\n\n" + xhr.responseText, []])
 			}
-			console.log("JSONDBConnection._sendRequest.default_callback: end.");
+			// console.log("JSONDBConnection._sendRequest.default_callback: end.");
 		};
 		var error_cb = (e) => {
 			console.log("JSONDBConnection._sendRequest.error_cb: start.");
@@ -532,7 +532,7 @@ function JSONDBConnection(connectionString,verbose) {
 		console.log("JSONDBConnection.objectById: end.");
 	};
 	this.fullObjectById = function(oid, ignore_deleted, a_callback) {
-		console.log("JSONDBConnection.fullObjectById: start.");
+		// console.log("JSONDBConnection.fullObjectById: start.");
 		var self = this
 		var my_cb = (jsonObj) => {
 			console.log("JSONDBConnection.fullObjectById.my_cb: start.");
@@ -550,7 +550,7 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.fullObjectById.my_cb: end.");
 		}
 		this._sendRequest('fullObjectById', [oid,ignore_deleted], my_cb.bind(self));
-		console.log("JSONDBConnection.fullObjectById: end.");
+		// console.log("JSONDBConnection.fullObjectById: end.");
 	};
 	this.objectByName = function(name, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.objectByName: start.");
@@ -618,7 +618,7 @@ function JSONDBConnection(connectionString,verbose) {
 	*/
 
 	this.getRootObj = function(a_callback) {
-		console.log("JSONDBConnection.getRootObj: start.");
+		// console.log("JSONDBConnection.getRootObj: start.");
 		var self = this
 		var my_cb = (jsonObj) => {
 			console.log("JSONDBConnection.getRootObj.my_cb: start.");
@@ -636,7 +636,7 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.getRootObj.my_cb: end.");
 		}
 		this._sendRequest('getRootObj', [], my_cb.bind(self));
-		console.log("JSONDBConnection.getRootObj: end.");
+		// console.log("JSONDBConnection.getRootObj: end.");
 	};
 
 	this.getChilds = function(dbe, without_index_page, a_callback) {
@@ -664,7 +664,7 @@ function JSONDBConnection(connectionString,verbose) {
 					console.log("ERROR" + e);
 				}
 			}
-			console.log(dbelist)
+			// console.log(dbelist)
 			jsonObj[1] = dbelist;
 			a_callback(jsonObj, dbelist)
 			console.log("JSONDBConnection.getChilds.my_cb: end.");
