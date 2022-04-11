@@ -319,6 +319,10 @@ div.formView_value h1 {
 div.middle_content {
   overflow:auto;
   border:0px solid #fa6;
+
+  padding-left:1.5rem;
+  /* padding-top: 5.5rem; */
+  padding-bottom: 4.5rem;
   /* position:absolute;
   top:44px;
   left:20px;
@@ -557,6 +561,9 @@ input.search {
   border-radius-bottomleft:10px;-moz-border-radius-bottomleft:10px;-webkit-border-bottom-left-radius:10px;
 }
 
+#gestione_left {
+  margin-top: 2rem;
+}
 
 
 /* ********************************* Content classes ********************************* */

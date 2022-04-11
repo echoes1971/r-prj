@@ -113,7 +113,7 @@ if(!is_a($current_obj,'DBEFolder')) {
 ?></div><?php
 
 do_hook('divleft_after');
-?></div></div><?php
+?></div><?php
 
 ?><div id="container"><?php
 
