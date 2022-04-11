@@ -163,11 +163,13 @@ li.breadcrumb, a.breadcrumb:link, a.breadcrumb:active, a.breadcrumb:visited, a.b
   font-weight: bold;
 }
 ul.obj_actions {
-  display:inline;
+  /* display:inline; */
   list-style-position: inside;
   text-align: left;
   font-weight: bold;
   margin: 1px;
+
+  padding-top:4.5rem;
 }
 li.obj_actions {
   display:block;
@@ -442,7 +444,10 @@ input.search {
   bottom: 0px;
   right: 0px;
   
-  padding: 20px 2px;
+  /* padding: 20px 2px; */
+  padding-top:5.5rem;
+  /* margin-left: 1rem; */
+  margin-right: -1rem;
 
   width: 140px;
   background-color: #000000;

@@ -694,7 +694,7 @@ h6 {
   position: relative;
   font-weight: bold;
   color: #000;
-  text-align: right;
+  /* text-align: right; */
   background: #fc6;
   height: 3rem;
   width: 7.5rem;
@@ -708,6 +708,9 @@ h6 {
 }
 .lcars-element * {
   margin: 0;
+}
+.lcars-element.short{
+  height: 1.5rem;
 }
 .lcars-element.left-rounded {
   border-top-left-radius: 1.5rem;
@@ -889,7 +892,7 @@ a.lcars-text-box.blink {
 .lcars-bracket.hollow {
   background-color: #000;
   border-style: solid;
-  border-color: #fc6;
+  /* border-color: #fc6; */
 }
 .lcars-u-1-1 {
   width: 7.5rem;
