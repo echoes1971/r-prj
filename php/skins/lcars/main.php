@@ -223,54 +223,56 @@ if($search_object>'') {
 
 	$content_items_count=count($content_items);
 	foreach($content_items as $content_item) {
+		echo "<div class=\"lcars-row\">&nbsp;</div>";
+
 		echo "<div class=\"lcars-row\">";
 
-		echo "<div class=\"lcars-element left-rounded lcars-eggplant-bg  lcars-u-1-1\"></div>";
-		$_desc = $content_item->getValue('description');
-		echo "<div class=\"lcars-element lcars-lavender-purple-bg lcars-u-1-1\">";
-		echo "<img src=\"".getSkinFile($content_item->getDetailIcon())."\" alt=\"\" />&nbsp;";
-		if( is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
-			echo $content_item->getValue('name');
-		} else {
-			echo "<a href=\"main.php?obj_id=".$content_item->getValue('id')."\">".$content_item->getValue('name')."</a>";
-		}
+		echo "<div class=\"lcars-element left-rounded lcars-eggplant-bg  lcars-u-1-1\">";
 		echo "</div>";
 
-		echo "<div class=\"lcars-element lcars-black-bg lcars-u-3-2\">";
-		if( is_a($content_item,'FFile') && $content_item->isImage() ) {
+		$_desc = substr($content_item->getValue('description'),0,30);
+		if(strlen($_desc)==30) $_desc .= "...";
+		if($_desc>'') {
+			$_desc = "<p class=\"content_item\">".str_replace("\n","<br/>",$_desc)."</p>";
+		}
+		if(is_a($content_item,'FFile') && $content_item->isImage()) {
 			$__alt_link=$content_item->getValue('alt_link');
-			
-			echo $content_item->getField('filename')->render_thumbnail($__alt_link);
-			echo '<br/><br/>';
+			$_desc = $content_item->getField('filename')->render_thumbnail($__alt_link).'<br/><br/>'.$_desc;
 		} elseif( is_a($content_item,'FPage') ) {
 			if($current_obj_id==$content_item->getValue('id')) {
 				if($_desc>'') {
-					echo "<p class=\"content_item\">$_desc</p>";
+					echo "XXX<p class=\"content_item\">$_desc</p>";
 					echo "<br/>";
 					$_desc='';
 				}
 				echo $content_item->getField('html')->render_view('main.php','download.php');
 			}
 		} elseif( is_a($content_item,'FLink') ) {
-			echo $content_item->render_view();
+			$_desc = $content_item->render_view() . $_desc;
 		} elseif( is_a($content_item,'FNote') ) {
 			$_desc='';
 		} else {
-			echo "<b>".$content_item->getField('name')->render_view()."</b>";
-	// 		echo $content_item->render_view($dbmgr);
-	// 		echo $content_item->render_view();
-		}
-		if($_desc>'') {
-			echo "<p class=\"content_item\">".str_replace("\n","<br/>",$_desc)."</p>";
+			// $_desc = $content_item->getField('name')->render_view() . $_desc;
 		}
 
-		// if($content_items_count>1) echo "<hr/>";
+		echo "<div class=\"lcars-element lcars-lavender-purple-bg lcars-u-1-1\">";
+		if( is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
+			echo $content_item->getValue('name');
+		} else {
+			echo "<a href=\"main.php?obj_id=".$content_item->getValue('id')."\">".$content_item->getValue('name')."</a>";
+		}
+		echo "&nbsp;<img src=\"".getSkinFile($content_item->getDetailIcon())."\" alt=\"\" />";
 		echo "</div>";
+
+		echo "<div class=\"lcars-element lcars-hopbush-bg lcars-u-2-1\">";
+		echo $_desc;
+		echo "</div>";
+
 		echo "<div class=\"lcars-element right-rounded lcars-cosmic-bg lcars-u-1-1\"></div>";
 
 		echo "</div>";
 
-		// echo "<div class=\"lcars-row\"><div class=\"lcars-element lcars-black-bg lcars-u-4-1\"></div></div>";
+		// echo "<div class=\"lcars-row\">&nbsp;</div>";
 	}
 	// echo join("<br/><hr/>",$content_items);
 // 2012.07.23: start.

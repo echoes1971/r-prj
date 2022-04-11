@@ -23,7 +23,7 @@ do_hook('footer_before');
   ?><div class="lcars-elbow left-top lcars-tan-bg"></div><?php
   ?><div class="lcars-bar horizontal both-divider bottom"><?php
 do_hook('footer_content_before');
-?><div class="lcars-title right horizontal">&copy; <?php echo date("Y"); ?> by Roberto Rocco-Angeloni - All rights reserved.</div><?php
+?><div class="lcars-title right horizontal">&copy; <?php echo date("Y"); ?> by Roberto Rocco-Angeloni.</div><?php
   ?></div><?php
   ?><div class="lcars-bar horizontal right-end left-divider bottom"></div><?php
 
