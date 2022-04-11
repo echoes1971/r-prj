@@ -45,7 +45,7 @@ function render_level(&$parent_list,$level=0,$indent="") {
 		$formtype = $formulator->getFormNameByDBEName($dbetype);
 		$myform = $formulator->getInstance($formtype,'Modify','dbe_modify_do.php'); // 2011.04.04 eval("\$myform = new $formtype('Modify','dbe_modify_do.php');");
 		$myform->setValues($menu_item->getValuesDictionary());
-		if( ($menu_item->getValue('father_id')==$current_obj_id)
+		if(($menu_item->getValue('father_id')==$current_obj_id)
 			|| ($menu_item->getValue('fk_obj_id')==$current_obj_id) ){
 			if(!is_a($menu_item,'DBEFolder')
 				&& !is_a($menu_item,'DBELink')
@@ -71,17 +71,17 @@ function render_level(&$parent_list,$level=0,$indent="") {
 			$txt_align = "";
 			$fg_color = "";
 			$bg_color = "lcars-rust-bg";
-			if( is_a($myform,'FFolder') ) {
+			if(is_a($myform,'FFolder')) {
 				$fg_color = "lcars-white-color";
 				$bg_color = "lcars-dodger-blue-alt-bg";
-			} else if( is_a($myform,'FLink') ) {
+			} else if(is_a($myform,'FLink')) {
 				$fg_color = "lcars-white-color";
 				$bg_color = "lcars-dodger-blue-bg";
-			} else if( is_a($myform,'FNote') ) {
+			} else if(is_a($myform,'FNote')) {
 				$txt_align = "txtright";
 				$fg_color = "lcars-black-color";
 				$bg_color = "lcars-neon-carrot-bg";
-			} else if( is_a($myform,'FPage') ) {
+			} else if(is_a($myform,'FPage')) {
 				$txt_align = "txtright";
 				$fg_color = "lcars-black-color";
 				$bg_color = "lcars-red-damask-bg";
@@ -93,13 +93,13 @@ function render_level(&$parent_list,$level=0,$indent="") {
 			// if($myform->getDetailIcon()>"") {
 			// 	echo "<img src=\"".getSkinFile($myform->getDetailIcon())."\" alt=\"\" />&nbsp;";
 			// }
-			if( is_a($myform,'FLink') ) {
+			if(is_a($myform,'FLink')) {
 				echo $myform->render_view($dbmgr);
 			} else
 				echo "<a class=\"$fg_color\" href=\"main.php?obj_id=".$menu_item->getValue('id')."\">".$menu_item->getValue('name')."</a>";
 			echo "</div>";
 		}
-		if( ($level+1)<count($parent_list)
+		if(($level+1)<count($parent_list)
 			&& $menu_item->getValue('id')==$parent_list[$level+1]->getValue('id')
 		) {
 			render_level($parent_list,$level+1,"$indent&nbsp;&nbsp;");
@@ -160,18 +160,18 @@ if($search_object>'') {
 		echo "<div class=\"content_item\">";
 		echo "<h3 class=\"content_item\">";
 		echo "<img src=\"".getSkinFile($content_item->getDetailIcon())."\" alt=\"\" />&nbsp;";
-		if( is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
+		if(is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
 			echo $content_item->getValue('name');
 		} else {
 			echo "<a href=\"main.php?obj_id=".$content_item->getValue('id')."\">".$content_item->getValue('name')."</a>";
 		}
 		echo "</h3>";
-		if( is_a($content_item,'FFile') && $content_item->isImage() ) {
+		if(is_a($content_item,'FFile') && $content_item->isImage()) {
 			$__alt_link=$content_item->getValue('alt_link');
 			
 			echo $content_item->getField('filename')->render_thumbnail($__alt_link);
 			echo '<br/><br/>';
-		} elseif( is_a($content_item,'FPage') ) {
+		} elseif(is_a($content_item,'FPage')) {
 			if($current_obj_id==$content_item->getValue('id')) {
 				if($_desc>'') {
 					echo "<p class=\"content_item\">$_desc</p>";
@@ -180,9 +180,9 @@ if($search_object>'') {
 				}
 				echo $content_item->getField('html')->render_view('main.php','download.php');
 			}
-		} elseif( is_a($content_item,'FLink') ) {
+		} elseif(is_a($content_item,'FLink')) {
 			echo $content_item->render_view();
-		} elseif( is_a($content_item,'FNote') ) {
+		} elseif(is_a($content_item,'FNote')) {
 			$_desc='';
 		} else {
 			echo "<b>".$content_item->getField('name')->render_view()."</b>";
@@ -209,9 +209,9 @@ if($search_object>'') {
 	echo "<div class=\"content-body $_content_body_fg\">";
 	if($index_page_form!==null) {
 		echo $index_page_form->getField('html')->render_view();
-	} elseif( is_a($current_form,'FPage') && !is_a($current_form,'FNews') ) {
+	} elseif(is_a($current_form,'FPage') && !is_a($current_form,'FNews')) {
 		echo $current_form->getField('html')->render_view();
-	} elseif( is_a($current_form,'FFile') && $current_form->isImage() ) {
+	} elseif(is_a($current_form,'FFile') && $current_form->isImage()) {
 	// 	echo $current_form->getField('name')->render_view();
 	// 	echo $current_form->getField('description')->render_view();
 		echo $current_form->render_view($dbmgr);
@@ -238,7 +238,7 @@ if($search_object>'') {
 		if(is_a($content_item,'FFile') && $content_item->isImage()) {
 			$__alt_link=$content_item->getValue('alt_link');
 			$_desc = $content_item->getField('filename')->render_thumbnail($__alt_link).'<br/><br/>'.$_desc;
-		} elseif( is_a($content_item,'FPage') ) {
+		} elseif(is_a($content_item,'FPage')) {
 			if($current_obj_id==$content_item->getValue('id')) {
 				if($_desc>'') {
 					echo "XXX<p class=\"content_item\">$_desc</p>";
@@ -247,16 +247,16 @@ if($search_object>'') {
 				}
 				echo $content_item->getField('html')->render_view('main.php','download.php');
 			}
-		} elseif( is_a($content_item,'FLink') ) {
+		} elseif(is_a($content_item,'FLink')) {
 			$_desc = $content_item->render_view() . $_desc;
-		} elseif( is_a($content_item,'FNote') ) {
+		} elseif(is_a($content_item,'FNote')) {
 			$_desc='';
 		} else {
 			// $_desc = $content_item->getField('name')->render_view() . $_desc;
 		}
 
 		echo "<div class=\"lcars-element lcars-lavender-purple-bg lcars-u-1-1\">";
-		if( is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
+		if(is_a($content_item,'FFile') && $content_item->isImage() && $content_item->getValue('alt_link')>'' ) {
 			echo $content_item->getValue('name');
 		} else {
 			echo "<a href=\"main.php?obj_id=".$content_item->getValue('id')."\">".$content_item->getValue('name')."</a>";
@@ -282,7 +282,7 @@ if($search_object>'') {
 do_hook('divmiddle_after');
  ?></div><?php
 ?></div><?php
- if( $dbmgr->hasGroup($GROUP_WEBMASTER) && ($current_obj->canWrite('U') || $current_obj->canWrite('G') ) ) {
+ if($dbmgr->hasGroup($GROUP_WEBMASTER) && ($current_obj->canWrite('U') || $current_obj->canWrite('G') )) {
 ?><div id="right"><?php
 	// Middle Right
 	do_hook('divright_before');
@@ -296,7 +296,7 @@ do_hook('divmiddle_after');
 	for($i=0; $i<$current_form->getDetailFormsCount(); $i++) {
 		$childForm = $current_form->getDetail($i);
 		$dest_form = $childForm;
-		if (!is_a($childForm,'FAssociation') ) {
+		if (!is_a($childForm,'FAssociation')) {
 			$childDBE = $childForm->getDBE();
 			$childDBE->readFKFrom($current_obj);
 			$newUrl = "mng/". $childForm->getPagePrefix()."_new.php?dbetype=".$childDBE->getTypeName()."&formtype=".get_class($childForm)."&".$childDBE->getFKCGIConditionFromMaster($current_obj, true);
