@@ -57,6 +57,8 @@ class App extends Component {
 
     this.currentobj_cb = this.currentobj_cb.bind(this);
     this.children_cb = this.children_cb.bind(this);
+
+    this.onError = this.onError.bind(this)
   }
 
   componentDidMount() {
@@ -225,7 +227,7 @@ class App extends Component {
   }
 
   onError(jsonObj) {
-    this.setState({server_response_0: jsonObj[0], server_response_1: jsonObj[1]})
+    this.setState({server_response_0: jsonObj[0], server_response_1: JSON.stringify(jsonObj[1])})
   }
 
   parsePath() {
