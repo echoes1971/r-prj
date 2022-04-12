@@ -8,7 +8,8 @@ import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
-import { DBEntity } from './db/dblayer';
+import { IFRTree, IFRTreeAll } from './comp.ui.elements';
+// import { DBEntity } from './db/dblayer';
 
 class App extends Component {
 
@@ -27,8 +28,8 @@ class App extends Component {
       ,root_obj: null
       ,top_menu: []
 
-      ,formname: 'FObject'
-      ,dbename: 'DBEObject'
+      ,formname: null //'FObject'
+      ,dbename: null //'DBEObject'
       ,current_obj: null
       ,children: []
     };
@@ -85,9 +86,9 @@ class App extends Component {
       case 'o':
         // Fetch the current object and its children
         this.be.fullObjectById(args[1],false,this.currentobj_cb);
-        const parent = new DBEntity('DBEObject','objects');
-        parent.setValue('id',args[1]);
-        this.be.getChilds(parent,false,this.children_cb);
+        // const parent = new DBEntity('DBEObject','objects');
+        // parent.setValue('id',args[1]);
+        // this.be.getChilds(parent,false,this.children_cb);
       case 's':
         // execute the search
       case 'management':
@@ -112,19 +113,40 @@ class App extends Component {
   }
 
   dbe2form_cb(jsonObj, dbe2formMapping) {
-    if(dbe2formMapping) {
-      this.dbe2formMapping = dbe2formMapping;
+    console.log("App.dbe2form_cb: dbe2formMapping="+JSON.stringify(dbe2formMapping))
+    if(!dbe2formMapping) {
+      return;
     }
+    this.dbe2formMapping = dbe2formMapping;
+
+    const current_obj = this.state.current_obj;
+    console.log("App.dbe2form_cb: current_obj="+current_obj)
+    if(current_obj===null || current_obj===undefined) return;
+    const dbename = current_obj.getDBEName()
+    console.log("App.dbe2form_cb: dbename="+dbename)
+    if(!(dbename>'')) return;
+    if(!(dbename in this.dbe2formMapping)) return;
+    const formname = this.dbe2formMapping[dbename];
+    console.log("App.dbe2form_cb: formname="+formname)
+    if(formname===null || formname===undefined) return;
+    this.setState({formname: formname});
   }
 
   currentobj_cb(jsonObj, myobj) {
     const current_obj = myobj
+    if(current_obj===null) {
+      console.log("App.currentobj_cb: current_obj not found or user has not the right to view it.");
+      return
+    }
     const dbename = current_obj.getDBEName()
     console.log("App.currentobj_cb: dbename="+dbename)
     const formname = this.be.getFormNameByDBEName(dbename);
     console.log("App.currentobj_cb: formname="+formname)
     this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
     console.log("App.currentobj_cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
+
+    // Load the children AFTER the object has been returned by the back-end
+    this.be.getChilds(current_obj,false,this.children_cb);
   }
   children_cb(jsonObj, dbelist) {
     // console.log("App.children_cb: dbelist="+JSON.stringify(dbelist));
@@ -239,12 +261,7 @@ class App extends Component {
       case 's':
         // Display search results
       default:
-        return (
-          <span>
-            <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo512_2.png"} /></div>
-            <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo16_2.png"} /></div>
-          </span>)
-        break
+        return (<IFRTree dark_theme={this.state.dark_theme} />)
     }
   }
   render() {
