@@ -38,6 +38,16 @@ class RLocalStorage {
         }
         return ret;
     }
+    /* Remove all the keys for this.myid
+    */
+    removeAllMyKeys() {
+        const prefix = this.myid + '.';
+        for(var i=0; i<localStorage.length; i++) {
+            if(localStorage.key(i).indexOf(prefix)<0) continue;
+            const k = localStorage.key(i)
+            localStorage.removeItem(k)
+        }
+    }
     /** Returns the state for myid */
     getMyState() {
         var ret = {};
