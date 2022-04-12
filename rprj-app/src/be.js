@@ -177,14 +177,14 @@ function simpleCache(cb) {
         // IF chache has key, then apply then callback we have as second parameter
         if(cache.has(key)) {
             const jsonValue = cache.get(key)
-            console.log("simpleCache: FOUND typeof(jsonValue)="+typeof(JSON.parse(jsonValue)))
+            // console.log("simpleCache: FOUND typeof(jsonValue)="+typeof(JSON.parse(jsonValue)))
             console.log("simpleCache: FOUND jsonValue="+jsonValue)
             a_cb(['',[]], JSON.parse(jsonValue))
         } else {
         // ELSE call the function cb, aith my_cb as a callback
             var my_cb = (jsonObj, myobj) => {
                 console.log("simpleCache.my_cb: start.")
-                console.log("simpleCache.my_cb: typeof(myobj)="+typeof(myobj))
+                // console.log("simpleCache.my_cb: typeof(myobj)="+typeof(myobj))
                 // Save in cache
                 const jsonValue = JSON.stringify(myobj)
                 console.log("simpleCache.my_cb: jsonValue="+jsonValue)
