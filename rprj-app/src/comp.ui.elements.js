@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { app_cfg } from './app.cgf';
 
@@ -102,12 +102,14 @@ const RLink = props => {
 }
 
 const DBOLink = props => {
+    var be = props.be;
 
     const id = props.dbo ? props.dbo.getValue('id') : ''
     const name = props.dbo ? props.dbo.getValue('name') : ''
     const dbename = props.dbo ? props.dbo.dbename : ''
+    const edit = props.edit || false
 
-    return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + "o/" + id + "/"}>{name}</a>
+    return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
 }
 
 export { DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }

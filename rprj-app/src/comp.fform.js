@@ -452,7 +452,7 @@ class FForm extends React.Component {
         );
     }
 
-    renderChildren() {
+    renderChildren(readonly) {
         const children = this.state.children
         if(children===undefined || children===null || children.length===0) return ('')
         const detailForms = this.form && 'detailForms' in this.form ? this.form['detailForms'] : []
@@ -463,7 +463,7 @@ class FForm extends React.Component {
         return (<div class="container">{
             Object.keys(children).map((k) => {
                 return (<div class="row">
-                    <div class="col"><DBOLink dbo={children[k]} be={this.be} /></div>
+                    <div class="col"><DBOLink dbo={children[k]} be={this.be} edit={readonly===false} /></div>
                 </div>)
             })
         }</div>)
@@ -481,7 +481,7 @@ class FForm extends React.Component {
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
         const actions = readonly ? ('') : this.renderActions();
-        const children = this.renderChildren()
+        const children = this.renderChildren(readonly)
 
         const server_response_0 = this.state.server_response_0
         const server_response_1 = this.state.server_response_1
@@ -500,7 +500,7 @@ class FForm extends React.Component {
                     <div class="row">{f}</div>
                     <div class="row"><div class="col">&nbsp;</div></div>
                     <div class="row"><div class="col">{children}</div></div>
-                    <div class="row"><div class="col"><pre>{JSON.stringify(this.form, null, 2)}</pre></div></div>
+                    {/* <div class="row"><div class="col"><pre>{JSON.stringify(this.form, null, 2)}</pre></div></div> */}
                     <div class="row"><div class="col">&nbsp;</div></div>
                 </div>
             </form>
