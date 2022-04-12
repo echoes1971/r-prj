@@ -2,6 +2,7 @@
 import { DBMgr, JSONDBConnection } from './db/dblayer'
 
 import { app_cfg } from './app.cgf';
+// import { RLocalStorage } from './comp.ls';
 
 /**
  * Back End Proxy
@@ -15,8 +16,14 @@ class BackEndProxy {
 
         this.con = new JSONDBConnection(endpoint, true);
         this.dbmgr = new DBMgr(this.con);
+        // this.ls = new RLocalStorage("BE");
         this.dbe2formMapping = {}
         this.root_obj = null
+
+
+        this.getDBEInstance = simpleCache(this.getDBEInstance.bind(this))
+        this.getFormInstance = simpleCache(this.getFormInstance.bind(this))
+        this.getFormInstanceByDBEName = simpleCache(this.getFormInstanceByDBEName.bind(this))
     }
 
     do_nothing_callback() {
@@ -154,6 +161,42 @@ class BackEndProxy {
         this.dbmgr.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
     }
 
+}
+
+/**
+ * To cache immutable results 
+ * for functions like: f(key,a_cb)
+ */
+function simpleCache(cb) {
+    const cache = new Map()
+    return (...args) => {
+        console.log("simpleCache: start.")
+        const key = args[0]
+        const a_cb = args[1]
+        console.log("simpleCache: key="+key)
+        // IF chache has key, then apply then callback we have as second parameter
+        if(cache.has(key)) {
+            const jsonValue = cache.get(key)
+            console.log("simpleCache: FOUND typeof(jsonValue)="+typeof(JSON.parse(jsonValue)))
+            console.log("simpleCache: FOUND jsonValue="+jsonValue)
+            a_cb(['',[]], JSON.parse(jsonValue))
+        } else {
+        // ELSE call the function cb, aith my_cb as a callback
+            var my_cb = (jsonObj, myobj) => {
+                console.log("simpleCache.my_cb: start.")
+                console.log("simpleCache.my_cb: typeof(myobj)="+typeof(myobj))
+                // Save in cache
+                const jsonValue = JSON.stringify(myobj)
+                console.log("simpleCache.my_cb: jsonValue="+jsonValue)
+                cache.set(key, jsonValue)
+                // Apply the callback in argument
+                a_cb(jsonObj, myobj)
+                console.log("simpleCache.my_cb: end.")
+            }
+            cb(key, my_cb)
+        }
+        console.log("simpleCache: end.")
+    }
 }
 
 export { BackEndProxy };
