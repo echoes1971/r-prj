@@ -14,6 +14,10 @@ class FForm extends React.Component {
             endpoint: props.endpoint,
             dark_theme: props.dark_theme,
             readonly: props.readonly || false,
+
+            server_response_0: '',
+            server_response_1: '',
+
             detailIcon: "", //"icons/user.png",
             detailTitle: "", //"User",
             formname: props.formname,
@@ -61,13 +65,13 @@ class FForm extends React.Component {
         // console.log("FForm.componentDidUpdate: props="+JSON.stringify(this.props))
         // console.log("FForm.componentDidUpdate: prevState="+JSON.stringify(prevState))
         // console.log("FForm.componentDidUpdate: state="+JSON.stringify(this.state))
-        var update = false;
+
         const changes = {};
         if(this.props.endpoint !== prevProps.endpoint) {
             // this.setState({endpoint: this.props.endpoint})
             changes["endpoint"] = this.props.endpoint;
             this.be = new BackEndProxy(this.props.endpoint);
-            // update = true;
+
             this.be.getFormInstance(this.props.formname,this.forminstance_callback);
         }
         if(JSON.stringify(this.props.obj) !== JSON.stringify(prevProps.obj)) {
@@ -101,14 +105,10 @@ class FForm extends React.Component {
             this.setState({formname: this.props.formname})
             console.log("FForm.componentDidUpdate: formname changed "+prevProps.formname + "=>" + this.props.formname)
             // changes["formname"] = this.props.formname;
-            // update = true;
+
             this.be.getFormInstance(this.props.formname,this.forminstance_callback);
         }
         // this.setState(changes);
-
-        // if(update) {
-        //     this.be.getFormInstance(this.props.formname,this.forminstance_callback);
-        // }
     }
 
     forminstance_callback(jsonObj,form) {
@@ -116,7 +116,7 @@ class FForm extends React.Component {
         // console.log("FForm.forminstance_callback: form="+JSON.stringify(form))
         this.form = form;
         if(form===null) {
-            this.props.onError(jsonObj);
+            // this.props.onError(jsonObj);
             return;
         }
         this.obj2state();
@@ -513,10 +513,14 @@ class FForm extends React.Component {
         if(!this.state.dbename || !this.state.formname || !this.state.obj) {
             return (<IFRTree dark_theme={this.state.dark_theme} />)
         }
+        const readonly =  this.state.readonly
         const detailIcon = this.state.detailIcon;
         const detailTitle = this.state.detailTitle;
         const f = this.renderGroups();
-        const actions = this.renderActions();
+        const actions = readonly ? ('') : this.renderActions();
+
+        const server_response_0 = this.state.server_response_0
+        const server_response_1 = this.state.server_response_1
         console.log("FForm.render: dark_theme="+this.state.dark_theme)
         console.log("FForm.render: readonly="+this.state.readonly)
         console.log("FForm.render: dbename="+this.state.dbename)
@@ -526,13 +530,13 @@ class FForm extends React.Component {
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{this.icon2emoji(detailIcon)} {detailTitle}</div></div>
-                    <div class="row"><div class="row">&nbsp;</div></div>
-                    <div class="row">{actions}</div>
-                    <div class="row"><div class="row">&nbsp;</div></div>
+                    { readonly ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
+                    { readonly ? '' : <div class="row">{actions}</div>}
+                    { readonly ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
                     <div class="row">{f}</div>
-                    <div class="row"><div class="row">&nbsp;</div></div>
+                    <div class="row"><div class="col">&nbsp;</div></div>
                     <div class="row">TODO: detail forms</div>
-                    <div class="row"><div class="row">&nbsp;</div></div>
+                    <div class="row"><div class="col">&nbsp;</div></div>
                 </div>
             </form>
         );

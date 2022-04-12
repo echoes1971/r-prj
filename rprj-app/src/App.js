@@ -8,6 +8,7 @@ import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
+import { ServerResponse } from './comp.test.serverresponse';
 import { IFRTree, IFRTreeAll } from './comp.ui.elements';
 // import { DBEntity } from './db/dblayer';
 
@@ -223,6 +224,10 @@ class App extends Component {
     this._addDarkThemeToBody(dark_theme);
   }
 
+  onError(jsonObj) {
+    this.setState({server_response_0: jsonObj[0], server_response_1: jsonObj[1]})
+  }
+
   parsePath() {
     // console.log("App.parsePath: root_path="+app_cfg.root_path);
     // console.log("App.parsePath: window.location.pathname="+window.location.pathname);
@@ -280,6 +285,20 @@ class App extends Component {
           root_obj={this.state.root_obj} top_menu={this.state.top_menu}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container-fluid p-3">{ this._render(mypath) }</div>
+
+        <div class="container">
+
+          <div class="row border rounded">
+            <div class="col">
+              <ServerResponse class=""
+                server_response_0={this.state.server_response_0}
+                server_response_1={this.state.server_response_1} />
+            </div>
+          </div>
+          
+
+        </div>
+
       </div>
     );
   }
