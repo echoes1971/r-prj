@@ -53,6 +53,7 @@ class FPermissions extends React.Component {
 
     render() {
         const fieldname = this.name;
+        const is_readonly = this.props.is_readonly
         // const fieldclass = (
         //         (this.cssClass>'' ? this.cssClass : '') + ' '
         //         + (is_readonly ? 'form-control-plaintext' : '')

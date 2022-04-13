@@ -86,31 +86,27 @@ class BackEndProxy {
         return this._canDo(obj,2,'x')
     }
     _canDo(obj,offset,perm) {
-        console.log("BackEndProxy._canDo: offset="+offset+" perm="+perm)
+        // console.log("BackEndProxy._canDo: offset="+offset+" perm="+perm)
         const user = this.getDBEUserFromConnection()
-        console.log("BackEndProxy.canRead: user="+JSON.stringify(user))
+        // console.log("BackEndProxy.canRead: user="+JSON.stringify(user))
         const values = 'dict' in obj ? obj['dict'] : obj
         // console.log("BackEndProxy.canRead: values="+JSON.stringify(values))
         const permissions = 'permissions' in values ? values['permissions'] : '---------'
-        console.log("BackEndProxy._canDo: permissions="+permissions)
+        // console.log("BackEndProxy._canDo: permissions="+permissions)
 
         // Public
-        console.log("BackEndProxy._canDo: public="+permissions.charAt(6+offset))
         if(permissions.charAt(6+offset)===perm) {
             return true
         }
         if(user===false) return false;
         // Group
-        console.log("BackEndProxy._canDo: group="+permissions.charAt(3+offset))
         if(permissions.charAt(3+offset)===perm && this.hasGroup(values['group_id'])) {
             return true
         }
         // User
-        console.log("BackEndProxy._canDo: user="+permissions.charAt(0+offset))
         if(permissions.charAt(0+offset)===perm && user.getValue('id') === values['owner']) {
             return true
         }
-        console.log("BackEndProxy._canDo: return false")
         return false
     }
 
@@ -122,9 +118,9 @@ class BackEndProxy {
     }
 
     fetchUserProfile(a_callback) {
-        console.log("BackEndProxy.fetchUserProfile: start.");
+        // console.log("BackEndProxy.fetchUserProfile: start.");
         const user = this.getDBEUserFromConnection();
-        console.log("BackEndProxy.fetchUserProfile: user="+JSON.stringify(user));
+        // console.log("BackEndProxy.fetchUserProfile: user="+JSON.stringify(user));
         if(user===null) {
             return
         }
@@ -132,17 +128,17 @@ class BackEndProxy {
         search.setValue('fk_users_id',user.getValue('id'))
         var self = this
         this.search(search,false,true,'', (server_messages,dbelist) => {
-            console.log("BackEndProxy.fetchUserProfile.cb: start.");
+            // console.log("BackEndProxy.fetchUserProfile.cb: start.");
             if(dbelist===null || dbelist.length!==1) {
-                console.log("BackEndProxy.fetchUserProfile: server_messages="+server_messages);
+                // console.log("BackEndProxy.fetchUserProfile: server_messages="+server_messages);
                 return
             }
-            self._user_profile = dbelist[1]
-            const user_profile = dbelist[1]
+            self._user_profile = dbelist[0]
+            const user_profile = dbelist[0]
             a_callback(user_profile)
-            console.log("BackEndProxy.fetchUserProfile.cb: end.");
+            // console.log("BackEndProxy.fetchUserProfile.cb: end.");
         })
-        console.log("BackEndProxy.fetchUserProfile: end.");
+        // console.log("BackEndProxy.fetchUserProfile: end.");
     }
 
     execute(tablename,sql_string,a_callback) {

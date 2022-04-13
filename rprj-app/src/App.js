@@ -93,9 +93,6 @@ class App extends Component {
       case 'o':
         // Fetch the current object and its children
         this.be.fullObjectById(args[1],false,this.currentobj_cb);
-        // const parent = new DBEntity('DBEObject','objects');
-        // parent.setValue('id',args[1]);
-        // this.be.getChilds(parent,false,this.children_cb);
         break;
       case 'p':
         // User profile
@@ -156,6 +153,8 @@ class App extends Component {
     this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
     console.log("App.currentobj_cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
 
+    this.setState({server_response_0: jsonObj[0],server_response_1: JSON.stringify(jsonObj[1],null,2)})
+
     // Load the children AFTER the object has been returned by the back-end
     this.be.getChilds(current_obj,false,this.children_cb);
   }
@@ -187,7 +186,7 @@ class App extends Component {
     const user_groups = this.be.getUserGroupsList();
     const user_is_admin = this.be.isAdmin();
     this.setState({
-      user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
+       user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
       ,user_groups: user_groups, user_is_admin: user_is_admin
     });
 
@@ -196,30 +195,33 @@ class App extends Component {
   }
   fetchLoggedUser() {
     // console.log("App.fetchLoggedUser: start.");
-    // console.log("App.fetchLoggedUser: be="+JSON.stringify(this.be));
     this.be.getLoggedUser(this.on_fetchuser_callback);
     // console.log("App.fetchLoggedUser: end.");
   }
 
   fetchUserProfile() {
     console.log("App.fetchUserProfile: start.")
+    const args = this.parsePath()
+    console.log("App.fetchUserProfile.cb: args="+JSON.stringify(args))
+    const is_current_object = args.length>1 && args[0]==='p' && (args[1]===undefined || args[1]==='')
     var self = this
     this.be.fetchUserProfile((user_profile) => {
       console.log("App.fetchUserProfile.cb: user_profile="+JSON.stringify(user_profile))
-      // const _user_profile = user_profile
-      // self.setState({user_profile: _user_profile})
-      const current_obj = user_profile
-      if(current_obj===null) {
-        console.log("App.fetchUserProfile.cb: current_obj not found or user has not the right to view it.");
+      const _user_profile = user_profile
+      if(_user_profile===null) {
         return
       }
+      self.setState({user_profile: _user_profile})
+      console.log("App.fetchUserProfile.cb: is_current_object="+is_current_object)
+      if(!is_current_object) return;
+      // IF the profile IS the current object
+      const current_obj = user_profile
       const dbename = current_obj.getDBEName()
       console.log("App.fetchUserProfile.cb: dbename="+dbename)
       const formname = self.be.getFormNameByDBEName(dbename);
       console.log("App.fetchUserProfile.cb: formname="+formname)
       this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
       console.log("App.fetchUserProfile.cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
-  
       // Load the children AFTER the object has been returned by the back-end
       self.be.getChilds(current_obj,false,this.children_cb);
     })

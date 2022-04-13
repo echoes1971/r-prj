@@ -486,11 +486,11 @@ class FForm extends React.Component {
 
         const server_response_0 = this.state.server_response_0
         const server_response_1 = this.state.server_response_1
-        console.log("FForm.render: dark_theme="+this.state.dark_theme)
-        console.log("FForm.render: readonly="+this.state.readonly)
-        console.log("FForm.render: dbename="+this.state.dbename)
-        console.log("FForm.render: formname="+this.state.formname)
-        console.log("FForm.render: obj="+JSON.stringify(this.state.obj))
+        // console.log("FForm.render: dark_theme="+this.state.dark_theme)
+        // console.log("FForm.render: readonly="+this.state.readonly)
+        // console.log("FForm.render: dbename="+this.state.dbename)
+        // console.log("FForm.render: formname="+this.state.formname)
+        // console.log("FForm.render: obj="+JSON.stringify(this.state.obj))
         return (
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
