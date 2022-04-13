@@ -53,6 +53,10 @@ class BackEndProxy {
     getUserGroupsList() {
         return this.con.getUserGroupsList();
     }
+    hasGroup(group_id) {
+        const groups = this.con.getUserGroupsList();
+        return groups!==undefined && groups!==null && group_id in groups;
+    }
     isAdmin() {
         const groups = this.getUserGroupsList();
         const ret = groups===null ? false
@@ -65,6 +69,48 @@ class BackEndProxy {
     logout(a_callback) {
         this.con.logout(a_callback);
     }
+
+    canRead(obj) {
+        if(obj===undefined || obj===null) return false;
+        return this._canDo(obj,0,'r')
+    }
+    canWrite(obj) {
+        if(obj===undefined || obj===null) return false;
+        return this._canDo(obj,1,'w')
+    }
+    canExecute(obj) {
+        if(obj===undefined || obj===null) return false;
+        return this._canDo(obj,2,'x')
+    }
+    _canDo(obj,offset,perm) {
+        console.log("BackEndProxy._canDo: offset="+offset+" perm="+perm)
+        const user = this.getDBEUserFromConnection()
+        console.log("BackEndProxy.canRead: user="+JSON.stringify(user))
+        const values = 'dict' in obj ? obj['dict'] : obj
+        // console.log("BackEndProxy.canRead: values="+JSON.stringify(values))
+        const permissions = 'permissions' in values ? values['permissions'] : '---------'
+        console.log("BackEndProxy._canDo: permissions="+permissions)
+
+        // Public
+        console.log("BackEndProxy._canDo: public="+permissions.charAt(6+offset))
+        if(permissions.charAt(6+offset)===perm) {
+            return true
+        }
+        if(user===false) return false;
+        // Group
+        console.log("BackEndProxy._canDo: group="+permissions.charAt(3+offset))
+        if(permissions.charAt(3+offset)===perm && this.hasGroup(values['group_id'])) {
+            return true
+        }
+        // User
+        console.log("BackEndProxy._canDo: user="+permissions.charAt(0+offset))
+        if(permissions.charAt(0+offset)===perm && user.getValue('id') === values['owner']) {
+            return true
+        }
+        console.log("BackEndProxy._canDo: return false")
+        return false
+    }
+
 
     getLoggedUser(a_callback) {
         // console.log("BackEndProxy.getLoggedUser: start.");

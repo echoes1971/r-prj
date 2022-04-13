@@ -256,11 +256,16 @@ class App extends Component {
       case 'e':
         // Edit the current object
         // TODO: check a user is logged in and has right to edit the object
+        var readonly = false
+        const user = this.be!== null ? this.be.getDBEUserFromConnection() : null
+        const current_obj = this.state.current_obj
+        readonly = user===null ? true
+            : (!this.be.canRead(current_obj) || !this.be.canWrite(current_obj))
         return (
           <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={this.state.children}
-            readonly={false}
+            readonly={readonly}
             onSave={this.onSave} onError={this.onError} />
           )
       case 'manage':
