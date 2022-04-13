@@ -14,10 +14,10 @@ class FPermissions extends React.Component {
         this.is_readonly = props.is_readonly;
         this.field_prefix = props.field_prefix;
 
-        this.permissions_handleChange = this.permissions_handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    permissions_handleChange(event) {
+    handleChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -44,6 +44,7 @@ class FPermissions extends React.Component {
                         + (permission_array[8] ? 'x' : '-');
 
         const state_fieldname = this.field_prefix + target.name.substring(5);
+        console.log("FPermissions.")
         this.setState({[name]: value, [state_fieldname]:permissions});
 
         this.props.onChange({
@@ -73,17 +74,17 @@ class FPermissions extends React.Component {
                                             <div class="btn-group btn-group-sm" role="group" aria-label="User">
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn0_'+fieldname} name={'btn0_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[0]==='r'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[0]==='r'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn0_'+fieldname}>Read</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn1_'+fieldname} name={'btn1_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[1]==='w'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[1]==='w'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn1_'+fieldname}>Write</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn2_'+fieldname} name={'btn2_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[2]==='x'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[2]==='x'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn2_'+fieldname}>Execute</label>
                                             </div>
                                         </div>
@@ -99,17 +100,17 @@ class FPermissions extends React.Component {
                                             <div class="btn-group btn-group-sm" role="group" aria-label="Group">
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn3_'+fieldname} name={'btn3_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[3]==='r'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[3]==='r'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn3_'+fieldname}>Read</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn4_'+fieldname} name={'btn4_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[4]==='w'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[4]==='w'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn4_'+fieldname}>Write</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn5_'+fieldname} name={'btn5_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[5]==='x'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[5]==='x'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn5_'+fieldname}>Execute</label>
                                             </div>
                                         </div>
@@ -125,17 +126,17 @@ class FPermissions extends React.Component {
                                             <div class="btn-group btn-group-sm" role="group" aria-label="All">
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn6_'+fieldname} name={'btn6_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[6]==='r'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[6]==='r'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn6_'+fieldname}>Read</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn7_'+fieldname} name={'btn7_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[7]==='w'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[7]==='w'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn7_'+fieldname}>Write</label>
 
                                                 <input type="checkbox" class="btn-check"
                                                     id={'btn8_'+fieldname} name={'btn8_'+fieldname} autoComplete="off"
-                                                    defaultChecked={value[8]==='x'} onChange={this.permissions_handleChange} />
+                                                    defaultChecked={value[8]==='x'} onChange={this.handleChange} />
                                                 <label class="btn btn-outline-secondary" for={'btn8_'+fieldname}>Execute</label>
                                             </div>
                                         </div>
@@ -151,4 +152,34 @@ class FPermissions extends React.Component {
     }
 }
 
-export { FPermissions };
+const FTextArea = props => {
+
+    const dark_theme = props.dark_theme
+
+    const field = props.field;
+    const field_prefix = props.field_prefix;
+    const is_readonly = props.is_readonly
+
+    const fieldname = field_prefix + field.name
+    const fieldclass = (
+        (field.cssClass>'' ? field.cssClass : '') + ' '
+        + (is_readonly ? 'form-control-plaintext'  + (dark_theme ? ' form-control-plaintext-dark' : '')
+             : '')
+    ).trim();
+
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start">
+                <textarea id={fieldname} name={fieldname}
+                    class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                    value={this.state[fieldname]}
+                    // size={field.size} width={field.width} height={field.height}
+                    onChange={this.default_handleChange} />
+            </div>
+        </div>
+        )
+}
+
+
+export { FPermissions, FTextArea };
