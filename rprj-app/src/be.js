@@ -1,5 +1,5 @@
 // Client
-import { DBMgr, JSONDBConnection } from './db/dblayer'
+import { DBEntity, DBMgr, JSONDBConnection } from './db/dblayer'
 
 import { app_cfg } from './app.cgf';
 // import { RLocalStorage } from './comp.ls';
@@ -19,6 +19,8 @@ class BackEndProxy {
         // this.ls = new RLocalStorage("BE");
         this.dbe2formMapping = {}
         this.root_obj = null
+
+        this._user_profile = null
 
 
         this.getDBEInstance = simpleCache(this.getDBEInstance.bind(this))
@@ -68,6 +70,7 @@ class BackEndProxy {
     }
     logout(a_callback) {
         this.con.logout(a_callback);
+        this._user_profile = null;
     }
 
     canRead(obj) {
@@ -116,6 +119,30 @@ class BackEndProxy {
         // console.log("BackEndProxy.getLoggedUser: start.");
         this.con.getLoggedUser(a_callback);
         // console.log("BackEndProxy.getLoggedUser: end.");
+    }
+
+    fetchUserProfile(a_callback) {
+        console.log("BackEndProxy.fetchUserProfile: start.");
+        const user = this.getDBEUserFromConnection();
+        console.log("BackEndProxy.fetchUserProfile: user="+JSON.stringify(user));
+        if(user===null) {
+            return
+        }
+        var search = new DBEntity("DBEPeople","people")
+        search.setValue('fk_users_id',user.getValue('id'))
+        var self = this
+        this.search(search,false,true,'', (server_messages,dbelist) => {
+            console.log("BackEndProxy.fetchUserProfile.cb: start.");
+            if(dbelist===null || dbelist.length!==1) {
+                console.log("BackEndProxy.fetchUserProfile: server_messages="+server_messages);
+                return
+            }
+            self._user_profile = dbelist[1]
+            const user_profile = dbelist[1]
+            a_callback(user_profile)
+            console.log("BackEndProxy.fetchUserProfile.cb: end.");
+        })
+        console.log("BackEndProxy.fetchUserProfile: end.");
     }
 
     execute(tablename,sql_string,a_callback) {

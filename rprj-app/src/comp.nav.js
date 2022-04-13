@@ -125,6 +125,7 @@ class RNav extends React.Component {
                             </a>
 
                             <ul class={dropdown_menu_class_2} aria-labelledby="navbarProfileDropdown">
+                                <li class="dropdown-item"><RLink class="nav-link" path="p/" name="Profile" /></li>
                                 <li class="dropdown-item">
                                     <form onSubmit={this.default_handleSubmit} >
                                         <div class="form-check form-switch">
@@ -151,6 +152,7 @@ class RNav extends React.Component {
                         </li>
 
                         {/* Visible ONLY on SM and MD screens */}
+                        <li class="dropdown-item d-md-block d-lg-none"><RLink class="nav-link" path="p/" name="Profile" /></li>
                         <li class="dropdown-item d-md-block d-lg-none">
                             <form onSubmit={this.default_handleSubmit} >
                                 <div class="form-check form-switch">
@@ -250,7 +252,7 @@ class RNav extends React.Component {
         const allowed_types = ['DBEFolder','DBELink','DBEPeople'];
         const root_obj = this.state.root_obj;
         const top_menu = this.state.top_menu;
-        console.log("RNav.render: top_menu="+top_menu)
+        // console.log("RNav.render: top_menu="+top_menu)
         return (
             <nav class={nav_class}>
                 <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>

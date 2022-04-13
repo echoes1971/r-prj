@@ -10,6 +10,7 @@ import RNav from './comp.nav';
 import TestBE from './comp.test.be';
 import { ServerResponse } from './comp.test.serverresponse';
 import { IFRTree, IFRTreeAll } from './comp.ui.elements';
+import { DBEntity } from './db/dblayer';
 // import { DBEntity } from './db/dblayer';
 
 class App extends Component {
@@ -23,9 +24,12 @@ class App extends Component {
     this.state = {
       endpoint: props.endpoint // "http://localhost:8080/jsonserver.php",
       ,dark_theme: props.dark_theme
+
       ,user_fullname: ''
       ,user_groups: []
       ,user_is_admin: false
+      ,user_profile: null
+      
       ,root_obj: null
       ,top_menu: []
 
@@ -92,6 +96,10 @@ class App extends Component {
         // const parent = new DBEntity('DBEObject','objects');
         // parent.setValue('id',args[1]);
         // this.be.getChilds(parent,false,this.children_cb);
+        break;
+      case 'p':
+        // User profile
+        // this.fetchUserProfile()
       case 's':
         // execute the search
       case 'management':
@@ -116,7 +124,7 @@ class App extends Component {
   }
 
   dbe2form_cb(jsonObj, dbe2formMapping) {
-    console.log("App.dbe2form_cb: dbe2formMapping="+JSON.stringify(dbe2formMapping))
+    // console.log("App.dbe2form_cb: dbe2formMapping="+JSON.stringify(dbe2formMapping))
     if(!dbe2formMapping) {
       return;
     }
@@ -174,7 +182,7 @@ class App extends Component {
   }
 
   on_fetchuser_callback(jsonObj) {
-    // console.log("App.on_fetchuser_callback: start.");
+    console.log("App.on_fetchuser_callback: start.");
     const tmpUser = this.be.getDBEUserFromConnection();
     const user_groups = this.be.getUserGroupsList();
     const user_is_admin = this.be.isAdmin();
@@ -182,13 +190,40 @@ class App extends Component {
       user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
       ,user_groups: user_groups, user_is_admin: user_is_admin
     });
-    // console.log("App.on_fetchuser_callback: end.");
+
+    this.fetchUserProfile();
+    console.log("App.on_fetchuser_callback: end.");
   }
   fetchLoggedUser() {
     // console.log("App.fetchLoggedUser: start.");
     // console.log("App.fetchLoggedUser: be="+JSON.stringify(this.be));
     this.be.getLoggedUser(this.on_fetchuser_callback);
     // console.log("App.fetchLoggedUser: end.");
+  }
+
+  fetchUserProfile() {
+    console.log("App.fetchUserProfile: start.")
+    var self = this
+    this.be.fetchUserProfile((user_profile) => {
+      console.log("App.fetchUserProfile.cb: user_profile="+JSON.stringify(user_profile))
+      // const _user_profile = user_profile
+      // self.setState({user_profile: _user_profile})
+      const current_obj = user_profile
+      if(current_obj===null) {
+        console.log("App.fetchUserProfile.cb: current_obj not found or user has not the right to view it.");
+        return
+      }
+      const dbename = current_obj.getDBEName()
+      console.log("App.fetchUserProfile.cb: dbename="+dbename)
+      const formname = self.be.getFormNameByDBEName(dbename);
+      console.log("App.fetchUserProfile.cb: formname="+formname)
+      this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
+      console.log("App.fetchUserProfile.cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
+  
+      // Load the children AFTER the object has been returned by the back-end
+      self.be.getChilds(current_obj,false,this.children_cb);
+    })
+    console.log("App.fetchUserProfile: end.")
   }
 
   on_login_callback(jsonObj) {
@@ -200,6 +235,8 @@ class App extends Component {
       user_fullname: tmpUser ? tmpUser.getValue('fullname') : ''
       ,user_groups: user_groups, user_is_admin: user_is_admin
     });
+
+    this.fetchUserProfile()
     // console.log("App.on_login_callback: end.");
   }
   onLogin(usr,pwd) {
@@ -207,7 +244,7 @@ class App extends Component {
   }
 
   on_logout_callback(jsonObj) {
-    this.setState({user_fullname: '', user_groups: [], user_is_admin: false})
+    this.setState({user_fullname: '', user_groups: [], user_is_admin: false, user_profile: null})
   }
   onLogout() {
     this.be.logout(this.on_logout_callback);
@@ -244,6 +281,8 @@ class App extends Component {
           <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
         );
         break
+      case 'p':
+        // User profile
       case 'o':
         // Display the current object
         return (

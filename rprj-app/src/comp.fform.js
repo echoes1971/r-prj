@@ -340,7 +340,8 @@ class FForm extends React.Component {
         const fieldname = this.field_prefix + field.name
         const fieldclass = (
             (field.cssClass>'' ? field.cssClass : '') + ' '
-            + (is_readonly ? 'form-control-plaintext' : '')
+            + (is_readonly ? 'form-control-plaintext'  + (this.state.dark_theme ? ' form-control-plaintext-dark' : '')
+                 : '')
         ).trim();
         return (
             <div class="row">
@@ -470,9 +471,9 @@ class FForm extends React.Component {
     }
 
     render() {
-        console.log("FForm.render: dbename="+this.state.dbename)
-        console.log("FForm.render: formname="+this.state.formname)
-        console.log("FForm.render: obj="+JSON.stringify(this.state.obj))
+        // console.log("FForm.render: dbename="+this.state.dbename)
+        // console.log("FForm.render: formname="+this.state.formname)
+        // console.log("FForm.render: obj="+JSON.stringify(this.state.obj))
         if(!this.state.dbename || !this.state.formname || !this.state.obj) {
             return (<IFRTree dark_theme={this.state.dark_theme} />)
         }
