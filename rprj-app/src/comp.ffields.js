@@ -1,5 +1,7 @@
 import React from 'react';
 
+import JoditEditor from "jodit-react";
+
 class FPermissions extends React.Component {
     constructor(props) {
         super(props);
@@ -181,5 +183,48 @@ const FTextArea = props => {
         )
 }
 
+class HTMLEdit extends React.Component {
+    constructor(props) {
+        super(props);
 
-export { FPermissions, FTextArea };
+        this.state = {
+            name: props.name,
+            readonly: props.readonly,
+            html: props.value
+        }
+        this.field_prefix = props.field_prefix
+        console.log("HTMLEdit.onChange: field_prefix="+this.field_prefix)
+
+        this.onChange = this.onChange.bind(this)
+    }
+
+    onChange(v) {
+        const html = v
+        this.setState({html: html})
+
+        const state_fieldname = this.field_prefix + this.state.name;
+        console.log("HTMLEdit.onChange: state_fieldname="+state_fieldname)
+        this.props.onChange({
+            target: { name: state_fieldname, value: html }
+        });
+    }
+
+    render() {
+        return (
+            this.state.readonly ?
+            <div class="border rounded" dangerouslySetInnerHTML={{__html: this.state.html}} />
+            :
+            <JoditEditor
+            	// ref={editor}
+                value={this.state.html}
+                // config={config}
+                tabIndex={1} // tabIndex of textarea
+                onBlur={this.onChange} // preferred to use only this option to update the content for performance reasons
+                onChange={newContent => {}}
+            />
+        );
+    }
+}
+
+
+export { FPermissions, HTMLEdit, FTextArea };

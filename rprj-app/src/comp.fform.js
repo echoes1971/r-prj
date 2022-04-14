@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { FPermissions } from './comp.ffields';
+import { HTMLEdit, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
-import HTMLEdit, { DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
+import { DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
 class FForm extends React.Component {
     constructor(props) {
@@ -361,7 +361,7 @@ class FForm extends React.Component {
                         value={this.state[fieldname]} size={field.size}
                         width={field.width} height={field.height}
                         onChange={this.default_handleChange} />
-                }
+                    }
                 </div>
             </div>
         );
@@ -403,12 +403,10 @@ class FForm extends React.Component {
         if(field._classname==='FHtml' || field._classname==='FHtmlEdit') {
             return <div class="row">
                 <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                    <div class="col text-start align-top">{
-                        is_readonly ? 
-                            <div class="border rounded" dangerouslySetInnerHTML={{__html: field["value"]}} />
-                            :
-                            <HTMLEdit value={field['value']} />
-                    }
+                    <div class="col text-start align-top">
+                        <HTMLEdit name={field.name} value={this.state[field_name]}
+                            readonly={is_readonly} field_prefix={this.field_prefix}
+                            onChange={this.default_handleChange} />
                     </div>
                 </div>
                 
