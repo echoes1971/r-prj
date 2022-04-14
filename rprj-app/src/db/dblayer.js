@@ -327,7 +327,7 @@ function JSONDBConnection(connectionString,verbose) {
 			} catch(e) {
 				console.log(e);
 			}
-			a_callback(jsonObj);
+			if(a_callback) a_callback(jsonObj);
 			// console.log("JSONDBConnection.getLoggedUser.my_cb: end.");
 		}
 		this._sendRequest('getLoggedUser', [], my_cb.bind(self));
