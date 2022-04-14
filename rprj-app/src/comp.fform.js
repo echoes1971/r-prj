@@ -2,7 +2,7 @@ import React from 'react';
 
 import { HTMLEdit, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
-import { DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
+import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
 class FForm extends React.Component {
     constructor(props) {
@@ -52,12 +52,12 @@ class FForm extends React.Component {
 
     componentDidMount() {
         // console.log("FForm.componentDidMount: start.")
+        this.be.getLoggedUser()
         this.be.getDBE2FormMapping((jsonObj, dbe2formMapping) => {
             this.dbe2formMapping = dbe2formMapping
             console.log("FForm.componentDidMount.cb: this="+this)
             console.log("FForm.componentDidMount.cb: dbe2formMapping="+JSON.stringify())
         });
-
         // this.be.getFormInstance(this.state.formname,this.forminstance_callback);
         // console.log("FForm.componentDidMount: end.")
     }
@@ -447,13 +447,29 @@ class FForm extends React.Component {
             </div>
         );
     }
-    renderActions() {
+    renderActions(readonly) {
         if(this.form===null) {
             return ("--");
         }
+
+        const user = this.be.getDBEUserFromConnection()
+        console.log("FForm.renderActions: user="+JSON.stringify(user))
+
+        const obj = this.state.obj
+        const can_write = this.be.canWrite(obj)
+        console.log("FForm.renderActions: readonly="+readonly)
+        console.log("FForm.renderActions: can_write="+can_write)
         const actions = this.form.actions;
         return (
-            <div class="btn-toolbar" role="toolbar" aria-label="Actions">
+            <div class="btn-toolbar" role="toolbar" aria-label="Actions">{
+                readonly ?
+                <div class="btn-group btn-group-sm" role="group">
+                    <DBOButton class="btn btn-secondary btn-sm"
+                        dbo={this.state.obj} name="Edit" edit={can_write}/>
+                </div>
+                : ''
+                }
+                { readonly ? '' :
                 <div class="btn-group btn-group-sm" role="group">
                     <button class="btn btn-secondary btn-sm" type="button" >Delete</button>
                     {Object.keys(actions).map((k) => {
@@ -463,14 +479,18 @@ class FForm extends React.Component {
                         );
 
                     })}
-                    <button class="btn btn-secondary btn-xs" type="button"
-                        onClick={this.btnSave} >Save</button>
+                    <button class="btn btn-secondary btn-xs" type="button" onClick={this.btnSave} >Save</button>
                 </div>
-                &nbsp;
-                <div class="btn-group btn-group-sm" role="group">
-                    <button class="btn btn-secondary btn-sm" type="button" >View</button>
-                    <button class="btn btn-secondary btn-sm" type="button" >Close</button>
-                </div>
+                }
+                { readonly ? '' : <span>&nbsp;</span> }
+                { readonly ? '' :
+                    <div class="btn-group btn-group-sm" role="group">
+                        {/* <button class="btn btn-secondary btn-sm" type="button" >View</button> */}
+                        <DBOButton class="btn btn-secondary btn-sm"
+                            dbo={this.state.obj} name="View" edit={false}/>
+                        <button class="btn btn-secondary btn-sm" type="button" >Close</button>
+                    </div>
+                }
             </div>
         );
     }
@@ -482,11 +502,10 @@ class FForm extends React.Component {
         if(detailForms.length==0) return ('')
         var formnames = []
         for(const i in children) {
-            console.log(children[i])
             const dbename = children[i].getDBEName()
-            console.log("FForm.renderChildren: dbename="+dbename)
+            // console.log("FForm.renderChildren: dbename="+dbename)
             const formname = this.be.getFormNameByDBEName(dbename)
-            console.log("FForm.renderChildren: formname="+formname)
+            // console.log("FForm.renderChildren: formname="+formname)
             formnames.push(formname)
             const form_icon = formnames[i] + "_icon"
             const form_icon_title = formnames[i] + "_icon_title"
@@ -519,12 +538,16 @@ class FForm extends React.Component {
         if(!this.state.dbename || !this.state.formname || !this.state.obj) {
             return (<IFRTree dark_theme={this.state.dark_theme} />)
         }
+        const obj = this.state.obj
+        const can_write = this.be.canWrite(obj)
+        console.log("FForm.renderActions: can_write="+can_write)
+
         const readonly =  this.state.readonly
         const detailIcon = this.state.detailIcon;
         const detailTitle = this.state.detailTitle;
         const dark_theme = this.state.dark_theme;
         const f = this.renderGroups();
-        const actions = readonly ? ('') : this.renderActions();
+        const actions = this.renderActions(readonly);
         const children = this.state.children
         const childrenUI = this.renderChildren(readonly)
 
@@ -539,9 +562,9 @@ class FForm extends React.Component {
             <form onSubmit={this.default_handleSubmit} encType={this.form!==null ? this.form.enctype : null} >
                 <div class="container border rounded">
                     <div class="row text-center border-bottom"><div class="col fw-bold">{icon2emoji(detailIcon)} {detailTitle}</div></div>
-                    { readonly ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
-                    { readonly ? '' : <div class="row">{actions}</div>}
-                    { readonly ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
+                    { !can_write ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
+                    { !can_write ? '' : <div class="row">{actions}</div>}
+                    { !can_write ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
                     <div class="row">{f}</div>
                     <div class="row"><div class="col">&nbsp;</div></div>
                     { children!==undefined && children!==null && children.length>0 ?

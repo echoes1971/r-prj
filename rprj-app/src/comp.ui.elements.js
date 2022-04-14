@@ -101,12 +101,27 @@ const RLink = props => {
     return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + path}>{name}</a>
 }
 
+const DBOButton = props => {
+    var be = props.be;
+
+    const id = props.dbo ? props.dbo.getValue('id') : ''
+    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
+    const edit = props.edit || false
+    const detailIcon = props.detailIcon || ''
+    const detailIconTitle = props.detailIconTitle || ''
+
+    const link = app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"
+
+    return <button class={props.class} type="button" onClick={() => {window.location=link}} >{name}</button>
+
+    return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+}
+
 const DBOLink = props => {
     var be = props.be;
 
     const id = props.dbo ? props.dbo.getValue('id') : ''
-    const name = props.dbo ? props.dbo.getValue('name') : ''
-    const dbename = props.dbo ? props.dbo.dbename : ''
+    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
     const edit = props.edit || false
     const detailIcon = props.detailIcon || ''
     const detailIconTitle = props.detailIconTitle || ''
@@ -115,4 +130,4 @@ const DBOLink = props => {
 }
 
 
-export { DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
+export { DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
