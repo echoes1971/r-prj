@@ -11,6 +11,7 @@ class RNav extends React.Component {
         
         this.state = {
              dark_theme: props.dark_theme
+            ,endpoint: props.endpoint
             ,p_usr: ''
             ,p_pwd: ''
             ,user_fullname: props.user_fullname

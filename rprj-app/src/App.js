@@ -332,7 +332,7 @@ class App extends Component {
     // console.log("App.render: root_obj="+(root_obj ? root_obj.to_string() : 'null'));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
-        <RNav dark_theme={this.state.dark_theme}
+        <RNav dark_theme={this.state.dark_theme} endpoint={this.state.endpoint}
           user_fullname={this.state.user_fullname} user_is_admin={this.state.user_is_admin}
           user_groups={this.state.user_groups}
           root_obj={this.state.root_obj} top_menu={this.state.top_menu}
