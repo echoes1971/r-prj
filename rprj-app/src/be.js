@@ -56,8 +56,10 @@ class BackEndProxy {
         return this.con.getUserGroupsList();
     }
     hasGroup(group_id) {
+        const user = this.getDBEUserFromConnection()
         const groups = this.con.getUserGroupsList();
-        return groups!==undefined && groups!==null && group_id in groups;
+        return groups!==undefined && groups!==null
+            && (group_id in groups || user.getValue('group_id'));
     }
     isAdmin() {
         const groups = this.getUserGroupsList();
@@ -88,25 +90,29 @@ class BackEndProxy {
     _canDo(obj,offset,perm) {
         // console.log("BackEndProxy._canDo: offset="+offset+" perm="+perm)
         const user = this.getDBEUserFromConnection()
-        // console.log("BackEndProxy.canRead: user="+JSON.stringify(user))
+        // console.log("BackEndProxy._canDo: user="+JSON.stringify(user))
         const values = 'dict' in obj ? obj['dict'] : obj
-        // console.log("BackEndProxy.canRead: values="+JSON.stringify(values))
+        // console.log("BackEndProxy._canDo: values="+JSON.stringify(values))
         const permissions = 'permissions' in values ? values['permissions'] : '---------'
         // console.log("BackEndProxy._canDo: permissions="+permissions)
 
         // Public
+        // console.log("BackEndProxy._canDo: Public")
         if(permissions.charAt(6+offset)===perm) {
             return true
         }
         if(user===false) return false;
         // Group
+        // console.log("BackEndProxy._canDo: Group "+permissions.charAt(3+offset))
         if(permissions.charAt(3+offset)===perm && this.hasGroup(values['group_id'])) {
             return true
         }
         // User
-        if(permissions.charAt(0+offset)===perm && user.getValue('id') === values['owner']) {
+        // console.log("BackEndProxy._canDo: User "+permissions.charAt(0+offset))
+        if(permissions.charAt(0+offset)===perm && user!==null && user.getValue('id')===values['owner']) {
             return true
         }
+        // console.log("BackEndProxy._canDo: Can't do!!!")
         return false
     }
 
