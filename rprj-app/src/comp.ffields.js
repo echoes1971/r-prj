@@ -183,6 +183,10 @@ const FTextArea = props => {
         )
 }
 
+/**
+ * See: https://github.com/jodit/jodit-react
+ * and https://www.sanity.io/guides/top-5-rich-text-react-components
+ */
 class HTMLEdit extends React.Component {
     constructor(props) {
         super(props);
