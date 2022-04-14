@@ -52,6 +52,12 @@ class FForm extends React.Component {
 
     componentDidMount() {
         // console.log("FForm.componentDidMount: start.")
+        this.be.getDBE2FormMapping((jsonObj, dbe2formMapping) => {
+            this.dbe2formMapping = dbe2formMapping
+            console.log("FForm.componentDidMount.cb: this="+this)
+            console.log("FForm.componentDidMount.cb: dbe2formMapping="+JSON.stringify())
+        });
+
         // this.be.getFormInstance(this.state.formname,this.forminstance_callback);
         // console.log("FForm.componentDidMount: end.")
     }
@@ -458,16 +464,36 @@ class FForm extends React.Component {
         if(children===undefined || children===null || children.length===0) return ('')
         const detailForms = this.form && 'detailForms' in this.form ? this.form['detailForms'] : []
         if(detailForms.length==0) return ('')
+        var formnames = []
+        for(const i in children) {
+            console.log(children[i])
+            const dbename = children[i].getDBEName()
+            console.log("FForm.renderChildren: dbename="+dbename)
+            const formname = this.be.getFormNameByDBEName(dbename)
+            console.log("FForm.renderChildren: formname="+formname)
+            formnames.push(formname)
+            const form_icon = formnames[i] + "_icon"
+            const form_icon_title = formnames[i] + "_icon_title"
+            const state_form_icon = this.state[form_icon]
+            if(state_form_icon===undefined || state_form_icon===null) {
+                var my_cb = (jsonObj,form) => {
+                    const myform = form
+                    this.setState({[form_icon]: myform.detailIcon,[form_icon_title]:form.detailTitle})
+                }
+                my_cb = my_cb.bind(this).bind(form_icon)
+                this.be.getFormInstance(formname,my_cb)
+            }
+        }
 
-
-
-        return (<div class="container">{
-            Object.keys(children).map((k) => {
+        return (<div class="container">
+            {Object.keys(children).map((k) => {
+                const form_icon = formnames[k] + "_icon"
+                const form_icon_title = formnames[k] + "_icon_title"
                 return (<div class="row">
-                    <div class="col"><DBOLink dbo={children[k]} be={this.be} edit={readonly===false} /></div>
+                    <div class="col"><DBOLink dbo={children[k]} detailIconTitle={this.state[form_icon_title]} detailIcon={icon2emoji(this.state[form_icon])} edit={readonly===false} /></div>
                 </div>)
             })
-        }</div>)
+            }</div>)
     }
 
     render() {
@@ -480,9 +506,11 @@ class FForm extends React.Component {
         const readonly =  this.state.readonly
         const detailIcon = this.state.detailIcon;
         const detailTitle = this.state.detailTitle;
+        const dark_theme = this.state.dark_theme;
         const f = this.renderGroups();
         const actions = readonly ? ('') : this.renderActions();
-        const children = this.renderChildren(readonly)
+        const children = this.state.children
+        const childrenUI = this.renderChildren(readonly)
 
         const server_response_0 = this.state.server_response_0
         const server_response_1 = this.state.server_response_1
@@ -500,7 +528,14 @@ class FForm extends React.Component {
                     { readonly ? '' : <div class="row"><div class="col">&nbsp;</div></div>}
                     <div class="row">{f}</div>
                     <div class="row"><div class="col">&nbsp;</div></div>
-                    <div class="row"><div class="col">{children}</div></div>
+                    { children!==undefined && children!==null && children.length>0 ?
+                        <div class="row"><div class={"col fw-bold text-middle m-2 rounded" + (dark_theme ? " bg-dark" : " bg-light")}>Content</div></div>
+                        :''
+                    }
+                    { children!==undefined && children!==null && children.length>0 ?
+                        <div class="row"><div class="col">{childrenUI}</div></div>
+                        : ''
+                    }
                     {/* <div class="row"><div class="col"><pre>{JSON.stringify(this.form, null, 2)}</pre></div></div> */}
                     <div class="row"><div class="col">&nbsp;</div></div>
                 </div>

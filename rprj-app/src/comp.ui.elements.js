@@ -108,8 +108,10 @@ const DBOLink = props => {
     const name = props.dbo ? props.dbo.getValue('name') : ''
     const dbename = props.dbo ? props.dbo.dbename : ''
     const edit = props.edit || false
+    const detailIcon = props.detailIcon || ''
+    const detailIconTitle = props.detailIconTitle || ''
 
-    return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
 
 export { DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
