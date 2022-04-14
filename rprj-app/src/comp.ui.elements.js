@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
 
+// import ReactDOM from 'react-dom';
+import {convertFromHTML, Editor, EditorState, ContentState, RichUtils} from 'draft-js';
+import {
+    ItalicButton,
+    BoldButton,
+    UnderlineButton,
+    CodeButton
+  } from "@draft-js-plugins/buttons";
+import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
+import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
+// import 'draft-js/dist/Draft.css';
+
 import { app_cfg } from './app.cgf';
 
 const icon2emoji = (detail_icon) => {
@@ -114,4 +126,50 @@ const DBOLink = props => {
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
 
+
+class HTMLEdit extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const blocksFromHTML = convertFromHTML(props.value)
+        const state = ContentState.createFromBlockArray(
+            blocksFromHTML.contentBlocks,
+            blocksFromHTML.entityMap,
+            );
+
+        this.state = { editorState: EditorState.createWithContent(state) };
+        // this.state = { editorState: EditorState.createEmpty() };
+        // this.state = { editorState: EditorState.createWithContent(ContentState.createFromText(props.value)) };
+        this.onChange = editorState => this.setState({ editorState });
+        this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    }
+
+    handleKeyCommand(command, editorState) {
+        const newState = RichUtils.handleKeyCommand(editorState, command);
+
+        if (newState) {
+            this.onChange(newState);
+            return 'handled';
+        }
+
+        return 'not-handled';
+    }
+
+    render() {
+
+        const inlineToolbarPlugin = createInlineToolbarPlugin();
+        const toolbarPlugin = createToolbarPlugin();
+
+        return (
+            <Editor
+                editorState={this.state.editorState}
+                // handleKeyCommand={this.handleKeyCommand}
+                plugins={[inlineToolbarPlugin, toolbarPlugin]}
+                onChange={this.onChange}
+            />
+        );
+    }
+}
+
+export default HTMLEdit;
 export { DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }

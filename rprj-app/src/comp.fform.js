@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
-import { DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
+import HTMLEdit, { DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
 class FForm extends React.Component {
     constructor(props) {
@@ -352,12 +352,16 @@ class FForm extends React.Component {
         return (
             <div class="row">
                 <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start">
+                <div class="col text-start">{
+                    is_readonly ?
+                    <pre class="border rounded">{field['value']}</pre>
+                    :
                     <textarea id={fieldname} name={fieldname}
                         class={fieldclass} readOnly={is_readonly} placeholder={field.title}
                         value={this.state[fieldname]} size={field.size}
                         width={field.width} height={field.height}
                         onChange={this.default_handleChange} />
+                }
                 </div>
             </div>
         );
@@ -395,6 +399,20 @@ class FForm extends React.Component {
         }
         if(field._classname==='FTextArea') {
             return this.renderFTextArea(field,is_readonly)
+        }
+        if(field._classname==='FHtml' || field._classname==='FHtmlEdit') {
+            return <div class="row">
+                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+                    <div class="col text-start align-top">{
+                        is_readonly ? 
+                            <div class="border rounded" dangerouslySetInnerHTML={{__html: field["value"]}} />
+                            :
+                            <HTMLEdit value={field['value']} />
+                    }
+                    </div>
+                </div>
+                
+                // : this.renderFField(field, false, true)
         }
         return this.renderFField(field, false, true);
     }

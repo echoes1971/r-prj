@@ -4,6 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './index.scss';
+
+import 'draft-js/dist/Draft.css';
+import '@draft-js-plugins/static-toolbar/lib/plugin.css'
+import '@draft-js-plugins/inline-toolbar/lib/plugin.css'
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
