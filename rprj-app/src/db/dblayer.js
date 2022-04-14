@@ -486,17 +486,17 @@ function JSONDBConnection(connectionString,verbose) {
 		var self = this
 		var my_cb = (jsonObj) => {
 			console.log("JSONDBConnection.select.my_cb: start.");
-			console.log("JSONDBConnection.select.my_cb: jsonObj=" + JSON.stringify(jsonObj));
+			// console.log("JSONDBConnection.select.my_cb: jsonObj=" + JSON.stringify(jsonObj));
 			var dbelist = [];
 			// console.log(jsonObj[1])
 			var myRS = self.obj2resultset(jsonObj[1]);
-			console.log("myRS: " + JSON.stringify(myRS));
+			// console.log("myRS: " + JSON.stringify(myRS));
 			var dbelist = myRS!==null ? [] : null;
 			for(var i=0; myRS!==null && i<myRS.getNumRows(); i++) {
 				try {
 					var mydbe = new DBEntity(dbename, tablename);
 					mydbe.fromRS(myRS,i);
-					console.log("JSONDBConnection.select.my_cb: mydbe=" + mydbe.to_string());
+					// console.log("JSONDBConnection.select.my_cb: mydbe=" + mydbe.to_string());
 					dbelist.push(mydbe);
 				} catch(e) {
 					console.log("ERROR" + e);
