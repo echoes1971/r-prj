@@ -347,7 +347,8 @@ class FormExplorer extends React.Component {
         if(this.state.myobj!==null && this.state.myobj!==undefined) {
             console.log("FormExplorer.render: this.state.myobj="+this.state.myobj.to_string());
         }
-        const obj = this.state.myobj!==null && this.state.myobj!==undefined ? this.state.myobj.getValues() : {};
+        const obj = this.state.myobj!==null && this.state.myobj!==undefined ? this.state.myobj : {};
+        // const obj = this.state.myobj!==null && this.state.myobj!==undefined ? this.state.myobj.getValues() : {};
         console.log("FormExplorer.render: obj="+JSON.stringify(obj));
         const dbeNames = this.dbe2formMapping ? Object.keys(this.dbe2formMapping) : []
         console.log("FormExplorer.render: dbeNames="+JSON.stringify(dbeNames));

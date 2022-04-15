@@ -456,6 +456,8 @@ class FForm extends React.Component {
         console.log("FForm.renderActions: user="+JSON.stringify(user))
 
         const obj = this.state.obj
+        console.log("FForm.renderActions: obj="+JSON.stringify(obj))
+        console.log("FForm.renderActions: obj="+obj.to_string())
         const can_write = this.be.canWrite(obj)
         console.log("FForm.renderActions: readonly="+readonly)
         console.log("FForm.renderActions: can_write="+can_write)
@@ -487,7 +489,7 @@ class FForm extends React.Component {
                     <div class="btn-group btn-group-sm" role="group">
                         {/* <button class="btn btn-secondary btn-sm" type="button" >View</button> */}
                         <DBOButton class="btn btn-secondary btn-sm"
-                            dbo={this.state.obj} name="View" edit={false}/>
+                            dbo={obj} name="View" edit={false}/>
                         <button class="btn btn-secondary btn-sm" type="button" >Close</button>
                     </div>
                 }

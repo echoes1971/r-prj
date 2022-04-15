@@ -102,8 +102,12 @@ const RLink = props => {
 }
 
 const DBOButton = props => {
-    const id = props.dbo ? props.dbo.getValue('id') : ''
-    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
+    const dbo = props.dbo
+    console.log("DBOButton: dbo="+JSON.stringify(dbo))
+    if(! 'getValue' in dbo) alert("cippa")
+    const id = dbo ? dbo.getValue('id') : ''
+    const name = props.name>'' ? props.name
+            : (dbo!==null && dbo!==undefined ? dbo.getValue('name') : '')
     const edit = props.edit || false
 
     const link = app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"
