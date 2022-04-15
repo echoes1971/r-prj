@@ -289,9 +289,9 @@ do_hook('divmiddle_after');
 	
 	// Actions
 	echo "<div class=\"lcars-column\">";
-	echo "<div class=\"lcars-dodger-blue-border lcars-bracket top hollow\"></div>";
-	echo "<div class=\"lcars-element short lcars-dodger-blue-bg\">Actions</div>";
-	echo "<div class=\"lcars-element short lcars-red-damask-bg\"><a href=\"javascript:main_actions_mostra_url('Edit','mng/dbe_modify.php?dbetype=$dbetype&formtype=$formtype&field_id=".$current_obj->getValue('id')."');\"><img border=\"0\" src=\"".getSkinFile("mng/icone/Edit16.gif")."\" alt=\"\" />Edit</a></div>";
+	echo "<div class=\"lcars-gray-border lcars-bracket top hollow\"></div>";
+	echo "<div class=\"lcars-element short lcars-black-bg lcars-white-color\">Actions</div>";
+	echo "<div class=\"lcars-element short lcars-gray-bg\"><a href=\"javascript:main_actions_mostra_url('Edit','mng/dbe_modify.php?dbetype=$dbetype&formtype=$formtype&field_id=".$current_obj->getValue('id')."');\"><img border=\"0\" src=\"".getSkinFile("mng/icone/Edit16.gif")."\" alt=\"\" />Edit</a></div>";
 	// echo "<li class=\"obj_actions\">&nbsp;</li>";
 	for($i=0; $i<$current_form->getDetailFormsCount(); $i++) {
 		$childForm = $current_form->getDetail($i);
@@ -301,11 +301,11 @@ do_hook('divmiddle_after');
 			$childDBE->readFKFrom($current_obj);
 			$newUrl = "mng/". $childForm->getPagePrefix()."_new.php?dbetype=".$childDBE->getTypeName()."&formtype=".get_class($childForm)."&".$childDBE->getFKCGIConditionFromMaster($current_obj, true);
 			$newTitle = "Add ".$dest_form->getDetailTitle();
-			?><div class="lcars-element short lcars-bourbon-bg"><a href="javascript:main_actions_mostra_url('<?php echo $newTitle; ?>','<?php echo $newUrl; ?>');"><img title="<?php echo $newTitle; ?>" alt="<?php echo $newTitle; ?>" src="<?php echo getSkinFile("mng/icone/New16.gif"); ?>" border="0" /> <?php echo $dest_form->getDetailTitle(); ?></a></div><?php
+			?><div class="lcars-element short lcars-gray-bg"><a href="javascript:main_actions_mostra_url('<?php echo $newTitle; ?>','<?php echo $newUrl; ?>');"><img title="<?php echo $newTitle; ?>" alt="<?php echo $newTitle; ?>" src="<?php echo getSkinFile("mng/icone/New16.gif"); ?>" border="0" /> <?php echo $dest_form->getDetailTitle(); ?></a></div><?php
 		}
 	}
-	echo "<div class=\"lcars-element short lcars-rust-bg\">&nbsp;</div>";
-	echo "<div class=\"lcars-bracket bottom hollow lcars-rust-border \"></div>";
+	echo "<div class=\"lcars-element short lcars-black-bg\">&nbsp;</div>";
+	echo "<div class=\"lcars-bracket bottom hollow lcars-gray-border \"></div>";
 	echo "</div>";
 	
 	do_hook('divright_after');
