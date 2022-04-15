@@ -349,7 +349,6 @@ class App extends Component {
                 server_response_1={this.state.server_response_1} />
             </div>
           </div>
-          
 
         </div>
 
