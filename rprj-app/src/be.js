@@ -59,7 +59,9 @@ class BackEndProxy {
         const user = this.getDBEUserFromConnection()
         const groups = this.con.getUserGroupsList();
         return groups!==undefined && groups!==null
-            && (group_id in groups || user.getValue('group_id'));
+            && (
+                group_id in groups || (user!==null && user.getValue('group_id'))
+                );
     }
     isAdmin() {
         const groups = this.getUserGroupsList();

@@ -282,9 +282,10 @@ class App extends Component {
     return mypath.split("/");
   }
   _render(args) {
+    var ret = ''
     switch(args[0]) {
       case 'test':
-        return (
+        ret = (
           <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
         );
         break
@@ -292,13 +293,14 @@ class App extends Component {
         // User profile
       case 'o':
         // Display the current object
-        return (
+        ret = (
           <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={this.state.children}
             readonly={true}
             onSave={this.onSave} onError={this.onError} />
           )
+        break
       case 'e':
         // Edit the current object
         // TODO: check a user is logged in and has right to edit the object
@@ -307,29 +309,28 @@ class App extends Component {
         const current_obj = this.state.current_obj
         readonly = user===null ? true
             : (!this.be.canRead(current_obj) || !this.be.canWrite(current_obj))
-        return (
+        ret = (
           <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={this.state.children}
             readonly={readonly}
             onSave={this.onSave} onError={this.onError} />
           )
+        break
       case 'manage':
         // Admin-like page of the site, for objects administered by the current user
       case 's':
         // Display search results
       default:
-        return (<IFRTree dark_theme={this.state.dark_theme} />)
+        ret = (<IFRTree dark_theme={this.state.dark_theme} />)
     }
+    return ret
   }
   render() {
-    const endpoints = app_cfg.endpoints;
-    const dark_theme = this.state.dark_theme;
+    // const dark_theme = this.state.dark_theme;
     // console.log("App.render: dark_theme="+dark_theme);
     const mypath = this.parsePath()
     // console.log("App.render: mypath="+JSON.stringify(mypath));
-    const root_obj = this.state.root_obj
-    // console.log("App.render: root_obj="+(root_obj ? root_obj.to_string() : 'null'));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} endpoint={this.state.endpoint}

@@ -499,7 +499,7 @@ class FForm extends React.Component {
         const children = this.state.children
         if(children===undefined || children===null || children.length===0) return ('')
         const detailForms = this.form && 'detailForms' in this.form ? this.form['detailForms'] : []
-        if(detailForms.length==0) return ('')
+        if(detailForms.length===0) return ('')
         var formnames = []
         for(const i in children) {
             const dbename = children[i].getDBEName()
@@ -551,8 +551,6 @@ class FForm extends React.Component {
         const children = this.state.children
         const childrenUI = this.renderChildren(readonly)
 
-        const server_response_0 = this.state.server_response_0
-        const server_response_1 = this.state.server_response_1
         // console.log("FForm.render: dark_theme="+this.state.dark_theme)
         // console.log("FForm.render: readonly="+this.state.readonly)
         // console.log("FForm.render: dbename="+this.state.dbename)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { app_cfg } from './app.cgf';
 
@@ -65,14 +65,14 @@ const IFRTree = props => {
     if(dark_theme) {
         return (
             <span>
-              <div class="d-block d-md-none text-center"><img src={app_cfg.root_path+"logo256_2.png"} /></div>
-              <div class="d-none d-md-block text-center"><img src={app_cfg.root_path+"logo512_2.png"} /></div>
+              <div class="d-block d-md-none text-center"><img src={app_cfg.root_path+"logo256_2.png"} alt='' /></div>
+              <div class="d-none d-md-block text-center"><img src={app_cfg.root_path+"logo512_2.png"} alt='' /></div>
             </span>)
         }
     return (
         <span>
-            <div class="d-block d-md-none text-center"><img src={app_cfg.root_path+"logo256.png"} /></div>
-            <div class="d-none d-md-block text-center"><img src={app_cfg.root_path+"logo512.png"} /></div>
+            <div class="d-block d-md-none text-center"><img src={app_cfg.root_path+"logo256.png"} alt='' /></div>
+            <div class="d-none d-md-block text-center"><img src={app_cfg.root_path+"logo512.png"} alt='' /></div>
         </span>)
 }
 const IFRTreeAll = props => {
@@ -81,14 +81,14 @@ const IFRTreeAll = props => {
     if(dark_theme) {
         return (
             <span>
-              <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo512_2.png"} /></div>
-              <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} /><img src={app_cfg.root_path+"logo256_2.png"} /><img src={app_cfg.root_path+"logo128_2.png"} /><img src={app_cfg.root_path+"logo64_2.png"} /><img src={app_cfg.root_path+"logo32_2.png"} /><img src={app_cfg.root_path+"logo16_2.png"} /></div>
+              <div class="text-center"><img src={app_cfg.root_path+"logo16_2.png"} alt='' /><img src={app_cfg.root_path+"logo32_2.png"} alt='' /><img src={app_cfg.root_path+"logo64_2.png"} alt='' /><img src={app_cfg.root_path+"logo128_2.png"} alt='' /><img src={app_cfg.root_path+"logo256_2.png"} alt='' /><img src={app_cfg.root_path+"logo512_2.png"} alt='' /></div>
+              <div class="text-center"><img src={app_cfg.root_path+"logo512_2.png"} alt='' /><img src={app_cfg.root_path+"logo256_2.png"} alt='' /><img src={app_cfg.root_path+"logo128_2.png"} alt='' /><img src={app_cfg.root_path+"logo64_2.png"} alt='' /><img src={app_cfg.root_path+"logo32_2.png"} alt='' /><img src={app_cfg.root_path+"logo16_2.png"} alt='' /></div>
             </span>)
         }
     return (
         <span>
-          <div class="text-center"><img src={app_cfg.root_path+"logo16.png"} /><img src={app_cfg.root_path+"logo32.png"} /><img src={app_cfg.root_path+"logo64.png"} /><img src={app_cfg.root_path+"logo128.png"} /><img src={app_cfg.root_path+"logo256.png"} /><img src={app_cfg.root_path+"logo512.png"} /></div>
-          <div class="text-center"><img src={app_cfg.root_path+"logo512.png"} /><img src={app_cfg.root_path+"logo256.png"} /><img src={app_cfg.root_path+"logo128.png"} /><img src={app_cfg.root_path+"logo64.png"} /><img src={app_cfg.root_path+"logo32.png"} /><img src={app_cfg.root_path+"logo16.png"} /></div>
+          <div class="text-center"><img src={app_cfg.root_path+"logo16.png"} alt='' /><img src={app_cfg.root_path+"logo32.png"} alt='' /><img src={app_cfg.root_path+"logo64.png"} alt='' /><img src={app_cfg.root_path+"logo128.png"} alt='' /><img src={app_cfg.root_path+"logo256.png"} alt='' /><img src={app_cfg.root_path+"logo512.png"} alt='' /></div>
+          <div class="text-center"><img src={app_cfg.root_path+"logo512.png"} alt='' /><img src={app_cfg.root_path+"logo256.png"} alt='' /><img src={app_cfg.root_path+"logo128.png"} alt='' /><img src={app_cfg.root_path+"logo64.png"} alt='' /><img src={app_cfg.root_path+"logo32.png"} alt='' /><img src={app_cfg.root_path+"logo16.png"} alt='' /></div>
         </span>)
 }
 
@@ -102,24 +102,16 @@ const RLink = props => {
 }
 
 const DBOButton = props => {
-    var be = props.be;
-
     const id = props.dbo ? props.dbo.getValue('id') : ''
     const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
     const edit = props.edit || false
-    const detailIcon = props.detailIcon || ''
-    const detailIconTitle = props.detailIconTitle || ''
 
     const link = app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"
 
     return <button class={props.class} type="button" onClick={() => {window.location=link}} >{name}</button>
-
-    return <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
 }
 
 const DBOLink = props => {
-    var be = props.be;
-
     const id = props.dbo ? props.dbo.getValue('id') : ''
     const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
     const edit = props.edit || false
