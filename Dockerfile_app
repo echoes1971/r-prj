@@ -8,7 +8,7 @@ COPY rprj-app/package*.json ./
 COPY rprj-app/ .
 COPY rprj-app/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-RUN npm install -g npm@8.5.4
+RUN npm install -g npm@8.5.5
 
 # RUN npm install react-scripts@5.0.0 -g
 # --silent
