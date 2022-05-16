@@ -269,34 +269,70 @@ const FList = props => {
 
 const FPercent = props => {
     const is_readonly = props.is_readonly
-    // const field_prefix = props.field_prefix
     const field = props.field
 
     const [value, setValue] = useState(field.value)
 
-    const fieldname = props.name //field_prefix + field.name
+    const fieldname = props.name
     const fieldclass = (
             (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
-        ).trim();
+        ).trim()
 
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
             <div class="col text-start">
                 <input id={fieldname} name={fieldname} type="number"
-                            class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                            value={value} size={field.size}
-                            onChange={e => {
-                            const target = e.target;
-                            const v = target.type === 'checkbox' ? target.checked : target.value;
-                            const name = target.name;
-    
-                            props.onChange(name, v)
-                            setValue(v)
-                        }} /> %
+                    class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                    value={value} size={field.size}
+                    onChange={e => {
+                        const target = e.target;
+                        const v = target.type === 'checkbox' ? target.checked : target.value;
+                        const name = target.name;
+
+                        props.onChange(name, v)
+                        setValue(v)
+                    }} /> %
             </div>
         </div>
-    );
+    )
 }
 
-export { FList, FPercent, FPermissions, HTMLEdit, FTextArea };
+const FKField = props => {
+    const is_readonly = props.is_readonly
+    const field = props.field
+    const dbe = props.dbe
+    console.log("FKField: obj="+JSON.stringify(dbe))
+    console.log("FKField: field="+JSON.stringify(field))
+
+    const [value, setValue] = useState(field.value)
+
+    const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
+    console.log("FKField: fk="+JSON.stringify(fk))
+    const fieldname = props.name
+    const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim()
+
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start">TODO
+                <input id={fieldname} name={fieldname} type="number"
+                    class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                    value={value} size={field.size}
+                    onChange={e => {
+                        const target = e.target;
+                        const v = target.type === 'checkbox' ? target.checked : target.value;
+                        const name = target.name;
+
+                        props.onChange(name, v)
+                        setValue(v)
+                    }} />
+                    <pre>{JSON.stringify(dbe,null,2)}</pre>
+            </div>
+        </div>
+    )
+}
+
+export { FKField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }

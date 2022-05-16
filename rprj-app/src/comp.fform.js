@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
+import { FKField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -369,6 +369,12 @@ class FForm extends React.Component {
                             onChange={this.default_handleChange} />
                     </div>
                 </div>
+        }
+        if(field._classname==='FKField') {
+            const name = this.field_prefix + field.name;
+            const obj = this.state.obj
+            return <FKField name={name} field={field} dbe={obj} is_readonly={is_readonly}
+                onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         return this.renderFField(field, false, true);
     }

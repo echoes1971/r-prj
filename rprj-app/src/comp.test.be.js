@@ -466,7 +466,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse" id="test_formexplorer">
+                <div class="row collapse multi-collapse show" id="test_formexplorer">
                     <div class={"col card card-body" + (dark_theme ? " card-dark" : "")}>
                         <FormExplorer endpoint={this.state.endpoint} dark_theme={dark_theme} />
                     </div>
@@ -475,7 +475,7 @@ class TestBE extends React.Component {
                     <div class="col">&nbsp;</div>
                 </div>
 
-                <div class="row collapse multi-collapse show" id="test_dblayer">
+                <div class="row collapse multi-collapse" id="test_dblayer">
                     <div class={"component card card-body" + (dark_theme ? " card-dark" : "")}>
                         <div class="row">
                             <div class="col text-middle fw-bold">DBLayer</div>
