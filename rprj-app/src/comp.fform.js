@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FList, HTMLEdit, FPermissions } from './comp.ffields';
+import { FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -163,7 +163,7 @@ class FForm extends React.Component {
     btnSave() {
         const values = {};
         for(const k in this.state) {
-            console.log("FForm.btnSave: k="+k)
+            // console.log("FForm.btnSave: k="+k)
             if(k.indexOf(this.field_prefix)<0) continue;
             const k1 = k.replace(this.field_prefix,"");
             values[k1] = this.state[k]
@@ -219,7 +219,7 @@ class FForm extends React.Component {
     //      FChildSort - TODO
     //  FCheckBox - TODO
     //  FTextArea
-    //      FHtml - TODO
+    //      FHtml
     //  FDateTime
     //      FDateTimeReadOnly
     //  FKField - TODO
@@ -259,29 +259,6 @@ class FForm extends React.Component {
             </div>
         );
     }
-    // renderFList(field, is_readonly=false) {
-    //     const fieldname = this.field_prefix + field.name
-    //     const fieldclass = (
-    //         (field.cssClass>'' ? field.cssClass : '') + ' '
-    //         + (is_readonly ? 'form-control-plaintext' : '')
-    //     ).trim();
-    //     const listvalues = field.valueslist;
-    //     return (
-    //         <div class="row">
-    //             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-    //             <div class="col text-start">
-    //                 <select id={fieldname} name={fieldname}
-    //                     class={fieldclass} readOnly={is_readonly}
-    //                     value={this.state[fieldname]} onChange={this.default_handleChange} >
-    //                     {Object.keys(listvalues).map((k) => {
-    //                         return (<option value={k}>{listvalues[k]}</option>);
-    //                     }
-    //                     )}
-    //                 </select>
-    //             </div>
-    //         </div>
-    //     );
-    // }
     password_handleChange(event) {
         const target = event.target;
         const value1 = target.type === 'checkbox' ? target.checked : target.value;
@@ -323,25 +300,25 @@ class FForm extends React.Component {
             </div>
         );
     }
-    renderFPercent(field, is_readonly=false) {
-        const fieldname = this.field_prefix + field.name
-        const fieldtype = "number";
-        const fieldclass = (
-                (field.cssClass>'' ? field.cssClass : '') + ' '
-                + (is_readonly ? 'form-control-plaintext' : '')
-            ).trim();
-        return (
-            <div class="row">
-                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start">
-                    <input id={fieldname} name={fieldname} type={fieldtype}
-                            class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                            value={this.state[fieldname]} size={field.size}
-                        onChange={this.default_handleChange} /> %
-                </div>
-            </div>
-        );
-    }
+    // renderFPercent(field, is_readonly=false) {
+    //     const fieldname = this.field_prefix + field.name
+    //     const fieldtype = "number";
+    //     const fieldclass = (
+    //             (field.cssClass>'' ? field.cssClass : '') + ' '
+    //             + (is_readonly ? 'form-control-plaintext' : '')
+    //         ).trim();
+    //     return (
+    //         <div class="row">
+    //             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+    //             <div class="col text-start">
+    //                 <input id={fieldname} name={fieldname} type={fieldtype}
+    //                         class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+    //                         value={this.state[fieldname]} size={field.size}
+    //                     onChange={this.default_handleChange} /> %
+    //             </div>
+    //         </div>
+    //     );
+    // }
     renderFTextArea(field, is_readonly=false) {
         const fieldname = this.field_prefix + field.name
         const fieldclass = (
@@ -382,17 +359,19 @@ class FForm extends React.Component {
         }
         if(["FList"].indexOf(field._classname)>=0) {
             const name = this.field_prefix + field.name;
-            return <FList field={field} is_readonly={is_readonly} field_prefix={this.field_prefix}
-                    onChange={(n,v) => {
-                        this.setState({[n]: v});
-                    }} />
-            // return this.renderFList(field,is_readonly);
+            return <FList name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => {
+                // console.log("FForm.renderFiekd.FList.onChange: "+n+"=>"+v)
+                this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, is_readonly);
         }
         if(field._classname==='FPercent') {
-            return this.renderFPercent(field, is_readonly);
+            const name = this.field_prefix + field.name;
+            return <FPercent name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => {
+                // console.log("FForm.renderFiekd.FList.onChange: "+n+"=>"+v)
+                this.setState({[n]: v}); }} />
+            // return this.renderFPercent(field, is_readonly);
         }
         if(field._classname==='FPermissions') {
             return (

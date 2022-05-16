@@ -232,12 +232,12 @@ class HTMLEdit extends React.Component {
 
 const FList = props => {
     const is_readonly = props.is_readonly
-    const field_prefix = props.field_prefix
+    // const field_prefix = props.field_prefix
     const field = props.field
 
     const [value, setValue] = useState(field.value)
 
-    const fieldname = field_prefix + field.name
+    const fieldname = props.name //field_prefix + field.name
     const fieldclass = (
             (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
         ).trim();
@@ -265,7 +265,39 @@ const FList = props => {
             </div>
         </div>
     );
-
 }
 
-export { FList, FPermissions, HTMLEdit, FTextArea };
+const FPercent = props => {
+    const is_readonly = props.is_readonly
+    // const field_prefix = props.field_prefix
+    const field = props.field
+
+    const [value, setValue] = useState(field.value)
+
+    const fieldname = props.name //field_prefix + field.name
+    const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim();
+    const listvalues = field.valueslist
+
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start">
+                <input id={fieldname} name={fieldname} type="number"
+                            class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                            value={value} size={field.size}
+                            onChange={e => {
+                            const target = e.target;
+                            const v = target.type === 'checkbox' ? target.checked : target.value;
+                            const name = target.name;
+    
+                            props.onChange(name, v)
+                            setValue(v)
+                        }} /> %
+            </div>
+        </div>
+    );
+}
+
+export { FList, FPercent, FPermissions, HTMLEdit, FTextArea };
