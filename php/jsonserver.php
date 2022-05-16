@@ -453,6 +453,16 @@ function getDBEInstance($aclassname) {
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
 }
+function getDBEInstanceByTablename($aTablename) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+	$dbe = $dbmgr->getInstanceByTableName($aTablename);
+	if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
+	$dbmgr->setVerbose(false);
+
+	return $dbe==null ? array() : array(_dbeToJson($dbe));
+}
 function getDBE2FormMapping() {
 	global $formulator;
 	$ret = $formulator->getDBE2FormMapping();

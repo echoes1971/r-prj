@@ -373,7 +373,7 @@ class FForm extends React.Component {
         if(field._classname==='FKField') {
             const name = this.field_prefix + field.name;
             const obj = this.state.obj
-            return <FKField name={name} field={field} dbe={obj} is_readonly={is_readonly}
+            return <FKField name={name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
                 onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         return this.renderFField(field, false, true);

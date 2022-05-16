@@ -125,5 +125,14 @@ const DBOLink = props => {
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
 
+const DBELink = props => {
+    const id = props.dbeid ? props.dbeid : ''
+    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
+    const edit = props.edit || false
+    const detailIcon = props.detailIcon || ''
+    const detailIconTitle = props.detailIconTitle || ''
 
-export { DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
+    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
+}
+
+export { DBELink, DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }

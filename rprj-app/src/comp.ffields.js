@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
+import { DBEntity } from './db/dblayer'
+import { DBELink } from './comp.ui.elements'
+
 class FPermissions extends React.Component {
     constructor(props) {
         super(props);
@@ -302,34 +305,69 @@ const FKField = props => {
     const is_readonly = props.is_readonly
     const field = props.field
     const dbe = props.dbe
+    const dark_theme = props.dark_theme
+    const be = props.be
+
     console.log("FKField: obj="+JSON.stringify(dbe))
     console.log("FKField: field="+JSON.stringify(field))
 
     const [value, setValue] = useState(field.value)
-
+    const [decodedValue, setDecodedValue] = useState(field.value)
+    console.log("FKField: decodedValue="+decodedValue)
+    
     const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
     console.log("FKField: fk="+JSON.stringify(fk))
+
+    if(fk) {
+        const decodeField = fk.tabella_riferita==='users' ? "login"
+            : "name"
+
+        be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
+            var search = mydbe;
+            search.setValue(fk.colonna_riferita,value || field.value);
+            console.log("FKField: search="+search.to_string());
+        
+    
+            be.search(search, false, true, decodeField, (server_messages,dbelist) => {
+                // console.log("FKField: server_messages="+server_messages)
+                console.log("FKField: dbelist="+JSON.stringify(dbelist))
+                const mylist = dbelist
+                if(mylist && mylist.length===1) {
+                    const res = dbelist[0]
+                    // console.log("FKField: res="+JSON.stringify(res))
+                    // console.log("FKField: res.getValue("+decodeField+")="+res.getValue(decodeField))
+                    setDecodedValue(res.getValue(decodeField))
+                }
+            });
+        })
+    }
+
     const fieldname = props.name
     const fieldclass = (
-            (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
-        ).trim()
+        (field.cssClass>'' ? field.cssClass : '') + ' ' +
+        (is_readonly ?
+            'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
+            : '')
+        ).trim();
 
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
             <div class="col text-start">TODO
-                <input id={fieldname} name={fieldname} type="number"
+                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value}
                     class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                    value={value} size={field.size}
                     onChange={e => {
                         const target = e.target;
                         const v = target.type === 'checkbox' ? target.checked : target.value;
                         const name = target.name;
+                        console.log("FKField.render: "+name+"="+v)
 
                         props.onChange(name, v)
                         setValue(v)
                     }} />
-                    <pre>{JSON.stringify(dbe,null,2)}</pre>
+                    {value || field.value}
+                    <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}  />
+                    {/* <pre>{JSON.stringify(fk,null,2)}</pre> */}
             </div>
         </div>
     )

@@ -179,6 +179,10 @@ class BackEndProxy {
         if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
         this.con.getDBEInstance(aclassname,a_callback);
     }
+    getDBEInstanceByTablename(aclassname, a_callback) {
+        if(aclassname===null || aclassname===undefined || aclassname.length===0) return;
+        this.con.getDBEInstanceByTablename(aclassname,a_callback);
+    }
     getFormNameByDBEName(dbeName) {
         return this.dbe2formMapping[dbeName];
     }
