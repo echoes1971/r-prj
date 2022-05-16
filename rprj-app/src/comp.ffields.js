@@ -278,7 +278,6 @@ const FPercent = props => {
     const fieldclass = (
             (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
         ).trim();
-    const listvalues = field.valueslist
 
     return (
         <div class="row">
