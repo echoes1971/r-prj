@@ -300,25 +300,6 @@ class FForm extends React.Component {
             </div>
         );
     }
-    // renderFPercent(field, is_readonly=false) {
-    //     const fieldname = this.field_prefix + field.name
-    //     const fieldtype = "number";
-    //     const fieldclass = (
-    //             (field.cssClass>'' ? field.cssClass : '') + ' '
-    //             + (is_readonly ? 'form-control-plaintext' : '')
-    //         ).trim();
-    //     return (
-    //         <div class="row">
-    //             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-    //             <div class="col text-start">
-    //                 <input id={fieldname} name={fieldname} type={fieldtype}
-    //                         class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-    //                         value={this.state[fieldname]} size={field.size}
-    //                     onChange={this.default_handleChange} /> %
-    //             </div>
-    //         </div>
-    //     );
-    // }
     renderFTextArea(field, is_readonly=false) {
         const fieldname = this.field_prefix + field.name
         const fieldclass = (
@@ -348,9 +329,9 @@ class FForm extends React.Component {
         // console.log("FForm.renderField: field._classname="+field._classname)
         const field_name = this.field_prefix + field.name;
         field["value"] = this.state[field_name];
-        if(field["value"]) {
-            console.log("FForm.renderField: field="+JSON.stringify(field));
-        }
+        // if(field["value"]) {
+        //     console.log("FForm.renderField: field="+JSON.stringify(field));
+        // }
         if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
             return this.renderFField(field,is_readonly);
         }
@@ -359,19 +340,14 @@ class FForm extends React.Component {
         }
         if(["FList"].indexOf(field._classname)>=0) {
             const name = this.field_prefix + field.name;
-            return <FList name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => {
-                // console.log("FForm.renderFiekd.FList.onChange: "+n+"=>"+v)
-                this.setState({[n]: v}); }} />
+            return <FList name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, is_readonly);
         }
         if(field._classname==='FPercent') {
             const name = this.field_prefix + field.name;
-            return <FPercent name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => {
-                // console.log("FForm.renderFiekd.FList.onChange: "+n+"=>"+v)
-                this.setState({[n]: v}); }} />
-            // return this.renderFPercent(field, is_readonly);
+            return <FPercent name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPermissions') {
             return (
@@ -393,8 +369,6 @@ class FForm extends React.Component {
                             onChange={this.default_handleChange} />
                     </div>
                 </div>
-                
-                // : this.renderFField(field, false, true)
         }
         return this.renderFField(field, false, true);
     }
