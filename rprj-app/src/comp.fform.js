@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HTMLEdit, FPermissions } from './comp.ffields';
+import { FList, HTMLEdit, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -259,29 +259,29 @@ class FForm extends React.Component {
             </div>
         );
     }
-    renderFList(field, is_readonly=false) {
-        const fieldname = this.field_prefix + field.name
-        const fieldclass = (
-            (field.cssClass>'' ? field.cssClass : '') + ' '
-            + (is_readonly ? 'form-control-plaintext' : '')
-        ).trim();
-        const listvalues = field.valueslist;
-        return (
-            <div class="row">
-                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start">
-                    <select id={fieldname} name={fieldname}
-                        class={fieldclass} readOnly={is_readonly}
-                        value={this.state[fieldname]} onChange={this.default_handleChange} >
-                        {Object.keys(listvalues).map((k) => {
-                            return (<option value={k}>{listvalues[k]}</option>);
-                        }
-                        )}
-                    </select>
-                </div>
-            </div>
-        );
-    }
+    // renderFList(field, is_readonly=false) {
+    //     const fieldname = this.field_prefix + field.name
+    //     const fieldclass = (
+    //         (field.cssClass>'' ? field.cssClass : '') + ' '
+    //         + (is_readonly ? 'form-control-plaintext' : '')
+    //     ).trim();
+    //     const listvalues = field.valueslist;
+    //     return (
+    //         <div class="row">
+    //             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+    //             <div class="col text-start">
+    //                 <select id={fieldname} name={fieldname}
+    //                     class={fieldclass} readOnly={is_readonly}
+    //                     value={this.state[fieldname]} onChange={this.default_handleChange} >
+    //                     {Object.keys(listvalues).map((k) => {
+    //                         return (<option value={k}>{listvalues[k]}</option>);
+    //                     }
+    //                     )}
+    //                 </select>
+    //             </div>
+    //         </div>
+    //     );
+    // }
     password_handleChange(event) {
         const target = event.target;
         const value1 = target.type === 'checkbox' ? target.checked : target.value;
@@ -381,7 +381,12 @@ class FForm extends React.Component {
             return this.renderFField(field,true);
         }
         if(["FList"].indexOf(field._classname)>=0) {
-            return this.renderFList(field,is_readonly);
+            const name = this.field_prefix + field.name;
+            return <FList field={field} is_readonly={is_readonly} field_prefix={this.field_prefix}
+                    onChange={(n,v) => {
+                        this.setState({[n]: v});
+                    }} />
+            // return this.renderFList(field,is_readonly);
         }
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, is_readonly);
@@ -457,7 +462,7 @@ class FForm extends React.Component {
 
         const obj = this.state.obj
         console.log("FForm.renderActions: obj="+JSON.stringify(obj))
-        console.log("FForm.renderActions: obj="+obj.to_string())
+        // console.log("FForm.renderActions: obj="+obj.to_string())
         const can_write = this.be.canWrite(obj)
         console.log("FForm.renderActions: readonly="+readonly)
         console.log("FForm.renderActions: can_write="+can_write)

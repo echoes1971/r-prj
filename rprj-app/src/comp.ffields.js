@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
@@ -230,5 +230,42 @@ class HTMLEdit extends React.Component {
     }
 }
 
+const FList = props => {
+    const is_readonly = props.is_readonly
+    const field_prefix = props.field_prefix
+    const field = props.field
 
-export { FPermissions, HTMLEdit, FTextArea };
+    const [value, setValue] = useState(field.value)
+
+    const fieldname = field_prefix + field.name
+    const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
+        ).trim();
+    const listvalues = field.valueslist
+
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start">
+                <select id={fieldname} name={fieldname}
+                    class={fieldclass} readOnly={is_readonly}
+                    value={value} onChange={e => {
+                        const target = e.target;
+                        const v = target.type === 'checkbox' ? target.checked : target.value;
+                        const name = target.name;
+
+                        props.onChange(name, v)
+                        setValue(v)
+                    }} >
+                    {Object.keys(listvalues).map((k) => {
+                        return (<option value={k}>{listvalues[k]}</option>);
+                    }
+                    )}
+                </select>
+            </div>
+        </div>
+    );
+
+}
+
+export { FList, FPermissions, HTMLEdit, FTextArea };
