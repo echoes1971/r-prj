@@ -1,6 +1,7 @@
 import React, {useRef, useState} from 'react';
 
 import { app_cfg } from './app.cgf';
+import { getFlagEmojiByID } from './countries'
 
 const icon2emoji = (detail_icon) => {
     var ret = ('');
@@ -105,7 +106,7 @@ const RLink = props => {
 const DBOButton = props => {
     const dbo = props.dbo
     console.log("DBOButton: dbo="+JSON.stringify(dbo))
-    if(! 'getValue' in dbo) alert("cippa")
+    // if(! ('getValue' in dbo)) alert("cippa")
     const id = dbo ? dbo.getValue('id') : ''
     const name = props.name>'' ? props.name
             : (dbo!==null && dbo!==undefined ? dbo.getValue('name') : '')
@@ -124,14 +125,6 @@ const DBOLink = props => {
     const detailIconTitle = props.detailIconTitle || ''
 
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
-}
-
-function getFlagEmoji(countryCode) {
-    const codePoints = countryCode
-      .toUpperCase()
-      .split('')
-      .map(char =>  127397 + char.charCodeAt());
-    return String.fromCodePoint(...codePoints);
 }
 
 const DBELink = props => {
@@ -165,7 +158,10 @@ const DBELink = props => {
         })
     }
     //  {getFlagEmoji('IT')}
-    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
+    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
+            {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
+            <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+        </span>
 }
 
 export { DBELink, DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
