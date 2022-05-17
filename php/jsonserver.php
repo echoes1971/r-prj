@@ -572,7 +572,7 @@ function getFormInstance($aClassname) {
 function getFormInstanceByDBEName($aClassname) {
 	global $formulator;
 	$ret = $formulator->getInstanceByDBEName($aClassname);
-	return $ret;
+	return _form2dictionary($ret);
 }
 function getRootObj() {
 	global $root_obj_id;
