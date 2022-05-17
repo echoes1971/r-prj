@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
@@ -308,20 +308,32 @@ const FKField = props => {
     const dark_theme = props.dark_theme
     const be = props.be
 
-    console.log("FKField: obj="+JSON.stringify(dbe))
-    console.log("FKField: field="+JSON.stringify(field))
+    const refSearchStarted = useRef(false)
+
+    console.log("FKField: start "+field.name)
+
+    // console.log("FKField: dbe="+JSON.stringify(dbe))
 
     const [value, setValue] = useState(field.value)
-    const [decodedValue, setDecodedValue] = useState(field.value)
+    const [decodedValue, setDecodedValue] = useState("--")
     console.log("FKField: decodedValue="+decodedValue)
     
+    console.log("FKField: refSearchStarted="+refSearchStarted.current)
+
     const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
     console.log("FKField: fk="+JSON.stringify(fk))
 
-    if(fk) {
+    if(fk && !refSearchStarted.current) { //decodedValue==="--") {
+        refSearchStarted.current = true
+
+        console.log("FKField: field="+JSON.stringify(field))
+
         const decodeField = fk.tabella_riferita==='users' ? "login"
+            : fk.tabella_riferita==='countrylist' ? "Common_Name"
             : "name"
 
+        console.log("FKField: decodeField="+decodeField);
+        console.log("FKField: fk.tabella_riferita="+fk.tabella_riferita);
         be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
             var search = mydbe;
             search.setValue(fk.colonna_riferita,value || field.value);
@@ -329,13 +341,13 @@ const FKField = props => {
         
     
             be.search(search, false, true, decodeField, (server_messages,dbelist) => {
-                // console.log("FKField: server_messages="+server_messages)
+                console.log("FKField: server_messages="+server_messages)
                 console.log("FKField: dbelist="+JSON.stringify(dbelist))
                 const mylist = dbelist
                 if(mylist && mylist.length===1) {
                     const res = dbelist[0]
-                    // console.log("FKField: res="+JSON.stringify(res))
-                    // console.log("FKField: res.getValue("+decodeField+")="+res.getValue(decodeField))
+                    console.log("FKField: res="+JSON.stringify(res))
+                    console.log("FKField: res.getValue("+decodeField+")="+res.getValue(decodeField))
                     setDecodedValue(res.getValue(decodeField))
                 }
             });
@@ -350,10 +362,11 @@ const FKField = props => {
             : '')
         ).trim();
 
+    console.log("FKField: end "+field.name)
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-            <div class="col text-start">TODO
+            <div class="col text-start">
                 <input id={fieldname} name={fieldname} type="hidden" value={value || field.value}
                     class={fieldclass} readOnly={is_readonly} placeholder={field.title}
                     onChange={e => {
@@ -365,8 +378,9 @@ const FKField = props => {
                         props.onChange(name, v)
                         setValue(v)
                     }} />
-                    {value || field.value}
-                    <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}  />
+                    {/* {value} || {field.value} */}
+                    <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                        be={be} tablename={fk ? fk.tabella_riferita : null} />
                     {/* <pre>{JSON.stringify(fk,null,2)}</pre> */}
             </div>
         </div>
