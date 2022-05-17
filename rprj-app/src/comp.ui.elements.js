@@ -53,6 +53,7 @@ const icon2emoji = (detail_icon) => {
             break
         default:
             ret = (<span>&#9881;</span>)
+            // ret = (<b>{detail_icon}</b>)
             break
     }
     return ret
@@ -125,6 +126,14 @@ const DBOLink = props => {
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
 
+function getFlagEmoji(countryCode) {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split('')
+      .map(char =>  127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+}
+
 const DBELink = props => {
     const id = props.dbeid ? props.dbeid : ''
     const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
@@ -137,7 +146,7 @@ const DBELink = props => {
     const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
     const refSearchStarted = useRef(false)
 
-    if(detailIcon==='' && detailIconTitle==='' && tablename && !refSearchStarted.current && be) {
+    if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
         refSearchStarted.current = true
         console.log("DBELink.search: tablename="+JSON.stringify(tablename))
         be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
@@ -155,7 +164,7 @@ const DBELink = props => {
             })
         })
     }
-
+    //  {getFlagEmoji('IT')}
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
 
