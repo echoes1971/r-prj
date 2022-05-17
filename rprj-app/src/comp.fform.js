@@ -152,7 +152,7 @@ class FForm extends React.Component {
         // Store new values
         console.log("FForm.obj2state: myobj="+JSON.stringify(myobj));
         for(const k in myobj) { //.getValues()) {
-            console.log("FForm.obj2state: k="+k)
+            // console.log("FForm.obj2state: k="+k)
             const k1 = this.field_prefix + k
             values[k1] = myobj[k]
         }
@@ -420,7 +420,7 @@ class FForm extends React.Component {
         console.log("FForm.renderActions: user="+JSON.stringify(user))
 
         const obj = this.state.obj
-        console.log("FForm.renderActions: obj="+JSON.stringify(obj))
+        // console.log("FForm.renderActions: obj="+JSON.stringify(obj))
         // console.log("FForm.renderActions: obj="+obj.to_string())
         const can_write = this.be.canWrite(obj)
         console.log("FForm.renderActions: readonly="+readonly)
