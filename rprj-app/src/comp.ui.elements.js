@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 
 import { app_cfg } from './app.cgf';
 
@@ -129,8 +129,32 @@ const DBELink = props => {
     const id = props.dbeid ? props.dbeid : ''
     const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
     const edit = props.edit || false
-    const detailIcon = props.detailIcon || ''
-    const detailIconTitle = props.detailIconTitle || ''
+
+    const be = props.be
+    const tablename = props.tablename
+
+    const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
+    const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
+    const refSearchStarted = useRef(false)
+
+    if(detailIcon==='' && detailIconTitle==='' && tablename && !refSearchStarted.current && be) {
+        refSearchStarted.current = true
+        console.log("DBELink.search: tablename="+JSON.stringify(tablename))
+        be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
+            const dbe = mydbe
+            console.log("DBELink.search: dbe="+JSON.stringify(dbe))
+            be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
+                console.log("DBELink.search: dbe.dbename="+dbe.dbename)
+                const myform = form
+                console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
+                if(myform) {
+                    console.log("DBELink.search: myform="+JSON.stringify(myform))
+                    setDetailIcon(icon2emoji(myform.detailIcon))
+                    setDetailIconTitle(form.detailTitle)
+                }
+            })
+        })
+    }
 
     return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
 }
