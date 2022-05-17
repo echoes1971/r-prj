@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
-import { DBEntity } from './db/dblayer'
 import { DBELink } from './comp.ui.elements'
 
 class FPermissions extends React.Component {
