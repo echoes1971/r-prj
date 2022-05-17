@@ -157,11 +157,82 @@ const DBELink = props => {
             })
         })
     }
-    //  {getFlagEmoji('IT')}
-    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
+    return (
+        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
             <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
         </span>
+        )
 }
 
-export { DBELink, DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
+const DBELinkEdit = props => {
+    const id = props.dbeid ? props.dbeid : ''
+    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
+    const edit = props.edit || false
+    const fieldname = props.fieldname || ''
+    const fieldclass = props.fieldclass || ''
+
+    const be = props.be
+    const tablename = props.tablename
+
+    const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
+    const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
+    const refSearchStarted = useRef(false)
+
+    const [searchString, setSearchString] = useState('')
+
+    if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
+        refSearchStarted.current = true
+        console.log("DBELink.search: tablename="+JSON.stringify(tablename))
+        be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
+            const dbe = mydbe
+            console.log("DBELink.search: dbe="+JSON.stringify(dbe))
+            be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
+                console.log("DBELink.search: dbe.dbename="+dbe.dbename)
+                const myform = form
+                console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
+                if(myform) {
+                    console.log("DBELink.search: myform="+JSON.stringify(myform))
+                    setDetailIcon(icon2emoji(myform.detailIcon))
+                    setDetailIconTitle(form.detailTitle)
+                }
+            })
+        })
+    }
+    const listvalues = {'82':'Italy', '60':'France', 'xxx':'zozzo'}
+    return (
+        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
+            {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
+            <a class="dropdown-toggle" id={'dropdown_' + fieldname}
+                role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+            <ul class="dropdown-menu" aria-labelledby={'dropdown_' + fieldname}>
+                <li>
+                    <input id={fieldname} name={fieldname} value={searchString} class={fieldclass}
+                        placeholder="Search..."
+                        onChange={e => {
+                            const target = e.target;
+                            const v = target.value;
+                            const name = target.name;
+                            console.log("DBELinkEdit: "+name+"="+v)
+                            if(v.length>2) {
+                                console.log("DBELinkEdit: TODO start the search"+name+"="+v)
+                            }
+                            // props.onChange(name, v)
+                            setSearchString(v)
+                        }} />
+                </li>
+                {Object.keys(listvalues).map((k) => {
+                    // return (<option value={k}>{listvalues[k]}</option>);
+                    return (<li><a class="dropdown-item" href="#"
+                        onClick={() => {
+                            refSearchStarted.current = false
+                            props.onSelect(k)
+                        }}>{k} {listvalues[k]}</a></li>)
+                })}
+            </ul>
+        </span>
+        )
+}
+
+export { DBELink, DBELinkEdit, DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
-import { DBELink } from './comp.ui.elements'
+import { DBELink, DBELinkEdit } from './comp.ui.elements'
 
 class FPermissions extends React.Component {
     constructor(props) {
@@ -261,8 +261,7 @@ const FList = props => {
                     }} >
                     {Object.keys(listvalues).map((k) => {
                         return (<option value={k}>{listvalues[k]}</option>);
-                    }
-                    )}
+                    })}
                 </select>
             </div>
         </div>
@@ -322,23 +321,22 @@ const FKField = props => {
     const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
     console.log("FKField: fk="+JSON.stringify(fk))
 
+    const decodeField = fk && fk.tabella_riferita==='users' ? "login"
+        : fk && fk.tabella_riferita==='countrylist' ? "Common_Name"
+        : "name"
+    console.log("FKField: decodeField="+decodeField);
+
     if(fk && !refSearchStarted.current) { //decodedValue==="--") {
         refSearchStarted.current = true
 
         console.log("FKField: field="+JSON.stringify(field))
 
-        const decodeField = fk.tabella_riferita==='users' ? "login"
-            : fk.tabella_riferita==='countrylist' ? "Common_Name"
-            : "name"
-
-        console.log("FKField: decodeField="+decodeField);
         console.log("FKField: fk.tabella_riferita="+fk.tabella_riferita);
         be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
             var search = mydbe;
             search.setValue(fk.colonna_riferita,value || field.value);
             console.log("FKField: search="+search.to_string());
         
-    
             be.search(search, false, true, decodeField, (server_messages,dbelist) => {
                 console.log("FKField: server_messages="+server_messages)
                 console.log("FKField: dbelist="+JSON.stringify(dbelist))
@@ -360,28 +358,38 @@ const FKField = props => {
             'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
             : '')
         ).trim();
+    
+    function _renderReadOnly() {
+        return (
+            <span>
+                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass}/>
+                <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                    be={be} tablename={fk ? fk.tabella_riferita : null} />
+            </span>
+        )
+    }
+    function _render() {
+        return (
+            <span>
+                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass}/>
+                <DBELinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                    fieldname={fieldname} fieldclass={fieldclass} be={be} tablename={fk ? fk.tabella_riferita : null}
+                    onSelect={(newid) => {
+                        console.log("FKField.onSelect: "+fieldname+"="+newid)
+                        props.onChange(fieldname, newid)
+                    }}
+                    />
+            </span>
+        )
+    }
 
     console.log("FKField: end "+field.name)
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-            <div class="col text-start">
-                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value}
-                    class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                    onChange={e => {
-                        const target = e.target;
-                        const v = target.type === 'checkbox' ? target.checked : target.value;
-                        const name = target.name;
-                        console.log("FKField.render: "+name+"="+v)
-
-                        props.onChange(name, v)
-                        setValue(v)
-                    }} />
-                    {/* {value} || {field.value} */}
-                    <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                        be={be} tablename={fk ? fk.tabella_riferita : null} />
-                    {/* <pre>{JSON.stringify(fk,null,2)}</pre> */}
-            </div>
+            <div class="col text-start">{
+                is_readonly ? _renderReadOnly() : _render()
+            }</div>
         </div>
     )
 }
