@@ -160,6 +160,12 @@ class BackEndProxy {
     // search(dbe, uselike, caseSensitive, orderBy, a_callback) {
     //     this.con.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
     // }
+    searchDBEById(oid, ignore_deleted, a_callback) {
+        this.con.searchDBEById(oid, ignore_deleted, a_callback);
+    }
+    fullDBEById(oid, ignore_deleted, a_callback) {
+        this.con.fullDBEById(oid, ignore_deleted, a_callback);
+    }
 
     objectById(oid, ignore_deleted, a_callback) {
         this.con.objectById(oid, ignore_deleted, a_callback);

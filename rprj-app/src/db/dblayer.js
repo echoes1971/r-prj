@@ -510,6 +510,50 @@ function JSONDBConnection(connectionString,verbose) {
 		this._sendRequest('search', [ new Array( dbe.dbename, dbe.getValues() ), uselike, caseSensitive, orderBy ], my_cb.bind(self).bind(dbename).bind(tablename));
 	}
 
+	this.searchDBEById = function(myid, ignore_deleted, a_callback) {
+		console.log("JSONDBConnection.searchDBEById: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.searchDBEById.my_cb: start.");
+			var myobj = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.searchDBEById.my_cb: end.");
+		}
+		this._sendRequest('searchDBEById', [myid,ignore_deleted], my_cb.bind(self));
+		console.log("JSONDBConnection.searchDBEById: end.");
+	};
+
+	this.fullDBEById = function(myid, ignore_deleted, a_callback) {
+		console.log("JSONDBConnection.fullDBEById: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.fullDBEById.my_cb: start.");
+			var myobj = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.fullDBEById.my_cb: end.");
+		}
+		this._sendRequest('fullDBEById', [myid,ignore_deleted], my_cb.bind(self));
+		console.log("JSONDBConnection.fullDBEById: end.");
+	};
+
 	this.objectById = function(oid, ignore_deleted, a_callback) {
 		console.log("JSONDBConnection.objectById: start.");
 		var self = this
