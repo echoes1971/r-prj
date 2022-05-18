@@ -1127,7 +1127,7 @@ class DBMgr {
 		$q = array();
 		foreach($tipi as $tablename=>$classname) {
 			$mydbe = $this->getInstance($classname);
-			if($classname=='DBEObject' || is_a($mydbe,"DBAssociation")) continue;
+			if($classname=='DBEObject' || $classname=='DBECountry' || is_a($mydbe,"DBAssociation")) continue;
             $tmpchiavi = $mydbe->getKeys();
             $chiavi = $tmpchiavi!=null ? array_keys($tmpchiavi) : null;
             // print "DBMgr.searchDBEById: chiavi=[".implode(",",$chiavi)."] ".count($chiavi)." ".$chiavi[0]." <br/>\n";
