@@ -1128,15 +1128,17 @@ class DBMgr {
 		foreach($tipi as $tablename=>$classname) {
 			$mydbe = $this->getInstance($classname);
 			if($classname=='DBEObject' || is_a($mydbe,"DBAssociation")) continue;
-            $chiavi = $mydbe->getKeys();
-            // 
-            if(count($chiavi)!=1 || $chiavi[0]!="id") continue;
+            $tmpchiavi = $mydbe->getKeys();
+            $chiavi = $tmpchiavi!=null ? array_keys($tmpchiavi) : null;
+            // print "DBMgr.searchDBEById: chiavi=[".implode(",",$chiavi)."] ".count($chiavi)." ".$chiavi[0]." <br/>\n";
+            if($chiavi==null || count($chiavi)!=1 || $chiavi[0]!="id") continue;
 			$q[]="select '$classname' as classname,id"
 					." from ".$this->buildTableName($mydbe)
 					." where id='".DBEntity::hex2uuid($id)."'"
 					.($ignore_deleted && is_a($mydbe,'DBEObject') ? " and deleted_date='0000-00-00 00:00:00'" : '');
 		}
 		$searchString = implode(" union ", $q);
+		// printf("query: $searchString<br/>\n");
 		if($this->_verbose) { printf("query: $searchString<br/>\n"); }
 		$lista = $this->select('DBEntity', "dbe", $searchString);
 		return count($lista)==1 ? $lista[0] : null;
