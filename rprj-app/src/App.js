@@ -93,7 +93,8 @@ class App extends Component {
       case 'e':
       case 'o':
         // Fetch the current object and its children
-        this.be.fullObjectById(args[1],false,this.currentobj_cb);
+        this.be.fullDBEById(args[1],false,this.currentobj_cb);
+        // this.be.fullObjectById(args[1],false,this.currentobj_cb);
         break;
       case 'p':
         // User profile
