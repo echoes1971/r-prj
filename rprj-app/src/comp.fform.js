@@ -375,10 +375,10 @@ class FForm extends React.Component {
             const obj = this.state.obj
             return <FKField name={name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
                 onChange={(n,v) => {
-                    console.log("FForm.renderField.onChange: "+n+"="+v)
-                    var obj = this.state.obj
-                    obj.setValue('id',v)
-                    this.setState({[n]: v, 'obj': obj});
+                    // console.log("FForm.renderField.onChange: "+n+"="+v)
+                    var myobj = this.state.obj
+                    myobj.setValue('id',v)
+                    this.setState({[n]: v, 'obj': myobj});
                 }} />
         }
         return this.renderFField(field, false, true);
