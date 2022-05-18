@@ -939,7 +939,11 @@ class DBMgr {
                     } else if($is_to) {
                         $clausole[$len_clausole++] =  substr($n,3)."<='".$this->db_escape_string($v)."'" ;
                     } else if(!$dbe->isFK($n) && $uselike==1) {
-                        $clausole[$len_clausole++] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
+                        if(strpos($v,"%%")>=0) {
+                            $clausole[$len_clausole++] = "$n like '".$this->db_escape_string($v)."'" ;
+                        } else {
+                            $clausole[$len_clausole++] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
+                        }
                     } else {
                         $clausole[$len_clausole++] =  "$n='".$this->db_escape_string($v)."'" ;
                     }
