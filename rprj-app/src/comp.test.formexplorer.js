@@ -376,8 +376,8 @@ class FormExplorer extends React.Component {
                                 )}
                             </select>
                             <div class="btn-group m-1" role="group" aria-label="Test Modules">
-                                <button class="btn btn-secondary" onClick={this.btnDebugDBE}>Debug DBE</button>
-                                <button class="btn btn-secondary" onClick={this.btnDebugFForm}>Debug FForm</button>
+                                <button class="btn btn-sm btn-secondary" onClick={this.btnDebugDBE}>Debug DBE</button>
+                                <button class="btn btn-sm btn-secondary" onClick={this.btnDebugFForm}>Debug FForm</button>
                             </div>
                         </form>
                     </div>
@@ -386,21 +386,21 @@ class FormExplorer extends React.Component {
                         <form onSubmit={this.default_handleSubmit}>
                             <label for="obj_id" /><input id="obj_id" name="obj_id" value={this.state.obj_id} onChange={this.default_handleChange} />
                             <div class="btn-group m-1" role="group" aria-label="Test Modules">
-                                <button class="btn btn-secondary" onClick={this.btnLoadDBE}>Load DBE</button>
-                                <button class="btn btn-secondary" onClick={this.btnLoadObject}>Load Object</button>
+                                <button class="btn btn-sm btn-secondary" onClick={this.btnLoadDBE}>Load DBE</button>
+                                <button class="btn btn-sm btn-secondary" onClick={this.btnLoadObject}>Load Object</button>
                             </div>
                         </form>
                     </div>
 
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <button class="btn btn-secondary" onClick={this.btnClassNames}>Class Names</button>
+                            <button class="btn btn-sm btn-secondary" onClick={this.btnClassNames}>Class Names</button>
                         </form>
                     </div>
 
                     <div class="col">
                         <form onSubmit={this.default_handleSubmit}>
-                            <button class="btn btn-secondary" onClick={this.btnDBE2Form}>DBE 2 Form</button>
+                            <button class="btn btn-sm btn-secondary" onClick={this.btnDBE2Form}>DBE 2 Form</button>
                         </form>
                     </div>
                 </div>
