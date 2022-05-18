@@ -411,40 +411,26 @@ const FKField = props => {
             'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
             : '')
         ).trim();
-    
-    function _renderReadOnly() {
-        return (
-            <span>
-                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass}/>
-                <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                    be={be} tablename={fk ? fk.tabella_riferita : null} />
-            </span>
-        )
-    }
-    function _render() {
-        return (
-            <span>
-                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass}/>
-                <DBELinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                    fieldname={fieldname} fieldclass={fieldclass}
-                    be={be} tablename={fk ? fk.tabella_riferita : null} decodeField={decodeField}
-                    onSelect={(newid) => {
-                        refSearchStarted.current = false
-                        console.log("FKField.onSelect: "+fieldname+"="+newid)
-                        props.onChange(fieldname, newid)
-                        setValue(newid)
-                    }}
-                    />
-            </span>
-        )
-    }
 
     console.log("FKField: end "+field.name)
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-            <div class="col text-start">{
-                is_readonly ? _renderReadOnly() : _render()
+            <div class="col text-start">
+                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass} />{
+                is_readonly ? 
+                <DBELink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                    be={be} tablename={fk ? fk.tabella_riferita : null} />
+                 :
+                <DBELinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                 fieldname={fieldname} fieldclass={fieldclass}
+                 be={be} tablename={fk ? fk.tabella_riferita : null} decodeField={decodeField}
+                 onSelect={(newid) => {
+                     refSearchStarted.current = false
+                    //  console.log("FKField.onSelect: "+fieldname+"="+newid)
+                     props.onChange(fieldname, newid)
+                     setValue(newid)
+                 }} />
             }</div>
         </div>
     )
