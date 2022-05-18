@@ -205,7 +205,7 @@ const DBELinkEdit = props => {
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
             <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+                href={ tablename!=='countrylist' ? app_cfg.root_path + (edit ? "e/" : "o/") + id + "/" : null }>{name}</a>
             <ul class="dropdown-menu" aria-labelledby={'dropdown_' + fieldname}>
                 <li>
                     <input id={fieldname} name={fieldname} value={searchString} class={('form-control '+fieldclass).trim()} placeholder="Search..."
