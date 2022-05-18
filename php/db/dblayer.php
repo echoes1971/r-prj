@@ -1116,6 +1116,43 @@ class DBMgr {
         $ret = $tmp[0]->getValue('numero')>0;
         return $ret;
     }
+
+    /**
+     * Given an ID, it searches on all the tables with column ID as primary key
+     * @param ID
+     * @return a DBE with the attribute 'classname', corresponding to the DBE class to use for a full search
+     */
+    function searchDBEById($id,$ignore_deleted=true) {
+		$tipi = $this->getFactory()->getRegisteredTypes();
+		$q = array();
+		foreach($tipi as $tablename=>$classname) {
+			$mydbe = $this->getInstance($classname);
+			if($classname=='DBEObject' || is_a($mydbe,"DBAssociation")) continue;
+            $chiavi = $mydbe->getKeys();
+            // 
+            if(count($chiavi)!=1 || $chiavi[0]!="id") continue;
+			$q[]="select '$classname' as classname,id"
+					." from ".$this->buildTableName($mydbe)
+					." where id='".DBEntity::hex2uuid($id)."'"
+					.($ignore_deleted && is_a($mydbe,'DBEObject') ? " and deleted_date='0000-00-00 00:00:00'" : '');
+		}
+		$searchString = implode(" union ", $q);
+		if($this->_verbose) { printf("query: $searchString<br/>\n"); }
+		$lista = $this->select('DBEntity', "dbe", $searchString);
+		return count($lista)==1 ? $lista[0] : null;
+	}
+    /**
+     * Performs the search by ID and, if found, it returns the full DBE
+     */
+    function fullDBEById($id,$ignore_deleted=true) {
+        $searchInfo = $this->searchDBEById($id,$ignore_deleted);
+        if($searchInfo==null) return null;
+
+        $search = $this->getInstance($searchInfo->getValue('classname'));
+        $search->setValue('id',$id);
+        $res = $this->search($search,false);
+		return count($res)==1 ? $res[0] : null;
+    }
 }
 
 ?>

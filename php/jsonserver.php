@@ -259,6 +259,42 @@ function selectAsArray($tablename, $searchString) {
 	return $retArray;
 }
 
+/**
+ * Normal DBEs are not publicly searchable, only DBOs with the right permissions
+ */
+function searchDBEById($myid,$ignore_deleted) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+	$dbe = null;
+	if(_isAuthorized()) {
+		$dbe = $dbmgr->searchDBEById($myid,$ignore_deleted);
+		if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
+	} else {
+		echo "json_server.searchDBEById: Authentication required!\n";
+	}
+	$dbmgr->setVerbose(false);
+	
+	return $dbe==null ? array() : array(_dbeToJson($dbe));
+}
+/**
+ * See searchDBEById: authorization required here!!!!
+ */
+function fullDBEById($myid,$ignore_deleted) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+	$dbe = null;
+	if(_isAuthorized()) {
+		$dbe = $dbmgr->fullDBEById($myid,$ignore_deleted);
+		if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
+	} else {
+		echo "json_server.fullDBEById: Authentication required!\n";
+	}
+	$dbmgr->setVerbose(false);
+	
+	return $dbe==null ? array() : array(_dbeToJson($dbe));
+}
 
 // ************* ObjectMgr: start.
 function objectById($myid,$ignore_deleted) {
