@@ -539,10 +539,13 @@ function JSONDBConnection(connectionString,verbose) {
 			console.log("JSONDBConnection.fullDBEById.my_cb: start.");
 			var myobj = null;
 			try {
+				// console.log("JSONDBConnection.fullDBEById.my_cb: jsonObj[0]="+jsonObj[0]);
 				var myrs=self.obj2resultset(jsonObj[1]);
+				// console.log("JSONDBConnection.fullDBEById.my_cb: myrs="+JSON.stringify(myrs));
 				if(myrs) {
 					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
 					myobj.fromRS(myrs,0);
+					// console.log("JSONDBConnection.fullDBEById.my_cb: myobj="+JSON.stringify(myobj));
 				}
 			} catch(e) {
 				console.log(e);
