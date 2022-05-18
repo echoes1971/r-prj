@@ -232,6 +232,57 @@ class HTMLEdit extends React.Component {
     }
 }
 
+const FField = props => {
+    const is_readonly = props.is_readonly
+    const dark_theme = props.dark_theme
+    const class_unknown = props.class_unknown || false
+    const field = props.field
+
+    const [value, setValue] = useState(field.value)
+
+    const fieldname = props.name
+    const fieldtype = field._classname==="FPassword" ? "password"
+        : field.type==="n" ? "number"
+        : field.type==='d' ? 
+            ( field.show_date && field.show_time ? 'datetime-local'
+                : field.show_date ? 'date'
+                : 'time'
+            )
+        : "text"; // n=number s=string d=datetime
+    const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' ' +
+            (is_readonly ?
+                'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
+                : '')
+        ).trim()
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start align-top">
+                {   class_unknown ?
+                    <p>{field._classname}</p>
+                    :
+                    <input id={fieldname} name={fieldname} type={fieldtype}
+                            // size={field.size}
+                            class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                            value={value && field.type==='d' ?
+                                        ( fieldtype==='time' ? value.split(" ")[1] : value.replace(" ","T") )
+                                    : value }
+                        onChange={e => {
+                            const target = e.target;
+                            const v = target.type === 'checkbox' ? target.checked : target.value;
+                            const name = target.name;
+
+                            props.onChange(e)
+                            setValue(v)
+                        }} />
+                }
+            </div>
+        </div>
+    );
+
+}
+
 const FList = props => {
     const is_readonly = props.is_readonly
     // const field_prefix = props.field_prefix
@@ -399,4 +450,4 @@ const FKField = props => {
     )
 }
 
-export { FKField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }
+export { FField, FKField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }

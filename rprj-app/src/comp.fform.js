@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FKField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
+import { FField, FKField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -55,9 +55,8 @@ class FForm extends React.Component {
         this.be.getLoggedUser()
         this.be.getDBE2FormMapping((jsonObj, dbe2formMapping) => {
             this.dbe2formMapping = dbe2formMapping
-            console.log("FForm.componentDidMount.cb: this="+this)
-            console.log("FForm.componentDidMount.cb: dbe2formMapping="+JSON.stringify())
-        });
+            // console.log("FForm.componentDidMount.cb: dbe2formMapping="+JSON.stringify(this.dbe2formMapping))
+        })
         // this.be.getFormInstance(this.state.formname,this.forminstance_callback);
         // console.log("FForm.componentDidMount: end.")
     }
@@ -65,7 +64,6 @@ class FForm extends React.Component {
         console.log("FForm.componentWillUnmount: start.");
         console.log("FForm.componentWillUnmount: end.");
     }
-    // componentDidUpdate(prevProps, prevState, snapshot) {
     componentDidUpdate(prevProps, prevState) {
         // console.log("FForm.componentDidUpdate: prevProps="+JSON.stringify(prevProps))
         // console.log("FForm.componentDidUpdate: props="+JSON.stringify(this.props))
@@ -150,13 +148,13 @@ class FForm extends React.Component {
         }
 
         // Store new values
-        console.log("FForm.obj2state: myobj="+JSON.stringify(myobj));
+        // console.log("FForm.obj2state: myobj="+JSON.stringify(myobj));
         for(const k in myobj) { //.getValues()) {
             // console.log("FForm.obj2state: k="+k)
             const k1 = this.field_prefix + k
             values[k1] = myobj[k]
         }
-        console.log("FForm.obj2state: values="+JSON.stringify(values));
+        // console.log("FForm.obj2state: values="+JSON.stringify(values));
         this.setState(values);
     }
 
@@ -222,43 +220,8 @@ class FForm extends React.Component {
     //      FHtml
     //  FDateTime
     //      FDateTimeReadOnly
-    //  FKField - TODO
+    //  FKField
     //      FKObjectField - TODO
-    renderFField(field, is_readonly=false, class_unknown=false) {
-        const fieldname = this.field_prefix + field.name
-        const fieldtype = field._classname==="FPassword" ? "password"
-                    : field.type==="n" ? "number"
-                    : field.type==='d' ? 
-                        ( field.show_date && field.show_time ? 'datetime-local'
-                            : field.show_date ? 'date'
-                            : 'time'
-                        )
-                    : "text"; // n=number s=string d=datetime
-        const fieldclass = (
-                (field.cssClass>'' ? field.cssClass : '') + ' ' +
-                (is_readonly ?
-                    'form-control-plaintext' + (this.state.dark_theme ? ' form-control-plaintext-dark' : '')
-                    : '')
-            ).trim();
-        return (
-            <div class="row">
-                <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-                <div class="col text-start align-top">
-                    {   class_unknown ?
-                        <p>{field._classname}</p>
-                        :
-                        <input id={fieldname} name={fieldname} type={fieldtype}
-                                // size={field.size}
-                                class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                                value={this.state[fieldname] && field.type==='d' ?
-                                            ( fieldtype==='time' ? this.state[fieldname].split(" ")[1] : this.state[fieldname].replace(" ","T") )
-                                        : this.state[fieldname] }
-                            onChange={this.default_handleChange} />
-                    }
-                </div>
-            </div>
-        );
-    }
     password_handleChange(event) {
         const target = event.target;
         const value1 = target.type === 'checkbox' ? target.checked : target.value;
@@ -333,21 +296,21 @@ class FForm extends React.Component {
         //     console.log("FForm.renderField: field="+JSON.stringify(field));
         // }
         if(["FDateTime","FLanguage","FNumber","FString","FUuid"].indexOf(field._classname)>=0) {
-            return this.renderFField(field,is_readonly);
+            return <FField name={field_name} field={field} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
+                onChange={this.default_handleChange} />
         }
         if(["FDateTimeReadOnly"].indexOf(field._classname)>=0) {
-            return this.renderFField(field,true);
+            return <FField name={field_name} field={field} is_readonly={true} dark_theme={this.state.dark_theme}
+                onChange={this.default_handleChange} />
         }
         if(["FList"].indexOf(field._classname)>=0) {
-            const name = this.field_prefix + field.name;
-            return <FList name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
+            return <FList name={field_name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, is_readonly);
         }
         if(field._classname==='FPercent') {
-            const name = this.field_prefix + field.name;
-            return <FPercent name={name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
+            return <FPercent name={field_name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPermissions') {
             return (
@@ -371,9 +334,8 @@ class FForm extends React.Component {
                 </div>
         }
         if(field._classname==='FKField') {
-            const name = this.field_prefix + field.name;
             const obj = this.state.obj
-            return <FKField name={name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
+            return <FKField name={field_name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
                 onChange={(n,v) => {
                     // console.log("FForm.renderField.onChange: "+n+"="+v)
                     var myobj = this.state.obj
@@ -381,7 +343,8 @@ class FForm extends React.Component {
                     this.setState({[n]: v, 'obj': myobj});
                 }} />
         }
-        return this.renderFField(field, false, true);
+        return <FField name={field_name} field={field} is_readonly={is_readonly} class_unknown={true} dark_theme={this.state.dark_theme}
+            onChange={this.default_handleChange} />
     }
     renderGroup(g) {
         const decodeGroupNames = this.form.decodeGroupNames
@@ -393,7 +356,7 @@ class FForm extends React.Component {
         const visibleFields = this.form.detailColumnNames;
         const readonlyFields = this.form.detailReadOnlyColumnNames;
 
-        console.log("FForm.renderGroup: this.state.dark_theme="+this.state.dark_theme)
+        // console.log("FForm.renderGroup: this.state.dark_theme="+this.state.dark_theme)
         return (
             <div class="component">
                 <div class="row"><div class={"col fw-bold text-middle m-2 rounded" + (this.state.dark_theme ? " bg-dark" : " bg-light")}>{groupName}</div></div>
@@ -422,14 +385,14 @@ class FForm extends React.Component {
         }
 
         const user = this.be.getDBEUserFromConnection()
-        console.log("FForm.renderActions: user="+JSON.stringify(user))
+        // console.log("FForm.renderActions: user="+JSON.stringify(user))
 
         const obj = this.state.obj
         // console.log("FForm.renderActions: obj="+JSON.stringify(obj))
         // console.log("FForm.renderActions: obj="+obj.to_string())
         const can_write = this.be.canWrite(obj)
-        console.log("FForm.renderActions: readonly="+readonly)
-        console.log("FForm.renderActions: can_write="+can_write)
+        // console.log("FForm.renderActions: readonly="+readonly)
+        // console.log("FForm.renderActions: can_write="+can_write)
         const actions = this.form.actions;
         return (
             <div class="btn-toolbar" role="toolbar" aria-label="Actions">{
@@ -511,7 +474,7 @@ class FForm extends React.Component {
         }
         const obj = this.state.obj
         const can_write = this.be.canWrite(obj)
-        console.log("FForm.renderActions: can_write="+can_write)
+        // console.log("FForm.renderActions: can_write="+can_write)
 
         const readonly =  this.state.readonly
         const detailIcon = this.state.detailIcon;
