@@ -160,7 +160,7 @@ const DBELink = props => {
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
-            <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+            <a class={props.class} aria-current={props.ariacurrent} href={ tablename!=='countrylist' ? app_cfg.root_path + (edit ? "e/" : "o/") + id + "/" : null}>{name}</a>
         </span>
         )
 }
