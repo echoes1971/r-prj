@@ -105,7 +105,7 @@ const RLink = props => {
 
 const DBOButton = props => {
     const dbo = props.dbo
-    console.log("DBOButton: dbo="+JSON.stringify(dbo))
+    // console.log("DBOButton: dbo="+JSON.stringify(dbo))
     // if(! ('getValue' in dbo)) alert("cippa")
     const id = dbo ? dbo.getValue('id') : ''
     const name = props.name>'' ? props.name
@@ -174,12 +174,14 @@ const DBELinkEdit = props => {
 
     const be = props.be
     const tablename = props.tablename
+    const decodeField = props.decodeField
 
     const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
     const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
     const refSearchStarted = useRef(false)
 
     const [searchString, setSearchString] = useState('')
+    const [listvalues, setListvalues] = useState({})    //  {'60':'France', '82':'Italy', '84': 'Japan', '167': 'Switzerland', 'xxx':'zozzo'}
 
     if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
         refSearchStarted.current = true
@@ -199,36 +201,49 @@ const DBELinkEdit = props => {
             })
         })
     }
-    const listvalues = {'82':'Italy', '60':'France', 'xxx':'zozzo'}
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
-            <a class="dropdown-toggle" id={'dropdown_' + fieldname}
-                role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
                 href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
             <ul class="dropdown-menu" aria-labelledby={'dropdown_' + fieldname}>
                 <li>
-                    <input id={fieldname} name={fieldname} value={searchString} class={fieldclass}
-                        placeholder="Search..."
+                    <input id={fieldname} name={fieldname} value={searchString} class={('form-control '+fieldclass).trim()} placeholder="Search..."
                         onChange={e => {
                             const target = e.target;
                             const v = target.value;
                             const name = target.name;
-                            console.log("DBELinkEdit: "+name+"="+v)
-                            if(v.length>2) {
-                                console.log("DBELinkEdit: TODO start the search"+name+"="+v)
+                            // console.log("DBELinkEdit: "+name+"="+v)
+                            if(v.length>0) {
+                                be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
+                                    var search = mydbe
+                                    search.setValue(decodeField,v+"%%")
+                                    // console.log("search="+search.to_string())
+                                    const uselike = true
+                                    const caseSensitive = false
+                                    const orderBy = decodeField
+                                    be.search(search, uselike, caseSensitive, orderBy, (server_messages, dbelist) => {
+                                        // console.log("DBELinkEdit.onChange: start.");
+                                        // console.log(server_messages)
+                                        var tmp = {}
+                                        for(var i=0; dbelist!==null && i<dbelist.length; i++) {
+                                            tmp[dbelist[i].getValue('id')] = dbelist[i].getValue(decodeField)
+                                        }
+                                        setListvalues(tmp)
+                                        // console.log("DBELinkEdit.onChange: end.")
+                                    })
+                                })
                             }
-                            // props.onChange(name, v)
                             setSearchString(v)
+                            // props.onChange(name, v)
                         }} />
                 </li>
                 {Object.keys(listvalues).map((k) => {
-                    // return (<option value={k}>{listvalues[k]}</option>);
-                    return (<li><a class="dropdown-item" href="#"
+                    return (<li><a class="dropdown-item" href="#" role="button"
                         onClick={() => {
                             refSearchStarted.current = false
                             props.onSelect(k)
-                        }}>{k} {listvalues[k]}</a></li>)
+                        }}>{tablename==='countrylist' ? getFlagEmojiByID(k) + ' ' : '' }{listvalues[k]}</a></li>)
                 })}
             </ul>
         </span>
