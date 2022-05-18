@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
@@ -311,6 +311,7 @@ const FKField = props => {
     console.log("FKField: start "+field.name)
 
     // console.log("FKField: dbe="+JSON.stringify(dbe))
+    // console.log("FKField: dbe.dict="+JSON.stringify(dbe.dict))
 
     const [value, setValue] = useState(field.value)
     const [decodedValue, setDecodedValue] = useState("--")
@@ -326,30 +327,31 @@ const FKField = props => {
         : "name"
     console.log("FKField: decodeField="+decodeField);
 
-    if(fk && !refSearchStarted.current) { //decodedValue==="--") {
-        refSearchStarted.current = true
+    useEffect(() => {
+        if(fk && !refSearchStarted.current) { //decodedValue==="--") {
+            refSearchStarted.current = true
 
-        console.log("FKField: field="+JSON.stringify(field))
-
-        console.log("FKField: fk.tabella_riferita="+fk.tabella_riferita);
-        be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
-            var search = mydbe;
-            search.setValue(fk.colonna_riferita,value || field.value);
-            console.log("FKField: search="+search.to_string());
-        
-            be.search(search, false, true, decodeField, (server_messages,dbelist) => {
-                console.log("FKField: server_messages="+server_messages)
-                console.log("FKField: dbelist="+JSON.stringify(dbelist))
-                const mylist = dbelist
-                if(mylist && mylist.length===1) {
-                    const res = dbelist[0]
-                    console.log("FKField: res="+JSON.stringify(res))
-                    console.log("FKField: res.getValue("+decodeField+")="+res.getValue(decodeField))
-                    setDecodedValue(res.getValue(decodeField))
-                }
-            });
-        })
-    }
+            console.log("FKField.useEffect: field="+JSON.stringify(field))
+            // console.log("FKField.useEffect: fk.tabella_riferita="+fk.tabella_riferita);
+            be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
+                var search = mydbe;
+                search.setValue(fk.colonna_riferita,value || field.value);
+                console.log("FKField.useEffect: search="+search.to_string());
+            
+                be.search(search, false, true, decodeField, (server_messages,dbelist) => {
+                    // console.log("FKField.useEffect: server_messages="+server_messages)
+                    // console.log("FKField.useEffect: dbelist="+JSON.stringify(dbelist))
+                    const mylist = dbelist
+                    if(mylist && mylist.length===1) {
+                        const res = dbelist[0]
+                        // console.log("FKField.useEffect: res="+JSON.stringify(res))
+                        // console.log("FKField.useEffect: res.getValue("+decodeField+")="+res.getValue(decodeField))
+                        setDecodedValue(res.getValue(decodeField))
+                    }
+                })
+            })
+        }
+    }, [value])
 
     const fieldname = props.name
     const fieldclass = (
@@ -373,10 +375,13 @@ const FKField = props => {
             <span>
                 <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass}/>
                 <DBELinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                    fieldname={fieldname} fieldclass={fieldclass} be={be} tablename={fk ? fk.tabella_riferita : null}
+                    fieldname={fieldname} fieldclass={fieldclass}
+                    be={be} tablename={fk ? fk.tabella_riferita : null} decodeField={decodeField}
                     onSelect={(newid) => {
+                        refSearchStarted.current = false
                         console.log("FKField.onSelect: "+fieldname+"="+newid)
                         props.onChange(fieldname, newid)
+                        setValue(newid)
                     }}
                     />
             </span>
