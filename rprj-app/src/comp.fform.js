@@ -310,7 +310,7 @@ class FForm extends React.Component {
             return this.renderFPassword(field, is_readonly);
         }
         if(field._classname==='FPercent') {
-            return <FPercent name={field_name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
+            return <FPercent name={field_name} field={field} is_readonly={is_readonly} dark_theme={this.state.dark_theme} onChange={(n,v) => { this.setState({[n]: v}); }} />
         }
         if(field._classname==='FPermissions') {
             return (
