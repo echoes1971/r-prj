@@ -321,22 +321,29 @@ const FList = props => {
 
 const FPercent = props => {
     const is_readonly = props.is_readonly
+    const dark_theme = props.dark_theme
     const field = props.field
 
     const [value, setValue] = useState(field.value)
 
     const fieldname = props.name
     const fieldclass = (
-            (field.cssClass>'' ? field.cssClass : '') + ' ' + (is_readonly ? 'form-control-plaintext' : '')
-        ).trim()
+        (field.cssClass>'' ? field.cssClass : '') + ' ' +
+        (is_readonly ?
+            'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
+            : '')
+    ).trim()
 
     return (
         <div class="row">
-            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-            <div class="col text-start">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>{
+                is_readonly ? 
+                <div class="col text-start">{value} %</div>
+                :
+            <div class="col text-end">
                 <input id={fieldname} name={fieldname} type="number"
                     class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                    value={value} size={field.size}
+                    value={value} size="4"
                     onChange={e => {
                         const target = e.target;
                         const v = target.type === 'checkbox' ? target.checked : target.value;
@@ -344,8 +351,8 @@ const FPercent = props => {
 
                         props.onChange(name, v)
                         setValue(v)
-                    }} /> %
-            </div>
+                    }} /></div>
+            }
         </div>
     )
 }
