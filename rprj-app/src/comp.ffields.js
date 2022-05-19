@@ -340,7 +340,7 @@ const FPercent = props => {
                 is_readonly ? 
                 <div class="col text-start">{value} %</div>
                 :
-            <div class="col text-end">
+            <div class="col text-start">
                 <input id={fieldname} name={fieldname} type="number"
                     class={fieldclass} readOnly={is_readonly} placeholder={field.title}
                     value={value} size="4"
@@ -351,7 +351,7 @@ const FPercent = props => {
 
                         props.onChange(name, v)
                         setValue(v)
-                    }} /></div>
+                    }} /> %</div>
             }
         </div>
     )
