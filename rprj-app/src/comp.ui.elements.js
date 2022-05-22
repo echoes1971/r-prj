@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import { app_cfg } from './app.cgf';
 import { getFlagEmojiByID } from './countries'
@@ -118,13 +118,54 @@ const DBOButton = props => {
 }
 
 const DBOLink = props => {
-    const id = props.dbo ? props.dbo.getValue('id') : ''
-    const name = props.name || (props.dbo ? props.dbo.getValue('name') : '')
+    const [dbo,setDBO] = useState(props.dbo || null)
+    const id = dbo ? dbo.getValue('id') : (props.dbeid ? props.dbeid  : '')
+    const [name, setName] = useState(props.name || (dbo ? dbo.getValue('name') : ''))
     const edit = props.edit || false
-    const detailIcon = props.detailIcon || ''
-    const detailIconTitle = props.detailIconTitle || ''
 
-    return <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}<a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a></span>
+    const be = props.be
+
+    const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
+    const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
+    const refSearchStarted = useRef(false)
+
+    // console.log("DBOLink: props.detailIcon="+JSON.stringify(props.detailIcon))
+    // console.log("DBOLink: detailIconTitle="+detailIconTitle)
+
+    // useEffect(() => {
+    //     if(dbo!==null) {
+    //         id = 
+    //     }
+    // },[dbo])
+
+    console.log("DBOLink: id="+id)
+    console.log("DBOLink: refSearchStarted="+refSearchStarted.current)
+
+    if(detailIcon==='' && detailIconTitle==='' && (id>'' && id!='0') && !refSearchStarted.current && be) {
+        refSearchStarted.current = true
+        be.fullObjectById(id, true, (jsonObj, myobj) => {
+            const _dbo = myobj
+            setDBO(myobj)
+            setName(myobj.getValue('name'))
+            console.log("DBOLink.search: _dbo="+JSON.stringify(_dbo))
+            be.getFormInstanceByDBEName(_dbo.dbename, (jsonObj, form) => {
+                console.log("DBOLink.search: _dbo.dbename="+_dbo.dbename)
+                const myform = form
+                // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
+                if(myform) {
+                    console.log("DBOLink.search: myform="+JSON.stringify(myform))
+                    setDetailIcon(icon2emoji(myform.detailIcon))
+                    setDetailIconTitle(form.detailTitle)
+                }
+            })
+        })
+    }
+
+    return (
+        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}{(id>'' && id!='0') || dbo ?
+        <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+            : '--'}</span>
+    )
 }
 
 const DBELink = props => {
@@ -250,4 +291,8 @@ const DBELinkEdit = props => {
         )
 }
 
-export { DBELink, DBELinkEdit, DBOButton, DBOLink, icon2emoji, IFRTree, IFRTreeAll, RLink }
+const DBOLinkEdit = props => {
+    return ('TODO')
+}
+
+export { DBELink, DBELinkEdit, DBOButton, DBOLink, DBOLinkEdit, icon2emoji, IFRTree, IFRTreeAll, RLink }

@@ -253,6 +253,7 @@ class RNav extends React.Component {
         const allowed_types = ['DBEFolder','DBELink','DBEPeople'];
         const root_obj = this.state.root_obj;
         const top_menu = this.state.top_menu;
+        console.log("RNav.render: root_obj="+JSON.stringify(root_obj))
         // console.log("RNav.render: top_menu="+top_menu)
         return (
             <nav class={nav_class}>
@@ -264,9 +265,7 @@ class RNav extends React.Component {
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent2">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <DBOLink class="nav-link active" aria-current="page" dbo={root_obj} />
-                            </li>
+                            <li class="nav-item">{root_obj!==null ? <DBOLink class="nav-link active" aria-current="page" dbo={root_obj} /> : ''}</li>
                             {top_menu.map((k) => {
                                 if(k===null || allowed_types.indexOf(k.getDBEName())<0) {
                                     return ('')

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import JoditEditor from "jodit-react";
 
-import { DBELink, DBELinkEdit } from './comp.ui.elements'
+import { DBELink, DBELinkEdit, DBOLink, DBOLinkEdit } from './comp.ui.elements'
 
 class FPermissions extends React.Component {
     constructor(props) {
@@ -443,4 +443,90 @@ const FKField = props => {
     )
 }
 
-export { FField, FKField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }
+const FKObjectField = props => {
+    const is_readonly = props.is_readonly
+    const field = props.field
+    const dbe = props.dbe
+    const dark_theme = props.dark_theme
+    const be = props.be
+
+    const refSearchStarted = useRef(false)
+
+    console.log("FKObjectField: start "+field.name)
+
+    // console.log("FKObjectField: dbe="+JSON.stringify(dbe))
+    // console.log("FKObjectField: dbe.dict="+JSON.stringify(dbe.dict))
+
+    const [value, setValue] = useState(field.value)
+    const [decodedValue, setDecodedValue] = useState(dbe ? dbe.getValue('name') : "")
+    console.log("FKObjectField: decodedValue="+decodedValue)
+    
+    console.log("FKObjectField: refSearchStarted="+refSearchStarted.current)
+
+    const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
+    console.log("FKObjectField: fks="+JSON.stringify(fks))
+
+    const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
+    console.log("FKObjectField: fk="+JSON.stringify(fk))
+
+    const decodeField = "name"
+    console.log("FKObjectField: decodeField="+decodeField);
+
+    // useEffect(() => {
+    //     if(fk && !refSearchStarted.current) { //decodedValue==="--") {
+    //         refSearchStarted.current = true
+
+    //         console.log("FKObjectField.useEffect: field="+JSON.stringify(field))
+    //         // console.log("FKObjectField.useEffect: fk.tabella_riferita="+fk.tabella_riferita);
+    //         be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
+    //             var search = mydbe;
+    //             search.setValue(fk.colonna_riferita,value || field.value);
+    //             console.log("FKObjectField.useEffect: search="+search.to_string());
+            
+    //             be.search(search, false, true, decodeField, (server_messages,dbelist) => {
+    //                 // console.log("FKObjectField.useEffect: server_messages="+server_messages)
+    //                 // console.log("FKObjectField.useEffect: dbelist="+JSON.stringify(dbelist))
+    //                 const mylist = dbelist
+    //                 if(mylist && mylist.length===1) {
+    //                     const res = dbelist[0]
+    //                     // console.log("FKObjectField.useEffect: res="+JSON.stringify(res))
+    //                     // console.log("FKObjectField.useEffect: res.getValue("+decodeField+")="+res.getValue(decodeField))
+    //                     setDecodedValue(res.getValue(decodeField))
+    //                 }
+    //             })
+    //         })
+    //     }
+    // }, [value])
+
+    const fieldname = props.name
+    const fieldclass = (
+        (field.cssClass>'' ? field.cssClass : '') + ' ' +
+        (is_readonly ?
+            'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
+            : '')
+        ).trim();
+
+    console.log("FKObjectField: end "+field.name)
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start">
+                <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass} />{
+                is_readonly ? 
+                <DBOLink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                    be={be} />
+                 :
+                <DBOLinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
+                 fieldname={fieldname} fieldclass={fieldclass} be={be}
+                 onSelect={(newid) => {
+                     refSearchStarted.current = false
+                    //  console.log("FKObjectField.onSelect: "+fieldname+"="+newid)
+                     props.onChange(fieldname, newid)
+                     setValue(newid)
+                 }} />
+            }</div>
+        </div>
+    )
+}
+
+export { FField, FKField, FKObjectField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }

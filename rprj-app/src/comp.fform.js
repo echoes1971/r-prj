@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FField, FKField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
+import { FField, FKField, FKObjectField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -336,6 +336,16 @@ class FForm extends React.Component {
         if(field._classname==='FKField') {
             const obj = this.state.obj
             return <FKField name={field_name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
+                onChange={(n,v) => {
+                    // console.log("FForm.renderField.onChange: "+n+"="+v)
+                    var myobj = this.state.obj
+                    myobj.setValue('id',v)
+                    this.setState({[n]: v, 'obj': myobj});
+                }} />
+        }
+        if(field._classname==='FKObjectField') {
+            const obj = this.state.obj
+            return <FKObjectField name={field_name} field={field} be={this.be} dbe={obj} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
                 onChange={(n,v) => {
                     // console.log("FForm.renderField.onChange: "+n+"="+v)
                     var myobj = this.state.obj
