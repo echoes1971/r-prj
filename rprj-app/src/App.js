@@ -163,7 +163,7 @@ class App extends Component {
   children_cb(jsonObj, dbelist) {
     // console.log("App.children_cb: dbelist="+JSON.stringify(dbelist));
     const children = dbelist
-    console.log("App.children_cb: children="+JSON.stringify(children));
+    // console.log("App.children_cb: children="+JSON.stringify(children));
     this.setState({children: children})
   }
 
