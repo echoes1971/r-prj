@@ -143,7 +143,7 @@ const DBOLink = props => {
                         setDetailIconTitle(myform.detailTitle)
                     }
                 })
-            } else if(detailIcon==='' && detailIconTitle==='' && (id>'' && id!='0')) {
+            } else if(detailIcon==='' && detailIconTitle==='' && (id>'' && id!=='0')) {
                 be.fullObjectById(id, true, (jsonObj, myobj) => {
                     const _dbo = myobj
                     setDBO(myobj)
@@ -171,11 +171,11 @@ const DBOLink = props => {
                 setDetailIconTitle(props.detailIconTitle)
             }
         }
-    },[dbo,props.detailIconTitle])
+    },[dbo,props.detailIcon,props.detailIconTitle,be,id])
 
 
     return (
-        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}{(id>'' && id!='0') || dbo ?
+        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}{(id>'' && id!=='0') || dbo ?
         <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
             : '--'}</span>
     )
@@ -193,25 +193,28 @@ const DBELink = props => {
     const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
     const refSearchStarted = useRef(false)
 
-    if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
-        refSearchStarted.current = true
-        // console.log("DBELink.search: tablename="+JSON.stringify(tablename))
-        be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
-            const dbe = mydbe
-            // console.log("DBELink.search: dbe="+JSON.stringify(dbe))
-            be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
-                // console.log("DBELink.search: dbe.dbename="+dbe.dbename)
-                const myform = form
-                // console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
-                if(myform) {
-                    // console.log("DBELink.search: myform="+JSON.stringify(myform))
-                    // console.log("DBELink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
-                    setDetailIcon(icon2emoji(myform.detailIcon))
-                    setDetailIconTitle(myform.detailTitle)
-                }
+    useEffect(() => {
+        if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
+            refSearchStarted.current = true
+            // console.log("DBELink.search: tablename="+JSON.stringify(tablename))
+            be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
+                const dbe = mydbe
+                // console.log("DBELink.search: dbe="+JSON.stringify(dbe))
+                be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
+                    // console.log("DBELink.search: dbe.dbename="+dbe.dbename)
+                    const myform = form
+                    // console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
+                    if(myform) {
+                        // console.log("DBELink.search: myform="+JSON.stringify(myform))
+                        // console.log("DBELink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
+                        setDetailIcon(icon2emoji(myform.detailIcon))
+                        setDetailIconTitle(myform.detailTitle)
+                    }
+                })
             })
-        })
-    }
+        }
+    }, [])
+
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             {tablename==='countrylist' ? getFlagEmojiByID(id) + ' ' : '' }
@@ -267,7 +270,7 @@ const DBELinkEdit = props => {
                         onChange={e => {
                             const target = e.target;
                             const v = target.value;
-                            const name = target.name;
+                            // const name = target.name;
                             // console.log("DBELinkEdit: "+name+"="+v)
                             if(v.length>0) {
                                 be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
@@ -306,7 +309,93 @@ const DBELinkEdit = props => {
 }
 
 const DBOLinkEdit = props => {
-    return ('TODO')
+    const [dbo,setDBO] = useState(props.dbo || null)
+    const id = dbo ? dbo.getValue('id') : ( props.dbeid ? props.dbeid : '' )
+    const [name, setName] = useState( dbo ? dbo.getValue('name') : (props.name ? props.name  : '--') )
+    const edit = props.edit || false
+    const fieldname = props.fieldname || ''
+    const fieldclass = props.fieldclass || ''
+
+    const be = props.be
+
+    const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
+    const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
+    const refSearchStarted = useRef(false)
+
+    const [searchString, setSearchString] = useState('')
+    const [listvalues, setListvalues] = useState({})    //  {'60':'France', '82':'Italy', '84': 'Japan', '167': 'Switzerland', 'xxx':'zozzo'}
+
+    useEffect(() => {
+        console.log("DBOLinkEdit: id="+id)
+        if(id>'' && id!=='0') {
+            // refSearchStarted.current = true
+            be.fullObjectById(id, true, (jsonObj, myobj) => {
+                const _dbo = myobj
+                setDBO(myobj)
+                setName(myobj.getValue('name'))
+                console.log("DBOLink.search: _dbo="+JSON.stringify(_dbo))
+                be.getFormInstanceByDBEName(_dbo.dbename, (jsonObj, form) => {
+                    // console.log("DBOLink.search: _dbo.dbename="+_dbo.dbename)
+                    const myform = form
+                    // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
+                    if(myform) {
+                        // console.log("DBOLink.search: myform="+JSON.stringify(myform))
+                        // console.log("DBOLink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
+                        setDetailIcon(icon2emoji(myform.detailIcon))
+                        setDetailIconTitle(myform.detailTitle)
+                    }
+                })
+            })
+        }
+    },[id])
+    return (
+        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
+            <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                href={app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
+            <ul class="dropdown-menu" aria-labelledby={'dropdown_' + fieldname}>
+                <li>
+                    <input id={fieldname} name={fieldname} value={searchString} class={('form-control '+fieldclass).trim()} placeholder="Search..."
+                        onChange={e => {
+                            const target = e.target;
+                            const v = target.value;
+                            // const name = target.name;
+                            // console.log("DBELinkEdit: "+name+"="+v)
+                            if(v.length>0) {
+                                // be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
+                                //     var search = mydbe
+                                //     search.setValue(decodeField,v+"%%")
+                                //     // console.log("search="+search.to_string())
+                                //     const uselike = true
+                                //     const caseSensitive = false
+                                //     const orderBy = decodeField
+                                //     be.search(search, uselike, caseSensitive, orderBy, (server_messages, dbelist) => {
+                                //         // console.log("DBELinkEdit.onChange: start.");
+                                //         // console.log(server_messages)
+                                //         var tmp = {}
+                                //         for(var i=0; dbelist!==null && i<dbelist.length; i++) {
+                                //             tmp[dbelist[i].getValue('id')] = dbelist[i].getValue(decodeField)
+                                //         }
+                                //         setListvalues(tmp)
+                                //         // console.log("DBELinkEdit.onChange: end.")
+                                //     })
+                                // })
+                                setListvalues({515: 'Casa', 517: 'Scariga'})
+                            }
+                            setSearchString(v)
+                            // props.onChange(name, v)
+                        }} />
+                </li>
+                {Object.keys(listvalues).map((k) => {
+                    return (<li><a class="dropdown-item" href="#" role="button"
+                        onClick={() => {
+                            refSearchStarted.current = false
+                            props.onSelect(k, listvalues[k])
+                        }}>{listvalues[k]}</a></li>)
+                })}
+            </ul>
+        TODO
+        </span>
+        )
 }
 
 export { DBELink, DBELinkEdit, DBOButton, DBOLink, DBOLinkEdit, icon2emoji, IFRTree, IFRTreeAll, RLink }
