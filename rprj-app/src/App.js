@@ -9,8 +9,7 @@ import { BackEndProxy } from './be';
 import RNav from './comp.nav';
 import TestBE from './comp.test.be';
 import { ServerResponse } from './comp.test.serverresponse';
-import { IFRTree, IFRTreeAll } from './comp.ui.elements';
-import { DBEntity } from './db/dblayer';
+import { IFRTree } from './comp.ui.elements';
 // import { DBEntity } from './db/dblayer';
 
 class App extends Component {
