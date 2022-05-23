@@ -373,17 +373,17 @@ const FKField = props => {
 
     const [value, setValue] = useState(field.value)
     const [decodedValue, setDecodedValue] = useState("--")
-    console.log("FKField: decodedValue="+decodedValue)
+    // console.log("FKField: decodedValue="+decodedValue)
     
-    console.log("FKField: refSearchStarted="+refSearchStarted.current)
+    // console.log("FKField: refSearchStarted="+refSearchStarted.current)
 
     const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
-    console.log("FKField: fk="+JSON.stringify(fk))
+    // console.log("FKField: fk="+JSON.stringify(fk))
 
     const decodeField = fk && fk.tabella_riferita==='users' ? "login"
         : fk && fk.tabella_riferita==='countrylist' ? "Common_Name"
         : "name"
-    console.log("FKField: decodeField="+decodeField);
+    // console.log("FKField: decodeField="+decodeField);
 
     useEffect(() => {
         if(fk && !refSearchStarted.current) { //decodedValue==="--") {
@@ -466,11 +466,11 @@ const FKObjectField = props => {
     const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
     console.log("FKObjectField: fks="+JSON.stringify(fks))
 
-    const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
-    console.log("FKObjectField: fk="+JSON.stringify(fk))
+    // const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
+    // console.log("FKObjectField: fk="+JSON.stringify(fk))
 
     const decodeField = "name"
-    console.log("FKObjectField: decodeField="+decodeField);
+    // console.log("FKObjectField: decodeField="+decodeField);
 
     // useEffect(() => {
     //     if(fk && !refSearchStarted.current) { //decodedValue==="--") {
