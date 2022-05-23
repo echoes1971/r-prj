@@ -120,7 +120,7 @@ const DBOButton = props => {
 const DBOLink = props => {
     const [dbo,setDBO] = useState(props.dbo || null)
     const id = dbo ? dbo.getValue('id') : (props.dbeid ? props.dbeid  : '')
-    const [name, setName] = useState(props.name || (dbo ? dbo.getValue('name') : ''))
+    const [name, setName] = useState( dbo ? dbo.getValue('name') : (props.name ? props.name  : '') )
     const edit = props.edit || false
 
     const be = props.be
@@ -129,37 +129,50 @@ const DBOLink = props => {
     const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
     const refSearchStarted = useRef(false)
 
-    // console.log("DBOLink: props.detailIcon="+JSON.stringify(props.detailIcon))
-    // console.log("DBOLink: detailIconTitle="+detailIconTitle)
+    useEffect(() => {
+        if(be && !refSearchStarted.current) {
+            refSearchStarted.current = true
+            if(dbo!==null) {
+                // console.log("DBOLink.search: dbo="+dbo.toString())
+                be.getFormInstanceByDBEName(dbo.dbename, (jsonObj, form) => {
+                    const myform = form
+                    // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
+                    if(myform) {
+                        // console.log("DBOLink.search: myform="+JSON.stringify(myform))
+                        setDetailIcon(icon2emoji(myform.detailIcon))
+                        setDetailIconTitle(myform.detailTitle)
+                    }
+                })
+            } else if(detailIcon==='' && detailIconTitle==='' && (id>'' && id!='0')) {
+                be.fullObjectById(id, true, (jsonObj, myobj) => {
+                    const _dbo = myobj
+                    setDBO(myobj)
+                    setName(myobj.getValue('name'))
+                    // console.log("DBOLink.search: _dbo="+JSON.stringify(_dbo))
+                    be.getFormInstanceByDBEName(_dbo.dbename, (jsonObj, form) => {
+                        // console.log("DBOLink.search: _dbo.dbename="+_dbo.dbename)
+                        const myform = form
+                        // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
+                        if(myform) {
+                            // console.log("DBOLink.search: myform="+JSON.stringify(myform))
+                            // console.log("DBOLink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
+                            setDetailIcon(icon2emoji(myform.detailIcon))
+                            setDetailIconTitle(myform.detailTitle)
+                        }
+                    })
+                })
+            }
+        } else if(dbo!==null) {
+            // console.log("DBOLink: id="+id+" name="+name)
+            // console.log("DBOLink: props.detailIcon="+JSON.stringify(''+typeof(props.detailIcon)))
+            // console.log("DBOLink: props.detailIconTitle="+JSON.stringify(''+props.detailIconTitle)+" "+typeof(props.detailIconTitle))
+            if(props.detailIconTitle>'' && props.detailIconTitle!==detailIconTitle) {
+                setDetailIcon(typeof(props.detailIcon)==="string" ? icon2emoji(props.detailIcon) : props.detailIcon)
+                setDetailIconTitle(props.detailIconTitle)
+            }
+        }
+    },[dbo,props.detailIconTitle])
 
-    // useEffect(() => {
-    //     if(dbo!==null) {
-    //         id = 
-    //     }
-    // },[dbo])
-
-    console.log("DBOLink: id="+id)
-    console.log("DBOLink: refSearchStarted="+refSearchStarted.current)
-
-    if(detailIcon==='' && detailIconTitle==='' && (id>'' && id!='0') && !refSearchStarted.current && be) {
-        refSearchStarted.current = true
-        be.fullObjectById(id, true, (jsonObj, myobj) => {
-            const _dbo = myobj
-            setDBO(myobj)
-            setName(myobj.getValue('name'))
-            console.log("DBOLink.search: _dbo="+JSON.stringify(_dbo))
-            be.getFormInstanceByDBEName(_dbo.dbename, (jsonObj, form) => {
-                console.log("DBOLink.search: _dbo.dbename="+_dbo.dbename)
-                const myform = form
-                // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
-                if(myform) {
-                    console.log("DBOLink.search: myform="+JSON.stringify(myform))
-                    setDetailIcon(icon2emoji(myform.detailIcon))
-                    setDetailIconTitle(form.detailTitle)
-                }
-            })
-        })
-    }
 
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}{(id>'' && id!='0') || dbo ?
@@ -182,18 +195,19 @@ const DBELink = props => {
 
     if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
         refSearchStarted.current = true
-        console.log("DBELink.search: tablename="+JSON.stringify(tablename))
+        // console.log("DBELink.search: tablename="+JSON.stringify(tablename))
         be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
             const dbe = mydbe
-            console.log("DBELink.search: dbe="+JSON.stringify(dbe))
+            // console.log("DBELink.search: dbe="+JSON.stringify(dbe))
             be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
-                console.log("DBELink.search: dbe.dbename="+dbe.dbename)
+                // console.log("DBELink.search: dbe.dbename="+dbe.dbename)
                 const myform = form
-                console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
+                // console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
                 if(myform) {
-                    console.log("DBELink.search: myform="+JSON.stringify(myform))
+                    // console.log("DBELink.search: myform="+JSON.stringify(myform))
+                    // console.log("DBELink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
                     setDetailIcon(icon2emoji(myform.detailIcon))
-                    setDetailIconTitle(form.detailTitle)
+                    setDetailIconTitle(myform.detailTitle)
                 }
             })
         })
