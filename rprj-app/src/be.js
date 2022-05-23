@@ -274,7 +274,7 @@ function simpleCache(cb) {
                 // console.log("simpleCache.my_cb: typeof(myobj)="+typeof(myobj))
                 // Save in cache
                 const jsonValue = JSON.stringify(myobj)
-                // console.log("simpleCache.my_cb: jsonValue="+jsonValue)
+                // console.log("simpleCache.my_cb: "+key+" => jsonValue="+jsonValue)
                 cache.set(key, jsonValue)
                 // Apply the callback in argument
                 a_cb(jsonObj, myobj)
