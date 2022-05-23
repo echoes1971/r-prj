@@ -275,7 +275,7 @@ class FForm extends React.Component {
                 <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
                 <div class="col text-start">{
                     is_readonly ?
-                    <pre class="border rounded">{field['value']}</pre>
+                    <pre class="border rounded">{field['value'] || ' '}</pre>
                     :
                     <textarea id={fieldname} name={fieldname}
                         class={fieldclass} readOnly={is_readonly} placeholder={field.title}
