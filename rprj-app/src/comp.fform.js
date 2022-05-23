@@ -455,12 +455,10 @@ class FForm extends React.Component {
             const form_icon_title = formnames[i] + "_icon_title"
             const state_form_icon = this.state[form_icon]
             if(state_form_icon===undefined || state_form_icon===null) {
-                var my_cb = (jsonObj,form) => {
+                this.be.getFormInstance(formname,(jsonObj,form) => {
                     const myform = form
-                    this.setState({[form_icon]: myform.detailIcon,[form_icon_title]:form.detailTitle})
-                }
-                my_cb = my_cb.bind(this).bind(form_icon)
-                this.be.getFormInstance(formname,my_cb)
+                    this.setState({[form_icon]: myform.detailIcon,[form_icon_title]:myform.detailTitle})
+                })
             }
         }
 
@@ -468,9 +466,14 @@ class FForm extends React.Component {
             {Object.keys(children).map((k) => {
                 const form_icon = formnames[k] + "_icon"
                 const form_icon_title = formnames[k] + "_icon_title"
+
+                const _detailIcon = icon2emoji(this.state[form_icon])
+                const _detailTitle = this.state[form_icon_title]
+
                 return (<div class="row">
-                    <div class="col"><DBOLink dbo={children[k]} detailIconTitle={this.state[form_icon_title]} detailIcon={icon2emoji(this.state[form_icon])} edit={readonly===false} /></div>
+                    <div class="col"><DBOLink dbo={children[k]} detailIconTitle={_detailTitle} detailIcon={_detailIcon} edit={readonly===false} /></div>
                 </div>)
+                    // <div class="col"><DBOLink dbo={children[k]} detailIconTitle={this.state[form_icon_title]} detailIcon={icon2emoji(this.state[form_icon])} edit={readonly===false} /></div>
             })
             }</div>)
     }
