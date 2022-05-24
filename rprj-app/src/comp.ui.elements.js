@@ -173,7 +173,6 @@ const DBOLink = props => {
         }
     },[dbo,props.detailIcon,props.detailIconTitle,be,id])
 
-
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}{(id>'' && id!=='0') || dbo ?
         <a class={props.class} aria-current={props.ariacurrent} href={ app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
@@ -243,16 +242,16 @@ const DBELinkEdit = props => {
 
     if(detailIcon==='' && detailIconTitle==='' && tablename && tablename!=='countrylist' && !refSearchStarted.current && be) {
         refSearchStarted.current = true
-        console.log("DBELink.search: tablename="+JSON.stringify(tablename))
+        // console.log("DBELink.search: tablename="+JSON.stringify(tablename))
         be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
             const dbe = mydbe
-            console.log("DBELink.search: dbe="+JSON.stringify(dbe))
+            // console.log("DBELink.search: dbe="+JSON.stringify(dbe))
             be.getFormInstanceByDBEName(dbe.dbename, (jsonObj, form) => {
-                console.log("DBELink.search: dbe.dbename="+dbe.dbename)
+                // console.log("DBELink.search: dbe.dbename="+dbe.dbename)
                 const myform = form
-                console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
+                // console.log("DBELink.search: jsonObj="+JSON.stringify(jsonObj))
                 if(myform) {
-                    console.log("DBELink.search: myform="+JSON.stringify(myform))
+                    // console.log("DBELink.search: myform="+JSON.stringify(myform))
                     setDetailIcon(icon2emoji(myform.detailIcon))
                     setDetailIconTitle(form.detailTitle)
                 }
@@ -310,20 +309,34 @@ const DBELinkEdit = props => {
 
 const DBOLinkEdit = props => {
     const [dbo,setDBO] = useState(props.dbo || null)
-    const id = dbo ? dbo.getValue('id') : ( props.dbeid ? props.dbeid : '' )
+    const [id,setID] = useState(dbo ? dbo.getValue('id') : ( props.dbeid ? props.dbeid : '' ))
     const [name, setName] = useState( dbo ? dbo.getValue('name') : (props.name ? props.name  : '--') )
     const edit = props.edit || false
     const fieldname = props.fieldname || ''
     const fieldclass = props.fieldclass || ''
 
     const be = props.be
+    const tablenames = props.tablenames
+    console.log("DBOLinkEdit: tablenames="+tablenames)
 
     const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
     const [detailIconTitle, setDetailIconTitle] = useState(props.detailIconTitle || '')
     const refSearchStarted = useRef(false)
 
     const [searchString, setSearchString] = useState('')
-    const [listvalues, setListvalues] = useState({})    //  {'60':'France', '82':'Italy', '84': 'Japan', '167': 'Switzerland', 'xxx':'zozzo'}
+    const [listvalues, setListvalues] = useState({})
+
+    useEffect(() => {
+        if(props.dbeid!==id) {
+            setID(props.dbeid)
+        }
+    },[props.dbeid])
+
+    useEffect(() => {
+        if(props.name!==name) {
+            setName(props.name)
+        }
+    },[props.name])
 
     useEffect(() => {
         console.log("DBOLinkEdit: id="+id)
@@ -333,14 +346,14 @@ const DBOLinkEdit = props => {
                 const _dbo = myobj
                 setDBO(myobj)
                 setName(myobj.getValue('name'))
-                console.log("DBOLink.search: _dbo="+JSON.stringify(_dbo))
+                console.log("DBOLinkEdit.search: _dbo="+JSON.stringify(_dbo))
                 be.getFormInstanceByDBEName(_dbo.dbename, (jsonObj, form) => {
-                    // console.log("DBOLink.search: _dbo.dbename="+_dbo.dbename)
+                    // console.log("DBOLinkEdit.search: _dbo.dbename="+_dbo.dbename)
                     const myform = form
-                    // console.log("DBOLink.search: jsonObj="+JSON.stringify(jsonObj))
+                    // console.log("DBOLinkEdit.search: jsonObj="+JSON.stringify(jsonObj))
                     if(myform) {
-                        // console.log("DBOLink.search: myform="+JSON.stringify(myform))
-                        // console.log("DBOLink.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
+                        // console.log("DBOLinkEdit.search: myform="+JSON.stringify(myform))
+                        // console.log("DBOLinkEdit.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
                         setDetailIcon(icon2emoji(myform.detailIcon))
                         setDetailIconTitle(myform.detailTitle)
                     }
@@ -348,6 +361,15 @@ const DBOLinkEdit = props => {
             })
         }
     },[id])
+
+    // useEffect(() => {
+    //     if(dbo===null) return;
+    //     const fks = dbo.getFK().filter(v => fieldname.endsWith(v['colonna_fk']))
+    //     console.log("DBOLinkEdit: fks="+JSON.stringify(fks))
+    //     const tablenames = fks.map(v => v["tabella_riferita"])
+    //     console.log("DBOLinkEdit: tablenames="+JSON.stringify(tablenames))
+    // },[dbo])
+
     return (
         <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
             <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
@@ -379,7 +401,7 @@ const DBOLinkEdit = props => {
                                 //         // console.log("DBELinkEdit.onChange: end.")
                                 //     })
                                 // })
-                                setListvalues({515: 'Casa', 517: 'Scariga'})
+                                setListvalues({515: 'Casa', 517: 'Scariga','uuid69742e34643931616163633861666536':'Docs'})
                             }
                             setSearchString(v)
                             // props.onChange(name, v)
