@@ -107,6 +107,10 @@ function DBEntity(dbename,tablename) {
 	
 	this.getFK = function() { return this._fks; }
 	this.getFKForTable = function(tablename) { var ret = []; for(var i=0; i<this._fks.length; i++) { if(this._fks[i].tabella_riferita===tablename) ret.push(this._fks[i]); } return ret; }
+	this.getFKForField = function(fieldname) {
+		const ret = this._fks.filter(v => v['colonna_fk']===fieldname);
+		return ret;
+	}
 	this.readFKFrom = function(dbe) {
 		var fks = this.getFKForTable( dbe.getTableName() );
 		for(var i=0; i<fks.length; i++) {
