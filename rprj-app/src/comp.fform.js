@@ -394,7 +394,7 @@ class FForm extends React.Component {
             return ("--");
         }
 
-        const user = this.be.getDBEUserFromConnection()
+        // const user = this.be.getDBEUserFromConnection()
         // console.log("FForm.renderActions: user="+JSON.stringify(user))
 
         const obj = this.state.obj

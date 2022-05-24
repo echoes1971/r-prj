@@ -271,7 +271,7 @@ const FField = props => {
                         onChange={e => {
                             const target = e.target;
                             const v = target.type === 'checkbox' ? target.checked : target.value;
-                            const name = target.name;
+                            // const name = target.name;
 
                             props.onChange(e)
                             setValue(v)
@@ -409,7 +409,7 @@ const FKField = props => {
                 })
             })
         }
-    }, [value])
+    }, [value, field, fk])
 
     const fieldname = props.name
     const fieldclass = (
@@ -458,18 +458,18 @@ const FKObjectField = props => {
     // console.log("FKObjectField: dbe.dict="+JSON.stringify(dbe.dict))
 
     const [value, setValue] = useState(field.value)
-    const [decodedValue, setDecodedValue] = useState(dbe ? dbe.getValue('name') : "")
+    const [decodedValue, setDecodedValue] = useState("")
     console.log("FKObjectField: decodedValue="+decodedValue)
     
     console.log("FKObjectField: refSearchStarted="+refSearchStarted.current)
 
-    const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
-    console.log("FKObjectField: fks="+JSON.stringify(fks))
+    // const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
+    // console.log("FKObjectField: fks="+JSON.stringify(fks))
 
     // const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
     // console.log("FKObjectField: fk="+JSON.stringify(fk))
 
-    const decodeField = "name"
+    // const decodeField = "name"
     // console.log("FKObjectField: decodeField="+decodeField);
 
     // useEffect(() => {
@@ -513,17 +513,18 @@ const FKObjectField = props => {
             <div class="col text-start">
                 <input id={fieldname} name={fieldname} type="hidden" value={value || field.value} class={fieldclass} />{
                 is_readonly ? 
-                <DBOLink dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                    be={be} />
+                <DBOLink dbeid={value || field.value} name={decodedValue}
+                        edit={!is_readonly} be={be} />
                  :
-                <DBOLinkEdit dbeid={value || field.value} name={decodedValue} edit={!is_readonly}
-                 fieldname={fieldname} fieldclass={fieldclass} be={be}
-                 onSelect={(newid) => {
-                     refSearchStarted.current = false
-                    //  console.log("FKObjectField.onSelect: "+fieldname+"="+newid)
-                     props.onChange(fieldname, newid)
-                     setValue(newid)
-                 }} />
+                <DBOLinkEdit dbeid={value || field.value} name={decodedValue}
+                    edit={!is_readonly} fieldname={fieldname} fieldclass={fieldclass} be={be}
+                    onSelect={(newid, newdecodedvalue) => {
+                        refSearchStarted.current = false
+                        //  console.log("FKObjectField.onSelect: "+fieldname+"="+newid)
+                        props.onChange(fieldname, newid)
+                        setValue(newid)
+                        setDecodedValue(newdecodedvalue)
+                    }} />
             }</div>
         </div>
     )
