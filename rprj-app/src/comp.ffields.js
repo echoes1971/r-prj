@@ -463,8 +463,11 @@ const FKObjectField = props => {
     
     console.log("FKObjectField: refSearchStarted="+refSearchStarted.current)
 
-    // const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
-    // console.log("FKObjectField: fks="+JSON.stringify(fks))
+    const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
+    console.log("FKObjectField: fks="+JSON.stringify(fks))
+
+    const tablenames = fks.map(v => v["tabella_riferita"])
+    console.log("FKObjectField: tablenames="+JSON.stringify(tablenames))
 
     // const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
     // console.log("FKObjectField: fk="+JSON.stringify(fk))
@@ -516,11 +519,11 @@ const FKObjectField = props => {
                 <DBOLink dbeid={value || field.value} name={decodedValue}
                         edit={!is_readonly} be={be} />
                  :
-                <DBOLinkEdit dbeid={value || field.value} name={decodedValue}
+                <DBOLinkEdit dbeid={value || field.value} name={decodedValue} tablenames={tablenames}
                     edit={!is_readonly} fieldname={fieldname} fieldclass={fieldclass} be={be}
                     onSelect={(newid, newdecodedvalue) => {
                         refSearchStarted.current = false
-                        //  console.log("FKObjectField.onSelect: "+fieldname+"="+newid)
+                        console.log("FKObjectField.onSelect: "+fieldname+"="+newid+" "+newdecodedvalue)
                         props.onChange(fieldname, newid)
                         setValue(newid)
                         setDecodedValue(newdecodedvalue)
