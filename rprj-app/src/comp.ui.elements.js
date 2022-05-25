@@ -383,25 +383,17 @@ const DBOLinkEdit = props => {
                             // const name = target.name;
                             // console.log("DBELinkEdit: "+name+"="+v)
                             if(v.length>0) {
-                                // be.getDBEInstanceByTablename(tablename, (jsonObj, mydbe) => {
-                                //     var search = mydbe
-                                //     search.setValue(decodeField,v+"%%")
-                                //     // console.log("search="+search.to_string())
-                                //     const uselike = true
-                                //     const caseSensitive = false
-                                //     const orderBy = decodeField
-                                //     be.search(search, uselike, caseSensitive, orderBy, (server_messages, dbelist) => {
-                                //         // console.log("DBELinkEdit.onChange: start.");
-                                //         // console.log(server_messages)
-                                //         var tmp = {}
-                                //         for(var i=0; dbelist!==null && i<dbelist.length; i++) {
-                                //             tmp[dbelist[i].getValue('id')] = dbelist[i].getValue(decodeField)
-                                //         }
-                                //         setListvalues(tmp)
-                                //         // console.log("DBELinkEdit.onChange: end.")
-                                //     })
-                                // })
-                                setListvalues({515: 'Casa', 517: 'Scariga','uuid69742e34643931616163633861666536':'Docs'})
+                                const uselike = true
+                                const ignore_deleted = true
+                                be.searchByName(v+"%%", uselike, tablenames, ignore_deleted, (jsonObj,dbelist) => {
+                                    console.log("DBELinkEdit.onChange: server msgs=" + jsonObj[0])
+                                    var tmp = {}
+                                    for(var i=0; dbelist!==null && i<dbelist.length; i++) {
+                                        tmp[dbelist[i].getValue('id')] = dbelist[i].getValue('name')
+                                    }
+                                    console.log("DBELinkEdit.onChange: tmp="+JSON.stringify(tmp))
+                                    setListvalues(tmp)
+                                })
                             }
                             setSearchString(v)
                             // props.onChange(name, v)
