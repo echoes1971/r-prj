@@ -645,6 +645,43 @@ function JSONDBConnection(connectionString,verbose) {
 		this._sendRequest('fullObjectByName', [name,ignore_deleted], my_cb.bind(self));
 		console.log("JSONDBConnection.fullObjectByName: end.");
 	};
+	this.searchByName = function(name, uselike, tablenames, ignore_deleted, a_callback) {
+		console.log("JSONDBConnection.searchByName: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.searchByName.my_cb: start.");
+			// console.log("JSONDBConnection.searchByName.my_cb: jsonObj=" + JSON.stringify(jsonObj));
+			var dbelist = [];
+			// console.log(jsonObj[1])
+			var myRS = self.obj2resultset(jsonObj[1]);
+			// console.log("myRS: " + JSON.stringify(myRS));
+			var dbelist = myRS!==null ? [] : null;
+			for(var i=0; myRS!==null && i<myRS.getNumRows(); i++) {
+				try {
+					var mydbe = new DBEntity(jsonObj[1][i]._typename, jsonObj[1][i]._tablename);
+					// var mydbe = new DBEntity(dbename, tablename);
+					mydbe.fromRS(myRS,i);
+					// console.log("JSONDBConnection.searchByName.my_cb: mydbe=" + mydbe.to_string());
+					dbelist.push(mydbe);
+				} catch(e) {
+					console.log("ERROR" + e);
+				}
+			}
+			// console.log(dbelist)
+			jsonObj[1] = dbelist;
+			// dbelist = dbelist.sort((a,b) => {
+			// 	const aName = a.getValue("name")
+			// 	const bName = b.getValue("name")
+			// 	return aName < bName ? -1
+			// 		: (aName > bName ? 1
+			// 			: 0)
+			// })
+			a_callback(jsonObj, dbelist)
+			console.log("JSONDBConnection.searchByName.my_cb: end.");
+		}
+		this._sendRequest('searchByName', [name, uselike, tablenames,ignore_deleted], my_cb.bind(self));
+		console.log("JSONDBConnection.searchByName: end.");
+	};
 	// **************** Proxy Connections: end. *********************
 	
 	/* TODO ?

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2005-2020 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2022 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: jsonserver.php $
  * @package rproject
@@ -299,7 +299,6 @@ function fullDBEById($myid,$ignore_deleted) {
 // ************* ObjectMgr: start.
 function objectById($myid,$ignore_deleted) {
 	global $dbmgr;
-	global $xmlrpc_require_login;
 	
 	$dbmgr->setVerbose(false);
 	$dbe = null;
@@ -315,7 +314,6 @@ function objectById($myid,$ignore_deleted) {
 }
 function fullObjectById($myid,$ignore_deleted) {
 	global $dbmgr;
-	global $xmlrpc_require_login;
 	
 	$dbmgr->setVerbose(false);
 	$dbe = null;
@@ -329,9 +327,26 @@ function fullObjectById($myid,$ignore_deleted) {
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
 }
+function searchByName($name,$uselike=false,$tablenames=null,$ignore_deleted=true) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+	$retArray = array();
+	// if(_isAuthorized()) {
+		$tmp = $dbmgr->searchByName($name,$uselike,$tablenames,$ignore_deleted);
+		foreach($tmp as $_dbe) {
+			$_dbe->setValue('_typename',get_class($_dbe));
+			$retArray[]=_dbeToJson($_dbe);
+		}
+	// } else {
+	// 	echo "json_server.objectByName: Authentication required!\n";
+	// }
+	$dbmgr->setVerbose(false);
+	
+	return $retArray;
+}
 function objectByName($myid,$ignore_deleted) {
 	global $dbmgr;
-	global $xmlrpc_require_login;
 	
 	$dbmgr->setVerbose(false);
 	$retArray = array();
@@ -350,7 +365,6 @@ function objectByName($myid,$ignore_deleted) {
 }
 function fullObjectByName($myid,$ignore_deleted) {
 	global $dbmgr;
-	global $xmlrpc_require_login;
 	
 	$dbmgr->setVerbose(false);
 	$retArray = array();

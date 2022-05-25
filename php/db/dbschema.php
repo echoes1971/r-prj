@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright &copy; 2005-2016 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
+ * @copyright &copy; 2005-2022 by Roberto Rocco Angeloni <roberto@roccoangeloni.it>
  * @license http://opensource.org/licenses/lgpl-3.0.html GNU Lesser General Public License, version 3.0 (LGPLv3)
  * @version $Id: dbschema.php $
  * @package rproject
@@ -697,6 +697,30 @@ class ObjectMgr extends DBMgr {
 		$lista = $this->search($cerca,0,false,null,$a_ignore_deleted);
 		if($this->_verbose) { printf("ObjectMgr.fullObjectById: lista=".count($lista)."<br/>\n"); }
 		return count($lista)==1 ? $lista[0] : null;
+	}
+	/** Search objects in the specified tables */
+	function searchByName($name,$uselike=false,$tablenames=null,$ignore_deleted=true) {
+		$tipi = $this->getFactory()->getRegisteredTypes();
+		$q = array();
+		foreach($tipi as $tablename=>$classname) {
+			if($tablenames!==null && !in_array($tablename,$tablenames)) continue;
+
+			$mydbe = $this->getInstance($classname); // 2011.04.04 eval("\$mydbe=new $classname;");
+			if(!is_a($mydbe,'DBEObject') || is_a($mydbe,"DBAssociation")) continue;
+			$q[]="select '$classname' as classname,id,owner,group_id,permissions,creator,"
+						."creation_date,last_modify,last_modify_date,father_id,name,description"
+					." from ".$this->buildTableName($mydbe)
+					.(!$uselike ? " where name='$name'"
+						: ( strpos($v,"%%")>=0 ? " where name like '$name'" : " where name like '%%$name%%'")
+					)
+					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
+		}
+		$searchString = implode(" union ", $q) . " order by name";
+		printf("query: $searchString<br/>\n");
+		if($this->_verbose) {
+			printf("query: $searchString<br/>\n");
+		}
+		return $this->select('DBEObject', "objects", $searchString);
 	}
 	/** Ricerca gli oggetti per nome, tipo wiki */
 	function objectByName($name,$ignore_deleted=true) {
