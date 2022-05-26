@@ -716,7 +716,7 @@ class ObjectMgr extends DBMgr {
 					.($ignore_deleted?" and deleted_date='0000-00-00 00:00:00'":'');
 		}
 		$searchString = implode(" union ", $q) . " order by name";
-		printf("query: $searchString<br/>\n");
+		// printf("query: $searchString<br/>\n");
 		if($this->_verbose) {
 			printf("query: $searchString<br/>\n");
 		}

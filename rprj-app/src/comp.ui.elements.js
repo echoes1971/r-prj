@@ -3,54 +3,54 @@ import React, {useEffect, useRef, useState} from 'react';
 import { app_cfg } from './app.cgf';
 import { getFlagEmojiByID } from './countries'
 
-const icon2emoji = (detail_icon) => {
+const icon2emoji = (detail_icon, detail_title=null) => {
     var ret = ('');
     switch(detail_icon) {
         case 'icons/user.png':
-            ret = (<span>&#128100;</span>)
+            ret = (<span title={detail_title}>&#128100;</span>)
             break
         case 'icons/group_16x16.gif':
-            ret = (<span>&#128101;</span>)
+            ret = (<span title={detail_title}>&#128101;</span>)
             break
         case 'icons/text-x-log.png':
             // ret = (<span>&#128195;</span>)
-            ret = (<span>&#128220;</span>)
+            ret = (<span title={detail_title}>&#128220;</span>)
             break
         case 'icons/company_16x16.gif':
-            ret = (<span>&#127981;</span>)
+            ret = (<span title={detail_title}>&#127981;</span>)
             break
         case 'icons/people.png':
-            ret = (<span>&#129333;</span>)
+            ret = (<span title={detail_title}>&#129333;</span>)
             break
         case 'icons/event_16x16.png':
-            ret = (<span>&#128198;</span>)
+            ret = (<span title={detail_title}>&#128198;</span>)
             break
         case 'icons/file_16x16.gif':
-            ret = (<span>&#128196;</span>)
+            ret = (<span title={detail_title}>&#128196;</span>)
             break
         case 'icons/folder_16x16.gif':
-            ret = (<span>&#128193;</span>)
+            ret = (<span title={detail_title}>&#128193;</span>)
             break
         case 'icons/link_16x16.gif':
-            ret = (<span>&#128279;</span>)
+            ret = (<span title={detail_title}>&#128279;</span>)
             break
         case 'icons/note_16x16.gif':
-            ret = (<span>&#128466;</span>)
+            ret = (<span title={detail_title}>&#128466;</span>)
             break
         case 'icons/page_16x16.gif':
-            ret = (<span>&#128195;</span>)
+            ret = (<span title={detail_title}>&#128195;</span>)
             break
         case 'icons/news.png':
-            ret = (<span>&#128240;</span>)
+            ret = (<span title={detail_title}>&#128240;</span>)
             break
         case 'icons/project_16x16.gif':
-            ret = (<span>&#127959;</span>) // 128200
+            ret = (<span title={detail_title}>&#127959;</span>) // 128200
             break
         case 'icons/timetrack_16x16.gif':
-            ret = (<span>&#9201;</span>)
+            ret = (<span title={detail_title}>&#9201;</span>)
             break
         case 'icons/task_16x16.gif':
-            ret = (<span>&#9745;</span>)
+            ret = (<span title={detail_title}>&#9745;</span>)
             break
         default:
             ret = (<span>&#9881;</span>)
@@ -354,7 +354,7 @@ const DBOLinkEdit = props => {
                     if(myform) {
                         // console.log("DBOLinkEdit.search: myform="+JSON.stringify(myform))
                         // console.log("DBOLinkEdit.search: myform -> detailIcon="+myform.detailIcon+" detailTitle="+myform.detailTitle)
-                        setDetailIcon(icon2emoji(myform.detailIcon))
+                        setDetailIcon(icon2emoji(myform.detailIcon, myform.detailTitle))
                         setDetailIconTitle(myform.detailTitle)
                     }
                 })
@@ -371,7 +371,7 @@ const DBOLinkEdit = props => {
     // },[dbo])
 
     return (
-        <span title={detailIconTitle}>{detailIcon}{detailIcon>'' ? ' ' : ''}
+        <span>{detailIcon}{detailIcon>'' ? ' ' : ''}
             <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
                 href={app_cfg.root_path + (edit ? "e/" : "o/") + id + "/"}>{name}</a>
             <ul class="dropdown-menu" aria-labelledby={'dropdown_' + fieldname}>
@@ -387,9 +387,9 @@ const DBOLinkEdit = props => {
                                 const ignore_deleted = true
                                 be.searchByName(v+"%%", uselike, tablenames, ignore_deleted, (jsonObj,dbelist) => {
                                     console.log("DBELinkEdit.onChange: server msgs=" + jsonObj[0])
-                                    var tmp = {}
+                                    var tmp = []
                                     for(var i=0; dbelist!==null && i<dbelist.length; i++) {
-                                        tmp[dbelist[i].getValue('id')] = dbelist[i].getValue('name')
+                                        tmp.push([dbelist[i].getValue('id'), dbelist[i].getValue('name')])
                                     }
                                     console.log("DBELinkEdit.onChange: tmp="+JSON.stringify(tmp))
                                     setListvalues(tmp)
@@ -403,8 +403,9 @@ const DBOLinkEdit = props => {
                     return (<li><a class="dropdown-item" href="#" role="button"
                         onClick={() => {
                             refSearchStarted.current = false
-                            props.onSelect(k, listvalues[k])
-                        }}>{listvalues[k]}</a></li>)
+                            props.onSelect(listvalues[k][0], listvalues[k][1])
+                            // props.onSelect(k, listvalues[k])
+                        }}>{listvalues[k][1]}</a></li>)
                 })}
             </ul>
         TODO

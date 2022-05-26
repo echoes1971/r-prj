@@ -669,13 +669,13 @@ function JSONDBConnection(connectionString,verbose) {
 			}
 			// console.log(dbelist)
 			jsonObj[1] = dbelist;
-			// dbelist = dbelist.sort((a,b) => {
-			// 	const aName = a.getValue("name")
-			// 	const bName = b.getValue("name")
-			// 	return aName < bName ? -1
-			// 		: (aName > bName ? 1
-			// 			: 0)
-			// })
+			dbelist.sort((a,b) => {
+				const aName = a.getValue("name")
+				const bName = b.getValue("name")
+				return aName < bName ? -1
+					: (aName > bName ? 1
+						: 0)
+			})
 			a_callback(jsonObj, dbelist)
 			console.log("JSONDBConnection.searchByName.my_cb: end.");
 		}
