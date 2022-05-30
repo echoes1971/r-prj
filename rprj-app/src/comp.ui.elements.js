@@ -106,7 +106,6 @@ const RLink = props => {
 const DBOButton = props => {
     const dbo = props.dbo
     // console.log("DBOButton: dbo="+JSON.stringify(dbo))
-    // if(! ('getValue' in dbo)) alert("cippa")
     const id = dbo ? dbo.getValue('id') : ''
     const name = props.name>'' ? props.name
             : (dbo!==null && dbo!==undefined ? dbo.getValue('name') : '')
@@ -292,7 +291,6 @@ const DBELinkEdit = props => {
                                 })
                             }
                             setSearchString(v)
-                            // props.onChange(name, v)
                         }} />
                 </li>
                 {Object.keys(listvalues).map((k) => {
@@ -362,14 +360,6 @@ const DBOLinkEdit = props => {
         }
     },[id])
 
-    // useEffect(() => {
-    //     if(dbo===null) return;
-    //     const fks = dbo.getFK().filter(v => fieldname.endsWith(v['colonna_fk']))
-    //     console.log("DBOLinkEdit: fks="+JSON.stringify(fks))
-    //     const tablenames = fks.map(v => v["tabella_riferita"])
-    //     console.log("DBOLinkEdit: tablenames="+JSON.stringify(tablenames))
-    // },[dbo])
-
     return (
         <span>{detailIcon}{detailIcon>'' ? ' ' : ''}
             <a class="dropdown-toggle" id={'dropdown_' + fieldname} role="button" data-bs-toggle="dropdown" aria-expanded="false"
@@ -396,7 +386,6 @@ const DBOLinkEdit = props => {
                                 })
                             }
                             setSearchString(v)
-                            // props.onChange(name, v)
                         }} />
                 </li>
                 {Object.keys(listvalues).map((k) => {
@@ -408,7 +397,6 @@ const DBOLinkEdit = props => {
                         }}>{listvalues[k][1]}</a></li>)
                 })}
             </ul>
-        TODO
         </span>
         )
 }
