@@ -459,47 +459,15 @@ const FKObjectField = props => {
 
     const [value, setValue] = useState(field.value)
     const [decodedValue, setDecodedValue] = useState("")
-    console.log("FKObjectField: decodedValue="+decodedValue)
+    // console.log("FKObjectField: decodedValue="+decodedValue)
     
-    console.log("FKObjectField: refSearchStarted="+refSearchStarted.current)
+    // console.log("FKObjectField: refSearchStarted="+refSearchStarted.current)
 
     const fks = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name)) : []
-    console.log("FKObjectField: fks="+JSON.stringify(fks))
+    // console.log("FKObjectField: fks="+JSON.stringify(fks))
 
     const tablenames = fks.map(v => v["tabella_riferita"])
-    console.log("FKObjectField: tablenames="+JSON.stringify(tablenames))
-
-    // const fk = dbe && dbe._fks ? dbe._fks.filter(v => v.colonna_fk===(field.name))[0] : {}
-    // console.log("FKObjectField: fk="+JSON.stringify(fk))
-
-    // const decodeField = "name"
-    // console.log("FKObjectField: decodeField="+decodeField);
-
-    // useEffect(() => {
-    //     if(fk && !refSearchStarted.current) { //decodedValue==="--") {
-    //         refSearchStarted.current = true
-
-    //         console.log("FKObjectField.useEffect: field="+JSON.stringify(field))
-    //         // console.log("FKObjectField.useEffect: fk.tabella_riferita="+fk.tabella_riferita);
-    //         be.getDBEInstanceByTablename(fk.tabella_riferita, (jsonObj, mydbe) => {
-    //             var search = mydbe;
-    //             search.setValue(fk.colonna_riferita,value || field.value);
-    //             console.log("FKObjectField.useEffect: search="+search.to_string());
-            
-    //             be.search(search, false, true, decodeField, (server_messages,dbelist) => {
-    //                 // console.log("FKObjectField.useEffect: server_messages="+server_messages)
-    //                 // console.log("FKObjectField.useEffect: dbelist="+JSON.stringify(dbelist))
-    //                 const mylist = dbelist
-    //                 if(mylist && mylist.length===1) {
-    //                     const res = dbelist[0]
-    //                     // console.log("FKObjectField.useEffect: res="+JSON.stringify(res))
-    //                     // console.log("FKObjectField.useEffect: res.getValue("+decodeField+")="+res.getValue(decodeField))
-    //                     setDecodedValue(res.getValue(decodeField))
-    //                 }
-    //             })
-    //         })
-    //     }
-    // }, [value])
+    // console.log("FKObjectField: tablenames="+JSON.stringify(tablenames))
 
     const fieldname = props.name
     const fieldclass = (
@@ -523,7 +491,7 @@ const FKObjectField = props => {
                     edit={!is_readonly} fieldname={fieldname} fieldclass={fieldclass} be={be}
                     onSelect={(newid, newdecodedvalue) => {
                         refSearchStarted.current = false
-                        console.log("FKObjectField.onSelect: "+fieldname+"="+newid+" "+newdecodedvalue)
+                        // console.log("FKObjectField.onSelect: "+fieldname+"="+newid+" "+newdecodedvalue)
                         props.onChange(fieldname, newid)
                         setValue(newid)
                         setDecodedValue(newdecodedvalue)

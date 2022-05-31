@@ -221,7 +221,7 @@ class FForm extends React.Component {
     //  FDateTime
     //      FDateTimeReadOnly
     //  FKField
-    //      FKObjectField - TODO
+    //      FKObjectField
     password_handleChange(event) {
         const target = event.target;
         const value1 = target.type === 'checkbox' ? target.checked : target.value;
@@ -393,9 +393,6 @@ class FForm extends React.Component {
         if(this.form===null) {
             return ("--");
         }
-
-        // const user = this.be.getDBEUserFromConnection()
-        // console.log("FForm.renderActions: user="+JSON.stringify(user))
 
         const obj = this.state.obj
         // console.log("FForm.renderActions: obj="+JSON.stringify(obj))
