@@ -11,8 +11,9 @@ import { app_cfg } from './app.cgf';
  * 
  */
 class BackEndProxy {
-    constructor(endpoint = 'http://localhost:8080/jsonserver.php') {
+    constructor(endpoint = 'http://localhost:8080/jsonserver.php', endpoint_download = 'http://localhost:8080/download.php') {
         this.endpoint = endpoint
+        this.endpoint_download = endpoint_download
 
         this.con = new JSONDBConnection(endpoint, true);
         this.dbmgr = new DBMgr(this.con);

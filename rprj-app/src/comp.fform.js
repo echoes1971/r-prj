@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FField, FKField, FKObjectField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
+import { FField, FFileField, FKField, FKObjectField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
 
@@ -352,6 +352,13 @@ class FForm extends React.Component {
                     myobj.setValue('id',v)
                     this.setState({[n]: v, 'obj': myobj});
                 }} />
+        }
+        if(field._classname==='FFileField') {
+            const obj = this.state.obj
+            field["value"] = obj.getValue('name')
+            return <FFileField name={field_name} field={field} be={this.be} dbe={obj} with_thumbnail={true} is_readonly={is_readonly} dark_theme={this.state.dark_theme}
+                onChange={this.default_handleChange}
+             />
         }
         return <FField name={field_name} field={field} is_readonly={is_readonly} class_unknown={true} dark_theme={this.state.dark_theme}
             onChange={this.default_handleChange} />

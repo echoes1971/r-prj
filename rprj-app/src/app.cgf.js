@@ -7,6 +7,7 @@ const app_cfg = {
                     ["https://www.africa-film.com/jsonserver.php","Africa Film"]
                 ]
     ,endpoint: process.env.NODE_ENV !== 'production' ? "http://localhost:8080/jsonserver.php" : "https://rprj.roccoangeloni.ch/jsonserver.php"
+    ,endpoint_download: process.env.NODE_ENV !== 'production' ? "http://localhost:8080/download.php" : "https://rprj.roccoangeloni.ch/download.php"
     // This path is where is stored the react-app, i.e. /myapp/
     // IT MUST ALWAYS END WITH /  !!!!!
     ,root_path: process.env.NODE_ENV !== 'production' ? "/" : "/app/"

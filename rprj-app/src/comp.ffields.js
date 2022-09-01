@@ -283,6 +283,81 @@ const FField = props => {
 
 }
 
+const FFileField = props => {
+    const is_readonly = props.is_readonly
+    const dark_theme = props.dark_theme
+    const field = props.field
+    const dbe = props.dbe
+    const be = props.be
+    const with_thumbnail = props.with_thumbnail
+    // console.log("FFileField: field="+JSON.stringify(field))
+
+    const [value, setValue] = useState(field.value)
+
+    const fieldname = props.name
+    const fieldtype = field._classname==="FPassword" ? "password"
+        : field.type==="n" ? "number"
+        : field.type==='d' ? 
+            ( field.show_date && field.show_time ? 'datetime-local'
+                : field.show_date ? 'date'
+                : 'time'
+            )
+        : "text"; // n=number s=string d=datetime
+    const fieldclass = (
+            (field.cssClass>'' ? field.cssClass : '') + ' ' +
+            (is_readonly ?
+                'form-control-plaintext' + (dark_theme ? ' form-control-plaintext-dark' : '')
+                : '')
+        ).trim()
+    
+    const download_link = be.endpoint_download + '?field_id=' + dbe.getValue('id')
+
+    return (
+        <div class="row">
+            <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
+            <div class="col text-start align-top">{
+                is_readonly ?
+                <div class="col text-start">
+                    <span>{
+                        with_thumbnail && dbe.isImage() ?
+                            <a title={dbe.getValue('name')} href={download_link} target="_download_">
+                                <img alt={value} src={download_link + '&view_thumb=y'} />
+                            </a>
+                        :
+                        ''
+                        }
+                        { with_thumbnail && dbe.isImage() ? ' ' : '' }
+                        <a href={download_link} target="_download_">{value}</a>
+                    </span>
+                    <pre>{JSON.stringify(field,null,2)}</pre>
+                    <pre>{JSON.stringify(dbe,null,2)}</pre>
+                </div>
+                :
+                <span>
+                <input id={fieldname} name={fieldname} type={fieldtype}
+                        // size={field.size}
+                        class={fieldclass} readOnly={is_readonly} placeholder={field.title}
+                        value={value && field.type==='d' ?
+                                    ( fieldtype==='time' ? value.split(" ")[1] : value.replace(" ","T") )
+                                : value }
+                    onChange={e => {
+                        const target = e.target;
+                        const v = target.type === 'checkbox' ? target.checked : target.value;
+                        // const name = target.name;
+
+                        props.onChange(e)
+                        setValue(v)
+                    }} />
+                    <pre>{JSON.stringify(field,null,2)}</pre>
+                    <pre>{JSON.stringify(dbe,null,2)}</pre>
+                </span>
+            }
+            </div>
+        </div>
+    );
+
+}
+
 const FList = props => {
     const is_readonly = props.is_readonly
     // const field_prefix = props.field_prefix
@@ -501,4 +576,4 @@ const FKObjectField = props => {
     )
 }
 
-export { FField, FKField, FKObjectField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }
+export { FField, FFileField, FKField, FKObjectField, FList, FPercent, FPermissions, HTMLEdit, FTextArea }

@@ -16,7 +16,7 @@ import { app_cfg } from './app.cgf';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App endpoint={app_cfg.endpoint} dark_theme={app_cfg.dark_theme} />
+    <App endpoint={app_cfg.endpoint} endpoint_download={app_cfg.endpoint_download} dark_theme={app_cfg.dark_theme} />
   </React.StrictMode>,
   document.getElementById('root')
 );

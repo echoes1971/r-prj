@@ -153,6 +153,18 @@ function DBEntity(dbename,tablename) {
 		return ret+")";
 	};
 	
+
+    this.isImage = function () {
+		if(this.getDBEName()!=='DBEFile') {
+			return false
+		}
+        const _mime = this.getValue('mime')
+        return _mime>'' && _mime.substring(0,5)==='image'
+    }
+
+
+
+
 	// **** Virtuals ****
 	this.createNewInstance = function() { return new DBEntity(this.dbename,this.tablename); }
 	

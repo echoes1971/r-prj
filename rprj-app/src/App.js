@@ -22,6 +22,7 @@ class App extends Component {
     // See: https://it.reactjs.org/
     this.state = {
       endpoint: props.endpoint // "http://localhost:8080/jsonserver.php",
+      ,endpoint_download: props.endpoint_download
       ,dark_theme: props.dark_theme
 
       ,user_fullname: ''
