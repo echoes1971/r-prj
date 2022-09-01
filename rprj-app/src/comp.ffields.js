@@ -317,21 +317,17 @@ const FFileField = props => {
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
             <div class="col text-start align-top">{
                 is_readonly ?
-                <div class="col text-start">
-                    <span>{
-                        with_thumbnail && dbe.isImage() ?
+                <span>
+                        {with_thumbnail && dbe.isImage() ?
                             <a title={dbe.getValue('name')} href={download_link} target="_download_">
                                 <img alt={value} src={download_link + '&view_thumb=y'} />
                             </a>
-                        :
-                        ''
+                            :
+                            ''
                         }
                         { with_thumbnail && dbe.isImage() ? ' ' : '' }
                         <a href={download_link} target="_download_">{value}</a>
-                    </span>
-                    <pre>{JSON.stringify(field,null,2)}</pre>
-                    <pre>{JSON.stringify(dbe,null,2)}</pre>
-                </div>
+                </span>
                 :
                 <span>
                 <input id={fieldname} name={fieldname} type={fieldtype}
@@ -348,10 +344,12 @@ const FFileField = props => {
                         props.onChange(e)
                         setValue(v)
                     }} />
-                    <pre>{JSON.stringify(field,null,2)}</pre>
-                    <pre>{JSON.stringify(dbe,null,2)}</pre>
                 </span>
             }
+            </div>
+            <div class="col text-start align-top">
+                <pre>{JSON.stringify(field,null,2)}</pre>
+                <pre>{JSON.stringify(dbe,null,2)}</pre>
             </div>
         </div>
     );

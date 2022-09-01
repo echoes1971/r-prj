@@ -474,8 +474,18 @@ class FForm extends React.Component {
                 const _detailIcon = icon2emoji(this.state[form_icon])
                 const _detailTitle = this.state[form_icon_title]
 
+                const _thumbnail = (
+                    children[k].isImage() ?
+                    <div class="col-1 text-end align-top">
+                    <img alt={children[k].getValue('name')} src={this.be.endpoint_download + '?field_id=' + children[k].getValue('id') + '&view_thumb=y'} />
+                    </div>
+                    :
+                    ''
+                )
+
                 return (<div class="row">
-                    <div class="col"><DBOLink dbo={children[k]} detailIconTitle={_detailTitle} detailIcon={_detailIcon} edit={readonly===false} /></div>
+                    {_thumbnail}
+                    <div class="col align-top"><DBOLink dbo={children[k]} detailIconTitle={_detailTitle} detailIcon={_detailIcon} edit={readonly===false} /></div>
                 </div>)
                     // <div class="col"><DBOLink dbo={children[k]} detailIconTitle={this.state[form_icon_title]} detailIcon={icon2emoji(this.state[form_icon])} edit={readonly===false} /></div>
             })
