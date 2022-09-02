@@ -349,7 +349,7 @@ const FFileField = props => {
             </div>
             <div class="col text-start align-top">
                 <pre>{JSON.stringify(field,null,2)}</pre>
-                <pre>{JSON.stringify(dbe,null,2)}</pre>
+                <pre>{JSON.stringify(dbe.getValues(),null,2)}</pre>
             </div>
         </div>
     );
