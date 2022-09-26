@@ -295,14 +295,7 @@ const FFileField = props => {
     const [value, setValue] = useState(field.value)
 
     const fieldname = props.name
-    const fieldtype = field._classname==="FPassword" ? "password"
-        : field.type==="n" ? "number"
-        : field.type==='d' ? 
-            ( field.show_date && field.show_time ? 'datetime-local'
-                : field.show_date ? 'date'
-                : 'time'
-            )
-        : "text"; // n=number s=string d=datetime
+    const fieldtype = "file";
     const fieldclass = (
             (field.cssClass>'' ? field.cssClass : '') + ' ' +
             (is_readonly ?
@@ -315,37 +308,31 @@ const FFileField = props => {
     return (
         <div class="row">
             <div class="col-1 text-end d-none d-lg-block">{field.title}</div>
-            <div class="col text-start align-top">{
-                is_readonly ?
-                <span>
-                        {with_thumbnail && dbe.isImage() ?
-                            <a title={dbe.getValue('name')} href={download_link} target="_download_">
-                                <img alt={value} src={download_link + '&view_thumb=y'} />
-                            </a>
-                            :
-                            ''
-                        }
-                        { with_thumbnail && dbe.isImage() ? ' ' : '' }
-                        <a href={download_link} target="_download_">{value}</a>
-                </span>
-                :
-                <span>
-                <input id={fieldname} name={fieldname} type={fieldtype}
-                        // size={field.size}
-                        class={fieldclass} readOnly={is_readonly} placeholder={field.title}
-                        value={value && field.type==='d' ?
-                                    ( fieldtype==='time' ? value.split(" ")[1] : value.replace(" ","T") )
-                                : value }
-                    onChange={e => {
-                        const target = e.target;
-                        const v = target.type === 'checkbox' ? target.checked : target.value;
-                        // const name = target.name;
+            <div class="col text-start align-top">
+                {with_thumbnail && dbe.isImage() ?
+                    <a title={dbe.getValue('name')} href={download_link} target="_download_">
+                        <img alt={value} src={download_link + '&view_thumb=y'} />
+                    </a>
+                    :
+                    ''
+                }
+                { with_thumbnail && dbe.isImage() ? ' ' : '' }
+                <a href={download_link} target="_download_">{value}</a>&nbsp;
+                { is_readonly ?
+                    ''
+                    :
+                    <input id={fieldname} name={fieldname} type={fieldtype}
+                        class={fieldclass} placeholder={field.title}
+                        onChange={e => {
+                            const target = e.target;
+                            const v = target.value;
+                            const name = target.name;
 
-                        props.onChange(e)
-                        setValue(v)
-                    }} />
-                </span>
-            }
+                            props.onChange(e)
+                            setValue(v)
+                        }}
+                    />
+                }
             </div>
             <div class="col text-start align-top">
                 <pre>{JSON.stringify(field,null,2)}</pre>
@@ -482,6 +469,7 @@ const FKField = props => {
                 })
             })
         }
+    // }, [value, field, fk, be, decodeField])
     }, [value, field, fk])
 
     const fieldname = props.name
