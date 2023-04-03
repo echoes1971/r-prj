@@ -401,4 +401,45 @@ const DBOLinkEdit = props => {
         )
 }
 
-export { DBELink, DBELinkEdit, DBOButton, DBOLink, DBOLinkEdit, icon2emoji, IFRTree, IFRTreeAll, RLink }
+const NewChildButton = props => {
+    const [dbo,setDBO] = useState(props.dbo || null)
+    const id = dbo ? dbo.getValue('id') : (props.dbeid ? props.dbeid  : '')
+    const [childTypeName,setChildTypeName] = useState(props.childTypeName || null)
+
+    const be = props.be
+
+    const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
+    const [title,setTitle] = useState('..')
+
+    const link = app_cfg.root_path + "c/" + id + "/" + childTypeName + "/"
+
+
+    console.log("NewChildButton: childTypeName="+childTypeName)
+
+    const refSearchStarted = useRef(false)
+
+    useEffect(() => {
+        if(be && !refSearchStarted.current) {
+            refSearchStarted.current = true
+            console.log("NewChildButton.search: dbo="+dbo.toString())
+            if(dbo!==null) {
+                // console.log("NewChildButton.search: dbo="+dbo.toString())
+                be.getFormInstance(childTypeName, (jsonObj, form) => {
+                    const myform = form
+                    // console.log("NewChildButton.search: jsonObj="+JSON.stringify(jsonObj))
+                    if(myform) {
+                        // console.log("NewChildButton.search: myform="+JSON.stringify(myform))
+                        setDetailIcon(icon2emoji(myform.detailIcon))
+                        setTitle('New ' + myform.detailTitle)
+                    }
+                })
+            }
+        }
+    },[dbo,props.childTypeName,be])
+    return (
+        <button class="btn btn-secondary btn-xs" type="button" onClick={() => {window.location=link}}
+         title={title}>{detailIcon>'' ? detailIcon : title}</button>
+    );
+}
+
+export { DBELink, DBELinkEdit, DBOButton, DBOLink, DBOLinkEdit, icon2emoji, IFRTree, IFRTreeAll, NewChildButton, RLink }

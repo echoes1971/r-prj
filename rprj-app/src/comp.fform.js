@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FField, FFileField, FKField, FKObjectField, FList, HTMLEdit, FPercent, FPermissions } from './comp.ffields';
 import { BackEndProxy } from './be';
-import { DBOButton, DBOLink, icon2emoji, IFRTree } from './comp.ui.elements';
+import { DBOButton, DBOLink, icon2emoji, IFRTree, NewChildButton } from './comp.ui.elements';
 
 class FForm extends React.Component {
     constructor(props) {
@@ -408,12 +408,41 @@ class FForm extends React.Component {
         // console.log("FForm.renderActions: readonly="+readonly)
         // console.log("FForm.renderActions: can_write="+can_write)
         const actions = this.form.actions;
+
+        const detailForms = this.form.detailForms
+        // for($i=0; $i<$current_form->getDetailFormsCount(); $i++) {
+        //     $childForm = $current_form->getDetail($i);
+        //     $dest_form = $childForm;
+        //     if (!is_a($childForm,'FAssociation') ) {
+        //         $childDBE = $childForm->getDBE();
+        //         $childDBE->readFKFrom($current_obj);
+        //         $newUrl = "mng/". $childForm->getPagePrefix()."_new.php?dbetype=".$childDBE->getTypeName()."&formtype=".get_class($childForm)."&".$childDBE->getFKCGIConditionFromMaster($current_obj, true);
+        //         $newTitle = "Add ".$dest_form->getDetailTitle();
+        //         ?><li class="obj_actions"><a href="javascript:main_actions_mostra_url('<?php echo $newTitle; ?>','<?php echo $newUrl; ?>');"><img title="<?php echo $newTitle; ?>" alt="<?php echo $newTitle; ?>" src="<?php echo getSkinFile("mng/icone/New16.gif"); ?>" border="0" /> <?php echo $dest_form->getDetailTitle(); ?></a></li><?php
+        //     }
+        // }
+    
+
         return (
             <div class="btn-toolbar" role="toolbar" aria-label="Actions">{
                 readonly ?
                 <div class="btn-group btn-group-sm" role="group">
                     <DBOButton class="btn btn-secondary btn-sm"
                         dbo={this.state.obj} name="Edit" edit={can_write}/>
+                </div>
+                : ''
+                }
+                { readonly ? <span>&nbsp;</span> : ''}
+                { readonly ?
+                <div class="btn-group btn-group-sm" role="group">
+                    {detailForms.map(k => {
+                        return (
+                            <NewChildButton class="btn btn-secondary btn-sm"
+                            dbo={obj} childTypeName={k} be={this.be}
+                            name="Edit" edit={can_write}/>
+                        );
+
+                    })}
                 </div>
                 : ''
                 }
