@@ -411,8 +411,7 @@ const NewChildButton = props => {
     const [detailIcon, setDetailIcon] = useState(props.detailIcon || '')
     const [title,setTitle] = useState('..')
 
-    const link = app_cfg.root_path + "c/" + id + "/" + childTypeName + "/"
-
+    const [link,setLink] = useState(app_cfg.root_path + "c/" + id + "/" + childTypeName + "/")
 
     console.log("NewChildButton: childTypeName="+childTypeName)
 
@@ -428,9 +427,10 @@ const NewChildButton = props => {
                     const myform = form
                     // console.log("NewChildButton.search: jsonObj="+JSON.stringify(jsonObj))
                     if(myform) {
-                        // console.log("NewChildButton.search: myform="+JSON.stringify(myform))
+                        console.log("NewChildButton.search: myform="+JSON.stringify(myform))
                         setDetailIcon(icon2emoji(myform.detailIcon))
                         setTitle('New ' + myform.detailTitle)
+                        setLink(app_cfg.root_path + "c/" + id + "/" + myform.dbe + "/" + childTypeName + "/")
                     }
                 })
             }

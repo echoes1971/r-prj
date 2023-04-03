@@ -96,7 +96,8 @@ class App extends Component {
       case 'c':
         // Fetch the current object and its children
         this.be.fullDBEById(args[1],false,this.parentobj_cb);
-        this.setState({formname: args[2]})
+        console.log("App.c.componentDidMount: formname="+args[3])
+        this.setState({formname:args[3], dbename: args[2]})
         // this.be.fullObjectById(args[1],false,this.currentobj_cb);
         break;
       case 'e':
@@ -157,11 +158,11 @@ class App extends Component {
       console.log("App.parentobj_cb: current_obj not found or user has not the right to view it.");
       return
     }
-    const dbename = parent_obj.getDBEName()
-    console.log("App.parentobj_cb: dbename="+dbename)
-    // const formname = this.parentobj_cb.getFormNameByDBEName(dbename);
+    // const dbename = parent_obj.getDBEName()
+    // console.log("App.parentobj_cb: dbename="+dbename)
+    // const formname = this.be.getFormNameByDBEName(dbename);
     // console.log("App.currentobj_cb: formname="+formname)
-    this.setState({parent_obj: parent_obj, dbename: dbename});
+    this.setState({parent_obj: parent_obj});
     console.log("App.parentobj_cb: parent_obj="+(parent_obj ? parent_obj.to_string() : '--'))
 
     this.setState({server_response_0: jsonObj[0],server_response_1: JSON.stringify(jsonObj[1],null,2)})
@@ -309,6 +310,8 @@ class App extends Component {
   }
   _render(args) {
     var ret = ''
+    console.log("App._render: this.state.formname="+this.state.formname);
+    console.log("App._render: this.state.dbename="+this.state.dbename);
     switch(args[0]) {
       case 'test':
         ret = (
@@ -321,9 +324,9 @@ class App extends Component {
         // Display the current object
         ret = (
           <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
-            formname={this.state.formname} dbename={this.state.dbename}
+            formname={args[3]} dbename={args[2]}
             obj={this.state.current_obj} children={[]}
-            readonly={true}
+            readonly={false}
             onSave={this.onSave} onError={this.onError} />
           )
         break
@@ -367,7 +370,7 @@ class App extends Component {
     // const dark_theme = this.state.dark_theme;
     // console.log("App.render: dark_theme="+dark_theme);
     const mypath = this.parsePath()
-    // console.log("App.render: mypath="+JSON.stringify(mypath));
+    console.log("App.render: mypath="+JSON.stringify(mypath));
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} endpoint={this.state.endpoint}
