@@ -96,8 +96,23 @@ class App extends Component {
       case 'c':
         // Fetch the current object and its children
         this.be.fullDBEById(args[1],false,this.parentobj_cb);
-        console.log("App.c.componentDidMount: formname="+args[3])
-        this.setState({formname:args[3], dbename: args[2]})
+        // console.log("App.c.componentDidMount: formname="+args[3])
+        // this.setState({formname:args[3], dbename: args[2]})
+
+        const mydbename = args[2]
+        this.be.getDBEInstance(mydbename,(jsonObj, mydbe) => {
+          const current_obj = mydbe
+
+          const dbename = current_obj.getDBEName()
+          console.log("App.c.componentDidMount.cb: dbename="+dbename)
+          const formname = this.be.getFormNameByDBEName(dbename);
+          console.log("App.c.componentDidMount.cb: formname="+formname)
+          this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
+          console.log("App.c.componentDidMount.cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
+      
+          this.setState({server_response_0: jsonObj[0],server_response_1: JSON.stringify(jsonObj[1],null,2)})
+        })
+
         // this.be.fullObjectById(args[1],false,this.currentobj_cb);
         break;
       case 'e':
@@ -324,7 +339,7 @@ class App extends Component {
         // Display the current object
         ret = (
           <FForm endpoint={this.state.endpoint} dark_theme={this.state.dark_theme}
-            formname={args[3]} dbename={args[2]}
+            formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={[]}
             readonly={false}
             onSave={this.onSave} onError={this.onError} />
