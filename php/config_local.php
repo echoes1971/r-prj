@@ -1,17 +1,17 @@
 <?php
 
-$site_title = ':: R-Prj ::';
-$site_title_2 = '-= Development version =-';
+$site_title = ':: R-Project ::';
+$site_title_2 = 'A CMS Project';
 
-$db_server = "rprj-mariadb";
+$db_server = "rprj-db";
 $db_user = "root";
 $db_pwd = "mysecret";
 $db_db = "rproject";
-$db_schema = "rprj";
+$db_schema = "rra";
 
 $skin = 'ami';
 
 $plugins_enabled[]='tinymce';
 
-$root_obj_id='-10';
+$root_obj_id='515';
 ?>
