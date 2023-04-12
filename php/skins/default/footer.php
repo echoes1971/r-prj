@@ -21,7 +21,7 @@
 do_hook('footer_before');
 ?><div id="footer"><?php
 do_hook('footer_content_before');
-?><small><b>&copy; <?php echo date("Y"); ?> by Roberto Rocco-Angeloni - All rights reserved. - Powered by <a href="http://u.bb/77j">R-Project</a>.</b></small><?php
+?><small><b>&copy; <?php echo date("Y"); ?> by Roberto Rocco-Angeloni - All rights reserved. - Powered by <a target="_blank" href="https://github.com/echoes1971/r-prj/">R-Project</a>.</b></small><?php
 do_hook('footer_content_after');
 ?></div><?php
 do_hook('footer_after');

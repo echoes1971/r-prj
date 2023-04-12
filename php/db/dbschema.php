@@ -37,8 +37,8 @@ class DBEDBVersion extends DBEntity {
                 'model_name'=> array('varchar(255)','not null'),
 				'version'=>array('int','not null'),
 			);
-	function DBEDBVersion($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "dbversion"; }
 	
@@ -65,8 +65,8 @@ class DBEUser extends DBEntity {
 				'fullname'=>array('text','default null'),
 				'group_id'=>array('uuid','not null'),
 			);
-	function DBEUser($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "users"; }
 	
@@ -154,8 +154,8 @@ class DBEGroup extends DBEntity {
 				'name'=>array('varchar(255)','not null'),
 				'description'=>array('text','default null'),
 			);
-	function DBEGroup($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "groups"; }
 	
@@ -192,8 +192,8 @@ class DBEGroup extends DBEntity {
 $dbschema_type_list[]='DBEGroup';
 class DBEUserGroup extends DBAssociation {
 	var $_typeName="DBEUserGroup";
-	function DBEUserGroup($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns
 			: array(
 				'user_id'=>array('uuid','not null'),
 				'group_id'=>array('uuid','not null'),
@@ -228,8 +228,8 @@ class DBELog extends DBEntity {
 				'note'=>array('varchar(255)',"not null default ''"),
 				'note2'=>array('text','not null'),
 			);
-	function DBELog($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
 	}
 	function getTableName() { return "log"; }
 	
@@ -272,8 +272,8 @@ class DBEObject extends DBEntity {
 				'name'=>array('varchar(255)','not null'),
 				'description'=>array('text','default null'),
 			);
-	function DBEObject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys
 			,$columns!==null ? $columns
 			: self::$_mycolumns
 			);
@@ -817,8 +817,8 @@ class DBECountry extends DBEntity {
 		'ISO_3166_1_Number'=>array('varchar(255)','default null'),
 		'IANA_Country_Code_TLD'=>array('varchar(255)','default null'),
 	);
-	function DBECountry($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEntity($tablename, $names, $values, $attrs, $keys, self::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, self::$_mycolumns);
 	}
 	function getTableName() { return "countrylist"; }
 	var $_chiavi = array('id' => 'uuid');
@@ -834,8 +834,8 @@ class DBECompany extends DBEObject {
 	var $_typeName="DBECompany";
 	protected static $__mycolumns = null;
 	
-	function DBECompany($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -873,8 +873,8 @@ $dbschema_type_list[]="DBECompany";
 class DBEPeople extends DBEObject {
 	var $_typeName="DBEPeople";
 	protected static $__mycolumns = null;
-	function DBEPeople($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -925,8 +925,8 @@ class DBEEvent extends DBEObject {
 	var $_typeName="DBEEvent";
 	function getTableName() { return "events"; }
 	protected static $__mycolumns = null;
-	function DBEEvent($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1008,8 +1008,8 @@ class DBEFile extends DBEObject {
 	
 	var $dest_directory;
 	
-	function DBEFile($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1296,8 +1296,8 @@ class DBEFolder extends DBEObject {
 		return "folders";
 	}
 	protected static $__mycolumns = null;
-	function DBEFolder($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $dest_directory=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1367,8 +1367,8 @@ class DBELink extends DBEObject {
 	var $_typeName="DBELink";
 	function getTableName() { return "links"; }
 	protected static $__mycolumns = null;
-	function DBELink($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1408,8 +1408,8 @@ class DBENote extends DBEObject {
 		return "notes";
 	}
 	protected static $__mycolumns = null;
-	function DBENote($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1439,8 +1439,8 @@ class DBEPage extends DBEObject {
 	var $_typeName="DBEPage";
 	function getTableName() { return "pages"; }
 	protected static $__mycolumns = null;
-	function DBEPage($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1473,8 +1473,8 @@ class DBENews extends DBEPage {
 	var $_typeName="DBENews";
 	function getTableName() { return "news"; }
 	protected static $__mycolumns = null;
-	function DBENews($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEPage($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEPage::$__mycolumns;
@@ -1497,8 +1497,8 @@ class DBEProject extends DBEObject {
 	function getTableName() {
 		return "projects";
 	}
-	function DBEProject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys, DBEObject::$_mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, DBEObject::$_mycolumns);
 		
 // 		$this->_columns['p_iva']=array('varchar(16)');
 	}
@@ -1530,8 +1530,8 @@ $dbschema_type_list[]="DBEProject";
 class DBEProjectCompanyRole extends DBEObject {
 	var $_typeName="DBEProjectCompanyRole";
 	protected static $__mycolumns = null;
-	function DBEProjectCompanyRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1580,8 +1580,8 @@ class DBEProjectCompany extends DBAssociation {
 			'company_id'=>array('uuid',"not null default ''"),
 			'projects_companies_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectCompany($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
@@ -1609,8 +1609,8 @@ class DBEProjectPeopleRole extends DBAssociation {
 	function getTableName() {
 		return "projects_people_roles";
 	}
-	function DBEProjectPeopleRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBAssociation($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1658,8 +1658,8 @@ class DBEProjectPeople extends DBAssociation {
 				'people_id'=>array('uuid',"not null default ''"),
 				'projects_people_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectPeople($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
@@ -1687,8 +1687,8 @@ class DBEProjectProjectRole extends DBEObject {
 		return "projects_projects_roles";
 	}
 	protected static $__mycolumns = null;
-	function DBEProjectProjectRole($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		if(self::$__mycolumns===null) {
 			self::$__mycolumns=DBEObject::$_mycolumns;
@@ -1732,8 +1732,8 @@ class DBEProjectProject extends DBAssociation {
 				'project2_id'=>array('uuid',"not null default ''"),
 				'projects_projects_role_id'=>array('uuid',"not null default ''"),
 			);
-	function DBEProjectProject($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBAssociation($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, self::$__mycolumns);
 	}
 	
 	// Statica
@@ -1758,8 +1758,8 @@ class DBETimetrack extends DBEObject {
 	function getTableName() {
 		return "timetracks";
 	}
-	function DBETimetrack($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['fk_obj_id']=array('uuid','default null');
 		$this->_columns['fk_progetto']=array('uuid','default null');
@@ -1826,8 +1826,8 @@ class DBETodo extends DBEObject {
 	function getTableName() {
 		return "todo";
 	}
-	function DBETodo($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['priority']=array('int','not null default 0');
 		$this->_columns['data_segnalazione']=array('datetime',"not null default '0000-00-00 00:00:00'");
@@ -1940,8 +1940,8 @@ class DBETodoTipo extends DBEObject {
 	function getTableName() {
 		return "todo_tipo";
 	}
-	function DBETodoTipo($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
-		$this->DBEObject($tablename, $names, $values, $attrs, $keys);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys);
 		
 		$this->_columns['order_position']=array('int','default 0');
 	}
@@ -1985,8 +1985,8 @@ class DBETestDBLayer extends DBEntity {
                 'prezzo'=>array('float'),
                 'data_disponibilita'=>array('datetime'),
             );
-    function DBETestDBLayer($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+        parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
     }
     function getSchemaName() { return "test"; }
     function getTableName() { return "test_dblayer"; }
@@ -2021,8 +2021,8 @@ class DBESocieta extends DBEntity {
                 'tipo'=>array('text'),
                 'data_creazione'=>array('datetime'),
             );
-    function DBESocieta($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
-        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+        parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
     }
     function getSchemaName() { return "test"; }
     function getTableName() { return "societa"; }
@@ -2044,8 +2044,8 @@ $dbschema_type_list[]='DBESocieta';
 /** *********************************** DBEFactory *********************************** */
 
 class MyDBEFactory extends DBEFactory {
-	function MyDBEFactory($verbose = 0) {
-		$this->DBEFactory($verbose);
+	function __construct($verbose = 0) {
+		parent::__construct($verbose);
 		
 		global $dbschema_type_list;
 		foreach($dbschema_type_list as $mytype)

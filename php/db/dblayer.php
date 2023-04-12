@@ -28,7 +28,7 @@ class ForeignKey {
      * @param tabella_riferita referenced table
      * @param colonna_riferita referenced column
      */
-    function ForeignKey($colonna_fk,$tabella_riferita,$colonna_riferita) {
+    function __construct($colonna_fk,$tabella_riferita,$colonna_riferita) {
         $this->colonna_fk=$colonna_fk;
         $this->tabella_riferita=$tabella_riferita;
         $this->colonna_riferita=$colonna_riferita;
@@ -46,7 +46,7 @@ class DBEntity {
     var $_fk;
     var $_columns;
     
-    function DBEntity($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
         if($tablename!=null) { $this->_tablename = $tablename; }
         if($attrs!=null) {
             $this->_dict = $attrs;
@@ -397,8 +397,8 @@ class DBEntity {
  * La seconda FK stabilisce la tabella TO
  */
 class DBAssociation extends DBEntity {
-    function DBAssociation($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
-        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns);
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
+        parent::__construct($tablename, $names, $values, $attrs, $keys, $columns);
     }
     
     function getFromTableName() { return $this->_fk[0]->tabella_riferita; }
@@ -412,7 +412,7 @@ class DBEFactory {
     var $verbose;
     var $classname2type;
     var $tablename2type;
-    function DBEFactory($verbose = 0) {
+    function __construct($verbose = 0) {
         $this->verbose=$verbose;
         $this->classname2type=array("default"=>"DBEntity",);
         $this->tablename2type=array("default"=>"DBEntity",);
@@ -505,13 +505,14 @@ class MYConnectionProvider extends DBConnectionProvider {
             if($this->_verbose) echo 'Could not run query: ' . mysqli_error();
             return $ret;
         }
-        if(mysqli_num_rows($result)>0) {
+        $_numrows = mysqli_num_rows($result);
+        if($_numrows>0) {
             $colonna=1;
             while ($row = mysqli_fetch_assoc($result)) {
                 $ret[$row["Field"]]=$row;
             }
         }
-        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$ret."<br/>\n";
+        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$_numrows."<br/>\n";
         return $ret;
     }
     function getColumnName($tablename, $num_column) {
@@ -610,9 +611,14 @@ class MYConnectionProvider extends DBConnectionProvider {
     }
     
     function connect() {
-        if($this->isConnected()) return;
+        // if($this->isConnected()) return;
         ob_start();
-        $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd, $this->_dbname);
+        try {
+            $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd, $this->_dbname);
+        } catch(Exception $e) {
+            echo "DBMgr.connect: ".$e->getMessage()."<br />\n";
+            if($this->_verbose) { echo "DBMgr.connect: ".$e->getMessage()."<br />\n"; }
+        }
         $messaggi = ob_get_contents();
         ob_end_clean();
         if($this->_verbose) {
@@ -631,8 +637,15 @@ class MYConnectionProvider extends DBConnectionProvider {
                 && $this->conn!==false
                 && !is_int($this->conn)
                 && $this->conn->connect_errno===0
-                && mysqli_ping($this->conn)
+                // && mysqli_ping($this->conn)
                 ;
+        // if($ret) {
+        //     try{
+        //         $ret = $ret && mysqli_ping($this->conn);
+        //     } catch(Exception $e) {
+        //         $ret = false;
+        //     }
+        // }
         //echo "isConnected:$ret<br/>";
         return $ret;
     }
@@ -723,7 +736,7 @@ class DBMgr {
      * @param dbeuser utente loggato
      * @param user_groups_list
      */
-    function DBMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
+    function __construct($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
         $this->_server = $server; $this->_user = $user;
         $this->_pwd = $pwd; $this->_dbname = $dbname;
         $this->_schema = $schema;
@@ -785,6 +798,7 @@ class DBMgr {
     function db_version() {
         ob_start();
         $cerca = new DBEDBVersion();
+        $cerca->setValue("model_name",$this->_schema);
         $ris = $this->search($cerca,1);
         $messaggi = ob_get_contents();
         ob_end_clean();

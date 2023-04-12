@@ -33,8 +33,8 @@ $formschema_type_list=array();
 
 /** *********************************** RRA Framework: inizio. *********************************** */
 class FUser extends FMasterDetail {
-	function FUser( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -73,8 +73,8 @@ class FUser extends FMasterDetail {
 }
 $formschema_type_list[]="FUser";
 class FGroup extends FMasterDetail {
-	function FGroup( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'id', new FNumber( 'id', "ID", '', $aValore='', $aClasseCss='formtable' ));
 		$this->addField('', -1, 'name', new FString( 'name', "Name", 'Nome del gruppo.', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
@@ -95,8 +95,8 @@ class FGroup extends FMasterDetail {
 }
 $formschema_type_list[]="FGroup";
 class FUserGroupAssociation extends FAssociation {
-	function FUserGroupAssociation($nome='', $azione='', $metodo="POST") {
-		$this->FAssociation(new DBEUserGroup(), null, null, $nome, $azione, $metodo);
+	function __construct($nome='', $azione='', $metodo="POST") {
+		parent::__construct(new DBEUserGroup(), null, null, $nome, $azione, $metodo);
 	}
 	function getDetailTitle() { return "Association User-Group"; }
 	function getFromForm() { return FForm::getInstance("FUser"); } // 2011.04.04 new FUser(); }
@@ -104,8 +104,8 @@ class FUserGroupAssociation extends FAssociation {
 }
 $formschema_type_list[]="FUserGroupAssociation";
 class FLog extends FMasterDetail {
-	function FLog( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -178,8 +178,8 @@ $formschema_type_list[]="FLog";
  */
 class FLogFilter extends FLog {
 	function getDetailTitle() { return "Log Filter"; }
-	function FLogFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FLog( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'from_ip', new FString( 'from_ip', "IP >=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ));
 		$this->addField('', -1, 'to_ip', new FString( 'to_ip', "IP <=", '', $aSize=16, $aLength=16, $aValore='', $aClasseCss='formtable' ));
@@ -195,8 +195,8 @@ class FLogFilter extends FLog {
 $formschema_type_list[]="FLogFilter";
 
 class FObject extends FMasterDetail {
-	function FObject( $nome='', $azione='', $metodo="POST" ) {
-		parent::FMasterDetail( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -271,8 +271,8 @@ $formschema_type_list[]="FObject";
 /** *********************************** RRA Contacts: inizio. *********************************** */
 
 class FCompany extends FObject {
-	function FCompany( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$_mydbe = $this->getDBE();
 		
@@ -321,8 +321,8 @@ class FCompany extends FObject {
 }
 $formschema_type_list[]="FCompany";
 class FPeople extends FObject {
-	function FPeople( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$_mydbe = $this->getDBE();
 		
@@ -383,8 +383,8 @@ $formschema_type_list[]="FPeople";
 
 /** *********************************** CMS: start. *********************************** */
 class FEvent extends FObject {
-	function FEvent( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -441,8 +441,8 @@ $formschema_type_list[]="FEvent";
  */
 class FEventFilter extends FEvent {
 	function getDetailTitle() { return "Event Filter"; }
-	function FEventFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FEvent( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'from_start_date', new FDateTime( 'from_start_date', "Date >=", $aDescription='Date from', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ));
 		$this->addField('', -1, 'to_start_date', new FDateTime( 'to_start_date', "Date <=", $aDescription='Date to', $aValore='', $aClasseCss='formtable', $aVisualizzaData=true, $aVisualizzaOra=false ));
@@ -460,8 +460,8 @@ class FEventFilter extends FEvent {
 $formschema_type_list[]="FEventFilter";
 
 class FFile extends FObject {
-	function FFile( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -522,8 +522,8 @@ class FFile extends FObject {
 $formschema_type_list[]="FFile";
 
 class FFolder extends FObject {
-	function FFolder( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -560,8 +560,8 @@ class FFolder extends FObject {
 $formschema_type_list[]="FFolder";
 
 class FLink extends FObject {
-	function FLink( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -602,8 +602,8 @@ class FLink extends FObject {
 $formschema_type_list[]="FLink";
 
 class FNote extends FObject {
-	function FNote( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -631,8 +631,8 @@ class FNote extends FObject {
 $formschema_type_list[]="FNote";
 
 class FPage extends FObject {
-	function FPage( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -663,8 +663,8 @@ class FPage extends FObject {
 $formschema_type_list[]="FPage";
 
 class FNews extends FPage {
-	function FNews( $nome='', $azione='', $metodo="POST" ) {
-		parent::FPage( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 // 		$this->addField('html', -1, 'html', new FHtml( 'html', "Html", 'Contenuto html.', 255, '', $aClasseCss='formtable', 50, 5));
@@ -696,8 +696,8 @@ $formschema_type_list[]="FNews";
 
 /** *********************************** RRA Projects: inizio. *********************************** */
 class FProject extends FObject {
-	function FProject( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addDetail("FFolder");
 		$this->addDetail("FProjectProject");
@@ -725,8 +725,8 @@ $formschema_type_list[]="FProject";
 
 class FProjectCompany extends FAssociation {
 	function getDetailTitle() { return "Association Project-Company"; }
-	function FProjectCompany($nome='', $azione='', $metodo="POST") {
-		$this->FAssociation(new DBEProjectCompany(),null,null,$nome, $azione, $metodo);
+	function __construct($nome='', $azione='', $metodo="POST") {
+		parent::__construct(new DBEProjectCompany(),null,null,$nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -740,8 +740,8 @@ class FProjectCompany extends FAssociation {
 }
 $formschema_type_list[]="FProjectCompany";
 class FProjectCompanyRole extends FObject {
-	function FProjectCompanyRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
@@ -758,8 +758,8 @@ $formschema_type_list[]="FProjectCompanyRole";
 
 class FProjectPeople extends FAssociation {
 	function getDetailTitle() { return "Association Project-People"; }
-	function FProjectPeople($nome='', $azione='', $metodo="POST") {
-		$this->FAssociation(new DBEProjectPeople(),null,null,$nome, $azione, $metodo);
+	function __construct($nome='', $azione='', $metodo="POST") {
+		parent::__construct(new DBEProjectPeople(),null,null,$nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -773,8 +773,8 @@ class FProjectPeople extends FAssociation {
 }
 $formschema_type_list[]="FProjectPeople";
 class FProjectPeopleRole extends FObject {
-	function FProjectPeopleRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
@@ -787,8 +787,8 @@ class FProjectPeopleRole extends FObject {
 $formschema_type_list[]="FProjectPeopleRole";
 
 class FProjectProject extends FAssociation {
-	function FProjectProject($nome='', $azione='', $metodo="POST") {
-		$this->FAssociation(new DBEProjectProject(),null,null,$nome, $azione, $metodo);
+	function __construct($nome='', $azione='', $metodo="POST") {
+		parent::__construct(new DBEProjectProject(),null,null,$nome, $azione, $metodo);
 		
 		$_mydbe=$this->getDBE();
 		
@@ -803,8 +803,8 @@ class FProjectProject extends FAssociation {
 }
 $formschema_type_list[]="FProjectProject";
 class FProjectProjectRole extends FObject {
-	function FProjectProjectRole( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
@@ -817,8 +817,8 @@ class FProjectProjectRole extends FObject {
 $formschema_type_list[]="FProjectCompanyRole";
 
 class FTimetrack extends FObject {
-	function FTimetrack( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'fk_obj_id',
@@ -863,8 +863,8 @@ class FTimetrack extends FObject {
 $formschema_type_list[]="FTimetrack";
 
 class FTodo extends FObject {
-	function FTodo( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$_mydbe=$this->getDBE();
 		
 		$this->addField('', -1, 'priority', new FNumber('priority', "Priority", 'Priorita', $aValore='', $aClasseCss='formtable' ));
@@ -931,8 +931,8 @@ $formschema_type_list[]="FTodo";
  */
 class FTodoFilter extends FTodo {
 	function getDetailTitle() { return "Todo Filter"; }
-	function FTodoFilter( $nome='', $azione='', $metodo="POST" ) {
-		parent::FTodo( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		
 		$this->addField('', -1, 'from_data_chiusura', new FDateTime( 'from_data_chiusura', "Closed on >=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
 		$this->addField('', -1, 'to_data_chiusura', new FDateTime( 'to_data_chiusura', "Closed on <=", $aDescription='Data chiusura', $aValore='', $aClasseCss='formtable', $aVisualizzaData=TRUE, $aVisualizzaOra=false ));
@@ -948,8 +948,8 @@ class FTodoFilter extends FTodo {
 $formschema_type_list[]="FTodoFilter";
 
 class FTodoTipo extends FObject {
-	function FTodoTipo( $nome='', $azione='', $metodo="POST" ) {
-		parent::FObject( $nome, $azione, $metodo);
+	function __construct( $nome='', $azione='', $metodo="POST" ) {
+		parent::__construct( $nome, $azione, $metodo);
 		$this->addField('', -1, 'order_position', new FString( 'order_position', "Order", 'Ordine', $aSize=50, $aLength=255, $aValore='', $aClasseCss='formtable' ));
 	}
 	function getDetailTitle() { return "Todo::Kind"; }
@@ -964,8 +964,8 @@ $formschema_type_list[]="FTodoTipo";
 
 /** *********************************** Form Factory *********************************** */
 class MyFormFactory extends FormFactory {
-	function MyFormFactory( $verbose = 0 ) {
-		$this->FormFactory( $verbose);
+	function __construct( $verbose = 0 ) {
+		parent::__construct( $verbose);
 		
 		global $formschema_type_list;
 		

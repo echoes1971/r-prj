@@ -296,4 +296,4 @@ foreach( $listaDBE as $mydbe ) {
  </tr>
 </table>
 <!-- Footer Pannello: fine. -->
-<?php echo implode($forms_cancella,"\n"); ?>
+<?php echo implode("\n",$forms_cancella); ?>
