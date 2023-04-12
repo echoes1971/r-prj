@@ -82,7 +82,6 @@ echo "\n";
 
 $update_errors=array();
 
-
 // Table definitions update
 $tables_update_errors=array();
 foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {

@@ -13,7 +13,7 @@
     apt:
       name:
       - "{{ dbpkg }}"
-      - python-pymysql
+      - python3-pymysql
 
   - name: Ensure mysql is running
     service:

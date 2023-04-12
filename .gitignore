@@ -3,3 +3,17 @@
 __pycache__/
 *.py[cod]
 
+# Local DB and file storage
+data
+mariadb
+files
+rradb
+rrafiles
+
+docker/build
+
+# I'm not so sure about this
+php/config_local.php
+
+php/skins/ami/bootstrap-4.3.1-dist
+php/skins/flat/bootstrap-4.3.1-dist

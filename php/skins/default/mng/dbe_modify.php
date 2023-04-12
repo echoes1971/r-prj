@@ -18,7 +18,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-require_once(getSkinFile("mng/gestione_header.php"));
+require_once( getSkinFile("mng/gestione_header.php") );
 
 $maxTabs = max( count($myform->getGroupNames()), $myform->getDetailFormsCount() ); if($maxTabs>1) $maxTabs++; // + 1 tab ALL
 
@@ -55,7 +55,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 ?><form action="<?php echo $myform->getAction(); ?>" method="<?php echo $myform->getMethod(); ?>" <?php if($myform->getEnctype()>"") echo "enctype=\"".$myform->getEnctype()."\""; ?>>
 	<input type="hidden" name="dbetype" value="<?php echo $dbetype; ?>" />
 	<input type="hidden" name="formtype" value="<?php echo $formtype; ?>" /><?php
-	foreach( array_keys($mydbe->getKeys()) as $nomeCampo ) {
+	foreach(array_keys($mydbe->getKeys()) as $nomeCampo) {
 		if(in_array($nomeCampo,$campiVisibili)) continue;
 		$myfield = $myform->getField($nomeCampo );
 		echo $myfield->render_hidden();
@@ -74,7 +74,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 	$tabNames=array();
 	echo "<tr>";
 	$countGroups = count($myform->getGroupNames());
-	foreach( $myform->getGroupNames() as $nome_gruppo ) {
+	foreach($myform->getGroupNames() as $nome_gruppo) {
 		$_mygroup=$myform->getGroup( $nome_gruppo );
 		$decodedGroupName = $myform->decodeGroupName($nome_gruppo);
 		$tabNames[]=$nome_gruppo;
@@ -91,14 +91,14 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 	if($countGroups>1) echo "<th id=\"tab_ALL_button\" class=\"formtable\" colspan=\"".($maxTabs/$countGroups)."\"><div onclick=\"javascript:showTab('tab_ALL');\">Show All</div></th>";
 	echo "</tr>";
 	
-	foreach( $myform->getGroupNames() as $nome_gruppo ) {
+	foreach($myform->getGroupNames() as $nome_gruppo) {
 		$_mygroup=$myform->getGroup( $nome_gruppo );
 		$decodedGroupName = $myform->decodeGroupName($nome_gruppo);
 		echo "<tr id=\"tab_{$nome_gruppo}\" ".($decodedGroupName>""?"style=\"display:none;\"":"")."><td colspan=\"$maxTabs\"><table class=\"formtableGroup\" align=\"center\">"; // 2012.02.22
-		foreach( $_mygroup as $nomeCampo ) {
+		foreach($_mygroup as $nomeCampo) {
 			$myfield = $myform->getField( $nomeCampo );
 			$_isKey = in_array($nomeCampo,array_keys($mydbe->getKeys()));
-			if( in_array($nomeCampo ,$campiVisibili) ) {
+			if(in_array($nomeCampo ,$campiVisibili)) {
 				echo "<tr class=\"formtable\">";
 				echo "<td class=\"formtable\" width=\"30%\" align=\"right\" valign=\"top\">".($_isKey?'<b>':'').$myfield->getTitle().($_isKey?'</b>':'')."</td>";
 				echo "<td class=\"formtable\" width=\"70%\" align=\"left\">";
@@ -168,7 +168,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 			echo "<td class=\"formtable\" width=\"30%\" align=\"right\" valign=\"top\"><b>".$dest_form->getListTitle()."</b></td>";
 			echo "<td class=\"formtable\" width=\"70%\" align=\"left\">";
 				$descrizioni = array();
-				foreach( $childs[ get_class($childForm) ] as $child) {
+				foreach($childs[ get_class($childForm) ] as $child) {
 					if($child==null) continue;
 					$dest_form->setValues( $child->getValuesDictionary() );
 					$link="dbe_modify.php?dbetype=".$child->getTypeName()."&formtype=".get_class($dest_form)."&".$child->getCGIKeysCondition();
@@ -185,7 +185,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 					."border=\"0\" "
 					."onmouseover=\"javascript:this.style.cursor='pointer'\" onmouseout=\"javascript:this.style.cursor='normal'\""
 					."/>";
-				if (!is_a($childForm,'FAssociation') ) {
+				if (!is_a($childForm,'FAssociation')) {
 					$childDBE = $childForm->getDBE();
 					$childDBE->readFKFrom($mydbe);
 					echo "&nbsp;&nbsp;&nbsp;";
@@ -232,7 +232,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 
 // **** Delete Form
 ?><form id="form_cancella_<?php echo $mydbe->getKeyAsHash();?>" border=0 action=""><?php
-	foreach( array_keys($mydbe->getKeys()) as $nomeCampo ) {
+	foreach(array_keys($mydbe->getKeys()) as $nomeCampo) {
 		$myfield = $myform->getField($nomeCampo );
 		echo $myfield->render_hidden();
 	}
@@ -247,7 +247,7 @@ $formActionsHtml .= "<input type=\"image\" class=\"formtable\" id=\"action_close
 function cancella_<?php echo $mydbe->getKeyAsHash(); ?>() {
 	myform = document.getElementById('form_cancella_<?php echo $mydbe->getKeyAsHash(); ?>');
 	conferma = confirm('Confirm delete?');
-	if ( conferma ) {
+	if ( conferma) {
 		myform.action = 'dbe_delete_do.php';
 		myform.submit();
 	}

@@ -22,7 +22,7 @@ class WTObject {
 	var $id;
 	var $style;
 	var $_class;
-	function WTObject($id="", $style=array(), $class="") {
+	function __construct($id="", $style=array(), $class="") {
 		$this->id=$id;
 		$this->style=$style;
 		$this->_class=$class;
@@ -37,8 +37,8 @@ class WTPage extends WTObject {
 	var $items;
 	var $title;
 	var $skin;
-	function WTPage($id, $title="", $skin="default", $style=array(), $class="") {
-		$this->WTObject($id, $style, $class);
+	function __construct($id, $title="", $skin="default", $style=array(), $class="") {
+		parent::__construct($id, $style, $class);
 		
 		$this->title = $title;
 		$this->skin = $skin;
@@ -99,8 +99,8 @@ class WTPage extends WTObject {
 class WTPanel extends WTObject {
 	var $items;
 	var $title;
-	function WTPanel($id, $style=array(), $title='',$class="") {
-		$this->WTObject($id, $style,$class);
+	function __construct($id, $style=array(), $title='',$class="") {
+		parent::__construct($id, $style,$class);
 		
 		$this->title = $title;
 		$this->items = array();
@@ -145,8 +145,8 @@ class WTForm extends WTObject {
 	var $fields;
 	var $actions;
 	var $method;
-	function WTForm($id, $method="POST", $style=array(),$class="") {
-		$this->WTObject($id, $style,$class);
+	function __construct($id, $method="POST", $style=array(),$class="") {
+		parent::__construct($id, $style,$class);
 		
 		$this->fields = array();
 		$this->actions = array();
@@ -202,8 +202,8 @@ class WTForm extends WTObject {
 
 class WTClock extends WTObject {
 	var $twentyfour_hours;
-	function WTClock($twentyfour_hours=true, $id="", $style=array(),$class="") {
-		$this->WTObject($id, $style,$class);
+	function __construct($twentyfour_hours=true, $id="", $style=array(),$class="") {
+		parent::__construct($id, $style,$class);
 		
 		$this->twentyfour_hours=$twentyfour_hours;
 	}
@@ -223,8 +223,8 @@ class WTClock extends WTObject {
 
 class WTObjTree extends WTObject {
 	var $root_id;
-	function WTObjTree($root_id, $id="", $style=array(),$class="") {
-		$this->WTObject($id, $style,$class);
+	function __construct($root_id, $id="", $style=array(),$class="") {
+		parent::__construct($id, $style,$class);
 		
 		$this->root_id=$root_id;
 	}
@@ -432,8 +432,8 @@ class WTMenu extends WTObject {
 	var $parent_id;
 	var $items;
 	var $js;
-	function WTMenu($id, $_html, $parent_id=null, $js=null, $style=array(),$class="") {
-		$this->WTObject($id, $style,$class);
+	function __construct($id, $_html, $parent_id=null, $js=null, $style=array(),$class="") {
+		parent::__construct($id, $style,$class);
 		
 		$this->_html=$_html;
 		$this->parent_id=$parent_id;
@@ -498,8 +498,8 @@ class WTPopupDiv extends WTObject {
 	var $width;
 	var $height;
 
-	function WTPopupDiv($id, $title, $contenuto, $width='400px', $height='150px', $path_immagini='', $style=array(),$class="WTpopupDiv") {
-		$this->WTObject($id, $style,$class);
+	function __construct($id, $title, $contenuto, $width='400px', $height='150px', $path_immagini='', $style=array(),$class="WTpopupDiv") {
+		parent::__construct($id, $style,$class);
 		$this->title=$title;
 		$this->contenuto=$contenuto;
 		$this->path_immagini=$path_immagini;
@@ -673,8 +673,8 @@ try {
 
 class WTPopupIFrame extends WTPopupDiv {
 	var $url;
-	function WTPopupIFrame($id, $title, $url, $width='600px', $height='400px', $path_immagini='', $style=array(),$class="WTpopupIFrame") {
-		$this->WTPopupDiv($id, $title, "<iframe id=\"".$id."_iframe\" src=\"$url\"></iframe>", $width, $height, $path_immagini, $style,$class);
+	function __construct($id, $title, $url, $width='600px', $height='400px', $path_immagini='', $style=array(),$class="WTpopupIFrame") {
+		parent::__construct($id, $title, "<iframe id=\"".$id."_iframe\" src=\"$url\"></iframe>", $width, $height, $path_immagini, $style,$class);
 		$this->url=$url;
 	}
 	function getStyle() {

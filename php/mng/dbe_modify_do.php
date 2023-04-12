@@ -31,7 +31,7 @@ require_once(ROOT_FOLDER . "plugins.php");
 $redir_page = "dbe_modify.php";
 
 $dbmgr = $_SESSION['dbmgr'];
-if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
+if($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
 	$_SESSION['dbmgr'] = $dbmgr;
@@ -39,7 +39,7 @@ if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 $dbmgr->setVerbose(false);
 
 $formulator = array_key_exists('formulator',$_SESSION) ?$_SESSION['formulator'] : null;
-if ($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
+if($formulator==null || get_class($formulator)=='__PHP_Incomplete_Class') {
 	$formulator = new MyFormFactory;
 	$_SESSION['formulator'] = $formulator;
 }

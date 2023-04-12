@@ -1,5 +1,13 @@
 version: '3'
 services:
+  rprj-app:
+    ports:
+    - "3000:3000"
+    volumes:
+    - ./rprj-app/package.json:/usr/src/app/package.json
+    - ./rprj-app/public:/usr/src/app/public
+    - ./rprj-app/src:/usr/src/app/src
+    - ./rprj-app/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
   rprj-web:
     environment:
       SITE_TITLE: ":: Flatskin Dev ::"
@@ -12,6 +20,6 @@ services:
       - ./docker/webentrypoint.sh:/usr/local/bin/docker-php-entrypoint
     #ports:
       #- 5000:80
-  rprj-db:
-    environment:
-      MYSQL_ROOT_PASSWORD: cippa
+  # rprj-db:
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: cippa

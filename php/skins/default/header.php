@@ -21,8 +21,8 @@
 $messaggio = '';
 $popupMessaggio=null;
 if(array_key_exists('messaggio',$_REQUEST)) {
- $messaggio = $_REQUEST['messaggio'];
- $popupMessaggio = new WTPopupDiv('header_message',"Message","$messaggio");
+	$messaggio = $_REQUEST['messaggio'];
+	$popupMessaggio = new WTPopupDiv('header_message',"Message","$messaggio");
 }
 $popupIframe = new WTPopupIFrame('main_actions','New','','800px', '600px');
 
@@ -39,11 +39,12 @@ if($dbmgr->getDBEUser()!==null) {
 ?><style type="text/css">
 
 </style>
+<link rel="icon" href="<?php echo getSkinFile("favicon.ico"); ?>" />
 <link href="<?php echo getSkinFile("style.css"); ?>" rel="stylesheet" type="text/css" />
 <link href="<?php echo getSkinFile("widgets.css"); ?>" rel="stylesheet" type="text/css" />
 <?php
-if(strpos($_SERVER['HTTP_USER_AGENT'], "MSIE ")>0 ) {
- echo "<link href=\"".getSkinFile("style_ie.css")."\" rel=\"stylesheet\" type=\"text/css\" />";
+if(strpos($_SERVER['HTTP_USER_AGENT'], "MSIE ")>0) {
+	echo "<link href=\"".getSkinFile("style_ie.css")."\" rel=\"stylesheet\" type=\"text/css\" />";
 }
 foreach($plugins_enabled as $plugin_name) {
  echo "<link rel=\"stylesheet\" href=\"".getPluginSkinFolder($plugin_name)."$plugin_name.css\" type=\"text/css\" />\n";
@@ -68,8 +69,8 @@ function reload() {
 </head>
 <body onload="javascript:<?php echo $popupIframe->getOnload().";"; if($messaggio>'') { echo $popupMessaggio->getOnload().";header_message_mostra();"; } ?>">
 <?php
-if ( $messaggio>'' ) {
- echo $popupMessaggio->render();
+if ( $messaggio>'') {
+	echo $popupMessaggio->render();
 }
 // popup iframe
 echo $popupIframe->render();

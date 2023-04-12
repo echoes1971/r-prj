@@ -1,2 +1,6 @@
-<h1 class="kheader"><?php echo $_SESSION['site_title']; ?></h1>
-<!-- h3>ICT Consulting services</h3 -->
+<div class="lcars-title left horizontal lcars-anakiwa-bg"><?php
+// echo $_SESSION['site_title'];
+echo "<a class=\"lcars-black-color\" href=\"".ROOT_FOLDER."main.php?obj_id=".$_SESSION['root_obj']->getValue('id')."\">";
+echo "<b>".$_SESSION['site_title']."</b>";
+echo "</a>";
+?></div>

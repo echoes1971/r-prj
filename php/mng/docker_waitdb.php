@@ -29,7 +29,7 @@ session_start();
 require_once(ROOT_FOLDER . "mng/checkUser.php");
 require_once(ROOT_FOLDER . "plugins.php");
 
-$dbmgr = $_SESSION['dbmgr'];
+$dbmgr = array_key_exists("dbmgr",$_SESSION) ? $_SESSION['dbmgr'] : null;
 if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 	$aFactory = new MyDBEFactory;
 	$dbmgr = new ObjectMgr( $db_server, $db_user, $db_pwd, $db_db, $db_schema, $aFactory );
@@ -37,21 +37,25 @@ if ($dbmgr==NULL || get_class($dbmgr)=='__PHP_Incomplete_Class') {
 }
 $dbmgr->setVerbose(false);
 
-$dbmgr->getConnectionProvider()->connect();
-$isConnected = $dbmgr->getConnectionProvider()->isConnected();
+$dbmgr->connect();
+// $dbmgr->getConnectionProvider()->connect();
+$isConnected = $dbmgr->isConnected();
+// $isConnected = $dbmgr->getConnectionProvider()->isConnected();
 $retryNumber = 0;
 $MAX_RETRY = 10;
 while(!$isConnected && $retryNumber<$MAX_RETRY) {
     echo "Connected: $isConnected\n";
-    echo "Retry: $retryNumber / $MAX_RETRY\n";
+    echo "Retry: ".($retryNumber+1)." / $MAX_RETRY\n";
     sleep(10);
-    $dbmgr->getConnectionProvider()->connect();
-    $isConnected = $dbmgr->getConnectionProvider()->isConnected();
+    $dbmgr->connect();
+    $isConnected = $dbmgr->isConnected();
+    // $dbmgr->getConnectionProvider()->connect();
+    // $isConnected = $dbmgr->getConnectionProvider()->isConnected();
     $retryNumber++;
 }
+echo "Connected: $isConnected\n";
 
 
 $my_db_version = $dbmgr->db_version();
 $new_db_version = $my_db_version;
-
 ?>

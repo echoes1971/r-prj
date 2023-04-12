@@ -214,7 +214,7 @@ function getChilds($my_obj_id,&$current_obj,&$current_form,$without_index_page=t
 		$childs_sort_order=preg_split("/,/",$current_obj->getValue('childs_sort_order'));
 		foreach($childs_sort_order as $_oid) {
 			for($_i=0; $_i<count($_menu_list); $_i++) {
-				if( $_menu_list[$_i]->getValue('id')!=$_oid ) continue;
+				if($_menu_list[$_i]->getValue('id')!=$_oid) continue;
 				$menu_list[]=$_menu_list[$_i];
 				$menu_list_ids[]=$_menu_list[$_i]->getValue('id');
 				array_splice($_menu_list, $_i,1);

@@ -19,13 +19,19 @@
  */
 
 do_hook('footer_before');
-?><div id="footer"><?php
+?><div id="footer" class="lcars-row"><?php
+  ?><div class="lcars-elbow left-top lcars-tan-bg"></div><?php
+  ?><div class="lcars-bar horizontal both-divider bottom"><?php
 do_hook('footer_content_before');
-?><small><b>&copy; <?php echo date("Y"); ?> by Wintermute - All rights reserved.</b></small><?php
-do_hook('footer_content_after');
+?><div class="lcars-title right horizontal">&copy; <?php echo date("Y"); ?> by Roberto Rocco-Angeloni.</div><?php
+  ?></div><?php
+  ?><div class="lcars-bar horizontal right-end left-divider bottom"></div><?php
+
+  do_hook('footer_content_after');
 ?></div><?php
 do_hook('footer_after');
 
 
-?></body>
+?></div>
+</body>
 </html>

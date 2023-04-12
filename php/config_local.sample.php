@@ -7,7 +7,7 @@ $db_server = "rprj-db-server";
 $db_user = "root";
 $db_pwd = "rprj-db-pwd";
 $db_db = "rprj-db-db";
-$db_schema = "rprj";
+$db_schema = "rprj-db-schema";
 
 $skin = 'ami';
 
