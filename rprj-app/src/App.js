@@ -100,6 +100,9 @@ class App extends Component {
         // this.setState({formname:args[3], dbename: args[2]})
 
         const mydbename = args[2]
+        const myformname = args[3]
+        this.setState({formname: myformname, dbename: mydbename});
+        
         this.be.getDBEInstance(mydbename,(jsonObj, mydbe) => {
           const current_obj = mydbe
 
@@ -108,6 +111,7 @@ class App extends Component {
           const formname = this.be.getFormNameByDBEName(dbename);
           console.log("App.c.componentDidMount.cb: formname="+formname)
           this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
+          // this.setState({current_obj: current_obj, formname: formname, dbename: dbename});
           console.log("App.c.componentDidMount.cb: current_obj="+(current_obj ? current_obj.to_string() : '--'))
       
           this.setState({server_response_0: jsonObj[0],server_response_1: JSON.stringify(jsonObj[1],null,2)})

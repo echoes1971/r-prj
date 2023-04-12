@@ -63,7 +63,7 @@ docker image prune
 
 # rprj_db
 
-docker exec -it r-rprj_rprj-db_1 mysql -pmysecret rproject
+docker exec -it r-prj-rprj-db-1 mysql -pmysecret rproject
 
 
 # Debugging rprj_web
