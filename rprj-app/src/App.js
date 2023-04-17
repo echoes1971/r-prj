@@ -321,8 +321,6 @@ class App extends Component {
           <TestBE endpoint={this.state.endpoint} dark_theme={this.state.dark_theme} endpoints={app_cfg.endpoints} />
         );
         break
-      case 'p':
-        // User profile
       case 'c':
         // Display the current object
         ret = (
@@ -333,6 +331,8 @@ class App extends Component {
             onSave={this.onSave} onError={this.onError} />
           )
         break
+      case 'p':
+        // User profile
       case 'o':
         // Display the current object
         console.log("App._render: formname="+this.state.formname)
