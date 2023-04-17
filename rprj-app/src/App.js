@@ -293,8 +293,15 @@ class App extends Component {
     this.setState({server_response_0: jsonObj[0], server_response_1: JSON.stringify(jsonObj[1])})
   }
 
-  onSave(values) {
-    this.setState({server_response_0: '', server_response_1: JSON.stringify(values,null,2)})
+  onSave(classname, values) {
+    // TODO:
+    // - populate a DBE
+    // - send it to the backend
+    // - IF successful, redirect to page /o/<new_id>
+    // - ELSE show error
+
+    console.log("App.onSave: classname="+classname)
+    this.setState({server_response_0: 'classname='+classname, server_response_1: JSON.stringify(values,null,2)})
   }
 
   parsePath() {

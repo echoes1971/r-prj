@@ -160,6 +160,7 @@ class FForm extends React.Component {
 
     btnSave() {
         const values = {};
+        const classname = this.state.dbename
         for(const k in this.state) {
             // console.log("FForm.btnSave: k="+k)
             if(k.indexOf(this.field_prefix)<0) continue;
@@ -167,7 +168,7 @@ class FForm extends React.Component {
             values[k1] = this.state[k]
         }
         console.log("FForm.btnSave: values="+JSON.stringify(values))
-        this.props.onSave(values)
+        this.props.onSave(classname, values)
     }
 
 

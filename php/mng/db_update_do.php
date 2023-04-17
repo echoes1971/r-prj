@@ -231,7 +231,7 @@ if($all_ok && $my_db_version<1) {
 	$queries = array(
 		"insert into _dbversion values ('rprj',0)",
 		//"insert into _dbversion values (0)",
-		"insert into _users values ( -1, 'adm','adm','','Administrator',-2 )",
+		"insert into _users values ( -1, 'adm','mysecretpass','','Administrator',-2 )",
 		"insert into _groups values ( -2, 'Admin','System admins' )",
 		"insert into _groups values ( -3, 'Users','System users' )",
 		"insert into _groups values ( -4, 'Guests','System guests (read only)' )",
