@@ -64,7 +64,7 @@ class DHTML_Calendar {
     }
 
     function _make_calendar($other_options = array()) {
-        $js_options = $this->_make_js_hash(array_merge($this->calendar_options, $other_options));
+        $js_options = $this->_make_js_hash(array_merge($this->calendar_options === null ? array() : $this->calendar_options , $other_options));
         $code  = ( '<script type="text/javascript">Calendar.setup({' .
                    $js_options .
                    '});</script>' );
@@ -95,7 +95,8 @@ class DHTML_Calendar {
     function _make_js_hash($array) {
         $jstr = '';
         reset($array);
-        while (list($key, $val) = each($array)) {
+        foreach($array as $key => $val) {
+        // while (list($key, $val) = each($array)) {
             if (is_bool($val))
                 $val = $val ? 'true' : 'false';
             else if (!is_numeric($val))
@@ -109,7 +110,8 @@ class DHTML_Calendar {
     function _make_html_attr($array) {
         $attrstr = '';
         reset($array);
-        while (list($key, $val) = each($array)) {
+        foreach($array as $key => $val) {
+        // while (list($key, $val) = each($array)) {
             $attrstr .= $key . '="' . $val . '" ';
         }
         return $attrstr;
