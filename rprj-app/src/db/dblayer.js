@@ -793,6 +793,27 @@ function JSONDBConnection(connectionString,verbose) {
 		}
 		this._sendRequest('getDBEInstance', [aclassname], my_cb.bind(self));
 	}
+	this.getNewDBEInstance = function(aclassname, father_id, a_callback) {
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.getNewDBEInstance.my_cb: start.");
+			console.log("JSONDBConnection.getNewDBEInstance.my_cb: jsonObj[1]="+JSON.stringify(jsonObj[1]));
+			var mydbe = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					console.log("JSONDBConnection.getNewDBEInstance.my_cb: myrs="+myrs.to_string());
+					mydbe = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					mydbe.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, mydbe);
+			console.log("JSONDBConnection.getNewDBEInstance.my_cb: end.");
+		}
+		this._sendRequest('getNewDBEInstance', [aclassname, father_id], my_cb.bind(self));
+	}
 
 	this.getDBEInstanceByTablename = function(aclassname, a_callback) {
 		var self = this

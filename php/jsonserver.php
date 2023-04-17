@@ -503,6 +503,24 @@ function getDBEInstance($aclassname) {
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
 }
+function getNewDBEInstance($aclassname, $father_id) {
+	global $dbmgr;
+	
+	$dbmgr->setVerbose(false);
+
+
+	$dbe = $dbmgr->getInstance($aclassname);
+	$dbe->setValue('fk_obj_id', $father_id);
+	// $mydbe->setValuesDictionary( $myform->getValues() );
+	if(is_a($dbe,'DBEObject'))
+		$dbe->setDefaultValues($dbmgr);
+	
+	if($dbe!==null) $dbe->setValue('_typename',get_class($dbe));
+	$dbmgr->setVerbose(false);
+
+	return $dbe==null ? array() : array(_dbeToJson($dbe));
+}
+
 function getDBEInstanceByTablename($aTablename) {
 	global $dbmgr;
 	

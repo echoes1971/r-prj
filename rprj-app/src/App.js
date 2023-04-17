@@ -35,7 +35,6 @@ class App extends Component {
 
       ,formname: null //'FObject'
       ,dbename: null //'DBEObject'
-      ,parent_obj: null
       ,current_obj: null
       ,children: []
     };
@@ -60,7 +59,6 @@ class App extends Component {
 
     this.dbe2form_cb = this.dbe2form_cb.bind(this);
 
-    this.parentobj_cb = this.parentobj_cb.bind(this);
     this.currentobj_cb = this.currentobj_cb.bind(this);
     this.children_cb = this.children_cb.bind(this);
 
@@ -94,18 +92,13 @@ class App extends Component {
     console.log("App.componentDidMount: args="+JSON.stringify(args))
     switch(args[0]) {
       case 'c':
-        // Fetch the current object and its children
-        this.be.fullDBEById(args[1],false,this.parentobj_cb);
-        // console.log("App.c.componentDidMount: formname="+args[3])
-        // this.setState({formname:args[3], dbename: args[2]})
-
+        const fk_obj_id = args[1]
         const mydbename = args[2]
         const myformname = args[3]
         this.setState({formname: myformname, dbename: mydbename});
         
-        this.be.getDBEInstance(mydbename,(jsonObj, mydbe) => {
+        this.be.getNewDBEInstance(mydbename, fk_obj_id,(jsonObj, mydbe) => {
           const current_obj = mydbe
-
           const dbename = current_obj.getDBEName()
           console.log("App.c.componentDidMount.cb: dbename="+dbename)
           const formname = this.be.getFormNameByDBEName(dbename);
@@ -169,22 +162,6 @@ class App extends Component {
     console.log("App.dbe2form_cb: formname="+formname)
     if(formname===null || formname===undefined) return;
     this.setState({formname: formname});
-  }
-
-  parentobj_cb(jsonObj, myobj) {
-    const parent_obj = myobj
-    if(parent_obj===null) {
-      console.log("App.parentobj_cb: current_obj not found or user has not the right to view it.");
-      return
-    }
-    // const dbename = parent_obj.getDBEName()
-    // console.log("App.parentobj_cb: dbename="+dbename)
-    // const formname = this.be.getFormNameByDBEName(dbename);
-    // console.log("App.currentobj_cb: formname="+formname)
-    this.setState({parent_obj: parent_obj});
-    console.log("App.parentobj_cb: parent_obj="+(parent_obj ? parent_obj.to_string() : '--'))
-
-    this.setState({server_response_0: jsonObj[0],server_response_1: JSON.stringify(jsonObj[1],null,2)})
   }
 
   currentobj_cb(jsonObj, myobj) {
