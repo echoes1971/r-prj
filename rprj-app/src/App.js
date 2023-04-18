@@ -293,15 +293,38 @@ class App extends Component {
     this.setState({server_response_0: jsonObj[0], server_response_1: JSON.stringify(jsonObj[1])})
   }
 
-  onSave(classname, values) {
+  onSave(values) {
     // TODO:
     // - populate a DBE
+    const dbename = this.state.current_obj.dbename
+    const tablename = this.state.current_obj.tablename
+    console.log("App.onSave: dbename="+dbename)
+    console.log("App.onSave: tablename="+tablename)
+    const mydbe = this.state.current_obj
+    console.log("App.onSave: mydbe="+mydbe.to_string())
+    mydbe.setValues(values)
+    console.log("App.onSave: mydbe="+mydbe.to_string())
+    console.log("App.onSave: mydbe.isNew()="+mydbe.isNew())
     // - send it to the backend
+    if(mydbe.isNew()) {
+      this.be.Insert(mydbe, (jsonObj, myobj) => {
+        console.log("App.onSave.Insert.cb: myobj="+myobj.to_string())
+        const link = app_cfg.root_path + "e/" + myobj.getValue('id') + "/"
+        window.location = link;
+      })
+    } else {
+      this.be.update(mydbe, (jsonObj, myobj) => {
+        console.log("App.onSave.update.cb: start.")
+        const o = myobj
+        console.log("App.onSave.update.cb: o="+JSON.stringify(o)) //.to_string())
+        this.setState({current_obj: o})
+        console.log("App.onSave.update.cb: end.")
+      })
+    }
     // - IF successful, redirect to page /o/<new_id>
     // - ELSE show error
 
-    console.log("App.onSave: classname="+classname)
-    this.setState({server_response_0: 'classname='+classname, server_response_1: JSON.stringify(values,null,2)})
+    this.setState({server_response_0: 'mydbe='+mydbe.to_string(), server_response_1: JSON.stringify(values,null,2)})
   }
 
   parsePath() {

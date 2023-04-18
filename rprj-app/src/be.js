@@ -256,6 +256,9 @@ class BackEndProxy {
         this.dbmgr.Search(dbe, uselike, caseSensitive, orderBy, a_callback);
     }
 
+    update(dbe, a_callback) {
+        this.dbmgr.Update(dbe, a_callback)
+    }
 }
 
 /**
