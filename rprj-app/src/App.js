@@ -307,10 +307,13 @@ class App extends Component {
     console.log("App.onSave: mydbe.isNew()="+mydbe.isNew())
     // - send it to the backend
     if(mydbe.isNew()) {
-      this.be.Insert(mydbe, (jsonObj, myobj) => {
-        console.log("App.onSave.Insert.cb: myobj="+myobj.to_string())
+      this.be.insert(mydbe, (jsonObj, myobj) => {
+        const o = myobj
+        console.log("App.onSave.insert.cb: myobj="+myobj.to_string())
         const link = app_cfg.root_path + "e/" + myobj.getValue('id') + "/"
-        window.location = link;
+        // window.location = link;
+        window.history.replaceState(null, myobj.getValue('name'), link)
+        this.setState({current_obj: myobj})
       })
     } else {
       this.be.update(mydbe, (jsonObj, myobj) => {

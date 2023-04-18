@@ -397,50 +397,28 @@ function JSONDBConnection(connectionString,verbose) {
 	// **************** Proxy Connections: start. *********************
 	// The proxy connections are used by DBMgr to execute the following methods
 	this.isProxy = function() { return true; }
-	this.Insert = function(dbe, on_insert_callback) {
-		var myobj = this;
-		var xmethod = 'insert';
-		var params = [ new Array( dbe.dbename,dbe.getValues() ), ];
-		var callback = function(ret) {
-			myobj.rs=myobj.obj2resultset(ret);
-			myobj.dbe = new DBEntity(dbe.dbename,dbe.tablename);
-			myobj.dbe.fromRS(myobj.rs,0);
-		};
-		var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Insert Error: '+ret); };
-		var callFinal = function() { if(on_insert_callback!=null) on_insert_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) {
-		// 		this.rs=null; this.dbe=null; alert('Insert Error: '+ret);
-		// 		return null;
-		// 	}; // FIXME farlo meglio
-		// 	this.rs=myobj.obj2resultset(ret);
-		// 	this.dbe = new DBEntity(dbe.dbename,dbe.tablename);
-		// 	this.dbe.fromRS(myobj.rs,0);
-		// 	callFinal();
-		// 	return this.dbe;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+	this.Insert = function(dbe, a_callback) {
+		console.log("JSONDBConnection.Insert: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.Insert.my_cb: start.");
+			var myobj = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.Insert.my_cb: end.");
+		}
+		this._sendRequest('insert', [new Array( dbe.dbename, dbe.getValues() )], my_cb.bind(self));
+		console.log("JSONDBConnection.Insert: end.");
 	}
 	this.Update = function(dbe, a_callback) {
-		// var myobj = this;
-		// var xmethod = 'update';
-		// var params = [ new Array( dbe.dbename,dbe.getValues() ), ];
-		// var callback = function(ret) {
-		// 	myobj.rs=myobj.obj2resultset(ret);
-		// 	myobj.dbe = new DBEntity("DBEntity","tablename");
-		// 	myobj.dbe.fromRS(myobj.rs,0);
-		// };
-		// var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Update Error: '+ret); };
-		// var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-		// 	callback(ret);
-		// 	callFinal();
-		// 	return myobj.dbe;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
 		console.log("JSONDBConnection.Update: start.");
 		var self = this
 		var my_cb = (jsonObj) => {
@@ -974,9 +952,9 @@ function DBMgr(_connection, verbose) {
 	
 	// **************** Proxy Connections: start. *********************
 	this.Insert = function(dbe, on_my_callback) {
-		this.con.Insert(dbe);
-		if(on_my_callback!=null) on_my_callback();
-		return this.con.dbe;
+		this.con.Insert(dbe, on_my_callback);
+		// if(on_my_callback!=null) on_my_callback();
+		// return this.con.dbe;
 	}
 	this.Update = function(dbe, on_my_callback) {
 		this.con.Update(dbe, on_my_callback);
