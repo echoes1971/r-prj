@@ -48,6 +48,7 @@ class FForm extends React.Component {
         this.renderActions = this.renderActions.bind(this);
 
         this.btnSave = this.btnSave.bind(this);
+        this.btnDelete = this.btnDelete.bind(this);
     }
 
     componentDidMount() {
@@ -168,6 +169,17 @@ class FForm extends React.Component {
         }
         console.log("FForm.btnSave: values="+JSON.stringify(values))
         this.props.onSave(values)
+    }
+    btnDelete() {
+        const values = {};
+        for(const k in this.state) {
+            // console.log("FForm.btnDelete: k="+k)
+            if(k.indexOf(this.field_prefix)<0) continue;
+            const k1 = k.replace(this.field_prefix,"");
+            values[k1] = this.state[k]
+        }
+        console.log("FForm.btnDelete: values="+JSON.stringify(values))
+        this.props.onDelete(values)
     }
 
 
@@ -448,7 +460,24 @@ class FForm extends React.Component {
                 }
                 { readonly ? '' :
                 <div class="btn-group btn-group-sm" role="group">
-                    <button class="btn btn-secondary btn-sm" type="button" >Delete</button>
+                    <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                    <div class="modal modal-danger fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog --bs-danger">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModalLabel">Warning</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Confirm delete?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={this.btnDelete}>OK</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                     {Object.keys(actions).map((k) => {
                         // {"label":"Reload","page":"obj_reload_do.php","icon":"icons/reload.png","desc":"Reload"}
                         return (

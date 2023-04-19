@@ -21,9 +21,10 @@ See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
 # TODO
 
 - App.js
-  - Finish the Create /c/-10/FNote
+  - Manage -> Deleted objects: show the list of deleted objects, so to inspect them or revert deletion
 
 - comp.fform.js
+  - show ONLY SAVE button while creating a new object /c/sdfs/DBENote
   - FField
   -  FFileField - Render OK-ish. TODO: the backend.
   -  FList

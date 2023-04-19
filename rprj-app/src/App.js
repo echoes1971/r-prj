@@ -64,6 +64,7 @@ class App extends Component {
 
     this.onError = this.onError.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
   componentDidMount() {
@@ -294,8 +295,6 @@ class App extends Component {
   }
 
   onSave(values) {
-    // TODO:
-    // - populate a DBE
     const dbename = this.state.current_obj.dbename
     const tablename = this.state.current_obj.tablename
     console.log("App.onSave: dbename="+dbename)
@@ -308,7 +307,6 @@ class App extends Component {
     // - send it to the backend
     if(mydbe.isNew()) {
       this.be.insert(mydbe, (jsonObj, myobj) => {
-        const o = myobj
         console.log("App.onSave.insert.cb: myobj="+myobj.to_string())
         const link = app_cfg.root_path + "e/" + myobj.getValue('id') + "/"
         // window.location = link;
@@ -328,6 +326,30 @@ class App extends Component {
     // - ELSE show error
 
     this.setState({server_response_0: 'mydbe='+mydbe.to_string(), server_response_1: JSON.stringify(values,null,2)})
+  }
+  onDelete(values) {
+    const dbename = this.state.current_obj.dbename
+    const tablename = this.state.current_obj.tablename
+    console.log("App.onDelete: dbename="+dbename)
+    console.log("App.onDelete: tablename="+tablename)
+    const mydbe = this.state.current_obj
+    console.log("App.onDelete: mydbe="+mydbe.to_string())
+    mydbe.setValues(values)
+    console.log("App.onDelete: mydbe="+mydbe.to_string())
+    console.log("App.onDelete: mydbe.isNew()="+mydbe.isNew())
+    const parent_id = mydbe.getValue('father_id')===undefined || mydbe.getValue('father_id')===null
+         || mydbe.getValue('father_id')===0 || mydbe.getValue('father_id')==='0'
+         || mydbe.getValue('father_id')===''
+         ? this.state.root_obj.getValue('id') : mydbe.getValue('father_id')
+    this.setState({server_response_0: 'father_id='+mydbe.getValue('father_id')+'<br/>\nparent_id='+parent_id, server_response_1: JSON.stringify(values,null,2)})
+    this.be.delete(mydbe, (jsonObj, myobj) => {
+      console.log("App.onDelete.delete.cb: jsonObj="+JSON.stringify(jsonObj))
+      console.log("App.onDelete.delete.cb: myobj="+JSON.stringify(myobj))
+      const link = app_cfg.root_path + "e/" + parent_id + "/"
+      window.location = link;
+      // window.history.replaceState(null, myobj.getValue('name'), link)
+      // this.setState({current_obj: myobj})
+    })
   }
 
   parsePath() {
@@ -354,7 +376,7 @@ class App extends Component {
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={[]}
             readonly={false}
-            onSave={this.onSave} onError={this.onError} />
+            onSave={this.onSave} onDelete={this.onDelete} onError={this.onError} />
           )
         break
       case 'p':
@@ -367,7 +389,7 @@ class App extends Component {
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={this.state.children}
             readonly={true}
-            onSave={this.onSave} onError={this.onError} />
+            onSave={this.onSave} onDelete={this.onDelete} onError={this.onError} />
           )
         break
       case 'e':
@@ -383,7 +405,7 @@ class App extends Component {
             formname={this.state.formname} dbename={this.state.dbename}
             obj={this.state.current_obj} children={this.state.children}
             readonly={readonly}
-            onSave={this.onSave} onError={this.onError} />
+            onSave={this.onSave} onDelete={this.onDelete} onError={this.onError} />
           )
         break
       case 'manage':

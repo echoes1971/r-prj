@@ -439,31 +439,26 @@ function JSONDBConnection(connectionString,verbose) {
 		this._sendRequest('update', [new Array( dbe.dbename, dbe.getValues() )], my_cb.bind(self));
 		console.log("JSONDBConnection.Update: end.");
 	}
-	this.Delete = function(dbe, on_finish_callback) {
-		var myobj = this;
-		myobj.rs=null;
-		myobj.dbe=null;
-		var xmethod = 'delete';
-		var params = [ new Array( dbe.dbename,dbe.getValues() ), ];
-		var callback = function(ret) {
-			myobj.rs=myobj.obj2resultset(ret);
-			if(myobj.rs==null) {
-				myobj.dbe = null;
-			} else {
-				myobj.dbe = new DBEntity("DBEntity","tablename");
-				myobj.dbe.fromRS(myobj.rs,0);
+	this.Delete = function(dbe, a_callback) {
+		console.log("JSONDBConnection.Delete: start.");
+		var self = this
+		var my_cb = (jsonObj) => {
+			console.log("JSONDBConnection.Delete.my_cb: start.");
+			var myobj = null;
+			try {
+				var myrs=self.obj2resultset(jsonObj[1]);
+				if(myrs) {
+					myobj = new DBEntity(jsonObj[1][0]._typename,jsonObj[1][0]._tablename);
+					myobj.fromRS(myrs,0);
+				}
+			} catch(e) {
+				console.log(e);
 			}
-		};
-		var callErr = function(ret) { myobj.rs=null; myobj.dbe=null; alert('Delete Error: '+ret); };
-		var callFinal = function() { if(on_finish_callback!=null) on_finish_callback(); };
-		// if(this.synchronous) {
-		// 	var ret = xmlrpcSync(this.connectionString,xmethod,params);
-		// 	if(ret==null) { callErr(ret); return null; }; // FIXME farlo meglio
-		// 	callback(ret);
-		// 	callFinal();
-		// 	return myobj.dbe;
-		// } else
-		// 	var server = xmlrpc(this.connectionString,xmethod,params,callback,callErr,callFinal);
+			a_callback(jsonObj, myobj);
+			console.log("JSONDBConnection.Delete.my_cb: end.");
+		}
+		this._sendRequest('delete', [new Array( dbe.dbename, dbe.getValues() )], my_cb.bind(self));
+		console.log("JSONDBConnection.Delete: end.");
 	}
 	this.Select = function(dbename,tablename,searchString, a_callback) {
 		var self = this
@@ -962,9 +957,9 @@ function DBMgr(_connection, verbose) {
 		// return this.con.dbe;
 	}
 	this.Delete = function(dbe, on_my_callback) {
-		this.con.Delete(dbe);
-		if(on_my_callback!=null) on_my_callback();
-		return this.con.dbe;
+		this.con.Delete(dbe, on_my_callback);
+		// if(on_my_callback!=null) on_my_callback();
+		// return this.con.dbe;
 	}
 	this.Select = function(dbename,tablename,searchString, a_callback) {
 		// var self = this

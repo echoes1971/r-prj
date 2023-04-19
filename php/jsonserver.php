@@ -443,7 +443,6 @@ function Upload($num_porzione_corrente,$num_porzioni_totali,$filename,$binario,$
 	}
 	return $ret;
 }
-
 function Download($uuid,$view_thumb) {
 	global $dbmgr;
 	global $xmlrpc_require_login;
@@ -520,7 +519,6 @@ function getNewDBEInstance($aclassname, $father_id) {
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
 }
-
 function getDBEInstanceByTablename($aTablename) {
 	global $dbmgr;
 	
@@ -531,6 +529,7 @@ function getDBEInstanceByTablename($aTablename) {
 
 	return $dbe==null ? array() : array(_dbeToJson($dbe));
 }
+
 function getDBE2FormMapping() {
 	global $formulator;
 	$ret = $formulator->getDBE2FormMapping();
@@ -642,6 +641,7 @@ function getFormInstanceByDBEName($aClassname) {
 	$ret = $formulator->getInstanceByDBEName($aClassname);
 	return _form2dictionary($ret);
 }
+
 function getRootObj() {
 	global $root_obj_id;
 	// echo "root_obj_id: $root_obj_id\n";

@@ -262,6 +262,9 @@ class BackEndProxy {
     update(dbe, a_callback) {
         this.dbmgr.Update(dbe, a_callback)
     }
+    delete(dbe, a_callback) {
+        this.dbmgr.Delete(dbe, a_callback)
+    }
 }
 
 /**
