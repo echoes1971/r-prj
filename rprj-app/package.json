@@ -18,6 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "PUBLIC_URL=/app/ react-scripts build",
+    "winbuild": "set PUBLIC_URL=/app/&&react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

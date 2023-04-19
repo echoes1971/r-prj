@@ -1,4 +1,23 @@
 
+# Deploy
+
+On windows
+```
+cd rprj-app
+del build
+npm run winbuild
+move .\build\ app
+Compress-Archive -Path .\app -DestinationPath .\app.zip
+del app
+```
+
+Copy app.zip on the server and unzip it in the root directory of your site.
+
+
+See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
+
+
+
 # TODO
 
 - App.js
