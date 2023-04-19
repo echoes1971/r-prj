@@ -34,6 +34,8 @@ See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
 # DONE
 
 - comp.fform.js
+  - Delete
+  - Save
   - FField
   -  FNumber
   -      FPercent
