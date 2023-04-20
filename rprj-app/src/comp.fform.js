@@ -4,6 +4,8 @@ import { FField, FFileField, FKField, FKObjectField, FList, HTMLEdit, FPercent, 
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree, NewChildButton } from './comp.ui.elements';
 
+import { app_cfg } from './app.cgf';
+
 class FForm extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,8 @@ class FForm extends React.Component {
             dbename: props.dbename,
             obj_id: props.obj_id,
             obj: props.obj || null,
-            children: props.children || []
+            children: props.children || [], 
+            has_changes: false
         }
 
         this.field_prefix = "field_"
@@ -169,6 +172,7 @@ class FForm extends React.Component {
         }
         console.log("FForm.btnSave: values="+JSON.stringify(values))
         this.props.onSave(values)
+        this.setState({has_changes: false})
     }
     btnDelete() {
         const values = {};
@@ -200,7 +204,7 @@ class FForm extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        this.setState({[name]: value});
+        this.setState({[name]: value, has_changes: true});
     }
 
     _getField(f) {
@@ -247,7 +251,7 @@ class FForm extends React.Component {
         const value2 = name.indexOf('pwd1_')>=0 ? this.state[fieldname2] : this.state[fieldname1];
         const value = value1===value2 ? value1 : this.state[prefix_fieldname]
 
-        this.setState({[prefix_fieldname]: value, [name]: value1});
+        this.setState({[prefix_fieldname]: value, [name]: value1, has_changes: true});
     }
     renderFPassword(field, is_readonly=false) {
         const fieldname1 = "pwd1_" + field.name
@@ -316,13 +320,13 @@ class FForm extends React.Component {
                 onChange={this.default_handleChange} />
         }
         if(["FList"].indexOf(field._classname)>=0) {
-            return <FList name={field_name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v}); }} />
+            return <FList name={field_name} field={field} is_readonly={is_readonly} onChange={(n,v) => { this.setState({[n]: v, has_changes: true}); }} />
         }
         if(field._classname==='FPassword') {
             return this.renderFPassword(field, is_readonly);
         }
         if(field._classname==='FPercent') {
-            return <FPercent name={field_name} field={field} is_readonly={is_readonly} dark_theme={this.state.dark_theme} onChange={(n,v) => { this.setState({[n]: v}); }} />
+            return <FPercent name={field_name} field={field} is_readonly={is_readonly} dark_theme={this.state.dark_theme} onChange={(n,v) => { this.setState({[n]: v, has_changes: true}); }} />
         }
         if(field._classname==='FPermissions') {
             return (
@@ -352,7 +356,7 @@ class FForm extends React.Component {
                     // console.log("FForm.renderField.onChange: "+n+"="+v)
                     var myobj = this.state.obj
                     myobj.setValue('id',v)
-                    this.setState({[n]: v, 'obj': myobj});
+                    this.setState({[n]: v, 'obj': myobj, has_changes: true});
                 }} />
         }
         if(field._classname==='FKObjectField') {
@@ -362,7 +366,7 @@ class FForm extends React.Component {
                     // console.log("FForm.renderField.onChange: "+n+"="+v)
                     var myobj = this.state.obj
                     myobj.setValue('id',v)
-                    this.setState({[n]: v, 'obj': myobj});
+                    this.setState({[n]: v, 'obj': myobj, has_changes: true});
                 }} />
         }
         if(field._classname==='FFileField') {
@@ -434,7 +438,16 @@ class FForm extends React.Component {
         //     }
         // }
     
+        const self_link = app_cfg.root_path + "o/" + obj.getValue('id') + "/"
 
+        const parent_id = obj.getValue('father_id')===undefined || obj.getValue('father_id')===null
+            || obj.getValue('father_id')===0 || obj.getValue('father_id')==='0'
+            || obj.getValue('father_id')===''
+            ? ( this.state.root_obj ? this.state.root_obj.getValue('id') : obj.getValue('id') )
+            : obj.getValue('father_id')
+        const parent_link = app_cfg.root_path + "o/" + parent_id + "/"
+        // const parent_link = app_cfg.root_path + (readonly ? "o/" : "e/") + parent_id + "/"
+    
         return (
             <div class="btn-toolbar" role="toolbar" aria-label="Actions">{
                 readonly ?
@@ -460,7 +473,10 @@ class FForm extends React.Component {
                 }
                 { readonly ? '' :
                 <div class="btn-group btn-group-sm" role="group">
+                    {obj.isNew() ? '' :
                     <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                    }
+                    {obj.isNew() ? '' :
                     <div class="modal modal-danger fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                         <div class="modal-dialog --bs-danger">
                             <div class="modal-content">
@@ -478,7 +494,8 @@ class FForm extends React.Component {
                             </div>
                         </div>
                     </div>
-                    {Object.keys(actions).map((k) => {
+                    }
+                    {!obj.isNew() && Object.keys(actions).map((k) => {
                         // {"label":"Reload","page":"obj_reload_do.php","icon":"icons/reload.png","desc":"Reload"}
                         return (
                             <button class="btn btn-secondary btn-xs" type="button" title={actions[k].desc}>{actions[k].label || actions[k][0]}</button>
@@ -491,10 +508,27 @@ class FForm extends React.Component {
                 { readonly ? '' : <span>&nbsp;</span> }
                 { readonly ? '' :
                     <div class="btn-group btn-group-sm" role="group">
-                        {/* <button class="btn btn-secondary btn-sm" type="button" >View</button> */}
-                        <DBOButton class="btn btn-secondary btn-sm"
-                            dbo={obj} name="View" edit={false}/>
-                        <button class="btn btn-secondary btn-sm" type="button" >Close</button>
+                        { obj.isNew() ? '' :
+                        // <DBOButton class="btn btn-secondary btn-sm" dbo={obj} name="View" edit={false}/>
+                        <button class="btn btn-secondary btn-sm" type="button" onClick={() => {
+                            if(this.state.has_changes) {
+                                if(window.confirm("There are unsaved changes that will be lost.\nContinue?")) {
+                                    window.location=self_link
+                                }
+                            } else {
+                                window.location=self_link
+                            }
+                            }} >View</button>
+                        }
+                        <button class="btn btn-secondary btn-sm" type="button" onClick={() => {
+                            if(this.state.has_changes) {
+                                if(window.confirm("There are unsaved changes that will be lost.\nContinue?")) {
+                                    window.location=parent_link
+                                }
+                            } else {
+                                window.location=parent_link
+                            }
+                            }} >Close</button>
                     </div>
                 }
             </div>

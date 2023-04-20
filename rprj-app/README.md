@@ -24,7 +24,7 @@ See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
   - Manage -> Deleted objects: show the list of deleted objects, so to inspect them or revert deletion
 
 - comp.fform.js
-  - show ONLY SAVE button while creating a new object /c/sdfs/DBENote
+  - Button Reload
   - FField
   -  FFileField - Render OK-ish. TODO: the backend.
   -  FList
@@ -33,7 +33,11 @@ See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
 
 # DONE
 
+- App.js
+
 - comp.fform.js
+  - Button Close: open the parent folder, if exist.
+  - show ONLY SAVE button while creating a new object /c/sdfs/DBENote
   - Delete
   - Save
   - FField
