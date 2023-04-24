@@ -57,7 +57,11 @@ $dbmgr->setVerbose(false);
 // If not exists
 $dbmgr->create_db();
 
-$my_db_version = $dbmgr->db_version();
+$my_db_version = 0;
+try {
+	$my_db_version = $dbmgr->db_version();
+} catch(Exception $e) {
+}
 $new_db_version = $my_db_version;
 
 ?><html>
@@ -95,7 +99,11 @@ foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 // 	echo "Error: ".$dbmgr->db_error()."\n";
 // 	echo "connected: ".$dbmgr->isConnected()."\n";
 	
-	$lista = $dbmgr->getColumnsForTable($tablename);
+	$lista = [];
+	try {
+		$lista = $dbmgr->getColumnsForTable($tablename);
+	} catch(Exception $e) {
+	}
 	$sql = "";
 	if(count($lista)==0) {
 		$sql .= "create table ".$dbmgr->buildTableName( $dbe )." (\n";
