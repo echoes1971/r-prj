@@ -1115,7 +1115,7 @@ class DBEFile extends DBEObject {
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
 		if($father_id>0) {
-			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id=".$this->getValue('father_id');
+			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id='".DBEntity::uuid2hex($this->getValue('father_id'))."'";
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
 			if(count($tmp)==1) {
 				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));
@@ -1173,7 +1173,7 @@ class DBEFile extends DBEObject {
 		// Eredita la 'radice' dal padre
 		$father_id = $this->getValue('father_id');
 		if($father_id>0) {
-			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id=".$this->getValue('father_id');
+			$query="select fk_obj_id from ". $dbmgr->buildTableName($this)." where id='".DBEntity::uuid2hex($this->getValue('father_id'))."'";
 			$tmp = $dbmgr->select("DBE",$this->getTableName(),$query);
 			if(count($tmp)==1) {
 				$this->setValue('fk_obj_id', $tmp[0]->getValue('fk_obj_id'));

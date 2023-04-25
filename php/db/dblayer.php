@@ -580,7 +580,14 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         return $ret;
     }
-    function db_query($_query) { return mysqli_query($this->conn, $_query); }
+    function db_query($_query) {
+	    try {
+		    return mysqli_query($this->conn, $_query);
+	    } catch(Exception $e) {
+		    echo "MYConnectionProvider.db_query: EXCEPTION $e while executing $_query";
+		    return null;
+	    }
+    }
     function db_error() { return mysqli_error($this->conn); }
     function db_fetch_array($_p) { return mysqli_fetch_array($_p); }
     
