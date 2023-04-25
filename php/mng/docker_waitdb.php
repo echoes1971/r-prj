@@ -56,6 +56,11 @@ while(!$isConnected && $retryNumber<$MAX_RETRY) {
 echo "Connected: $isConnected\n";
 
 
-$my_db_version = $dbmgr->db_version();
+$my_db_version = 0;
+try {
+	$my_db_version = $dbmgr->db_version();
+} catch(Exception $e) {
+}
+// $my_db_version = $dbmgr->db_version();
 $new_db_version = $my_db_version;
 ?>
