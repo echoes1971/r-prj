@@ -17,6 +17,7 @@ class RNav extends React.Component {
             ,user_fullname: props.user_fullname
             ,user_is_admin: props.user_is_admin
             ,user_groups: props.user_groups
+            ,site_title: props.site_title
             ,root_obj: props.root_obj
             ,top_menu: props.top_menu
         }
@@ -251,13 +252,14 @@ class RNav extends React.Component {
         const nav_class = "navbar sticky-top navbar-expand-lg navbar-"+current_theme+" bg-"+current_theme
         const dropdown_menu_class = "dropdown-menu" + (this.state.dark_theme ? ' dropdown-menu-dark' : '')
         const allowed_types = ['DBEFolder','DBELink','DBEPeople'];
+        const site_title = this.state.site_title;
         const root_obj = this.state.root_obj;
         const top_menu = this.state.top_menu;
         console.log("RNav.render: root_obj="+JSON.stringify(root_obj))
         // console.log("RNav.render: top_menu="+top_menu)
         return (
             <nav class={nav_class}>
-                <a class="navbar-brand d-none d-lg-block" href="#">R-Prj</a>
+                <a class="navbar-brand d-none d-lg-block" href="#">{site_title}</a>
 
                 <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">

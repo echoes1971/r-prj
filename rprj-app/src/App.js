@@ -29,6 +29,8 @@ class App extends Component {
       ,user_groups: []
       ,user_is_admin: false
       ,user_profile: null
+
+      ,site_title: app_cfg.site_title || 'R-Prj'
       
       ,root_obj: null
       ,top_menu: []
@@ -195,6 +197,7 @@ class App extends Component {
     this.tmp_root_obj = myobj;
     // console.log("App.rootobj_cb: myobj="+(myobj ? myobj.to_string() : '--'))
     // this.setState({root_obj: myobj})
+    if(myobj===null) return;
     this.be.getChilds(myobj,true,this.topmenu_cb);
   }
   topmenu_cb(jsonObj, dbelist) {
@@ -427,6 +430,7 @@ class App extends Component {
         <RNav dark_theme={this.state.dark_theme} endpoint={this.state.endpoint}
           user_fullname={this.state.user_fullname} user_is_admin={this.state.user_is_admin}
           user_groups={this.state.user_groups}
+          site_title={this.state.site_title}
           root_obj={this.state.root_obj} top_menu={this.state.top_menu}
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container-fluid p-3">{ this._render(mypath) }</div>

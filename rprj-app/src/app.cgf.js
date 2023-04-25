@@ -1,6 +1,7 @@
 
 const app_cfg = {
-     endpoints: [ ["http://localhost:8080/jsonserver.php","Local"],
+    site_title: process.env.SITE_TITLE > '' ? process.env.SITE_TITLE : 'R-Prj'
+     ,endpoints: [ ["http://localhost:8080/jsonserver.php","Local"],
                     ["https://rprj.roccoangeloni.ch/php/jsonserver.php","rprj"],
                     ["https://www.roccoangeloni.it/rproject/jsonserver.php","RRA"],
                     ["https://echocloud.doesntexist.com/jsonserver.php","Echo Cloud"],
