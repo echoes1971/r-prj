@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile_app
       tags:
-      - "rprj-app:0.9"
+      - "rprj-app:${RPRJ_TAG}"
     ports:
     - "8081:3000"
     depends_on:
@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile_web
       tags:
-      - "rprj-web:0.9"
+      - "rprj-web:${RPRJ_TAG}"
     environment:
       SITE_TITLE: ":: R-Project ::"
       SITE_TITLE_2: "A CMS Project"
@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile_db
       tags:
-      - "rprj-db:0.9"
+      - "rprj-db:${RPRJ_TAG}"
     environment:
       MYSQL_ROOT_PASSWORD: mysecret
       MYSQL_DATABASE: rproject
