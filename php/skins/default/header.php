@@ -20,7 +20,7 @@
 
 $messaggio = '';
 $popupMessaggio=null;
-if( array_key_exists('messaggio',$_REQUEST) ) {
+if(array_key_exists('messaggio',$_REQUEST)) {
 	$messaggio = $_REQUEST['messaggio'];
 	$popupMessaggio = new WTPopupDiv('header_message',"Message","$messaggio");
 }
@@ -39,10 +39,11 @@ if($dbmgr->getDBEUser()!==null) {
 ?><style type="text/css">
 
 </style>
+<link rel="icon" href="<?php echo getSkinFile("favicon.ico"); ?>" />
 <link href="<?php echo getSkinFile("style.css"); ?>" rel="stylesheet" type="text/css" />
 <link href="<?php echo getSkinFile("widgets.css"); ?>" rel="stylesheet" type="text/css" />
 <?php
-if(strpos($_SERVER['HTTP_USER_AGENT'], "MSIE ")>0 ) {
+if(strpos($_SERVER['HTTP_USER_AGENT'], "MSIE ")>0) {
 	echo "<link href=\"".getSkinFile("style_ie.css")."\" rel=\"stylesheet\" type=\"text/css\" />";
 }
 foreach($plugins_enabled as $plugin_name) {
@@ -68,7 +69,7 @@ function reload() {
 </head>
 <body onload="javascript:<?php echo $popupIframe->getOnload().";"; if($messaggio>'') { echo $popupMessaggio->getOnload().";header_message_mostra();"; } ?>">
 <?php
-if ( $messaggio>'' ) {
+if ( $messaggio>'') {
 	echo $popupMessaggio->render();
 }
 // popup iframe

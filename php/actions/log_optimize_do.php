@@ -58,7 +58,7 @@ $queries = array(
     "delete from $tablename where url like '%yahoo%'",
     "delete from $tablename where url like '%yandex%'",
     "delete from $tablename where url like '%BANNED%'",
-			"update $tablename set note2='' where `count`>=100",
+//			"update $tablename set note2='' where `count`>=100",
 			"optimize table $tablename",
 			);
 

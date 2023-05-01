@@ -226,7 +226,7 @@ if($search_object>'') {
 				echo $content_item->getField('html')->render_view('main.php','download.php');
 			}
 		} elseif( is_a($content_item,'FLink') ) {
-			echo $content_item->render_view();
+			echo $content_item->render_view($dbmgr);
 		} elseif( is_a($content_item,'FNote') ) {
 			$_desc='';
 		} else {

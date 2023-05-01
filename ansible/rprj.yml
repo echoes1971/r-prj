@@ -24,7 +24,7 @@
       - php
       - php-mysql
       - php-sqlite3
-      - python-selinux
+      - python3-selinux
 
   - name: Enable Apache Modules
     apache2_module:
@@ -38,7 +38,7 @@
 
   - name: GIT clone and update
     git:
-      repo: https://git.code.sf.net/p/r-prj/gitcode
+      repo: https://github.com/echoes1971/r-prj.git
       dest: "{{ git_dir }}"
       version: master
     register: git_updated

@@ -57,7 +57,11 @@ $dbmgr->setVerbose(false);
 // If not exists
 $dbmgr->create_db();
 
-$my_db_version = $dbmgr->db_version();
+$my_db_version = 0;
+try {
+	$my_db_version = $dbmgr->db_version();
+} catch(Exception $e) {
+}
 $new_db_version = $my_db_version;
 
 ?><html>
@@ -82,7 +86,6 @@ echo "\n";
 
 $update_errors=array();
 
-
 // Table definitions update
 $tables_update_errors=array();
 foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
@@ -96,7 +99,11 @@ foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 // 	echo "Error: ".$dbmgr->db_error()."\n";
 // 	echo "connected: ".$dbmgr->isConnected()."\n";
 	
-	$lista = $dbmgr->getColumnsForTable($tablename);
+	$lista = [];
+	try {
+		$lista = $dbmgr->getColumnsForTable($tablename);
+	} catch(Exception $e) {
+	}
 	$sql = "";
 	if(count($lista)==0) {
 		$sql .= "create table ".$dbmgr->buildTableName( $dbe )." (\n";
@@ -232,7 +239,7 @@ if($all_ok && $my_db_version<1) {
 	$queries = array(
 		"insert into _dbversion values ('rprj',0)",
 		//"insert into _dbversion values (0)",
-		"insert into _users values ( -1, 'adm','adm','','Administrator',-2 )",
+		"insert into _users values ( -1, 'adm','mysecretpass','','Administrator',-2 )",
 		"insert into _groups values ( -2, 'Admin','System admins' )",
 		"insert into _groups values ( -3, 'Users','System users' )",
 		"insert into _groups values ( -4, 'Guests','System guests (read only)' )",

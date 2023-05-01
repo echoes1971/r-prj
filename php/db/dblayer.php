@@ -28,7 +28,7 @@ class ForeignKey {
      * @param tabella_riferita referenced table
      * @param colonna_riferita referenced column
      */
-    function ForeignKey($colonna_fk,$tabella_riferita,$colonna_riferita) {
+    function __construct($colonna_fk,$tabella_riferita,$colonna_riferita) {
         $this->colonna_fk=$colonna_fk;
         $this->tabella_riferita=$tabella_riferita;
         $this->colonna_riferita=$colonna_riferita;
@@ -46,7 +46,7 @@ class DBEntity {
     var $_fk;
     var $_columns;
     
-    function DBEntity($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
         if($tablename!=null) { $this->_tablename = $tablename; }
         if($attrs!=null) {
             $this->_dict = $attrs;
@@ -397,8 +397,8 @@ class DBEntity {
  * La seconda FK stabilisce la tabella TO
  */
 class DBAssociation extends DBEntity {
-    function DBAssociation($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
-        $this->DBEntity($tablename, $names, $values, $attrs, $keys, $columns);
+    function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=array()) {
+        parent::__construct($tablename, $names, $values, $attrs, $keys, $columns);
     }
     
     function getFromTableName() { return $this->_fk[0]->tabella_riferita; }
@@ -412,7 +412,7 @@ class DBEFactory {
     var $verbose;
     var $classname2type;
     var $tablename2type;
-    function DBEFactory($verbose = 0) {
+    function __construct($verbose = 0) {
         $this->verbose=$verbose;
         $this->classname2type=array("default"=>"DBEntity",);
         $this->tablename2type=array("default"=>"DBEntity",);
@@ -505,13 +505,14 @@ class MYConnectionProvider extends DBConnectionProvider {
             if($this->_verbose) echo 'Could not run query: ' . mysqli_error();
             return $ret;
         }
-        if(mysqli_num_rows($result)>0) {
+        $_numrows = mysqli_num_rows($result);
+        if($_numrows>0) {
             $colonna=1;
             while ($row = mysqli_fetch_assoc($result)) {
                 $ret[$row["Field"]]=$row;
             }
         }
-        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$ret."<br/>\n";
+        if($this->_verbose) echo "MYConnectionProvider.getColumnsForTable: mysqli_num_rows(result)=".$_numrows."<br/>\n";
         return $ret;
     }
     function getColumnName($tablename, $num_column) {
@@ -523,7 +524,7 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         if(mysqli_num_rows($result) > 0) {
             $colonna=1;
-            while ($row = mysqli_fetch_assoc($result)) {
+            while($row = mysqli_fetch_assoc($result)) {
                 if($colonna==$num_column) {
                     $ret=$row["Field"];
                     break;
@@ -579,7 +580,14 @@ class MYConnectionProvider extends DBConnectionProvider {
         }
         return $ret;
     }
-    function db_query($_query) { return mysqli_query($this->conn, $_query); }
+    function db_query($_query) {
+	    try {
+		    return mysqli_query($this->conn, $_query);
+	    } catch(Exception $e) {
+		    echo "MYConnectionProvider.db_query: EXCEPTION $e while executing $_query";
+		    return null;
+	    }
+    }
     function db_error() { return mysqli_error($this->conn); }
     function db_fetch_array($_p) { return mysqli_fetch_array($_p); }
     
@@ -610,9 +618,14 @@ class MYConnectionProvider extends DBConnectionProvider {
     }
     
     function connect() {
-        if($this->isConnected()) return;
+        // if($this->isConnected()) return;
         ob_start();
-        $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd, $this->_dbname);
+        try {
+            $this->conn = mysqli_connect($this->_server, $this->_user, $this->_pwd, $this->_dbname);
+        } catch(Exception $e) {
+            echo "DBMgr.connect: ".$e->getMessage()."<br />\n";
+            if($this->_verbose) { echo "DBMgr.connect: ".$e->getMessage()."<br />\n"; }
+        }
         $messaggi = ob_get_contents();
         ob_end_clean();
         if($this->_verbose) {
@@ -631,8 +644,15 @@ class MYConnectionProvider extends DBConnectionProvider {
                 && $this->conn!==false
                 && !is_int($this->conn)
                 && $this->conn->connect_errno===0
-                && mysqli_ping($this->conn)
+                // && mysqli_ping($this->conn)
                 ;
+        // if($ret) {
+        //     try{
+        //         $ret = $ret && mysqli_ping($this->conn);
+        //     } catch(Exception $e) {
+        //         $ret = false;
+        //     }
+        // }
         //echo "isConnected:$ret<br/>";
         return $ret;
     }
@@ -723,7 +743,7 @@ class DBMgr {
      * @param dbeuser utente loggato
      * @param user_groups_list
      */
-    function DBMgr($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
+    function __construct($server, $user, $pwd, $dbname, $schema, $aDBEFactory=null,$dbeuser=null, $user_groups_list=array()) {
         $this->_server = $server; $this->_user = $user;
         $this->_pwd = $pwd; $this->_dbname = $dbname;
         $this->_schema = $schema;
@@ -736,7 +756,6 @@ class DBMgr {
         $this->dbeuser = $dbeuser;
         $this->user_groups_list = $user_groups_list;
     }
-
     
     function setConnection($_conn) { $this->conn = $_conn; }
     function getConnection() { return $this->conn; }
@@ -786,6 +805,7 @@ class DBMgr {
     function db_version() {
         ob_start();
         $cerca = new DBEDBVersion();
+        $cerca->setValue("model_name",$this->_schema);
         $ris = $this->search($cerca,1);
         $messaggi = ob_get_contents();
         ob_end_clean();
@@ -940,7 +960,11 @@ class DBMgr {
                     } else if($is_to) {
                         $clausole[$len_clausole++] =  substr($n,3)."<='".$this->db_escape_string($v)."'" ;
                     } else if(!$dbe->isFK($n) && $uselike==1) {
-                        $clausole[$len_clausole++] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
+                        if(strpos($v,"%%")>=0) {
+                            $clausole[$len_clausole++] = "$n like '".$this->db_escape_string($v)."'" ;
+                        } else {
+                            $clausole[$len_clausole++] = "$n like '%%".$this->db_escape_string($v)."%%'" ;
+                        }
                     } else {
                         $clausole[$len_clausole++] =  "$n='".$this->db_escape_string($v)."'" ;
                     }
@@ -1112,6 +1136,45 @@ class DBMgr {
         $tmp=$this->select($classname, $mytablename, $query);
         $ret = $tmp[0]->getValue('numero')>0;
         return $ret;
+    }
+
+    /**
+     * Given an ID, it searches on all the tables with column ID as primary key
+     * @param ID
+     * @return a DBE with the attribute 'classname', corresponding to the DBE class to use for a full search
+     */
+    function searchDBEById($id,$ignore_deleted=true) {
+		$tipi = $this->getFactory()->getRegisteredTypes();
+		$q = array();
+		foreach($tipi as $tablename=>$classname) {
+			$mydbe = $this->getInstance($classname);
+			if($classname=='DBEObject' || $classname=='DBECountry' || is_a($mydbe,"DBAssociation")) continue;
+            $tmpchiavi = $mydbe->getKeys();
+            $chiavi = $tmpchiavi!=null ? array_keys($tmpchiavi) : null;
+            // print "DBMgr.searchDBEById: chiavi=[".implode(",",$chiavi)."] ".count($chiavi)." ".$chiavi[0]." <br/>\n";
+            if($chiavi==null || count($chiavi)!=1 || $chiavi[0]!="id") continue;
+			$q[]="select '$classname' as classname,id"
+					." from ".$this->buildTableName($mydbe)
+					." where id='".DBEntity::hex2uuid($id)."'"
+					.($ignore_deleted && is_a($mydbe,'DBEObject') ? " and deleted_date='0000-00-00 00:00:00'" : '');
+		}
+		$searchString = implode(" union ", $q);
+		// printf("query: $searchString<br/>\n");
+		if($this->_verbose) { printf("query: $searchString<br/>\n"); }
+		$lista = $this->select('DBEntity', "dbe", $searchString);
+		return count($lista)==1 ? $lista[0] : null;
+	}
+    /**
+     * Performs the search by ID and, if found, it returns the full DBE
+     */
+    function fullDBEById($id,$ignore_deleted=true) {
+        $searchInfo = $this->searchDBEById($id,$ignore_deleted);
+        if($searchInfo==null) return null;
+
+        $search = $this->getInstance($searchInfo->getValue('classname'));
+        $search->setValue('id',$id);
+        $res = $this->search($search,false);
+		return count($res)==1 ? $res[0] : null;
     }
 }
 

@@ -1,24 +1,41 @@
 version: '3'
 services:
-  rprj-web:
-    build: .
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile_app
+      tags:
+      - "rprj-app:0.9"
+    ports:
+    - "8081:3000"
+    depends_on:
+    - web
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile_web
+      tags:
+      - "rprj-web:0.9"
     environment:
       SITE_TITLE: ":: R-Project ::"
       SITE_TITLE_2: "A CMS Project"
       RPRJ_ADMIN_PASS: mysecretpass
       RPRJ_ROOT_OBJ: -10
-      MYSQL_APP: rprj-db
+      RPRJ_DB_SCHEMA: rprj
+      MYSQL_APP: db
     ports:
     - "8080:80"
     volumes:
     - ./files:/var/www/html/files
     - ./files:/var/www/html/mng/files
     depends_on:
-      - rprj-db
-  rprj-db:
+      - db
+  db:
     build:
       context: .
       dockerfile: Dockerfile_db
+      tags:
+      - "rprj-db:0.9"
     environment:
       MYSQL_ROOT_PASSWORD: mysecret
       MYSQL_DATABASE: rproject

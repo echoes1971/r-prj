@@ -61,7 +61,7 @@ class FField {
 	 * @param myform riferimento all'istanza di form a cui appartiene
 	 * @param mytipo s=stringa, n=numero, d=data
 	 */
-	function FField($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $myform=null, $mytipo='s') {
+	function __construct($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $myform=null, $mytipo='s') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -131,7 +131,7 @@ class FForm {
 	var $fields;
 	var $groups;
 	
-	function FForm($nome='', $azione='', $metodo="POST", $enctype='') {
+	function __construct($nome='', $azione='', $metodo="POST", $enctype='') {
 		$this->fields = array(); $this->groups = array();
 		$this->nome = $nome; $this->azione = $azione; $this->metodo = $metodo; $this->enctype=$enctype;
 	}
@@ -366,8 +366,8 @@ class FForm {
 class FMasterDetail extends FForm {
 	var $detailForms;
 	var $masterForms; // 2011.09.07: masters to attach to
-	function FMasterDetail($nome='', $azione='', $metodo="POST") {
-		$this->FForm($nome, $azione, $metodo);
+	function __construct($nome='', $azione='', $metodo="POST") {
+		parent::__construct($nome, $azione, $metodo);
 		$this->detailForms=array();
 	}
 	
@@ -443,8 +443,8 @@ class FAssociation extends FForm {
 	var $dbeassociation;
 	var $from_form;
 	var $to_form;
-	function FAssociation($dbeassociation, $from_form, $to_form, $nome='', $azione='', $metodo="POST") {
-		parent::FForm($nome, $azione, $metodo);
+	function __construct($dbeassociation, $from_form, $to_form, $nome='', $azione='', $metodo="POST") {
+		parent::__construct($nome, $azione, $metodo);
 		
 		$this->dbeassociation = $dbeassociation;
 		$this->from_form=$from_form;
@@ -467,7 +467,7 @@ class FormFactory {
 	var $dbename2type;
 	var $fieldslist; // 2011.05.16
 	var $master_details;
-	function FormFactory($verbose = 0) {
+	function __construct($verbose = 0) {
 		$this->verbose=$verbose;
 		$this->classname2type=array("default"=>"FForm",);
 		$this->dbename2type=array("default"=>"FForm",);
@@ -554,6 +554,9 @@ class FormFactory {
 		return $ret;
 	}
 	
+	function getDBE2FormMapping() {
+		return $this->dbename2type;
+	}
 	function getFormNameByDBEName($aDBEName) {
 		$ret = null;
 		if(array_key_exists($aDBEName,$this->dbename2type)) {
@@ -568,8 +571,8 @@ class FormFactory {
 //***************************** Standard Fields
 
 class FNumber extends FField {
-	function FNumber($aNomeCampo, $aTitle, $aDescription, $aValore='', $aClasseCss=null, $myform=null) {
-		$this->FField($aNomeCampo, $aTitle, $aDescription, 0, 0, $aValore, $aClasseCss, $myform, 'n');
+	function __construct($aNomeCampo, $aTitle, $aDescription, $aValore='', $aClasseCss=null, $myform=null) {
+		parent::__construct($aNomeCampo, $aTitle, $aDescription, 0, 0, $aValore, $aClasseCss, $myform, 'n');
 	}
 }
 class FPercent extends FNumber {
@@ -601,7 +604,6 @@ class FUuid extends FString {
 }
 class FPassword extends FString {
 	var $old_pwd;
-
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		if(array_key_exists($prefix.'new_'.$this->aNomeCampo,$aArray)
 			&& array_key_exists($prefix.'new2_'.$this->aNomeCampo,$aArray)
@@ -656,8 +658,8 @@ class FFileField extends FField {
 	 * @param aValore field value
 	 * @param aClasseCss css class
 	 */
-	function FFileField($aNomeCampo, $aTitle, $aDescription, $dest_directory='', $aSize=1, $aLength=20, $aValore='', $aClasseCss=null) {
-		$this->FField($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength, $aValore, $aClasseCss);
+	function __construct($aNomeCampo, $aTitle, $aDescription, $dest_directory='', $aSize=1, $aLength=20, $aValore='', $aClasseCss=null) {
+		parent::__construct($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength, $aValore, $aClasseCss);
 		
 		$this->dest_directory=$dest_directory;
 	}
@@ -702,7 +704,6 @@ class FFileField extends FField {
 	function render(&$dbmgr=null) {
 		return $this->render_view(). '&nbsp;' . campoGenerico($tipoCampo='file', $this->aNomeCampo.$this->isArray, $this->aValore, $this->aClasseCss, $this->_size, $this->_length);
 	}
-
 	function readValueFromArray(&$aArray,$prefix="field_", $only_not_empty=false, $at_index=-1) {
 		parent::readValueFromArray($aArray,$prefix);
 // 		echo "root_directory: " . $GLOBALS['root_directory'] . "<br>\n";
@@ -739,7 +740,7 @@ class FList extends FField {
 	 * altezza = numero di elementi visualizzati della select
 	 * multiselezione
 	*/
-	function FList($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $altezza, $multiselezione) {
+	function __construct($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $altezza, $multiselezione) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -771,7 +772,7 @@ class FCheckBox extends FField {
 	 * multiselezione
 	 * stringa_separatrice: nel caso della multiselezione, viene effettuata una implosione dell'array di stringhe con qyesta stringa come separatore
 	*/
-	function FCheckBox($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $multiselezione=false, $stringa_separatrice="||", $tipo_campo='s') {
+	function __construct($aNomeCampo, $aTitle, $aDescription, $aSize, $aLength=20, $aValore='', $aClasseCss=null, $listaValori, $multiselezione=false, $stringa_separatrice="||", $tipo_campo='s') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -818,7 +819,7 @@ class FTextArea extends FField {
 	Parameters:
 	- $basic_formatting:	supporto per una formattazione di base, al momento solo gli 'a capo'
 	*/
-	function FTextArea($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
+	function __construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -840,8 +841,8 @@ class FTextArea extends FField {
 	}
 }
 class FHtml extends FTextArea {
-	function FHtml($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
-		$this->FTextArea($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss, $width===null ? 50 : $width, $height===null ? 100 : $height, $basicFormatting);
+	function __construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore='YYYY-MM-DD HH:mm', $aClasseCss=null, $width=null, $height=null, $basicFormatting=true) {
+		parent::__construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss, $width===null ? 50 : $width, $height===null ? 100 : $height, $basicFormatting);
 	}
 	function render() {
 		return parent::render()
@@ -864,7 +865,7 @@ class FDateTime extends FField {
 	var $aVisualizzaData=TRUE;
 	var $aVisualizzaOra=TRUE;
 	
-	function FDateTime($aNomeCampo, $aTitle, $aDescription, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
+	function __construct($aNomeCampo, $aTitle, $aDescription, $aValore, $aClasseCss=null, $aVisualizzaData=TRUE, $aVisualizzaOra=TRUE) {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
 		$this->_description = $aDescription;
@@ -970,7 +971,7 @@ class FKField extends FField {
 	 * @param destform class name of the destination form
 	 * @param viewmode { 'select','readonly' }
 	 */
-	function FKField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
+	function __construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
 									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select') {
 		$this->aNomeCampo = $aNomeCampo;
 		$this->_title = $aTitle;
@@ -1114,9 +1115,9 @@ class FKField extends FField {
  * @param destform se null ==> cerca tra tutte le FObject, nella form specificata altrimenti
  */
 class FKObjectField extends FKField {
-	function FKObjectField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
+	function __construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore=null, $aClasseCss=null,
 									$mydbe=null, $myFK=null, $description_columns=array(), $destform=null, $viewmode='select') {
-		$this->FKField($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss,
+		parent::__construct($aNomeCampo, $aTitle, $aDescription,$aSize, $aValore, $aClasseCss,
 									$mydbe, $myFK, $description_columns, $destform, $viewmode);
 	}
 	
@@ -1196,6 +1197,7 @@ class FKObjectField extends FKField {
 	}
 	
 	function render_view(&$dbmgr=null, $showlink=false) {
+		if($dbmgr==null) return ''; // 20220327
 		$tmp=$this->_searchObject($dbmgr);
 		$mydbe=$tmp[0]; $mydestform=$tmp[1]; $nomeclasse=$tmp[2];
 		if($mydbe==null) return '';
