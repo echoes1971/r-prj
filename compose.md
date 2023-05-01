@@ -23,6 +23,11 @@ docker-compose stop rprj-db
 docker-compose rm -f rprj-db
 docker-compose -p rprj up rprj-db
 
+# Just BUILD the images
+
+docker compose -p rprj build
+
+
 # Debugging
 
 docker exec -it r-prj_rprj-app_1 sh
