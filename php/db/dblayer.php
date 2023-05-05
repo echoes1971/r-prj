@@ -505,7 +505,7 @@ class MYConnectionProvider extends DBConnectionProvider {
             if($this->_verbose) echo 'Could not run query: ' . mysqli_error();
             return $ret;
         }
-        $_numrows = mysqli_num_rows($result);
+        $_numrows = $result===null ? 0 : mysqli_num_rows($result);
         if($_numrows>0) {
             $colonna=1;
             while ($row = mysqli_fetch_assoc($result)) {
@@ -596,11 +596,11 @@ class MYConnectionProvider extends DBConnectionProvider {
     function db_escape_string($_p) {
         return str_replace("\\\\\\\"","\"", str_replace("\\\\\\'","''",$_p));
     }
-    function db_free_result(&$r) { return mysqli_free_result($r); }
+    function db_free_result(&$r) { if($r!==null) return mysqli_free_result($r); }
     function db_num_rows($r) { return mysqli_num_rows($r); }
     function _description2names($_desc) {
         $ret = array();
-        $num_fields = $_desc===false ? 0 : mysqli_num_fields($_desc);
+        $num_fields = $_desc===false || $_desc===null ? 0 : mysqli_num_fields($_desc);
         for($i=0; $i<$num_fields; $i++) {
             $properties = mysqli_fetch_field_direct($_desc, $i);
             $_tmp = is_object($properties) ? $properties->name : null;
@@ -1019,7 +1019,7 @@ class DBMgr {
         if($this->_verbose) { print "DBMgr._select: classname=$classname<br />\n"; }
         $this->connect();
         $result = $this->db_query($searchString);
-        $numres = $result===false ? 0 : $this->connProvider->db_num_rows($result);
+        $numres = $result===false || $result===null ? 0 : $this->connProvider->db_num_rows($result);
          $names = $this->_description2names($result);
         if($this->_verbose) { print "DBMgr._select: found $numres rows.<br />\n"; }
         $ret = array();
