@@ -426,6 +426,9 @@ class App extends Component {
     // console.log("App.render: dark_theme="+dark_theme);
     const mypath = this.parsePath()
     console.log("App.render: mypath="+JSON.stringify(mypath));
+
+    const display_debug = false;
+
     return (
       <div className={"App" + (this.state.dark_theme ? " App-dark":'')}>
         <RNav dark_theme={this.state.dark_theme} endpoint={this.state.endpoint}
@@ -436,17 +439,19 @@ class App extends Component {
           onLogin={this.onLogin} onLogout={this.onLogout} onTheme={this.onTheme} />
         <div class="container-fluid p-3">{ this._render(mypath) }</div>
 
-        <div class="container">
+        {!display_debug ? '' :
+          <div class="container">
 
-          <div class="row border rounded">
-            <div class="col">
-              <ServerResponse class=""
-                server_response_0={this.state.server_response_0}
-                server_response_1={this.state.server_response_1} />
+            <div class="row border rounded">
+              <div class="col">
+                <ServerResponse class=""
+                  server_response_0={this.state.server_response_0}
+                  server_response_1={this.state.server_response_1} />
+              </div>
             </div>
-          </div>
 
-        </div>
+          </div>
+        }
 
       </div>
     );
