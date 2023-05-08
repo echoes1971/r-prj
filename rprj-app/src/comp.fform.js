@@ -4,7 +4,7 @@ import { FField, FFileField, FKField, FKObjectField, FList, HTMLEdit, FPercent, 
 import { BackEndProxy } from './be';
 import { DBOButton, DBOLink, icon2emoji, IFRTree, NewChildButton } from './comp.ui.elements';
 
-import { app_cfg } from './app.cgf';
+import { app_cfg } from './app.cfg';
 
 class FForm extends React.Component {
     constructor(props) {

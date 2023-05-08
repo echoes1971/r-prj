@@ -4,7 +4,6 @@ const app_cfg = {
      ,endpoints: [ ["http://localhost:8080/jsonserver.php","Local"],
                     ["https://rprj.roccoangeloni.ch/php/jsonserver.php","rprj"],
                     ["https://www.roccoangeloni.it/rproject/jsonserver.php","RRA"],
-                    ["https://echocloud.doesntexist.com/jsonserver.php","Echo Cloud"],
                     ["https://www.africa-film.com/jsonserver.php","Africa Film"]
                 ]
     ,endpoint: process.env.NODE_ENV !== 'production' ? "http://localhost:8080/jsonserver.php" : "https://rprj.roccoangeloni.ch/jsonserver.php"

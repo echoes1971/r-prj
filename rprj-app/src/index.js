@@ -12,7 +12,7 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { app_cfg } from './app.cgf';
+import { app_cfg } from './app.cfg';
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,7 +1,7 @@
 // Client
 import { DBEntity, DBMgr, JSONDBConnection } from './db/dblayer'
 
-import { app_cfg } from './app.cgf';
+import { app_cfg } from './app.cfg';
 // import { RLocalStorage } from './comp.ls';
 
 /**

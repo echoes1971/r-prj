@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import './App.scss';
 
-import { app_cfg } from './app.cgf';
+import { app_cfg } from './app.cfg';
 import { FForm } from './comp.fform';
 import { RLocalStorage } from './comp.ls';
 import { BackEndProxy } from './be';

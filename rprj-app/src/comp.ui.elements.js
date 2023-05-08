@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-import { app_cfg } from './app.cgf';
+import { app_cfg } from './app.cfg';
 import { getFlagEmojiByID } from './countries'
 
 const icon2emoji = (detail_icon, detail_title=null) => {
