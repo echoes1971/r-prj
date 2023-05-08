@@ -5,7 +5,11 @@ On windows
 ```
 cd rprj-app
 del build
+
 npm run winbuild
+# IF you want to set a title
+($env:REACT_APP_SITE_TITLE='MyPrj') -and (npm run winbuild)
+
 move .\build\ app
 Compress-Archive -Path .\app -DestinationPath .\app.zip
 del app

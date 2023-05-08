@@ -356,8 +356,9 @@ class App extends Component {
   }
 
   parsePath() {
-    // console.log("App.parsePath: root_path="+app_cfg.root_path);
-    // console.log("App.parsePath: window.location.pathname="+window.location.pathname);
+    console.log("App.parsePath: root_path="+app_cfg.root_path);
+    console.log("App.parsePath: window.location="+window.location);
+    console.log("App.parsePath: window.location.pathname="+window.location.pathname);
     const mypath = window.location.pathname.substring(app_cfg.root_path.length)
     // console.log("App.parsePath: mypath="+mypath);
     return mypath.split("/");
