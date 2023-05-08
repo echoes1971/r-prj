@@ -9,24 +9,27 @@ ENV RPRJ_ADMIN_PASS myrprjsecret
 ENV RPRJ_SKIN default
 ENV RPRJ_ROOT_OBJ -10
 
-# Install mysqli
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-
 # See: https://stackoverflow.com/questions/39657058/installing-gd-in-docker
-RUN apt-get update -y && apt-get install -y apt-utils \
+RUN apt-get update -y && apt-get install -y \
     libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
-    libfreetype6-dev libzip-dev
-RUN apt-get update && \
-    apt-get install -y \
-        zlib1g-dev
+    libfreetype6-dev libzip-dev zlib1g-dev
+# apt-utils
 
 # Already loaded?
 # RUN docker-php-ext-install mbstring
+
+# Install mysqli
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
 RUN docker-php-ext-install zip
 
 RUN docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype
 RUN docker-php-ext-install gd
+
+RUN apt-get purge -y \
+    libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
+    libfreetype6-dev libzip-dev zlib1g-dev
+RUN apt-get clean
 
 # Copy the source
 COPY php/ /var/www/html/
@@ -34,12 +37,7 @@ COPY php/ /var/www/html/
 # COPY ./docker/webentrypoint.sh /usr/local/bin/
 COPY ./docker/webentrypoint.sh /usr/local/bin/docker-php-entrypoint
 # ENTRYPOINT /usr/local/bin/webentrypoint.sh
-
 # RUN chmod 777 /usr/bin/webentrypoint.sh
 
 # ENTRYPOINT ["/usr/bin/webentrypoint.sh"]
 # ENTRYPOINT ["/usr/local/bin/webentrypoint.sh"]
-
-# CMD ["pwd"]
-# CMD ["ls","/usr/local/bin/"]
-
