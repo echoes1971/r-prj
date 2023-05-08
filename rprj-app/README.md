@@ -9,6 +9,7 @@ del build
 npm run winbuild
 # IF you want to set a title
 ($env:REACT_APP_SITE_TITLE='MyPrj') -and (npm run winbuild)
+Remove-Item -Path Env:\REACT_APP_SITE_TITLE
 
 move .\build\ app
 Compress-Archive -Path .\app -DestinationPath .\app.zip
@@ -20,6 +21,9 @@ Copy app.zip on the server and unzip it in the root directory of your site.
 
 See: https://wordpress.org/support/topic/yarn-build-not-recognizing-public_url/
 
+## Environment variables
+
+See https://create-react-app.dev/docs/adding-custom-environment-variables/
 
 
 # TODO
