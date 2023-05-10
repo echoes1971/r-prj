@@ -196,7 +196,7 @@ class App extends Component {
   rootobj_cb(jsonObj, myobj) {
     this.tmp_root_obj = myobj;
     // console.log("App.rootobj_cb: myobj="+(myobj ? myobj.to_string() : '--'))
-    // this.setState({root_obj: myobj})
+    this.setState({root_obj: myobj})
     if(myobj===null) return;
     this.be.getChilds(myobj,true,this.topmenu_cb);
   }
@@ -361,7 +361,16 @@ class App extends Component {
     console.log("App.parsePath: window.location.pathname="+window.location.pathname);
     const mypath = window.location.pathname.substring(app_cfg.root_path.length)
     // console.log("App.parsePath: mypath="+mypath);
-    return mypath.split("/");
+    var ret = mypath.split("/");
+    console.log("App.parsePath: ret="+JSON.stringify(ret));
+    if(ret.length===1 && ret[0]==='') {
+      ret[0] = "o"
+      if(this.state.root_obj!==null) {
+        ret.push(this.state.root_obj.getValue("id"))
+      }
+      console.log("App.parsePath: => ret="+JSON.stringify(ret));
+    }
+    return ret
   }
   _render(args) {
     var ret = ''
