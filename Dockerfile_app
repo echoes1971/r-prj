@@ -20,7 +20,8 @@ COPY rprj-app/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN rm package-lock.json
 RUN rm -rf node_modules
 
-RUN npm install -g npm@9.6.6
+#RUN npm install -g npm@9.6.6
+RUN npm install -g npm@10.2.0
 #RUN npm --version
 
 # See: https://mherman.org/blog/dockerizing-a-react-app/
