@@ -1,4 +1,6 @@
-FROM node:18-alpine
+FROM node:20-alpine
+
+#°FROM node:18-alpine
 
 # Apparently a package needs a recent python
 
