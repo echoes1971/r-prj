@@ -23,6 +23,7 @@ services:
       RPRJ_ROOT_OBJ: -10
       RPRJ_DB_SCHEMA: rprj
       MYSQL_APP: db
+      MYSQL_USER: root
     ports:
     - "8080:80"
     volumes:

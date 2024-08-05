@@ -24,6 +24,7 @@ echo "$SERVER_NAME"
 echo "$SITE_TITLE"
 echo "$SITE_TITLE_2"
 echo "$MYSQL_APP"
+echo "$MYSQL_USER"
 echo "$MYSQL_DB"
 echo "$MYSQL_PASSWORD"
 echo "$RPRJ_SKIN"
@@ -38,6 +39,7 @@ sed -i "s/__site_title__/$SITE_TITLE/g" /var/www/html/config_local.php
 sed -i "s/__site_title_2__/$SITE_TITLE_2/g" /var/www/html/config_local.php
 sed -i s/rprj-db-server/$MYSQL_APP/g /var/www/html/config_local.php
 sed -i s/rprj-db-db/$MYSQL_DB/g /var/www/html/config_local.php
+sed -i s/rprj-db-user/$MYSQL_USER/g /var/www/html/config_local.php
 sed -i s/rprj-db-pwd/$MYSQL_PASSWORD/g /var/www/html/config_local.php
 sed -i s/rprj-db-schema/$RPRJ_DB_SCHEMA/g /var/www/html/config_local.php
 sed -i "s/skin = 'default'/skin = '$RPRJ_SKIN'/g" /var/www/html/config_local.php
