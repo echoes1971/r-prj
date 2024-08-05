@@ -4,6 +4,7 @@ ENV SITE_TITLE My Site
 ENV SITE_TITLE_2 My cool subtitle
 ENV MYSQL_APP rprj-db
 ENV MYSQL_DB rproject
+ENV MYSQL_USER root
 ENV MYSQL_PASSWORD mysecret
 ENV RPRJ_ADMIN_PASS myrprjsecret
 ENV RPRJ_SKIN default
