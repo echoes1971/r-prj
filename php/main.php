@@ -111,7 +111,7 @@ $searchresult_items = array();
 if($search_object>'') {
 	$searchresult_ids = array();
 	$search = new DBEObject();
-	$search->setValue('name',$search_object);
+	$search->setValue('name', strpos($search_object,'%')===false ? '%'.$search_object.'%' : $search_object );
 	$_searchresults_tmp = $dbmgr->search($search);
 	foreach($_searchresults_tmp as $_searchresult_tmp) {
 		$dbetype = $_searchresult_tmp->getValue('classname')>'' ? $_searchresult_tmp->getValue('classname') : $_searchresult_tmp->getTypeName();
