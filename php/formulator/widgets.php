@@ -564,6 +564,8 @@ class WTPopupDiv extends WTObject {
 try {
 	d.outerHeight=window.outerHeight;
 	d.outerWidth=window.outerWidth;
+	d.innerHeight=window.innerHeight;
+	d.innerWidth=window.innerWidth;
 }catch(e) {}
 	return d;
 }
@@ -587,8 +589,11 @@ function <?php echo $this->id; ?>_mostra() {
 	myDivSfondo = document.getElementById('<?php echo $this->id; ?>Sfondo');
 	myDivRiquadro = document.getElementById('<?php echo $this->id; ?>Riquadro');
 	myDivContenuto = document.getElementById('<?php echo $this->id; ?>Contenuto');
-myDivIFrame = document.getElementById('<?php echo $this->id; ?>_iframe');
+	myDivIFrame = document.getElementById('<?php echo $this->id; ?>_iframe');
 	d = <?php echo $this->id; ?>_pageDimensions(document);
+//	console.log("d.outerWidth="+d.outerWidth+"; d.outerHeight="+d.outerHeight);
+//	console.log("; d.innerWidth="+d.innerWidth+"d.innerHeight="+d.innerHeight);
+//	console.log("d.x="+d.x+"; d.y="+d.y+"; d.top="+d.top+"; d.left="+d.left);
 //	alert('x='+d.x+'; y='+d.y+'; top='+d.top+'; left='+d.left );
 //	alert('outerWidth='+d.outerWidth+'; outerHeight='+d.outerHeight);
 	if(mydiv.style.visibility == "visible") {
@@ -596,20 +601,44 @@ myDivIFrame = document.getElementById('<?php echo $this->id; ?>_iframe');
 	} else {
 var mywidth = <?php echo str_replace('px','',$this->width); ?>;
 var myheight = <?php echo str_replace('px','',$this->height); ?>;
-if(mywidth>d.outerWidth) mywidth=d.outerWidth-50;
+
+//console.log("mywidth="+mywidth+"; myheight="+myheight+"; d.outerWidth="+d.outerWidth+"; d.outerHeight="+d.outerHeight);
+
+if(mywidth>d.outerWidth) mywidth=d.outerWidth; //-50;
 if(myheight>d.outerHeight) myheight=d.outerHeight-100;
+
+//console.log("==> mywidth="+mywidth+"; myheight="+myheight+"; d.outerWidth="+d.outerWidth+"; d.outerHeight="+d.outerHeight);
+
+
 try {
 	myDivIFrame.style.width=mywidth-8;
 	myDivIFrame.style.height=myheight-8-50;
-} catch(e) {}
+} catch(e) { alert(e); }
 		try { myDivSfondo.style.height=d.y;/*'100%';*/ } catch(e) { alert(e); }
 		try { myDivSfondo.style.width=d.x;/*'100%';*/ } catch(e) { alert(e); }
 
 		try { myDivRiquadro.style.left = ( (d.x-mywidth)/2 ) + 'px'; } catch(e) { alert(e); }
 		try { myDivRiquadro.style.top = ( (d.outerHeight - myheight)/2 ) + 'px'; } catch(e) { alert(e); }
 //                try { myDivRiquadro.style.top = ( (d.top + d.y - myheight)/2 ) + 'px'; } catch(e) { alert(e); }
+
 		try { myDivContenuto.style.left = ( (d.x-mywidth)/2 ) + 'px'; } catch(e) { alert(e); }
-		try { myDivContenuto.style.top = ( (d.outerHeight - myheight)/2 ) + 'px'; } catch(e) { alert(e); }
+		try {
+			myDivContenuto.style.top = ( (d.innerHeight - myheight)/2 ) + 'px';
+//			myDivContenuto.style.top = ( (d.outerHeight - myheight)/2 ) + 'px';
+			
+		} catch(e) { alert(e); }
+		console.log("myDivContenuto.style.left="+myDivContenuto.style.left);
+		console.log("myDivContenuto.style.top="+myDivContenuto.style.top);
+
+		if(mywidth==d.outerWidth) {
+			try {
+				myDivContenuto.style.width = d.x+'px';
+				myDivIFrame.style.width=(d.x-16)+'px';
+			} catch(e) { alert(e); }
+			console.log("myDivContenuto.style.width="+myDivContenuto.style.width);
+			console.log("myDivIFrame.style.width="+myDivIFrame.style.width);
+		}
+
 //                try { myDivContenuto.style.top = ( (d.top + d.y - myheight)/2 ) + 'px'; } catch(e) { alert(e); }
 
 		myDivContenuto.style.width=mywidth;
