@@ -237,7 +237,7 @@ composer require firebase/php-jwt --no-interaction --no-plugins --no-scripts --p
 class DBEAuthToken extends DBEntity {
 	var $_typeName="DBEAuthToken";
 	public static $_mycolumns = array(
-				'token_id'=>array('varchar(64)','not null'),
+				'token_id'=>array('varchar(512)','not null'),
 				'user_id'=>array('uuid','not null'),
 				'access_token'=>array('text','not null'),
 				'refresh_token'=>array('text','default null'),
