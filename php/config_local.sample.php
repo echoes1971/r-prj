@@ -13,5 +13,7 @@ $skin = 'default';
 
 $plugins_enabled[]='tinymce';
 
+$jwt_secret_key='__jwt_secret_key__';
+
 $root_obj_id='-10';
 ?>

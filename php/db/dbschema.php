@@ -18,6 +18,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
+require 'vendor/autoload.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+
 /**
  * Versions
  *
@@ -86,16 +93,16 @@ class DBEUser extends DBEntity {
 	
 	function checkNewPassword() {
 		$ret = true;
-/*		if($this->getValue('old_pwd')>'') {
-			$this->setValue('pwd',$this->getValue('old_pwd'));
-		} else if($this->getValue('new_pwd')>'' && $this->getValue('new_pwd')==$this->getValue('new2_pwd')) {
-			$this->setValue('pwd',$this->getValue('new_pwd'));
-		} else {
-			$ret = false;
-		}
-		$this->setValue('old_pwd',null);
-		$this->setValue('new_pwd',null);
-		$this->setValue('new2_pwd',null);*/
+		// if($this->getValue('old_pwd')>'') {
+		// 	$this->setValue('pwd',$this->getValue('old_pwd'));
+		// } else if($this->getValue('new_pwd')>'' && $this->getValue('new_pwd')==$this->getValue('new2_pwd')) {
+		// 	$this->setValue('pwd',$this->getValue('new_pwd'));
+		// } else {
+		// 	$ret = false;
+		// }
+		// $this->setValue('old_pwd',null);
+		// $this->setValue('new_pwd',null);
+		// $this->setValue('new2_pwd',null);
 		return $ret;
 	}
 	
@@ -217,6 +224,103 @@ class DBEUserGroup extends DBAssociation {
 }
 $dbschema_type_list[]="DBEUserGroup";
 
+/*
+TODO manage this
+
+Install composer:
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && rm composer-setup.php
+cd ./php
+composer require firebase/php-jwt --no-interaction --no-plugins --no-scripts --prefer-dist
+ */
+class DBEAuthToken extends DBEntity {
+	var $_typeName="DBEAuthToken";
+	public static $_mycolumns = array(
+				'token_id'=>array('varchar(64)','not null'),
+				'user_id'=>array('uuid','not null'),
+				'access_token'=>array('text','not null'),
+				'refresh_token'=>array('text','default null'),
+				'expires_at'=>array('datetime','not null'),
+				'created_at'=>array('datetime','DEFAULT CURRENT_TIMESTAMP'),
+			);
+	function __construct($tablename=null, $names=null, $values=null, $attrs=null, $keys=null, $columns=null) {
+		parent::__construct($tablename, $names, $values, $attrs, $keys, $columns!==null ? $columns : self::$_mycolumns);
+	}
+	function getTableName() { return "oauth_tokens"; }
+	
+	// Statica
+	var $_chiavi = array('token_id' => 'varchar(64)');
+	function getKeys() {
+		$_chiavi = array();
+		$_chiavi['token_id'] = 'varchar(64)';
+		return $_chiavi;
+	}
+	function getOrderBy() { return array('expires_at desc','user_id'); }
+	function getFK() {
+		if($this->_fk==null) {
+			$this->_fk=array();
+		}
+		if(count($this->_fk)==0) {
+			$this->_fk[] = new ForeignKey('user_id','users','id');
+		}
+		return $this->_fk;
+	}
+	
+	function _getTodayString() {
+		$oggi_array = getdate(time());
+		$oggi = $oggi_array['year'] . "-" . (strlen($oggi_array['mon'])<2 ? "0" : "") . $oggi_array['mon'] . "-" . (strlen($oggi_array['mday'])<2 ? "0" : "") . $oggi_array['mday'] . " " . (strlen($oggi_array['hours'])<2 ? "0" : "") . $oggi_array['hours'] . ":" . (strlen($oggi_array['minutes'])<2 ? "0" : "") . $oggi_array['minutes'] . ":00";
+		return $oggi;
+	}
+
+	function createJWT($user_id, $user_groups, $validity_seconds, $secret_key = null) {
+		if($secret_key===null || $secret_key=='') {
+			global $jwt_secret_key;
+			$secret_key = $jwt_secret_key;
+		}
+		$issuedAt = time();
+		$expire = $issuedAt + $validity_seconds;
+		$payload = array(
+			'user_id' => $user_id,
+			'user_groups' => $user_groups,
+			'iat' => $issuedAt,
+			'exp' => $expire,
+			// 'sub' => $this->getValue('user_id'),
+			// 'tid' => $this->getValue('token_id'),
+		);
+		$jwt = JWT::encode($payload, $secret_key, 'HS256');
+		$this->setValue('access_token', $jwt);
+		return $jwt;
+	}
+	function checkJWT($jwt, $secret_key = null) {
+		if($secret_key===null || $secret_key=='') {
+			global $jwt_secret_key;
+			$secret_key = $jwt_secret_key;
+		}
+		try {
+			$decoded = JWT::decode($jwt, new Key($secret_key, 'HS256'));
+			// TODO check the decoded values with the db stored ones
+			return (array)$decoded;
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+
+	function _before_insert(&$dbmgr) {
+		// $nomeTabella = $dbmgr->_buildTableName("seq_id");
+		// $tmp = $dbmgr->select($nomeTabella, "select id as id from $nomeTabella");
+		// $myid = $tmp[0]->getValue('id') + 1;
+ 		// $myid = $dbmgr->getNextId($this);
+ 		// $this->setValue('id', $myid);
+		$this->createJWT($this->getValue('user_id'), array(), 3600*2);
+		$this->setValue('created_at', $this->_getTodayString());
+	}
+}
+$dbschema_type_list[]="DBEAuthToken";
+
+
+
+
 class DBELog extends DBEntity {
 	var $_typeName="DBELog";
 	public static $_mycolumns = array(
@@ -244,11 +348,11 @@ class DBELog extends DBEntity {
 	function getOrderBy() { return array('data desc','ora desc'); }
 	
 	function _before_insert(&$dbmgr) {
-// 		$nomeTabella = $dbmgr->_buildTableName("seq_id");
-// 		$tmp = $dbmgr->select($nomeTabella, "select id as id from $nomeTabella");
-// 		$myid = $tmp[0]->getValue('id') + 1;
-//  		$myid = $dbmgr->getNextId($this);
-//  		$this->setValue('id', $myid);
+		// 		$nomeTabella = $dbmgr->_buildTableName("seq_id");
+		// 		$tmp = $dbmgr->select($nomeTabella, "select id as id from $nomeTabella");
+		// 		$myid = $tmp[0]->getValue('id') + 1;
+		//  		$myid = $dbmgr->getNextId($this);
+		//  		$this->setValue('id', $myid);
 	}
 }
 $dbschema_type_list[]="DBELog";

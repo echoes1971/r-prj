@@ -9,6 +9,7 @@ ENV MYSQL_PASSWORD mysecret
 ENV RPRJ_ADMIN_PASS myrprjsecret
 ENV RPRJ_SKIN default
 ENV RPRJ_ROOT_OBJ -10
+ENV RPRJ_JWT_SECRET_KEY sfdkjhfksdfhdaklhfkdasfh
 
 # To allow static /app running
 RUN a2enmod rewrite
@@ -16,7 +17,8 @@ RUN a2enmod rewrite
 # See: https://stackoverflow.com/questions/39657058/installing-gd-in-docker
 RUN apt-get update -y && apt-get install -y \
     libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
-    libfreetype6-dev libzip-dev zlib1g-dev
+    libfreetype6-dev libzip-dev zlib1g-dev \
+    git unzip curl
 # apt-utils
 
 # Already loaded?
@@ -39,6 +41,15 @@ RUN apt-get clean
 COPY php/ /var/www/html/
 # Copy the /app, if exists
 COPY rprj-app/build/ /var/www/html/app/
+
+# Install Composer and add firebase/php-jwt to the project so JWT lib is
+# available when the container starts. This runs during image build and
+# will create /var/www/html/vendor.
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && rm composer-setup.php \
+    && cd /var/www/html \
+    && composer require firebase/php-jwt --no-interaction --no-plugins --no-scripts --prefer-dist
 
 # COPY ./docker/webentrypoint.sh /usr/local/bin/
 COPY ./docker/webentrypoint.sh /usr/local/bin/docker-php-entrypoint

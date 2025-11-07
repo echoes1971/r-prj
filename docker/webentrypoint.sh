@@ -17,7 +17,7 @@ echo " |   /___|  _/ '_/ _ \| / -_) _|  _|"
 echo " |_|_\   |_| |_| \___// \___\__|\__|"
 echo "                    |__/            "
 echo
-echo "(C) 2005-2022 by Roberto Rocco-Angeloni"
+echo "(C) 2005-2025 by Roberto Rocco-Angeloni"
 echo
 echo "Environment:"
 echo "$SERVER_NAME"
@@ -31,6 +31,7 @@ echo "$RPRJ_SKIN"
 echo "$RPRJ_ROOT_OBJ"
 echo "$RPRJ_ADMIN_PASS"
 echo "$RPRJ_DB_SCHEMA"
+echo "$RPRJ_JWT_SECRET_KEY"
 echo "==============="
 
 # Write configuration
@@ -45,6 +46,7 @@ sed -i s/rprj-db-schema/$RPRJ_DB_SCHEMA/g /var/www/html/config_local.php
 sed -i "s/skin = 'default'/skin = '$RPRJ_SKIN'/g" /var/www/html/config_local.php
 sed -i s/-10/$RPRJ_ROOT_OBJ/g /var/www/html/config_local.php
 # sed -i s/setVerbose\(false\)/setVerbose\(true\)/g /var/www/html/mng/db_update_do.php
+sed -i "s/__jwt_secret_key__/$RPRJ_JWT_SECRET_KEY/g" /var/www/html/config_local.php
 
 sed -i s/_servername_com_/$SERVER_NAME/g /etc/apache2/sites-available/000-default.conf
 

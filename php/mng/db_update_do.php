@@ -90,14 +90,14 @@ $update_errors=array();
 $tables_update_errors=array();
 foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 	if($classname=='default') continue;
-// 	echo "Class: $classname\n";
+	// echo "Class: $classname\n";
 	$dbe = $dbmgr->getFactory()->getInstance($classname);
 	$tablename = $dbmgr->buildTableName( $dbe );
 	echo "Table: $tablename\n";
 	
 	$dbmgr->connect();
-// 	echo "Error: ".$dbmgr->db_error()."\n";
-// 	echo "connected: ".$dbmgr->isConnected()."\n";
+	// echo "Error: ".$dbmgr->db_error()."\n";
+	// echo "connected: ".$dbmgr->isConnected()."\n";
 	
 	$lista = [];
 	try {
@@ -110,13 +110,13 @@ foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 		foreach( $dbe->getColumns() as $col => $def ) {
 			$type = $def[0];
 			$constraints = count($def)>1 ? $def[1] : "";
-// 			echo "type: $type\n";
-// 			echo "constraints: $constraints\n";
+			// echo "type: $type\n";
+			// echo "constraints: $constraints\n";
 			$type = DBEntity::dbeType2dbType($type);
 			// 2011.03.04: inizio.
 			// 2011.03.04: le foreign key POSSONO essere nulle in generale
 			$not_null = $dbe->isPrimaryKey($col) ? "not null" : "";
-// 			$not_null = $dbe->isPrimaryKey($col) || $dbe->isFK($col) ? "not null" : "";
+			// $not_null = $dbe->isPrimaryKey($col) || $dbe->isFK($col) ? "not null" : "";
 			// 2011.03.04: fine.
 			$sql .= " $col $type ".($constraints>'' ? $constraints : $not_null).",\n";
 		}
@@ -147,16 +147,16 @@ foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 				$_constraints_dbe = count($dbe_columns[$col])>1 ? $dbe_columns[$col][1] : '';
 				if( $_type_db==$_type_dbe && $_constraints_db==$_constraints_dbe ) {
 				} else {
-// 					if($_type_db!=$_type_dbe) echo " $_type_db::$_type_dbe\n";
-// 					if($_constraints_db!=$_constraints_dbe) echo " $_constraints_db::$_constraints_dbe\n";
+					// if($_type_db!=$_type_dbe) echo " $_type_db::$_type_dbe\n";
+					// if($_constraints_db!=$_constraints_dbe) echo " $_constraints_db::$_constraints_dbe\n";
 					$differs[]=$col;
-// 					echo "$col => "; var_dump($def);
+					// echo "$col => "; var_dump($def);
 				}
 			} else {
 				$missing_dbe[]=$col;
 				echo "$col => "; var_dump($def);
 			}
-// 			echo var_dump($row); //->to_string("\n")."\n";
+			// echo var_dump($row); //->to_string("\n")."\n";
 		}
 		
 		// Report
@@ -200,7 +200,7 @@ foreach($dbmgr->getFactory()->getAllClassnames() as $classname) {
 		$missing_keys=array();
 		foreach(array_keys($dbe->getKeys()) as $pk) {
 			if( array_key_exists($pk, $lista) && $lista[$pk]['Key']=='PRI' ) continue;
-// 			echo "Missing key: ";var_dump($lista[$pk]);
+			// echo "Missing key: ";var_dump($lista[$pk]);
 			$missing_keys[]=$pk;
 			break;
 		}
