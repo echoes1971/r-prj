@@ -51,6 +51,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && cd /var/www/html \
     && composer require firebase/php-jwt --no-interaction --no-plugins --no-scripts --prefer-dist
 
+RUN composer require firebase/php-jwt --no-interaction --no-plugins --no-scripts --prefer-dist
+
 # COPY ./docker/webentrypoint.sh /usr/local/bin/
 COPY ./docker/webentrypoint.sh /usr/local/bin/docker-php-entrypoint
 # ENTRYPOINT /usr/local/bin/webentrypoint.sh
