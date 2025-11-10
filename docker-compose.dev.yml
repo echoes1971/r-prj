@@ -12,6 +12,7 @@ services:
     environment:
       SITE_TITLE: ":: R-Project Dev ::"
       SITE_TITLE_2: "Just testing stuff"
+      RPRJ_JWT_SECRET_KEY: mySecretJWTKeyForDev
       # RPRJ_ADMIN_PASS: pass
       # RPRJ_SKIN: lcars
       # MYSQL_PASSWORD: cippa
@@ -20,6 +21,8 @@ services:
       - ./docker/webentrypoint.sh:/usr/local/bin/docker-php-entrypoint
     #ports:
       #- 5000:80
-  # db:
+  db:
+    ports:
+    - "3306:3306"
   #   environment:
   #     MYSQL_ROOT_PASSWORD: cippa
